@@ -13,16 +13,30 @@ What you need to know about: Java (programming language), Bukkit (server softwar
 
 ### 1. Download the code
 
-Clone this repository. The easiest way is by going to **Code** > **Open with GitHub Desktop**.
+Clone this repository. The easiest way is by going to:
+
+> **Code** > **Open with GitHub Desktop**
+
+Place it wherever you like (for example *C:/Users/Martijn/Desktop/SuCraft/code*).
 
 ### 2. Open it in a code editor
 
-I strongly recommend using **Eclipse** since I will set the dependencies in Eclipse, you can use **File** > **Open Projects from File System...** and then select all projects in the folder (where you downloaded it earlier).
+Of course you must have installed [Java 16](https://www.java.com/) (I strongly recommend using [**Eclipse** IDE](https://www.eclipse.org/downloads/) since I will set the Maven dependencies in Eclipse, you can use:
+
+> **File** > **Import...** > **Existing Maven Projects** > select the directory you put the code in (e.g. *C:/Users/Martijn/Desktop/SuCraft/code*) > Check everything > **Finish**
 
 ### 3. Start a test server
 
-You should start a new Paper server (download the latest .jar from https://papermc.io/downloads and execute *java -jar paper-1.17.1-somenumber.jar* in cmd or in a .bat file).
+You should start a new Paper server (download the latest .jar from the [PaperMC website](https://papermc.io/downloads) and place it where you want to run the test server (for example *C:/Users/Martijn/Desktop/SuCraft/testserver*). Rename the jar you downloaded to *server.jar*.
 
-Then you should add all the plugins to the */plugins* folder. In Eclipse you can easily compile a plugin (**Run** > **Run As** > **Maven install**). To have it automatically placed into the test server plugins folder, you can define the environment variable **SUCRAFT_PLUGIN_PATH** on your computer. For example, set **SUCRAFT_PLUGIN_PATH** to 'C:/Users/Martijn/Desktop/SuCraft/plugins/'. ([How to add environment variables on Windows](https://docs.oracle.com/en/database/oracle/machine-learning/oml4r/1.5.1/oread/creating-and-modifying-environment-variables-on-windows.html#GUID-DD6F9982-60D5-48F6-8270-A27EC53807D0))
+Create a new file in the same folder, called *server.bat*, and open it with Notepad, and type
+
+> java -jar server.jar
+
+Now you can run *server.bat* and it will start the server. One time, you will have to open *eula.txt* and set it to *true*. The first time the server has started, it will generated a folder called *plugins*.
+
+Then you should add all the plugins to the */plugins* folder. In Eclipse you can easily compile all plugins (Right-click on the *sucraft* project > **Run As** > **Maven install**). To have it automatically placed into the test server plugins folder, you have to create a new file called *sucraft.properties* inside the *sucraft* project folder (next to the *LICENSE* and *README.md* files). In the file, type:
+
+> exportPluginsPath=C:/Users/Martijn/Desktop/SuCraft/testserver/plugins
 
 ### Now you can change the code and also test the changes!

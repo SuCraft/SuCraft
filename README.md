@@ -35,7 +35,7 @@ Create a new file in the same folder, called *server.bat*, and open it with Note
 
 Now you can run *server.bat* and it will start the server. One time, you will have to open *eula.txt* and set it to *true*. The first time the server has started, it will generated a folder called *plugins*.
 
-Then you should add all the plugins to the */plugins* folder. In Eclipse you can easily compile all plugins (Right-click on the *sucraft* project > **Run As** > **Maven install**). To have it automatically placed into the test server plugins folder, you have to create a new file called *sucraft.properties* inside the *sucraft* project folder (next to the *LICENSE* and *README.md* files). In the file, type (replace the *C:/Users/Martijn/Desktop/SuCraft/testserver* with your own test server path, please use / instead of \):
+Then you should add all the plugins to the */plugins* folder. In Eclipse you can easily compile all plugins (Right-click on the *sucraft* project > **Run As** > **Maven install**). To have it automatically placed into the test server plugins folder, you have to create a new file called *sucraft.properties* inside the *sucraft* project folder (next to the *LICENSE* and *README.md* files). In the file, type (replace the *C:/Users/Martijn/Desktop/SuCraft/testserver* with your own test server path, please use / instead of \\):
 
 > exportPluginsPath=C:/Users/Martijn/Desktop/SuCraft/testserver/plugins
 

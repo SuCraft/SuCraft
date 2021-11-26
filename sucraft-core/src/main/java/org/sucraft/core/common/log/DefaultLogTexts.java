@@ -7,9 +7,9 @@ public class DefaultLogTexts {
 	
 	public final String
 	pluginEnabling = "Enabling...",
-	pluginEnabled = "Enabled",
+	pluginEnabled = "Enabled!",
 	pluginDisabling = "Disabling...",
-	pluginDisabled = "Disabled",
+	pluginDisabled = "Disabled!",
 	registeringEvents = "Registering events...";
 	
 }

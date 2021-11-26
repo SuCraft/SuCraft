@@ -1,0 +1,7 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${pluginDescriptionAuthor}
+website: ${pluginDescriptionWebsite}
+api-version: 1.17
+main: org.sucraft.keepglass.main.SuCraftKeepGlassPlugin

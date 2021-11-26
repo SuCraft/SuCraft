@@ -7,6 +7,9 @@
   <url>http://sucraft.org</url>
   <description>SuCraft is a survival Minecraft server</description>
   <packaging>pom</packaging>
+  <modules>
+    <module>sucraft-core</module>
+  </modules>
   <build>
     <pluginManagement>
       <plugins>

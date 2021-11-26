@@ -2,6 +2,9 @@ package org.sucraft.core.common.plugin;
 
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +47,16 @@ public abstract class SuCraftPlugin extends JavaPlugin {
 	
 	public @NotNull SuCraftLogger getSuCraftLogger() {
 		return Objects.requireNonNull(suCraftLogger, "The logger has not been initialized yet");
+	}
+	
+	// Convenience methods for doing plugin-based things
+	
+	public void registerEvents(@NotNull Listener listener) {
+		Bukkit.getPluginManager().registerEvents(listener, this);
+	}
+	
+	public @NotNull NamespacedKey getNamespacedKey(@NotNull String key) {
+		return new NamespacedKey(this, key);
 	}
 	
 }

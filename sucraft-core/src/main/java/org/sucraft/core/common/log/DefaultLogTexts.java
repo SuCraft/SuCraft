@@ -9,6 +9,7 @@ public class DefaultLogTexts {
 	pluginEnabling = "Enabling...",
 	pluginEnabled = "Enabled",
 	pluginDisabling = "Disabling...",
-	pluginDisabled = "Disabled";
+	pluginDisabled = "Disabled",
+	registeringEvents = "Registering events...";
 	
 }

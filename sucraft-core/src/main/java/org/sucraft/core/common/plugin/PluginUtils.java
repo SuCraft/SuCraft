@@ -14,4 +14,14 @@ public class PluginUtils {
 		return Objects.requireNonNull(plugin, "Plugin has not been initialized yet");
 	}
 	
+	public <T> @NotNull T requireComponentInitialized(@Nullable T component) {
+		return Objects.requireNonNull(component, "Component has not been initialized yet");
+	}
+	
+	public void requireComponentUninitialized(@Nullable Object component) {
+		if (component == null) {
+			throw new IllegalStateException("Component was already initialized");
+		}
+	}
+	
 }

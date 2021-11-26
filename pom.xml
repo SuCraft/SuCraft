@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>sucraft-core</module>
-    <module>sucraft-keep-glass</module>
+    <module>sucraft-keepglass</module>
   </modules>
   <build>
     <finalName>${project.name}</finalName>

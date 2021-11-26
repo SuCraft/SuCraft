@@ -11,24 +11,39 @@ import org.jetbrains.annotations.Nullable;
 import org.sucraft.core.common.log.DefaultLogTexts;
 import org.sucraft.core.common.log.SuCraftLogger;
 
+import lombok.Getter;
+
 public abstract class SuCraftPlugin extends JavaPlugin {
 	
 	// Enable and disable
 	
 	@Override
 	public void onEnable() {
+		
+		enabling = true;
+		
 		suCraftLogger = new SuCraftLogger(this);
-		suCraftLogger.info(DefaultLogTexts.pluginEnabling);
 		onPluginPreEnable();
+		
+		suCraftLogger.info(DefaultLogTexts.pluginEnabling);
 		onPluginEnable();
 		suCraftLogger.info(DefaultLogTexts.pluginEnabled);
+		
+		enabling = false;
+		
 	}
 	
 	@Override
 	public void onDisable() {
+		
+		disabling = true;
+		
 		suCraftLogger.info(DefaultLogTexts.pluginDisabling);
 		onPluginDisable();
 		suCraftLogger.info(DefaultLogTexts.pluginDisabled);
+		
+		disabling = false;
+		
 	}
 	
 	/**
@@ -40,6 +55,11 @@ public abstract class SuCraftPlugin extends JavaPlugin {
 	protected void onPluginEnable() {}
 	
 	protected void onPluginDisable() {}
+	
+	@Getter
+	private boolean enabling = false;
+	@Getter
+	private boolean disabling = false;
 	
 	// Logger
 	

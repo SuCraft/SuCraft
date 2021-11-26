@@ -11,6 +11,8 @@
     <module>sucraft-core</module>
   </modules>
   <build>
+    <finalName>${project.name}</finalName>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <pluginManagement>
       <plugins>
         <plugin>

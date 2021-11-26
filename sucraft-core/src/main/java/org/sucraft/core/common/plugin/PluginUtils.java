@@ -19,7 +19,7 @@ public class PluginUtils {
 	}
 	
 	public void requireComponentUninitialized(@Nullable Object component) {
-		if (component == null) {
+		if (component != null) {
 			throw new IllegalStateException("Component was already initialized");
 		}
 	}

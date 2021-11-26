@@ -9,7 +9,7 @@ This repository contains the source code for SuCraft. You can help in three ways
 
 ## How to help with the code
 
-What you need to know about: Java (programming language), Bukkit (server software), Eclipse (code editor), Git (collaboration tool), Maven (using dependencies). If you don't know some of these, don't worry too much, you can figure it out along the way too, that's how I learnt a lot of these things. You can ask questions to Martijn on Discord: *Martijn#1369*.
+What you need to know about: Java (programming language), Bukkit (server software), Eclipse (code editor), Git (collaboration tool), Maven (using dependencies). If you don't know some of these, don't worry too much, you can figure it out along the way too, that's how I learnt a lot of these things. For questions, you can ask Martijn in [#development](https://discord.gg/pbsPkpUjG4).
 
 ### 1. Download the code
 
@@ -45,4 +45,4 @@ Then you should add all the plugins to the */plugins* folder. In Eclipse you can
 
 ### Now you can change the code yourself and also test the changes!
 
-For any questions, you can ask Martijn on Discord: *Martijn#1369*.
+For questions, you can ask Martijn in [#development](https://discord.gg/pbsPkpUjG4).

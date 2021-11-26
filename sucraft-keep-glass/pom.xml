@@ -8,7 +8,7 @@
   <artifactId>sucraft-keep-glass</artifactId>
   <name>SuCraft-KeepGlass</name>
   <description>Keep glass when broken</description>
-  <version>0.1</version>
+  <version>1.0</version>
   <build>
     <plugins>
       <plugin>

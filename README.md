@@ -15,6 +15,10 @@ What you need to know about: Java (programming language), Bukkit (server softwar
 
 Clone this repository. The easiest way is by going to:
 
+> **Fork** (in the right top)
+
+Then go to the forked version (*YourGitHubName/SuCraft* in your repositories) and do:
+
 > **Code** > **Open with GitHub Desktop**
 
 Place it wherever you like (for example *C:/Users/Martijn/Desktop/SuCraft/code*).

@@ -32,13 +32,19 @@ public class GlassBreakListener implements Listener {
 		return PluginUtils.requireComponentInitialized(instance);
 	}
 	
+	// Logger
+	
 	private final @NotNull SuCraftLogger logger;
+	
+	// Initialization
 	
 	private GlassBreakListener() {
 		logger = new SuCraftLogger(SuCraftKeepGlassPlugin.instance(), "Glass break listener");
 		logger.info(DefaultLogTexts.registeringEvents);
 		SuCraftKeepGlassPlugin.instance().registerEvents(this);
 	}
+	
+	// Events
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {

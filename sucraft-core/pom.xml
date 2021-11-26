@@ -10,8 +10,6 @@
   <description>Core utility classes and functions, and interfaces to individual components, for SuCraft</description>
   <version>0.1</version>
   <build>
-  	<finalName>${project.name}</finalName>
-    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

@@ -25,7 +25,7 @@ Download the GitHubDesktop program, and clone the code to wherever you like (for
 
 ### 2. Open it in a code editor
 
-Of course, you must have installed [Java JDK 17](https://www.oracle.com/java/technologies/downloads/) (not Java 16, and not Java JRE 17, you can check your Java JDK version by opening *cmd* and typing *javac -version* (not *java -version)). To edit the code, I recommend using the [**IntelliJ**](https://www.jetbrains.com/idea/download/) since it comes with all the languages and tools used. Then you can import all the SuCraft code at once:
+Of course, you must have installed [Java JDK 17](https://www.oracle.com/java/technologies/downloads/) (not Java 16, and not Java JRE 17, you can check your Java JDK version by opening *cmd* and typing *javac -version* (not *java -version)). To edit the code, I recommend using the [IntelliJ](https://www.jetbrains.com/idea/download/) since it comes with all the languages and tools used. Then you can import all the SuCraft code at once:
 
 * **File** > **New** > **Project from Existing Sources...** > Select the directory you put the code in (e.g. *C:/Users/Martijn/Desktop/SuCraft/code*) > **Import project from external model** > **Maven** > **Finish**
 

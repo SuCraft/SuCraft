@@ -31,3 +31,5 @@ sucraft.properties
 # IntelliJ
 .idea/*
 *.iml
+
+dependency-reduced-pom.xml

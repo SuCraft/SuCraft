@@ -28,7 +28,7 @@ jobs:
         mvn -B package -P !local --file pom.xml
         mkdir staging && cp code/sucraft-*/target/SuCraft-*.jar staging
     - name: Persist workflow data as artifacts
-      uses: action/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: github-actions-artifact
         path: staging

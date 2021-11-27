@@ -24,8 +24,8 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - uses: fwilhe2/setup-kotlin@main
-        with:
-          version: 1.5.10
+      with:
+        version: 1.5.10
     - name: Build with Maven
       run: |
         mvn -B package -P !local --file pom.xml

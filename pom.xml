@@ -21,25 +21,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>properties-maven-plugin</artifactId>
-          <version>1.0.0</version>
-          <executions>
-            <execution>
-              <id>read-sucraft-properties-file</id>
-              <phase>initialize</phase>
-              <goals>
-                <goal>read-project-properties</goal>
-              </goals>
-              <configuration>
-                <files>
-                  <file>../sucraft.properties</file>
-                </files>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
           <configuration>
@@ -55,26 +36,6 @@
               <phase>package</phase>
               <goals>
                 <goal>shade</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
-          <executions>
-            <execution>
-              <phase>install</phase>
-              <id>copy-built-jar</id>
-              <configuration>
-                <target>
-                  <echo>Copying ${project.build.directory}/${project.build.finalName}.jar to ${exportPluginsPath}</echo>
-                  <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                        todir="${exportPluginsPath}" />
-                </target>
-              </configuration>
-              <goals>
-                <goal>run</goal>
               </goals>
             </execution>
           </executions>
@@ -117,4 +78,59 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <property>
+          <name>!github</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>properties-maven-plugin</artifactId>
+              <version>1.0.0</version>
+              <executions>
+                <execution>
+                  <id>read-sucraft-properties-file</id>
+                  <phase>initialize</phase>
+                  <goals>
+                    <goal>read-project-properties</goal>
+                  </goals>
+                  <configuration>
+                    <files>
+                      <file>../sucraft.properties</file>
+                    </files>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>1.8</version>
+              <executions>
+                <execution>
+                  <phase>install</phase>
+                  <id>copy-built-jar</id>
+                  <configuration>
+                    <target>
+                      <echo>Copying ${project.build.directory}/${project.build.finalName}.jar to ${exportPluginsPath}</echo>
+                      <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                            todir="${exportPluginsPath}" />
+                    </target>
+                  </configuration>
+                  <goals>
+                    <goal>run</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -10,7 +10,8 @@
 	<properties>
 		<pluginDescriptionAuthor>SuCraft</pluginDescriptionAuthor>
 		<pluginDescriptionWebsite>sucraft.org</pluginDescriptionWebsite>
-		<kotlin.version>1.5.10</kotlin.version>
+		<kotlin.version>1.6.0</kotlin.version>
+		<lombok.version>1.18.20</lombok.version>
 	</properties>
 	<packaging>pom</packaging>
 	<modules>
@@ -24,6 +25,28 @@
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<version>${kotlin.version}</version>
+				<configuration>
+					<jvmTarget>17</jvmTarget>
+					<compilerPlugins>
+						<plugin>lombok</plugin>
+					</compilerPlugins>
+<!--					<pluginOptions>-->
+<!--						<option>lombok:config=${project.basedir}/lombok.config</option>-->
+<!--					</pluginOptions>-->
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-lombok</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok</artifactId>
+						<version>${lombok.version}</version>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -40,9 +63,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<jvmTarget>1.8</jvmTarget>
-				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -100,7 +120,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.20</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

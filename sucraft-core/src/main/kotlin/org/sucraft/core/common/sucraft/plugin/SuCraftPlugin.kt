@@ -51,8 +51,10 @@ abstract class SuCraftPlugin : JavaPlugin() {
 	protected open fun onSuCraftPluginEnable() {}
 	protected open fun onSuCraftPluginDisable() {}
 
-	private var enabling = false
-	private var disabling = false
+	var enabling = false
+		private set
+	var disabling = false
+		private set
 
 	// Logger
 

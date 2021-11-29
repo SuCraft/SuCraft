@@ -1,22 +1,16 @@
 package org.sucraft.keepglass.listener
 
-import org.sucraft.core.common.bukkit.log.NestedLogger
 import org.bukkit.event.EventPriority
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.GameMode
 import org.bukkit.inventory.ItemStack
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
 import org.sucraft.core.common.bukkit.material.MaterialGroups
 import org.sucraft.keepglass.main.SuCraftKeepGlassPlugin
-import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
+import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-object GlassBreakListener : Listener {
-
-	// Logger
-
-	private val logger: NestedLogger
+object GlassBreakListener : SuCraftComponent<SuCraftKeepGlassPlugin>(SuCraftKeepGlassPlugin.getInstance(), "Glass break listener") {
 
 	// Events
 
@@ -34,18 +28,6 @@ object GlassBreakListener : Listener {
 		// Drop the item
 		val dropLocation = block.location
 		dropLocation.world.dropItem(dropLocation, ItemStack(type))
-	}
-
-	// Initialization
-
-	init {
-		// Make sure the plugin is enabled
-		SuCraftKeepGlassPlugin.getInstance()
-		// Create the logger
-		logger = NestedLogger.create(SuCraftKeepGlassPlugin.getInstance().getNestedLogger(), "Glass break listener")
-		// Register events
-		logger.info(SuCraftLogTexts.registeringEvents)
-		SuCraftKeepGlassPlugin.getInstance().registerEvents(this)
 	}
 
 }

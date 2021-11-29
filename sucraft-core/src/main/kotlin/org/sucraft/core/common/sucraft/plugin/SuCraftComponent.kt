@@ -20,6 +20,7 @@ abstract class SuCraftComponent<P : SuCraftPlugin>(val plugin: P, val name: Stri
 		// Create the logger
 		logger = NestedLogger.create(plugin.getNestedLogger(), name)
 		// Register events
+		@Suppress("LeakingThis")
 		plugin.registerEvents(this)
 	}
 

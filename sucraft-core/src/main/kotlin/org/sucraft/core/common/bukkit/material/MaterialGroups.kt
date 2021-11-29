@@ -7,6 +7,7 @@ import org.sucraft.core.common.general.datastructure.PredicateContainer
 typealias MaterialGroup = PredicateContainer<Material>
 
 // TODO MUST POTENTIALLY BE UPDATED EVERY VERSION
+@Suppress("MemberVisibilityCanBePrivate")
 object MaterialGroups {
 
 	val damageDealingBlock = MaterialGroup {

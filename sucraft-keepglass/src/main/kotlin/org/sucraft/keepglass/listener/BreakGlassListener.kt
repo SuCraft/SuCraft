@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) SuCraft 2021 sucraft.org
+ */
+
 package org.sucraft.keepglass.listener
 
 import org.bukkit.event.EventPriority

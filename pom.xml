@@ -24,6 +24,7 @@
 		<module>sucraft-keepglass</module>
 		<module>sucraft-invisibleitemframes</module>
 		<module>sucraft-antimobgrief</module>
+		<module>sucraft-ridemobs</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

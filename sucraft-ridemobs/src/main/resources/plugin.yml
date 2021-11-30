@@ -1,0 +1,12 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${pluginDescriptionAuthor}
+website: ${pluginDescriptionWebsite}
+api-version: 1.17
+main: org.sucraft.ridemobs.main.SuCraftRideMobsPlugin
+depend: [SuCraft-Core]
+permissions:
+  sucraft.ridemobs.sit.panda:
+    description: Sit on pandas by right-clicking them
+    default: op

@@ -25,6 +25,7 @@
 		<module>sucraft-invisibleitemframes</module>
 		<module>sucraft-antimobgrief</module>
 		<module>sucraft-ridemobs</module>
+		<module>sucraft-enderdragondrops</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

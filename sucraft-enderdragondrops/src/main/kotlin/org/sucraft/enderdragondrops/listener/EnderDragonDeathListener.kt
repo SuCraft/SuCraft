@@ -23,7 +23,7 @@ object EnderDragonDeathListener : SuCraftComponent<SuCraftEnderDragonDropsPlugin
 	fun onEntityDeath(event: EntityDeathEvent) {
 		val dragon = (event.entity as? EnderDragon) ?: return
 		// Log to console
-		logger.info("An ender dragon died at ${dragon.location} (${dragon.killer?.let{"killed by ${it.name}"} ?: ClosestPlayerFinder.getClosestPlayer(dragon)?.let{"with closest by player ${it.name}"} ?: "killer unknown and no player close by"}")
+		logger.info("An ender dragon died at ${dragon.location} (${dragon.killer?.let {"killed by ${it.name}"} ?: ClosestPlayerFinder.getClosestPlayer(dragon)?.let {"with closest by player ${it.name}"} ?: "killer unknown and no player close by"}")
 		// Attempt to drop items
 		if (dragon.world.environment != World.Environment.THE_END) return
 		dragon.world.enderDragonBattle ?: return

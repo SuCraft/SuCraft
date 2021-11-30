@@ -18,6 +18,7 @@
 	<modules>
 		<module>sucraft-core</module>
 		<module>sucraft-keepglass</module>
+		<module>sucraft-invisibleitemframes</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

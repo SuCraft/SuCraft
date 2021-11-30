@@ -2,8 +2,7 @@ package org.sucraft.keepglass.main
 
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.core.common.general.pattern.SingletonContainer
-import org.sucraft.core.main.SuCraftCorePlugin
-import org.sucraft.keepglass.listener.GlassBreakListener
+import org.sucraft.keepglass.listener.BreakGlassListener
 
 class SuCraftKeepGlassPlugin : SuCraftPlugin() {
 
@@ -15,7 +14,7 @@ class SuCraftKeepGlassPlugin : SuCraftPlugin() {
 
 	override fun onSuCraftPluginEnable() {
 		// Initialize components
-		GlassBreakListener
+		BreakGlassListener
 	}
 
 }

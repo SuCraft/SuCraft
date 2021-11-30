@@ -23,6 +23,7 @@
 		<module>sucraft-core</module>
 		<module>sucraft-keepglass</module>
 		<module>sucraft-invisibleitemframes</module>
+		<module>sucraft-antimobgrief</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

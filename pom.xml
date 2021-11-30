@@ -26,6 +26,7 @@
 		<module>sucraft-antimobgrief</module>
 		<module>sucraft-ridemobs</module>
 		<module>sucraft-enderdragondrops</module>
+		<module>sucraft-harmlessentities</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>
@@ -205,6 +206,12 @@
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<version>20.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20200518</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

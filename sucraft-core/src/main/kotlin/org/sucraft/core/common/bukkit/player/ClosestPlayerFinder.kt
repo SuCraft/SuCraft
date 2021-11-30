@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import java.util.function.Predicate
 
+
 object ClosestPlayerFinder {
 
 	fun getClosestPlayer(location: Location, predicate: Predicate<Player>? = null): Player? =

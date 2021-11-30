@@ -8,6 +8,7 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.keepglass.listener.BreakGlassListener
 
+
 class SuCraftKeepGlassPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

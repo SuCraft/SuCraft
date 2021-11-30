@@ -4,6 +4,7 @@
 
 package org.sucraft.core.common.sucraft.log
 
+
 object SuCraftLogTexts {
 
 	const val pluginEnabling = "Enabling..."

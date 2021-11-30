@@ -9,6 +9,7 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.invisibleitemframes.listener.MakeItemFrameVisibleOnDamageListener
 import org.sucraft.invisibleitemframes.listener.RightClickItemFrameListener
 
+
 class SuCraftInvisibleItemFramesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

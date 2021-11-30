@@ -7,6 +7,7 @@ package org.sucraft.core.common.sucraft.delegate
 import org.bukkit.entity.Entity
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegateHolder
 
+
 interface HarmlessEntities {
 
 	// Companion (implementation)

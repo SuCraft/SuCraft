@@ -7,6 +7,7 @@ package org.sucraft.enderdragondrops.drop
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+
 object AdditionalEnderDragonDrops {
 
 	class DropWithProbability(val item: ItemStack, val probability: Double) {

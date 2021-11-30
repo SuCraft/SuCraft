@@ -12,6 +12,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
 import org.sucraft.core.common.general.pattern.SingletonContainer
 
+
 abstract class SuCraftPlugin : JavaPlugin() {
 
 	// Enable and disable

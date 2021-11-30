@@ -4,6 +4,7 @@
 
 package org.sucraft.core.common.sucraft.plugin
 
+
 open class SuCraftDelegateHolder<T> {
 
 	private var implementation: T? = null

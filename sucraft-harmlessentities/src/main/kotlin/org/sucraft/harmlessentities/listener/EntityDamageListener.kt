@@ -11,6 +11,7 @@ import org.sucraft.core.common.sucraft.delegate.HarmlessEntities
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.harmlessentities.main.SuCraftHarmlessEntitiesPlugin
 
+
 object EntityDamageListener : SuCraftComponent<SuCraftHarmlessEntitiesPlugin>(SuCraftHarmlessEntitiesPlugin.getInstance(), "Entity damage listener") {
 
 	// Events

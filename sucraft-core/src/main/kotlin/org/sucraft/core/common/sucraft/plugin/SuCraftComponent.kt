@@ -8,6 +8,7 @@ import org.bukkit.event.Listener
 import org.sucraft.core.common.bukkit.log.NestedLogger
 import java.lang.IllegalStateException
 
+
 abstract class SuCraftComponent<P : SuCraftPlugin>(val plugin: P, val name: String) : Listener {
 
 	// Logger

@@ -4,6 +4,7 @@
 
 package org.sucraft.core.common.general.pattern
 
+
 open class SingletonContainer<T> {
 
 	private var instance: T? = null

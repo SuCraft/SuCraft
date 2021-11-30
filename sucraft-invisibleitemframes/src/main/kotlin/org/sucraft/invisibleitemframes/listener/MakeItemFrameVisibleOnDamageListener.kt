@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.invisibleitemframes.main.SuCraftInvisibleItemFramesPlugin
 
+
 object MakeItemFrameVisibleOnDamageListener : SuCraftComponent<SuCraftInvisibleItemFramesPlugin>(SuCraftInvisibleItemFramesPlugin.getInstance(), "Make item frame visible on damage listener") {
 
 	// Events

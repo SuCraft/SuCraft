@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.ridemobs.main.SuCraftRideMobsPlugin
 
+
 object EjectOnQuitListener : SuCraftComponent<SuCraftRideMobsPlugin>(SuCraftRideMobsPlugin.getInstance(), "Eject on quit listener") {
 
 	// Events

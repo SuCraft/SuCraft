@@ -30,6 +30,7 @@
 		<module>OpMeCommand</module>
 		<module>PingCommand</module>
 		<module>EasterEggCommand</module>
+		<module>Supporters</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

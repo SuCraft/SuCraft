@@ -14,6 +14,16 @@ import java.util.*
 
 object PlayerByInputString {
 
+	// Text
+
+	private fun sendOnlinePlayerNotFound(audience: CommandSender, name: String) =
+		audience.sendMessage("${WHITE}${name}${RED} is not online.")
+
+	private fun sendOfflinePlayerNotFound(audience: CommandSender, name: String) =
+		audience.sendMessage("${RED}No player called ${WHITE}${name}${RED} was found.")
+
+	// Functionality
+
 	fun getOnline(input: String): Player? =
 		Bukkit.getPlayerExact(input) ?: try {
 			Bukkit.getPlayer(UUID.fromString(input))
@@ -23,7 +33,16 @@ object PlayerByInputString {
 
 	fun getOnlineOrSendErrorMessage(input: String, requester: CommandSender): Player? {
 		val foundPlayer = getOnline(input)
-		if (foundPlayer == null) requester.sendMessage("${WHITE}${input}${RED} is not online.")
+		if (foundPlayer == null) sendOnlinePlayerNotFound(requester, input)
+		return foundPlayer
+	}
+
+	fun getVisibleOnline(input: String, requester: CommandSender): Player? =
+		getOnline(input)?.takeIf { (requester as? Player)?.canSee(it) ?: true }
+
+	fun getVisibleOnlineOrSendErrorMessage(input: String, requester: CommandSender): Player? {
+		val foundPlayer = getVisibleOnline(input, requester)
+		if (foundPlayer == null) sendOnlinePlayerNotFound(requester, input)
 		return foundPlayer
 	}
 
@@ -39,7 +58,7 @@ object PlayerByInputString {
 
 	fun getOfflineOrSendErrorMessage(input: String, requester: CommandSender): OfflinePlayer? {
 		val foundPlayer = getOffline(input)
-		if (foundPlayer == null) requester.sendMessage("${RED}No player called ${WHITE}${input}${RED} was found.")
+		if (foundPlayer == null) sendOfflinePlayerNotFound(requester, input)
 		return foundPlayer
 	}
 

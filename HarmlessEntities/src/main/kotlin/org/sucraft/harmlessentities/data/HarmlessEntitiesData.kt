@@ -13,7 +13,7 @@ import org.sucraft.core.common.sucraft.persistentdata.DefaultSuCraftNamespace
 
 object HarmlessEntitiesData {
 
-	private val harmlessEntityNamespacedKey = DefaultSuCraftNamespace.getNamespacedKey("Harmless")
+	private val harmlessEntityNamespacedKey = DefaultSuCraftNamespace.getNamespacedKey("harmless")
 	// Checked for backwards compatability
 	private val oldHarmlessEntityNamespacedKey = NamespacedKey("harmlessentities", "harmless")
 

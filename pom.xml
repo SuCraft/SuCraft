@@ -28,6 +28,7 @@
 		<module>sucraft-enderdragondrops</module>
 		<module>sucraft-harmlessentities</module>
 		<module>sucraft-opmecommand</module>
+		<module>sucraft-pingcommand</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

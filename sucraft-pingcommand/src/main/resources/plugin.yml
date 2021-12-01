@@ -1,0 +1,23 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${pluginDescriptionAuthor}
+website: ${pluginDescriptionWebsite}
+api-version: 1.17
+main: org.sucraft.pingcommand.main.SuCraftPingCommandPlugin
+depend: [SuCraft-Core]
+commands:
+  ping:
+    description: Ping for lag
+    aliases: [lag, lagg, testlag, lagtest]
+    permission: sucraft.pingcommand.ping
+  pong:
+    description: Be a curious little shit
+    permission: sucraft.pingcommand.pong
+permissions:
+  sucraft.pingcommand.ping:
+    description: Use the ping command
+    default: true
+  sucraft.pingcommand.pong:
+    description: Use the pong command
+    default: true

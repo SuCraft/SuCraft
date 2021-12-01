@@ -17,13 +17,13 @@ object SuCraftLightningCommandCommands : SuCraftCommands<SuCraftLightningCommand
 	val LIGHTNING = SuCraftCommand.createPlayerOnly(
 		this,
 		"lightning",
-		{ player, _, _, _ ->
-			if (player.hasPermission(SuCraftLightningCommandPermissions.LIGHTNING)) {
-				logger.info("${player.name} struck decorative lightning at ${player.location}")
-				player.world.strikeLightningEffect(player.location)
-			} else {
+		onCommand@{ player, _, _, _ ->
+			if (!player.hasPermission(SuCraftLightningCommandPermissions.LIGHTNING)) {
 				SupportingMessages.sendOnlySupportersHaveAbility(player, "create decorative lightning")
+				return@onCommand
 			}
+			logger.info("${player.name} struck decorative lightning at ${player.location}")
+			player.world.strikeLightningEffect(player.location)
 		},
 		CommonTabCompletion.EMPTY
 	)

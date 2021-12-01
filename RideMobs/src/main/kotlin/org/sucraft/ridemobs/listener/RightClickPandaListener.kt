@@ -14,7 +14,7 @@ import org.sucraft.ridemobs.main.SuCraftRideMobsPlugin
 import org.sucraft.ridemobs.player.permission.SuCraftRideMobsPermissions
 
 
-object RightClickPandaListener : SuCraftComponent<SuCraftRideMobsPlugin>(SuCraftRideMobsPlugin.getInstance(), "Right-click panda listener") {
+object RightClickPandaListener : SuCraftComponent<SuCraftRideMobsPlugin>(SuCraftRideMobsPlugin.getInstance()) {
 
 	// Events
 

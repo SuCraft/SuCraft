@@ -13,7 +13,7 @@ import org.sucraft.antimobgrief.main.SuCraftAntiMobGriefPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
 
-object ExplosionListener : SuCraftComponent<SuCraftAntiMobGriefPlugin>(SuCraftAntiMobGriefPlugin.getInstance(), "Explosion listener") {
+object ExplosionListener : SuCraftComponent<SuCraftAntiMobGriefPlugin>(SuCraftAntiMobGriefPlugin.getInstance()) {
 
 	// Events
 

@@ -16,4 +16,4 @@ typealias TabCompleter = (sender: CommandSender, command: Command, label: String
 typealias PlayerCommandExecutor = (player: Player, command: Command, label: String, arguments: Array<String>) -> Unit
 typealias PlayerTabCompleter = (player: Player, command: Command, label: String, arguments: Array<String>) -> List<String>?
 
-abstract class SuCraftCommands<P : SuCraftPlugin>(plugin: P, name: String = "Commands") : SuCraftComponent<P>(plugin, name)
+abstract class SuCraftCommands<P : SuCraftPlugin>(plugin: P, customName: String? = "Commands") : SuCraftComponent<P>(plugin, customName)

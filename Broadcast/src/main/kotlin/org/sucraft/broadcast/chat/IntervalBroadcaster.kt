@@ -13,7 +13,7 @@ import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
 
-object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBroadcastPlugin.getInstance(), "Interval broadcaster") {
+object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBroadcastPlugin.getInstance()) {
 
 	// Settings
 

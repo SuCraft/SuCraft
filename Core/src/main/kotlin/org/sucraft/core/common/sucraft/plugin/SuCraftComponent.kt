@@ -9,7 +9,9 @@ import org.sucraft.core.common.bukkit.log.NestedLogger
 import java.lang.IllegalStateException
 
 
-abstract class SuCraftComponent<P : SuCraftPlugin>(val plugin: P, val name: String) : Listener {
+abstract class SuCraftComponent<P : SuCraftPlugin>(val plugin: P, val customName: String? = null) : Listener {
+
+	val name: String = customName ?: this::class.java.simpleName
 
 	// Logger
 

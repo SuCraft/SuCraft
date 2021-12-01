@@ -15,7 +15,7 @@ import org.sucraft.enderdragondrops.drop.AdditionalEnderDragonDrops
 import org.sucraft.enderdragondrops.main.SuCraftEnderDragonDropsPlugin
 
 
-object EnderDragonDeathListener : SuCraftComponent<SuCraftEnderDragonDropsPlugin>(SuCraftEnderDragonDropsPlugin.getInstance(), "Ender dragon death listener") {
+object EnderDragonDeathListener : SuCraftComponent<SuCraftEnderDragonDropsPlugin>(SuCraftEnderDragonDropsPlugin.getInstance()) {
 
 	// Events
 

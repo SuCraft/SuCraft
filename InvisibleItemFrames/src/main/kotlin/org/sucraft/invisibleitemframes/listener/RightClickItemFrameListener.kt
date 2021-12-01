@@ -14,7 +14,7 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.invisibleitemframes.main.SuCraftInvisibleItemFramesPlugin
 
 
-object RightClickItemFrameListener : SuCraftComponent<SuCraftInvisibleItemFramesPlugin>(SuCraftInvisibleItemFramesPlugin.getInstance(), "Right-click item frame listener") {
+object RightClickItemFrameListener : SuCraftComponent<SuCraftInvisibleItemFramesPlugin>(SuCraftInvisibleItemFramesPlugin.getInstance()) {
 
 	// Events
 

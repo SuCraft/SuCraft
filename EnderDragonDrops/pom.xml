@@ -34,7 +34,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>sucraft</groupId>
-			<artifactId>sucraft-core</artifactId>
+			<artifactId>core</artifactId>
 			<version>0.1</version>
 			<scope>provided</scope>
 		</dependency>

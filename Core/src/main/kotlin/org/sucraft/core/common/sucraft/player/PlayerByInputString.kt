@@ -9,6 +9,7 @@ import org.bukkit.ChatColor.*
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
 import java.util.*
 
 
@@ -49,17 +50,35 @@ object PlayerByInputString {
 	/**
 	 * Only returns a non-null value if the player has played on the server before
 	 */
-	fun getOffline(input: String): OfflinePlayer? =
-		Bukkit.getOfflinePlayerIfCached(input) ?: try {
-			Bukkit.getOfflinePlayer(UUID.fromString(input))
+	fun getOfflineInformation(input: String): OfflinePlayersInformation.OfflinePlayerInformation? =
+		OfflinePlayersInformation.get().getInformation(input) ?: try {
+			OfflinePlayersInformation.get().getInformation(UUID.fromString(input))
 		} catch (e: IllegalArgumentException) {
 			null
-		}?.takeIf { it.hasPlayedBefore() }
+		}
 
-	fun getOfflineOrSendErrorMessage(input: String, requester: CommandSender): OfflinePlayer? {
-		val foundPlayer = getOffline(input)
-		if (foundPlayer == null) sendOfflinePlayerNotFound(requester, input)
-		return foundPlayer
+	fun getOfflineInformationOrSendErrorMessage(input: String, requester: CommandSender): OfflinePlayersInformation.OfflinePlayerInformation? {
+		val foundPlayerInformation = getOfflineInformation(input)
+		if (foundPlayerInformation == null) sendOfflinePlayerNotFound(requester, input)
+		return foundPlayerInformation
 	}
+
+	/**
+	 * Only returns a non-null value if the player has played on the server before
+	 */
+	fun getOffline(input: String): OfflinePlayer? =
+		getOfflineInformation(input)?.getOfflinePlayer()
+
+	fun getOfflineOrSendErrorMessage(input: String, requester: CommandSender) =
+		getOfflineInformationOrSendErrorMessage(input, requester)?.getOfflinePlayer()
+
+	/**
+	 * Only returns a non-null value if the player has played on the server before
+	 */
+	fun getPlayerUUID(input: String) =
+		getOfflineInformation(input)?.getPlayerUUID()
+
+	fun getPlayerUUIDOrSendErrorMessage(input: String, requester: CommandSender) =
+		getOfflineInformationOrSendErrorMessage(input, requester)?.getPlayerUUID()
 
 }

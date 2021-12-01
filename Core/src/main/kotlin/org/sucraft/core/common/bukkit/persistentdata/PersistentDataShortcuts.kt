@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.UUID
 import kotlin.reflect.KClass
 
@@ -26,6 +27,7 @@ typealias _IntArray = IntArray
 typealias _LongArray = LongArray
 typealias _Boolean = Boolean
 typealias _UUID = UUID
+typealias _PlayerUUID = PlayerUUID
 typealias _JSONObject = JSONObject
 typealias _JSONArray = JSONArray
 typealias _Enum<E> = Enum<E>
@@ -94,6 +96,17 @@ object PersistentDataShortcuts {
 		{
 			try {
 				_UUID.fromString(it)
+			} catch (e: IllegalArgumentException) {
+				null
+			}
+		},
+		String
+	)
+	val PlayerUUID: PersistentDataShortcut<_PlayerUUID> = SerializedPersistentDataShortcut(
+		_PlayerUUID::toString,
+		{
+			try {
+				_PlayerUUID.fromString(it)
 			} catch (e: IllegalArgumentException) {
 				null
 			}

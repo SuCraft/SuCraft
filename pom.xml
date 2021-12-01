@@ -27,6 +27,7 @@
 		<module>sucraft-ridemobs</module>
 		<module>sucraft-enderdragondrops</module>
 		<module>sucraft-harmlessentities</module>
+		<module>sucraft-opmecommand</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

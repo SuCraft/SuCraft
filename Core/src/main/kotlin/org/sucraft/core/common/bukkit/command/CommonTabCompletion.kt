@@ -5,7 +5,6 @@
 package org.sucraft.core.common.bukkit.command
 
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.command.TabCompleter
 import java.util.*
 import org.sucraft.core.common.bukkit.command.CommandSenderExtensions.getVisiblePlayers

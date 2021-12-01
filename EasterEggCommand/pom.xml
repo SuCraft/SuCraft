@@ -10,9 +10,9 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-invisibleitemframes</artifactId>
-	<name>SuCraft-InvisibleItemFrames</name>
-	<description>Shift-right-click item frames to make them invisible</description>
+	<artifactId>eastereggcommand</artifactId>
+	<name>SuCraft-EasterEggCommand</name>
+	<description>Adds the easter egg command /easteregg</description>
 	<version>0.1</version>
 	<build>
 		<plugins>

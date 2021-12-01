@@ -10,10 +10,10 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-harmlessentities</artifactId>
-	<name>SuCraft-HarmlessEntities</name>
-	<description>Utility to mark entities as unable to do harm</description>
-	<version>0.1</version>
+	<artifactId>keepglass</artifactId>
+	<name>SuCraft-KeepGlass</name>
+	<description>Keep glass when broken</description>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

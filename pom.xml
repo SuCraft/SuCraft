@@ -20,16 +20,16 @@
 	</properties>
 	<packaging>pom</packaging>
 	<modules>
-		<module>sucraft-core</module>
-		<module>sucraft-keepglass</module>
-		<module>sucraft-invisibleitemframes</module>
-		<module>sucraft-antimobgrief</module>
-		<module>sucraft-ridemobs</module>
-		<module>sucraft-enderdragondrops</module>
-		<module>sucraft-harmlessentities</module>
-		<module>sucraft-opmecommand</module>
-		<module>sucraft-pingcommand</module>
-		<module>sucraft-eastereggcommand</module>
+		<module>Core</module>
+		<module>KeepGlass</module>
+		<module>InvisibleItemFrames</module>
+		<module>AntiMobGrief</module>
+		<module>RideMobs</module>
+		<module>EnderDragonDrops</module>
+		<module>HarmlessEntities</module>
+		<module>OpMeCommand</module>
+		<module>PingCommand</module>
+		<module>EasterEggCommand</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

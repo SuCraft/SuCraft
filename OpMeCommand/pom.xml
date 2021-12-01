@@ -10,9 +10,9 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-core</artifactId>
-	<name>SuCraft-Core</name>
-	<description>Core utility classes and functions, and interfaces to individual components, for SuCraft</description>
+	<artifactId>opmecommand</artifactId>
+	<name>SuCraft-OpMeCommand</name>
+	<description>Adds the troll command /opme</description>
 	<version>0.1</version>
 	<build>
 		<plugins>
@@ -31,4 +31,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>sucraft</groupId>
+			<artifactId>sucraft-core</artifactId>
+			<version>0.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

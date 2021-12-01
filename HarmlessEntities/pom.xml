@@ -10,9 +10,9 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-eastereggcommand</artifactId>
-	<name>SuCraft-EasterEggCommand</name>
-	<description>Adds the easter egg command /easteregg</description>
+	<artifactId>harmlessentities</artifactId>
+	<name>SuCraft-HarmlessEntities</name>
+	<description>Utility to mark entities as unable to do harm</description>
 	<version>0.1</version>
 	<build>
 		<plugins>

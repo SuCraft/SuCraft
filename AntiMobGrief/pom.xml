@@ -10,9 +10,9 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-pingcommand</artifactId>
-	<name>SuCraft-PingCommand</name>
-	<description>Adds the /ping command</description>
+	<artifactId>antimobgrief</artifactId>
+	<name>SuCraft-AntiMobGrief</name>
+	<description>Prevents some mobs from breaking blocks</description>
 	<version>0.1</version>
 	<build>
 		<plugins>

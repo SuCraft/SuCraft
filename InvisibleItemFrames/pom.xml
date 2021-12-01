@@ -10,9 +10,9 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-ridemobs</artifactId>
-	<name>SuCraft-RideMobs</name>
-	<description>Sit on mobs</description>
+	<artifactId>invisibleitemframes</artifactId>
+	<name>SuCraft-InvisibleItemFrames</name>
+	<description>Shift-right-click item frames to make them invisible</description>
 	<version>0.1</version>
 	<build>
 		<plugins>

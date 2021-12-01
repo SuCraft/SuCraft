@@ -10,10 +10,10 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-keepglass</artifactId>
-	<name>SuCraft-KeepGlass</name>
-	<description>Keep glass when broken</description>
-	<version>1.0</version>
+	<artifactId>ridemobs</artifactId>
+	<name>SuCraft-RideMobs</name>
+	<description>Sit on mobs</description>
+	<version>0.1</version>
 	<build>
 		<plugins>
 			<plugin>

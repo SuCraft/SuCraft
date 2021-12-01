@@ -10,7 +10,7 @@
 		<artifactId>sucraft</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>sucraft-enderdragondrops</artifactId>
+	<artifactId>enderdragondrops</artifactId>
 	<name>SuCraft-EnderDragonDrops</name>
 	<description>Adds item drops from the Ender dragon</description>
 	<version>0.1</version>

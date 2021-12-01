@@ -33,14 +33,19 @@ object SuCraftPortableToolBlocksCommands : SuCraftCommands<SuCraftPortableToolBl
 				if (!player.hasPermission(SuCraftPortableToolBlocksPermissions.ENDER_CHEST_OF_OTHER_PLAYERS) || arguments.isEmpty())
 					player
 				else
-					PlayerByInputString.getOnlineOrSendErrorMessage(arguments[0], player) ?: return@onCommand
+					PlayerByInputString.getVisibleOnlineOrSendErrorMessage(arguments[0], player) ?: return@onCommand
 			if (enderChestOwner == player)
 				logger.info("${player.name} opened the portable ender chest")
 			else
 				logger.info("${player.name} opened the ender chest of ${enderChestOwner.name}")
 			player.openInventory(enderChestOwner.enderChest)
 		},
-		CommonTabCompletion.EMPTY
+		{ player, command, label, arguments ->
+			if (player.hasPermission(SuCraftPortableToolBlocksPermissions.ENDER_CHEST_OF_OTHER_PLAYERS) && arguments.size <= 1)
+				CommonTabCompletion.VISIBLE_ONLINE_PLAYERS(player, command, label, arguments)
+			else
+				CommonTabCompletion.EMPTY(player, command, label, arguments)
+		}
 	)
 
 }

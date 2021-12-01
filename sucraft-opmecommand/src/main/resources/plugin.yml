@@ -9,7 +9,7 @@ depend: [SuCraft-Core]
 commands:
   opme:
     description: Become Moderator
-    permission: martijnsextrafeatures.opme
+    permission: sucraft.opmecommand.opme
 permissions:
   sucraft.opmecommand.opme:
     description: Use the opme command

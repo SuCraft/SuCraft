@@ -33,6 +33,7 @@
 		<module>LightningCommand</module>
 		<module>Supporters</module>
 		<module>Broadcast</module>
+		<module>PortableToolBlocks</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -9,7 +9,7 @@ import org.bukkit.NamespacedKey
 
 object DefaultSuCraftNamespace {
 
-	private const val defaultNamespace = "sucraft";
+	private const val defaultNamespace = "SuCraft";
 
 	fun getNamespacedKey(key: String) = NamespacedKey(defaultNamespace, key)
 

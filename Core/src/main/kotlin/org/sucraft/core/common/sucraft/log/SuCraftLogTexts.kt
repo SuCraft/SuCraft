@@ -12,5 +12,6 @@ object SuCraftLogTexts {
 	const val pluginDisabling = "Disabling..."
 	const val pluginDisabled = "Disabled!"
 	const val registeringEvents = "Registering events..."
+	const val schedulingTasks = "Scheduling tasks..."
 
 }

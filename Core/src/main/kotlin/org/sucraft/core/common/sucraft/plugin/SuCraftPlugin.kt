@@ -68,12 +68,8 @@ abstract class SuCraftPlugin : JavaPlugin() {
 
 	// Convenience methods for doing plugin-based things
 
-	fun registerEvents(listener: Listener) {
-		Bukkit.getPluginManager().registerEvents(listener, this)
-	}
+	fun registerEvents(listener: Listener) = Bukkit.getPluginManager().registerEvents(listener, this)
 
-	fun getNamespacedKey(key: String): NamespacedKey {
-		return NamespacedKey(this, key)
-	}
+	fun getNamespacedKey(key: String) = NamespacedKey(this, key)
 
 }

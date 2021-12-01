@@ -30,6 +30,7 @@
 		<module>OpMeCommand</module>
 		<module>PingCommand</module>
 		<module>EasterEggCommand</module>
+		<module>LightningCommand</module>
 		<module>Supporters</module>
 	</modules>
 	<build>

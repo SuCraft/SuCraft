@@ -29,6 +29,7 @@
 		<module>sucraft-harmlessentities</module>
 		<module>sucraft-opmecommand</module>
 		<module>sucraft-pingcommand</module>
+		<module>sucraft-eastereggcommand</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

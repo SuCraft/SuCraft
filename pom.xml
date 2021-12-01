@@ -32,6 +32,7 @@
 		<module>EasterEggCommand</module>
 		<module>LightningCommand</module>
 		<module>Supporters</module>
+		<module>Broadcast</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -24,6 +24,6 @@ object CommandSenderExtensions {
 		if (this is Player)
 			Bukkit.getOnlinePlayers().filter { !this.canSee(it) }
 		else
-			Collections.emptyList()
+			emptyList()
 
 }

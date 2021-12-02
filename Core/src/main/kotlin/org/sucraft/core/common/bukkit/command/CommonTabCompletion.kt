@@ -12,7 +12,7 @@ import org.sucraft.core.common.bukkit.command.CommandSenderExtensions.getVisible
 
 object CommonTabCompletion {
 
-	val EMPTY: TabCompleter = { _, _, _, _ -> Collections.emptyList() }
+	val EMPTY: TabCompleter = { _, _, _, _ -> emptyList() }
 	val ONLINE_PLAYERS: TabCompleter = { _, _, _, _ -> Bukkit.getOnlinePlayers().map { it.name } }
 	val VISIBLE_ONLINE_PLAYERS: TabCompleter = { sender, _, _, _ -> sender.getVisiblePlayers().map { it.name } }
 

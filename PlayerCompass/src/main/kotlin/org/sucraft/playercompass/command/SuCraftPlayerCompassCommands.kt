@@ -10,7 +10,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
-import org.bukkit.inventory.meta.ItemMeta
 import org.sucraft.core.common.bukkit.command.CommonTabCompletion
 import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
 import org.sucraft.core.common.bukkit.persistentdata.PersistentDataShortcuts

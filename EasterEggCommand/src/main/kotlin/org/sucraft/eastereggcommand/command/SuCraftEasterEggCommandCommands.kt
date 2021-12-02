@@ -17,11 +17,11 @@ import org.sucraft.eastereggcommand.main.SuCraftEasterEggCommandPlugin
 
 object SuCraftEasterEggCommandCommands : SuCraftCommands<SuCraftEasterEggCommandPlugin>(SuCraftEasterEggCommandPlugin.getInstance()) {
 
-	val EASTER_EGG = SuCraftCommand.createPlayerOnly(
+	val EASTER_EGG = SuCraftCommand.create(
 		this,
 		"easteregg",
-		{ player, _, _, _ ->
-			player.sendMessage(
+		{ sender, _, _, _ ->
+			sender.sendMessage(
 				Component.join(
 					JoinConfiguration.noSeparators(),
 					Component.text("I found what you are looking for: "),

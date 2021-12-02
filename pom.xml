@@ -39,6 +39,7 @@
 		<module>EasyDifficultySpiderPoison</module>
 		<module>RaidDifficulty</module>
 		<module>AnvilMechanics</module>
+		<module>MysteryBoxes</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

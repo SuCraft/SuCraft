@@ -35,6 +35,7 @@
 		<module>Broadcast</module>
 		<module>PortableToolBlocks</module>
 		<module>PlayerCompass</module>
+		<module>TenYearsElytra</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -1,0 +1,16 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${pluginDescriptionAuthor}
+website: ${pluginDescriptionWebsite}
+api-version: 1.17
+main: org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
+depend: [SuCraft-Core, SuCraft-HarmlessEntities]
+commands:
+  10years:
+    description: Cast a spell on an elytra
+    aliases: [tenyears]
+permissions:
+  sucraft.tenyearselytra.create:
+    description: Create a festive elytra
+    default: true

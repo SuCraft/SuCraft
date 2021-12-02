@@ -15,10 +15,11 @@ import org.bukkit.scheduler.BukkitTask
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.delegate.HarmlessEntities
 import org.sucraft.core.common.sucraft.player.PlayerUUID
+import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
 
 
-object FestiveFireworks {
+object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftTenYearsElytraPlugin.getInstance()) {
 
 	// Settings
 
@@ -58,7 +59,7 @@ object FestiveFireworks {
 		val newSpawnFireworksTasksForPlayer: MutableList<BukkitTask> = ArrayList<BukkitTask>().also { spawnTasks[uuid] = it }
 		var delay: Long = minFireworkDelay
 		while (delay <= maxFireworkDelay) {
-			newSpawnFireworksTasksForPlayer.add(RunInFuture.forPlayerIfOnline(SuCraftTenYearsElytraPlugin.getInstance(), player, ::spawnFireworks, delay))
+			newSpawnFireworksTasksForPlayer.add(RunInFuture.forPlayerIfOnline(plugin, player, ::spawnFireworks, delay))
 			delay += fireworkInterval
 		}
 	}

@@ -18,4 +18,16 @@ object DecimalUtils {
 		return DecimalFormat(formatString, symbols)
 	}
 
+	fun defaultFormatDouble(value: Double, maxFractionDigits: Int = 2, useGrouping: Boolean = true): String {
+		val decimalFormat = DecimalFormat()
+		decimalFormat.maximumFractionDigits = maxFractionDigits
+		decimalFormat.isGroupingUsed = useGrouping
+		val symbols = DecimalFormatSymbols.getInstance().clone() as DecimalFormatSymbols
+		symbols.decimalSeparator = '.'
+		symbols.groupingSeparator = ','
+		decimalFormat.decimalFormatSymbols = symbols
+		decimalFormat.minimumIntegerDigits = 1
+		return decimalFormat.format(value)
+	}
+
 }

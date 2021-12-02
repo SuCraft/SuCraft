@@ -12,7 +12,7 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 
 object RunInFuture {
 
-	fun forPlayerIfOnline(plugin: JavaPlugin, player: Player, action: (Player) -> Any?, delay: Long): BukkitTask {
+	fun forPlayerIfOnline(plugin: JavaPlugin, player: Player, action: (Player) -> Any?, delay: Long = 1): BukkitTask {
 		val uuid = PlayerUUID.get(player)
 		return Bukkit.getScheduler().runTaskLater(plugin, Runnable {
 			uuid.getPlayer()?.let(action)

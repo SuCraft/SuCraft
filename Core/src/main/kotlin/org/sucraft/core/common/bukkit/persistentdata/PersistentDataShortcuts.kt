@@ -5,6 +5,7 @@
 package org.sucraft.core.common.bukkit.persistentdata
 
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataHolder
 import org.bukkit.persistence.PersistentDataType
@@ -12,7 +13,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.sucraft.core.common.sucraft.player.PlayerUUID
+import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
 import java.util.UUID
+import javax.naming.Name
 import kotlin.reflect.KClass
 
 
@@ -42,6 +45,12 @@ object PersistentDataShortcuts {
 	fun remove(holder: PersistentDataHolder, key: NamespacedKey) =
 		remove(holder.persistentDataContainer, key)
 
+	fun remove(itemStack: ItemStack?, key: NamespacedKey) {
+		if (itemStack == null) return
+		if (!itemStack.hasItemMeta()) return
+		remove(itemStack.itemMeta, key)
+	}
+
 	interface PersistentDataShortcut<T> {
 
 		operator fun get(container: PersistentDataContainer, key: NamespacedKey): T?
@@ -49,10 +58,19 @@ object PersistentDataShortcuts {
 		operator fun get(holder: PersistentDataHolder, key: NamespacedKey) =
 			get(holder.persistentDataContainer, key)
 
+		operator fun get(itemStack: ItemStack?, key: NamespacedKey): T? {
+			if (itemStack == null) return null
+			if (!itemStack.hasItemMeta()) return null
+			return get(itemStack.itemMeta, key)
+		}
+
 		operator fun set(container: PersistentDataContainer, key: NamespacedKey, value: T)
 
 		operator fun set(holder: PersistentDataHolder, key: NamespacedKey, value: T) =
 			set(holder.persistentDataContainer, key, value)
+
+		operator fun set(itemStack: ItemStack, key: NamespacedKey, value: T) =
+			set(GuaranteedItemMetaGetter.get(itemStack), key, value)
 
 	}
 
@@ -173,11 +191,20 @@ object PersistentDataShortcuts {
 		operator fun get(holder: PersistentDataHolder, key: NamespacedKey) =
 			get(holder.persistentDataContainer, key)
 
+		operator fun get(itemStack: ItemStack?, key: NamespacedKey): Boolean {
+			if (itemStack == null) return false
+			if (!itemStack.hasItemMeta()) return false
+			return get(itemStack.itemMeta, key)
+		}
+
 		fun set(container: PersistentDataContainer, key: NamespacedKey) =
 			Boolean.set(container, key, true)
 
 		fun set(holder: PersistentDataHolder, key: NamespacedKey) =
 			set(holder.persistentDataContainer, key)
+
+		fun set(itemStack: ItemStack, key: NamespacedKey) =
+			set(itemStack.itemMeta, key)
 
 	}
 

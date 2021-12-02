@@ -37,6 +37,7 @@
 		<module>PlayerCompass</module>
 		<module>TenYearsElytra</module>
 		<module>EasyDifficultySpiderPoison</module>
+		<module>RaidDifficulty</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

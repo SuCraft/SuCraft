@@ -36,6 +36,7 @@
 		<module>PortableToolBlocks</module>
 		<module>PlayerCompass</module>
 		<module>TenYearsElytra</module>
+		<module>EasyDifficultySpiderPoison</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -38,6 +38,7 @@
 		<module>TenYearsElytra</module>
 		<module>EasyDifficultySpiderPoison</module>
 		<module>RaidDifficulty</module>
+		<module>AnvilMechanics</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -40,11 +40,11 @@ object SuCraftPortableToolBlocksCommands : SuCraftCommands<SuCraftPortableToolBl
 				logger.info("${player.name} opened the ender chest of ${enderChestOwner.name}")
 			player.openInventory(enderChestOwner.enderChest)
 		},
-		{ player, command, label, arguments ->
-			if (player.hasPermission(SuCraftPortableToolBlocksPermissions.ENDER_CHEST_OF_OTHER_PLAYERS) && arguments.size <= 1)
-				CommonTabCompletion.VISIBLE_ONLINE_PLAYERS(player, command, label, arguments)
+		CommonTabCompletion.deferredPlayer { player, _, _, _ ->
+			if (player.hasPermission(SuCraftPortableToolBlocksPermissions.ENDER_CHEST_OF_OTHER_PLAYERS))
+				CommonTabCompletion.onlyFirstArgument(CommonTabCompletion.VISIBLE_ONLINE_PLAYERS)
 			else
-				CommonTabCompletion.EMPTY(player, command, label, arguments)
+				CommonTabCompletion.EMPTY
 		}
 	)
 

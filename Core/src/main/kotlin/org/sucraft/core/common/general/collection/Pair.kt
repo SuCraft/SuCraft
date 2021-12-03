@@ -6,9 +6,11 @@ import java.util.Comparator
 import java.util.stream.Collector
 import java.util.stream.Collectors
 
+
+@Suppress("MemberVisibilityCanBePrivate")
 class Pair<A, B>(val first: A, val second: B) {
 
-	constructor(entry: Map.Entry<A, B>) : this(entry.key, entry.value) {}
+	constructor(entry: Map.Entry<A, B>) : this(entry.key, entry.value)
 
 	fun <A2> applyFirst(function: (A) -> A2): Pair<A2, B> {
 		return Pair(function(first), second)

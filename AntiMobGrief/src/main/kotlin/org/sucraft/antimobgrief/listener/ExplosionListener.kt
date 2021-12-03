@@ -32,7 +32,7 @@ object ExplosionListener : SuCraftComponent<SuCraftAntiMobGriefPlugin>(SuCraftAn
 			is Fireball -> {
 				val newBlockList = event.blockList().map { it.getRelative(BlockFace.UP) }.filter { it.type.isAir }
 				event.blockList().clear()
-				event.blockList().addAll(newBlockList);
+				event.blockList().addAll(newBlockList)
 			}
 		}
 	}

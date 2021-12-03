@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import java.util.function.Predicate
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object ClosestPlayerFinder {
 
 	fun getClosestPlayer(location: Location, predicate: ((Player) -> Boolean)? = null): Player? =

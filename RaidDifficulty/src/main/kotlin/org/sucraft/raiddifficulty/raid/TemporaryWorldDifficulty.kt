@@ -15,7 +15,7 @@ object TemporaryWorldDifficulty : SuCraftComponent<SuCraftRaidDifficultyPlugin>(
 
 	// Settings
 
-	const val resetOriginalDifficultyTimeoutInTicks = 2L
+	private const val resetOriginalDifficultyTimeoutInTicks = 2L
 
 	// Functionality
 

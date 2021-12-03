@@ -1,9 +1,5 @@
 package org.sucraft.core.common.bukkit.block
 
-import lombok.RequiredArgsConstructor
-import lombok.AccessLevel
-import lombok.EqualsAndHashCode
-import org.sucraft.core.common.bukkit.block.BlockCoordinates
 import org.bukkit.World
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -11,11 +7,10 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.json.JSONObject
 import java.lang.Exception
-import java.lang.IllegalArgumentException
-import java.util.*
 import kotlin.math.sqrt
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z: Int) : Comparable<BlockCoordinates> {
 
 	fun toJSON() = JSONObject().also {
@@ -35,8 +30,9 @@ data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z
 	/**
 	 * Deprecated because this loads the chunk, when possibly unintended
 	 */
-	@get:Deprecated("")
+	@Deprecated("This loads the chunk, when possibly unintended")
 	val block get() = world?.getBlockAt(x, y, z)
+	@Suppress("DEPRECATION")
 	val blockIfChunkIsLoaded get() = if (isChunkLoaded) block else null
 	val isChunkLoaded get() = world?.isChunkLoaded(chunkX, chunkZ) ?: false
 	// / 16;

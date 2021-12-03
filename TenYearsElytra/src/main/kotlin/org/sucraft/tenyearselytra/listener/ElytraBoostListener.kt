@@ -5,14 +5,8 @@
 package org.sucraft.tenyearselytra.listener
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
-import org.bukkit.FireworkEffect
-import org.bukkit.entity.Firework
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.inventory.meta.FireworkMeta
-import org.bukkit.scheduler.BukkitTask
-import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.tenyearselytra.data.ElytraData
 import org.sucraft.tenyearselytra.fireworks.FestiveFireworks

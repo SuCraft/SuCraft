@@ -79,7 +79,7 @@ object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftT
 			var color2: Color
 			while (true) {
 				color2 = fireworkColors.random()
-				if (!color1.equals(color2)) break
+				if (color1 != color2) break
 			}
 			val effect = FireworkEffect.builder()
 				.withColor(color1, color2)

@@ -7,6 +7,7 @@ package org.sucraft.core.common.general.string
 import java.util.*
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object StringReplacement {
 
     /**

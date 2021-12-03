@@ -6,7 +6,6 @@ package org.sucraft.harmlessentities.data
 
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Entity
-import org.bukkit.persistence.PersistentDataHolder
 import org.sucraft.core.common.bukkit.persistentdata.PersistentDataShortcuts
 import org.sucraft.core.common.sucraft.persistentdata.DefaultSuCraftNamespace
 
@@ -15,6 +14,7 @@ object HarmlessEntitiesData {
 
 	private val harmlessEntityNamespacedKey = DefaultSuCraftNamespace.getNamespacedKey("harmless")
 	// Checked for backwards compatability
+	@Suppress("DEPRECATION")
 	private val oldHarmlessEntityNamespacedKey = NamespacedKey("harmlessentities", "harmless")
 
 	fun isHarmless(entity: Entity) =

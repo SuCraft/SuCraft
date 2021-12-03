@@ -5,6 +5,7 @@
 package org.sucraft.core.common.bukkit.time
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object TickTime {
 
 	const val ticksPerSecond = 20

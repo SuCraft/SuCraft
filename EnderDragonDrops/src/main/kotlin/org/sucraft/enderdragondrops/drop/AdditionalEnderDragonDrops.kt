@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack
 
 object AdditionalEnderDragonDrops {
 
+	@Suppress("MemberVisibilityCanBePrivate")
 	class DropWithProbability(val item: ItemStack, val probability: Double) {
 
 		fun evaluateProbability() = Math.random() < probability

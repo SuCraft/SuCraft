@@ -18,17 +18,19 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object ElytraData {
 
-	val festiveElytraCreatorPersistentDataNamespacedKey: NamespacedKey = NamespacedKey("martijnsextrafeatures", "elytra_ten_years")
+	@Suppress("DEPRECATION")
+	private val festiveElytraCreatorPersistentDataNamespacedKey: NamespacedKey = NamespacedKey("martijnsextrafeatures", "elytra_ten_years")
 
-	val loreLines: Array<Component> = arrayOf(
+	private val loreLines: Array<Component> = arrayOf(
 		MiniMessage.builder().build().parse("<rainbow:2>Thank you for 10 years of SuCraft! ❤</rainbow>"),
 		Component.text("This elytra will leave fireworks").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
 		Component.text("when you boost with rockets!").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
 	)
 	// To fix elytras with an old version of the lore
-	val oldLoreLines: Array<Component> = arrayOf<Component>(
+	private val oldLoreLines: Array<Component> = arrayOf(
 		Component.text("when you boost with rockets!").color(NamedTextColor.GRAY)
 	)
 
@@ -88,8 +90,8 @@ object ElytraData {
 		}
 		if (containsAllLore) return null
 		lore = ArrayList()
-		lore.removeAll(loreLines)
-		lore.removeAll(oldLoreLines)
+		lore.removeAll(loreLines.toSet())
+		lore.removeAll(oldLoreLines.toSet())
 		for (i in loreLines.size - 1 downTo 0) {
 			if (!lore.contains(loreLines[i])) {
 				lore.add(0, loreLines[i])

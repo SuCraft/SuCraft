@@ -37,7 +37,7 @@ object PrintableEntityDescription {
 
     }
 
-    private fun addUUIDAndLocation(entity: Entity, builder: StringBuilder): Unit {
+    private fun addUUIDAndLocation(entity: Entity, builder: StringBuilder) {
 
         // The entity's UUID
         builder.append("{${entity.uniqueId}")
@@ -48,6 +48,7 @@ object PrintableEntityDescription {
 
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getShort(entity: Entity): String {
 
         // Initialize the builder

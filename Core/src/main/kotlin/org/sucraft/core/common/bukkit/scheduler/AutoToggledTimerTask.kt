@@ -8,6 +8,8 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 import org.sucraft.core.common.bukkit.time.TickTime
+import kotlin.math.max
+import kotlin.math.roundToLong
 
 
 /**
@@ -16,6 +18,7 @@ import org.sucraft.core.common.bukkit.time.TickTime
  * @param[run] The task to be executed
  * @param[condition] The condition for this task to run
  */
+@Suppress("MemberVisibilityCanBePrivate")
 open class AutoToggledTimerTask(val plugin: JavaPlugin, val run: () -> Any?, val condition: () -> Boolean, val interval: Long, val firstTimeDelay: Long = interval, val minimumDelayAfterTurningOn: Long = 0) {
 
 	val turnedOn get() = bukkitTask != null
@@ -53,13 +56,15 @@ open class AutoToggledTimerTask(val plugin: JavaPlugin, val run: () -> Any?, val
 		if (turnedOn) return false
 		if (firstRunAttemptInMillis == null) firstRunAttemptInMillis = System.currentTimeMillis()
 		if (!condition()) return false
-		val intervalUntilNextRun = Math.max(
+		val intervalUntilNextRun = max(
 			minimumDelayAfterTurningOn,
-			Math.round(TickTime.millisToTicks(if (lastRunInMillis == null) {
-				firstRunAttemptInMillis!! + TickTime.ticksToMillis(firstTimeDelay) - System.currentTimeMillis()
-			} else {
-				lastRunInMillis!! + TickTime.ticksToMillis(interval) - System.currentTimeMillis()
-			}))
+			TickTime.millisToTicks(
+				if (lastRunInMillis == null) {
+					firstRunAttemptInMillis!! + TickTime.ticksToMillis(firstTimeDelay) - System.currentTimeMillis()
+				} else {
+					lastRunInMillis!! + TickTime.ticksToMillis(interval) - System.currentTimeMillis()
+				}
+			).roundToLong()
 		)
 		if (intervalUntilNextRun == 0L) doRun()
 		bukkitTask = Bukkit.getScheduler().runTaskTimer(plugin, ::doIntervalCheckAndRun, if (intervalUntilNextRun == 0L) interval else intervalUntilNextRun, interval)

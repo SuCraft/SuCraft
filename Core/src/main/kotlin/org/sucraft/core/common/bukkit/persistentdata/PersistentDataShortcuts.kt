@@ -15,7 +15,6 @@ import org.json.JSONObject
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
 import java.util.UUID
-import javax.naming.Name
 import kotlin.reflect.KClass
 
 
@@ -35,6 +34,7 @@ typealias _JSONObject = JSONObject
 typealias _JSONArray = JSONArray
 typealias _Enum<E> = Enum<E>
 
+@Suppress("MemberVisibilityCanBePrivate")
 object PersistentDataShortcuts {
 
 	// Remove persistent data
@@ -153,6 +153,7 @@ object PersistentDataShortcuts {
 		},
 		String
 	)
+	@Suppress("NestedLambdaShadowedImplicitParameter")
 	val UUIDList: PersistentDataShortcut<MutableList<_UUID>> = SerializedPersistentDataShortcut(
 		{
 			val json = JSONArray()
@@ -186,7 +187,7 @@ object PersistentDataShortcuts {
 	object Tag {
 
 		operator fun get(container: PersistentDataContainer, key: NamespacedKey) =
-			Boolean.get(container, key) ?: false
+			Boolean[container, key] ?: false
 
 		operator fun get(holder: PersistentDataHolder, key: NamespacedKey) =
 			get(holder.persistentDataContainer, key)
@@ -197,8 +198,9 @@ object PersistentDataShortcuts {
 			return get(itemStack.itemMeta, key)
 		}
 
-		fun set(container: PersistentDataContainer, key: NamespacedKey) =
-			Boolean.set(container, key, true)
+		fun set(container: PersistentDataContainer, key: NamespacedKey) {
+			Boolean[container, key] = true
+		}
 
 		fun set(holder: PersistentDataHolder, key: NamespacedKey) =
 			set(holder.persistentDataContainer, key)

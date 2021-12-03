@@ -25,6 +25,7 @@ open class WhilePlayersAreOnlineTimerTask(plugin: JavaPlugin, run: () -> Any?, i
 
 	init {
 		// Register events
+		@Suppress("LeakingThis")
 		Bukkit.getPluginManager().registerEvents(this, plugin)
 		attemptToTurnOn()
 	}

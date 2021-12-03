@@ -53,8 +53,8 @@ object SuCraftUnsignBooksCommands : SuCraftCommands<SuCraftUnsignBooksPlugin>(Su
 			// Unsign the book
 			val newMeta = meta.clone()
 			val newItemStack = ItemStack(Material.WRITABLE_BOOK)
-			newItemStack.setItemMeta(newMeta)
-			logger.info("${player.name} unsigned a book ${meta.title?.let { "titled '${it}'" } ?: "without a title"}: ${itemStack}")
+			newItemStack.itemMeta = newMeta
+			logger.info("${player.name} unsigned a book ${meta.title?.let { "titled '${it}'" } ?: "without a title"}: $itemStack")
 			player.inventory.setItemInMainHand(newItemStack)
 			player.sendMessage("${GREEN}Unsigned ${meta.title?.let { "\"${WHITE}${it}${GREEN}\"" } ?: "${WHITE}}untitled book"}${GREEN}\"!")
 		},

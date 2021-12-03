@@ -9,6 +9,7 @@ import org.bukkit.command.*
 import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 
+@Suppress("MemberVisibilityCanBePrivate")
 class SuCraftCommand private constructor(val commands: SuCraftCommands<out SuCraftPlugin>, val name: String, val executor: CommandExecutor, val tabCompleter: TabCompleter) {
 
 	// Construction

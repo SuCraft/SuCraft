@@ -73,10 +73,10 @@ object SuCraftPlayerCompassCommands : SuCraftCommands<SuCraftPlayerCompassPlugin
 			// Update the compass direction right away
 			PlayerCompassTracker.possiblyUpdateCompass(player.location, itemStack, player)
 			player.updateInventory()
-			logger.info("${player.name} created a player-tracking compass: ${itemStack}")
+			logger.info("${player.name} created a player-tracking compass: $itemStack")
 			player.sendMessage(
 				Component.join(
-					Component.empty(),
+					JoinConfiguration.noSeparators(),
 					Component.text("You created a "),
 					Component.text("player compass").color(NamedTextColor.WHITE),
 					Component.text(" that always points to you!")

@@ -19,8 +19,8 @@ object SuCraftPortableToolBlocksCommands : SuCraftCommands<SuCraftPortableToolBl
 		this,
 		"craftingtable",
 		{ player, _, _, _ ->
-			logger.info("${player.name} opened the portable crafting table");
-			player.openWorkbench(null, true);
+			logger.info("${player.name} opened the portable crafting table")
+			player.openWorkbench(null, true)
 		},
 		CommonTabCompletion.EMPTY
 	)

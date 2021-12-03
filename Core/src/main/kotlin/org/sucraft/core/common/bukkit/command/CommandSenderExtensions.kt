@@ -7,7 +7,7 @@ package org.sucraft.core.common.bukkit.command
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.util.*
+
 
 object CommandSenderExtensions {
 
@@ -16,6 +16,7 @@ object CommandSenderExtensions {
 	fun CommandSender.getVisiblePlayers() =
 		Bukkit.getOnlinePlayers().let {
 			if (this is Player)
+				@Suppress("NestedLambdaShadowedImplicitParameter")
 				it.filter { this.canSee(it) }
 			else it
 		}

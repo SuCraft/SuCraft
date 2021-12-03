@@ -21,8 +21,8 @@ object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlug
 
 	// Settings
 
-	const val tenYearsElytraCommandName = "10years"
-	const val removeTenYearsElytraSubArgument = "remove"
+	private const val tenYearsElytraCommandName = "10years"
+	private const val removeTenYearsElytraSubArgument = "remove"
 
 	// Commands
 
@@ -59,6 +59,7 @@ object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlug
 			}
 			val festiveItemStack: ItemStack = ElytraData.festivizeElytra(player, itemStack)
 			player.inventory.setItemInMainHand(festiveItemStack)
+			@Suppress("DEPRECATION")
 			player.sendTitle("Thank you~", "Thank you for being a part of this wonderful community <3", 10, 100, 45)
 			player.sendMessage(MiniMessage.builder().build().parse("<rainbow:2>Enjoy your special festive elytra :)</rainbow>"))
 		},

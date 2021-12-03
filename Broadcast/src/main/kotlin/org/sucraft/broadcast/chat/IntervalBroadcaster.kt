@@ -13,6 +13,7 @@ import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBroadcastPlugin.getInstance()) {
 
 	// Settings
@@ -20,12 +21,12 @@ object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBro
 	/**
 	 * The interval in ticks to broadcast messages: currently 1 hour
 	 */
-	const val broadcastInterval = 20L * 60 * 60
+	private const val broadcastInterval = 20L * 60 * 60
 
 	/**
 	 * The minimum time in ticks before which to broadcast messages after a player logs in with no-one online before: currently 1 minute
 	 */
-	const val broadcastMinimumDelayAfterTurningOn = 20L * 60
+	private const val broadcastMinimumDelayAfterTurningOn = 20L * 60
 
 	private val messages = arrayOf(
 		"${GREEN}SuCraft Info${WHITE}: Want to join our Discord? Go to ${YELLOW}https://discord.gg/egH7dGX",

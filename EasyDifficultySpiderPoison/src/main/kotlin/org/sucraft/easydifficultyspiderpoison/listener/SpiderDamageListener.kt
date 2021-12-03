@@ -20,9 +20,9 @@ object SpiderDamageListener : SuCraftComponent<SuCraftEasyDifficultySpiderPoison
 
 	// Settings
 
-	val chanceForPoisonOnDamage = 0.2
-	val poisonDurationInTicks = 20 * 5
-	val poisonAmplifier = 0
+	private const val chanceForPoisonOnDamage = 0.2
+	private const val poisonDurationInTicks = 20 * 5
+	private const val poisonAmplifier = 0
 
 	// Events
 

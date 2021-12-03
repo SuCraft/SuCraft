@@ -5,4 +5,4 @@
 package org.sucraft.core.common.bukkit.player
 
 
-object PlayerExtensions {}
+object PlayerExtensions

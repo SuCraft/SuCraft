@@ -7,6 +7,7 @@ package org.sucraft.core.common.bukkit.item
 import org.bukkit.inventory.ItemStack
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object ItemNBTUtils {
 
 	// TODO uncomment and fix when added
@@ -36,11 +37,11 @@ object ItemNBTUtils {
 
 	// TODO remove all the below when the above are added
 
-	fun getNBTTagCompound(itemStack: ItemStack): Nothing {
+	fun getNBTTagCompound(@Suppress("UNUSED_PARAMETER") itemStack: ItemStack): Nothing {
 		throw NotImplementedError("Not implemented yet")
 	}
 
-	fun getFullNBTString(itemStack: ItemStack): String =
+	fun getFullNBTString(@Suppress("UNUSED_PARAMETER") itemStack: ItemStack): String =
 		"<NBT strings not implemented>"
 
 	fun getTypeAndFullNBTString(itemStack: ItemStack) =

@@ -24,18 +24,20 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.min
 
 
 object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCraftPlayerCompassPlugin.getInstance()) {
 
 	// Settings
 
-	const val checkForCompassesInInventoriesIntervalInTicks = 20L
-	const val updateCompassesInInventoriesIntervalInTicks = 1L
-	const val minAngularDifferenceForCompassLocationUpdate = 2 * Math.PI / 32 // There are 29 different visual angles, so taking that with a little extra margin
+	private const val checkForCompassesInInventoriesIntervalInTicks = 20L
+	private const val updateCompassesInInventoriesIntervalInTicks = 1L
+	private const val minAngularDifferenceForCompassLocationUpdate = 2 * Math.PI / 32 // There are 29 different visual angles, so taking that with a little extra margin
 
 	val playerCompassTrackedPlayerPersistentDataNamespacedKey = DefaultSuCraftNamespace.getNamespacedKey("player_compass_tracked_player")
 	// Checked for backwards compatability
+	@Suppress("DEPRECATION")
 	private val oldPlayerCompassTrackedPlayerPersistentDataNamespacedKey = NamespacedKey("martijnsextrafeatures", "compass_tracked_player")
 
 	// Initialization
@@ -101,7 +103,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 			val currentAngle = atan2(lodestone.z - trackerLocation.z, lodestone.x - trackerLocation.x)
 			val newAngle = atan2(trackedPlayer.location.z - trackerLocation.z, trackedPlayer.location.x - trackerLocation.x)
 			var angularDifference = abs(currentAngle - newAngle)
-			angularDifference = Math.min(angularDifference, 2 * Math.PI - angularDifference)
+			angularDifference = min(angularDifference, 2 * Math.PI - angularDifference)
 			angularDifference >= minAngularDifferenceForCompassLocationUpdate
 		} ?: true
 		if (!isRotationallyDifferent) return false

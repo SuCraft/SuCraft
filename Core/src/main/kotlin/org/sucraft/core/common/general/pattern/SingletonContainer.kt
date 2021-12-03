@@ -5,6 +5,7 @@
 package org.sucraft.core.common.general.pattern
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 open class SingletonContainer<T> {
 
 	private var instance: T? = null

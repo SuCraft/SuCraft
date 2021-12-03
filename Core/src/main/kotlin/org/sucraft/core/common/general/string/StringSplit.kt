@@ -74,11 +74,11 @@ object StringSplit {
                 nextSpaceIndex = whitespaceNormalizedString.length
             }
             var newLineLength = nextSpaceIndex - index + currentLine.length
-            if (currentLine.length > 0) {
+            if (currentLine.isNotEmpty()) {
                 newLineLength++
             }
             if (newLineLength > maxLineLength) {
-                if (currentLine.length == 0) {
+                if (currentLine.isEmpty()) {
                     lines.add(whitespaceNormalizedString.substring(index, index + maxLineLength - 1) + "-")
                     index += maxLineLength - 1
                 } else {

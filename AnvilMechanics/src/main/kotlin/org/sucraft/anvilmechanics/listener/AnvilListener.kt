@@ -31,7 +31,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 	/**
 	 * The maximum repair cost that anvils support (just a technicality, set higher than reasonably could occur)
 	 */
-	const val maximumRepairCost = 10000
+	private const val maximumRepairCost = 10000
 
 	/**
 	 * Repairs will never cost more than this
@@ -42,17 +42,17 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 	/**
 	 * The level cost of renaming (cannot be 0 due to the server using 0 as a special value for a repair being impossible)
 	 */
-	const val costToOnlyRename = 1
+	private const val costToOnlyRename = 1
 
 	/**
 	 * Whether ty try to refund the level rename cost (since it cannot be 0 but we may want it to not cost any levels just to rename items)
 	 */
-	const val tryToRefundRenameCost = true
+	private const val tryToRefundRenameCost = true
 
 	/**
 	 * Interval in millis between messages that tell the player the level cost of repairs that are too high to display (the client refuses to display them in survival mode)
 	 */
-	const val timeInMillisBetweenHighLevelCostMessages = 2000L // 2 seconds
+	private const val timeInMillisBetweenHighLevelCostMessages = 2000L // 2 seconds
 
 	/**
 	 * Protect the anvil from damage for this time after doing a rename operation, to prevent anvil from breaking by renaming

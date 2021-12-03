@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 object PotionUtils {
 
 	fun hasNonBasePotionEffect(meta: PotionMeta) =

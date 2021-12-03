@@ -13,6 +13,7 @@ import org.bukkit.event.Listener
 import org.sucraft.core.common.general.pattern.SingletonContainer
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class SuCraftPlugin : JavaPlugin() {
 
 	// Enable and disable

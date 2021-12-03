@@ -18,9 +18,9 @@ import org.sucraft.core.common.bukkit.potion.PotionUtils
 import org.sucraft.core.common.general.string.StringSplit
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.*
-import java.util.function.Function
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 
 	init {
@@ -39,6 +39,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	}
 
 	private fun <T> applyToMeta(metaType: Class<T>, metaConsumer: (T) -> Unit) =
+		@Suppress("UNCHECKED_CAST")
 		applyToMeta { if (metaType.isInstance(it)) (it as T)?.let(metaConsumer) }
 
 	private fun <V> getFromMeta(metaFunction: (ItemMeta) -> V) =
@@ -48,6 +49,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	 * @return null if the meta type does not match
 	 */
 	private fun <T, V> getFromMeta(metaType: Class<T>, metaFunction: (T) -> V?): V? = getFromMeta {
+		@Suppress("UNCHECKED_CAST")
 		if (!metaType.isInstance(it)) null else metaFunction(it as T)
 	}
 
@@ -66,7 +68,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun addItemFlags(vararg flags: ItemFlag) =
 		applyToMeta { it.addItemFlags(*flags) }
 
-	val itemFlags get() =
+	val itemFlags get(): Set<ItemFlag> =
 		getFromMeta { Collections.unmodifiableSet(it.itemFlags) }
 
 	fun hasItemFlag(itemFlag: ItemFlag) =
@@ -79,7 +81,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 		}
 	}
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun setDisplayName(name: String?) =
 		applyToMeta { it.setDisplayName(name) }
 
@@ -89,9 +91,9 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun setDisplayNameComponent(removeItalic: Boolean, name: Component?) =
 		applyToMeta { it.displayName(if (name == null || !removeItalic) name else name.decoration(TextDecoration.ITALIC, false)) }
 
-	@get:Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	val displayName	get() =
-		getFromMeta { if (it.hasDisplayName()) it.getDisplayName() else null }
+		getFromMeta { if (it.hasDisplayName()) it.displayName else null }
 
 	val displayNameComponent get() =
 		getFromMeta { if (it.hasDisplayName()) it.displayName() else null }
@@ -99,54 +101,60 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun hasDisplayName() =
 		getFromMeta { it.hasDisplayName() }
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun setLore(lore: List<String?>?) = applyToMeta { it.lore = lore }
 
-	fun setLore(vararg lore: String?) = setLore(listOf(*lore))
+	// TODO should be deprecated in the future in favor of Component
+	@Suppress("DEPRECATION")
+	fun setLore(vararg lore: String?) =
+		setLore(listOf(*lore))
 
+	// TODO should be deprecated in the future in favor of Component
+	@Suppress("DEPRECATION")
 	fun setLore(loreText: String, lorePrefix: String, loreMaxPartLength: Int) =
 		setLore(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
 
 	fun setLoreComponent(removeItalic: Boolean = true, lore: List<Component>?) =
+		@Suppress("NestedLambdaShadowedImplicitParameter")
 		applyToMeta { it.lore(if (lore == null || !removeItalic) lore else lore.map { it.decoration(TextDecoration.ITALIC, false) }) }
 
 	fun setLoreComponent(removeItalic: Boolean = true, vararg lore: Component) =
 		setLoreComponent(removeItalic, listOf(*lore))
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLore(lore: List<String?>) =
-		applyToMeta { it.setLore((it.getLore() ?: ArrayList()).also { it.addAll(lore) }) }
+		applyToMeta { it.lore = (it.lore ?: ArrayList()).also { it.addAll(lore) } }
 
-	@Deprecated("")
-	fun addLore(vararg lore: String): ItemStackBuilder {
-		return addLore(listOf(*lore))
-	}
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	fun addLore(vararg lore: String): ItemStackBuilder =
+		addLore(listOf(*lore))
 
-	@Deprecated("")
-	fun addLore(loreText: String, lorePrefix: String, loreMaxPartLength: Int): ItemStackBuilder {
-		return addLore(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
-	}
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	fun addLore(loreText: String, lorePrefix: String, loreMaxPartLength: Int) =
+		addLore(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
+
+
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLoreWithPossibleSeparatorLine(lore: List<String>) =
 		applyToMeta { meta ->
-			val existingLore = meta.getLore() ?: ArrayList()
-			var hasInformation =
+			val existingLore = meta.lore ?: ArrayList()
+			val hasInformation =
 				existingLore.isNotEmpty() ||
-						(!meta.enchants.isEmpty() && !meta.itemFlags.contains(ItemFlag.HIDE_ENCHANTS)) ||
-						(meta is PotionMeta && PotionUtils.hasNonBasePotionEffect(meta as PotionMeta) && !meta.getItemFlags().contains(ItemFlag.HIDE_POTION_EFFECTS))
+						(meta.enchants.isNotEmpty() && !meta.itemFlags.contains(ItemFlag.HIDE_ENCHANTS)) ||
+						(meta is PotionMeta && PotionUtils.hasNonBasePotionEffect(meta) && !meta.getItemFlags().contains(ItemFlag.HIDE_POTION_EFFECTS))
 			if (hasInformation && lore.isNotEmpty() && lore[0].isNotBlank() && (existingLore.isEmpty() || existingLore[existingLore.size - 1].isNotBlank())) {
 				existingLore.add("")
 			}
 			existingLore.addAll(lore)
-			meta.setLore(existingLore)
+			meta.lore = existingLore
 		}
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLoreWithPossibleSeparatorLine(vararg lore: String) =
 		addLoreWithPossibleSeparatorLine(listOf(*lore))
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLoreWithPossibleSeparatorLine(loreText: String, lorePrefix: String, loreMaxPartLength: Int) =
 		addLoreWithPossibleSeparatorLine(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
 
@@ -169,18 +177,18 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 				.map(componentPostprocessing ?: { it })
 		)
 
-	@get:Deprecated("")
-	val lore
-		get() = Collections.unmodifiableList(getFromMeta { it.getLore() } ?: emptyList())
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	val lore: List<String>
+		get() = Collections.unmodifiableList(getFromMeta { it.lore } ?: emptyList())
 
-	val loreComponent
+	val loreComponent: List<Component>
 		get() = Collections.unmodifiableList(getFromMeta { it.lore() } ?: emptyList())
 
 	fun setLeatherColor(color: Color?) =
 		applyToMeta(LeatherArmorMeta::class.java) { it.setColor(color) }
 
 	val leatherColor
-		get() = getFromMeta(LeatherArmorMeta::class.java) { it.getColor() }
+		get() = getFromMeta(LeatherArmorMeta::class.java) { it.color }
 
 	fun setSkullOwner(skullOwner: OfflinePlayer?) =
 		applyToMeta(SkullMeta::class.java) { it.owningPlayer = skullOwner }
@@ -211,21 +219,21 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	val bookAuthor
 		get() = getFromMeta(BookMeta::class.java) { it.author }
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun setBookPage(pageNumber: Int, page: String) =
-		applyToMeta<BookMeta>(BookMeta::class.java) { it.setPage(pageNumber, page) }
+		applyToMeta(BookMeta::class.java) { it.setPage(pageNumber, page) }
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun setBookPages(pages: List<String?>) =
-		applyToMeta(BookMeta::class.java) { meta: BookMeta -> meta.setPages(pages) }
+		applyToMeta(BookMeta::class.java) { meta: BookMeta -> meta.pages = pages }
 
-	@Deprecated("")
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun setBookPages(vararg pages: String) =
 		applyToMeta(BookMeta::class.java) { it.setPages(*pages) }
 
-	@get:Deprecated("")
-	val bookPages
-		get() = getFromMeta(BookMeta::class.java) { Collections.unmodifiableList(it.getPages()) }
+	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	val bookPages: List<String>?
+		get() = getFromMeta(BookMeta::class.java) { Collections.unmodifiableList(it.pages) }
 
 	fun addEnchantment(enchantmentAndLevel: Pair<Enchantment, Int>) =
 		addEnchantment(enchantmentAndLevel.first, enchantmentAndLevel.second)
@@ -233,7 +241,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun addEnchantment(enchantment: Enchantment, level: Int) =
 		also { itemStack.addUnsafeEnchantment(enchantment, level) }
 
-	val enchantments get() = Collections.unmodifiableMap(itemStack.enchantments)
+	val enchantments: Map<Enchantment, Int> get() = Collections.unmodifiableMap(itemStack.enchantments)
 
 	fun setPotionColor(color: Color?) =
 		applyToMeta(PotionMeta::class.java) { it.color = color }
@@ -250,7 +258,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun addCustomPotionEffect(potionEffect: PotionEffect, overwrite: Boolean) =
 		applyToMeta(PotionMeta::class.java) { it.addCustomEffect(potionEffect, overwrite) }
 
-	val customPotionEffects get() =
+	val customPotionEffects: List<PotionEffect>? get() =
 		getFromMeta(PotionMeta::class.java) { it.customEffects }
 
 	// TODO uncomment when added
@@ -344,9 +352,6 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 			}
 			return translatedLore
 		}
-	}
-
-	init {
 	}
 
 }

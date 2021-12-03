@@ -4,7 +4,7 @@
 
 package org.sucraft.invisibleitemframes.listener
 
-import org.bukkit.ChatColor.*;
+import org.bukkit.ChatColor.*
 import org.bukkit.Material
 import org.bukkit.entity.ItemFrame
 import org.bukkit.event.EventHandler

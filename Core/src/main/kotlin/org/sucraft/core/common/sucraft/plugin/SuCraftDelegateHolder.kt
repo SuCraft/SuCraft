@@ -5,13 +5,15 @@
 package org.sucraft.core.common.sucraft.plugin
 
 
-open class SuCraftDelegateHolder<T> {
+@Suppress("MemberVisibilityCanBePrivate")
+open class SuCraftDelegateHolder<T: SuCraftDelegate<*>> {
 
 	private var implementation: T? = null
 
 	fun registerImplementation(implementation: T) {
 		if (isImplementationRegistered())
 			throw java.lang.IllegalStateException("Implementation has already been registered")
+		implementation.getLogger().info("Registered delegate implementation ${implementation.getDelegateImplementationName()} for ${implementation.getDelegateInterfaceName()}")
 		this.implementation = implementation
 	}
 

@@ -6,18 +6,22 @@ package org.sucraft.core.common.sucraft.delegate
 
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.player.PlayerUUID
+import org.sucraft.core.common.sucraft.plugin.SuCraftDelegate
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegateHolder
+import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import java.util.*
 
 
-interface OfflinePlayersInformation {
+interface OfflinePlayersInformation<P: SuCraftPlugin>: SuCraftDelegate<P> {
 
 	// Companion (implementation)
 
-	companion object : SuCraftDelegateHolder<OfflinePlayersInformation>()
+	companion object : SuCraftDelegateHolder<OfflinePlayersInformation<*>>()
+
+	// Delegate name
+
+	override fun getDelegateInterfaceName() = OfflinePlayersInformation::class.simpleName!!
 
 	// Interface
 
@@ -25,11 +29,15 @@ interface OfflinePlayersInformation {
 
 		fun getName(): String?
 
-		fun isOnline(): Boolean
-
 		fun getOfflinePlayer(): OfflinePlayer
 
 		fun getPlayerUUID(): PlayerUUID
+
+		// Convenience methods
+
+		fun getOnlinePlayer() = getPlayerUUID().getOnlinePlayer()
+
+		fun isOnline() = getPlayerUUID().isOnline()
 
 	}
 
@@ -37,7 +45,8 @@ interface OfflinePlayersInformation {
 	 * Returns null if no such player has ever played on the server
 	 * The name is case-insensitive, so the resulting information may have a differently capitalized name than the one that was given
 	 */
-	fun getInformation(name: String) = Bukkit.getPlayerExact(name)?.let { getInformation(it) } ?: Bukkit.getOfflinePlayerIfCached(name)?.let { getInformation(it) } ?: Bukkit.getOfflinePlayer(name)?.let { getInformation(it) }
+	@Suppress("DEPRECATION")
+	fun getInformation(name: String) = Bukkit.getPlayerExact(name)?.let { getInformation(it) } ?: Bukkit.getOfflinePlayerIfCached(name)?.let { getInformation(it) } ?: getInformation(Bukkit.getOfflinePlayer(name))
 
 	/**
 	 * Returns null if no such player has ever played on the server
@@ -54,5 +63,10 @@ interface OfflinePlayersInformation {
 	fun hasPlayedBefore(uuid: UUID) = getInformation(uuid) != null
 
 	fun hasPlayedBefore(player: OfflinePlayer) = getInformation(player) != null
+
+	/**
+	 * Returns a list of all the correctly cased names of players that have played before
+	 */
+	fun getOfflinePlayerNames(): List<String>
 
 }

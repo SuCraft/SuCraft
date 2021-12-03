@@ -9,16 +9,41 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.json.JSONObject
 import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
+import org.sucraft.core.common.general.log.AbstractLogger
 import org.sucraft.core.common.sucraft.delegate.MinecraftClientLocale
 import org.sucraft.core.common.sucraft.delegate.StandardItemStackNames
+import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
+import org.sucraft.core.main.SuCraftCorePlugin
 
 
-object StandardItemStackNamesByClientLocale : StandardItemStackNames {
+object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCorePlugin>, SuCraftComponent<SuCraftCorePlugin>(SuCraftCorePlugin.getInstance()) {
+
+	// Settings
+
+	private const val readAllFromConfigurationOnInit = true
+
+	// Initialization
+
+	init {
+		StandardItemStackNames.registerImplementation(this)
+		if (readAllFromConfigurationOnInit) readAllFromConfigurationIfNeeded()
+	}
+
+	// Delegate overrides
+
+	override fun getPlugin(): SuCraftCorePlugin = plugin
+
+	override fun getLogger(): AbstractLogger = logger
+
+	// Data
 
 	private var hasBeenRead = false
 	private val standardNamesByKey: MutableMap<String, String> = HashMap()
 
+	// Implementation
+
 	private fun readAllFromConfiguration() {
+		hasBeenRead = true
 		val json = MinecraftClientLocale.get().getJSON()
 		for (name in JSONObject.getNames(json)) {
 			val split = name.split("\\.".toRegex()).toTypedArray()

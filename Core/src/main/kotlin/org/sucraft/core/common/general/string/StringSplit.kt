@@ -86,7 +86,7 @@ object StringSplit {
                     currentLine = ""
                 }
             } else {
-                if (currentLine.length > 0) {
+                if (currentLine.isNotEmpty()) {
                     currentLine += " "
                 }
                 currentLine += whitespaceNormalizedString.substring(index, nextSpaceIndex)

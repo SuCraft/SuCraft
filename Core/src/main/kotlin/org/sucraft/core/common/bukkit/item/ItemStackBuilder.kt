@@ -262,10 +262,10 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun removePersistentData(namespacedKey: NamespacedKey) =
 		PersistentDataShortcuts.remove(itemStack, namespacedKey)
 
-	fun <T, Z> setPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) =
-		applyToMeta { it.persistentDataContainer.set<T, Z>(namespacedKey, type, value) }
+	fun <T, Z: Any> setPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) =
+		applyToMeta { it.persistentDataContainer.set(namespacedKey, type, value) }
 
-	fun <T, Z> getPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>): Z? =
+	fun <T, Z: Any> getPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>): Z? =
 		getFromMeta { it.persistentDataContainer.get(namespacedKey, type) }
 
 	fun setPersistentDataPlayerUUID(namespacedKey: NamespacedKey, value: PlayerUUID) {

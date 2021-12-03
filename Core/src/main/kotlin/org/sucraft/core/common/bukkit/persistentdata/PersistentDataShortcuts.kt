@@ -74,7 +74,7 @@ object PersistentDataShortcuts {
 
 	}
 
-	private class ExistingTypePersistentDataShortcut<T>(val type: PersistentDataType<T, T>) : PersistentDataShortcut<T> {
+	private class ExistingTypePersistentDataShortcut<T: Any>(val type: PersistentDataType<T, T>) : PersistentDataShortcut<T> {
 
 		override operator fun get(container: PersistentDataContainer, key: NamespacedKey) =
 			container.get(key, type)

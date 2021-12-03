@@ -42,6 +42,7 @@
 		<module>MysteryBoxes</module>
 		<module>DropMinecartsOnLeave</module>
 		<module>VehicleEjectionOnQuit</module>
+		<module>UnsignBooks</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

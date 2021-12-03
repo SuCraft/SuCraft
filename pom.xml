@@ -41,6 +41,7 @@
 		<module>AnvilMechanics</module>
 		<module>MysteryBoxes</module>
 		<module>DropMinecartsOnLeave</module>
+		<module>VehicleEjectionOnQuit</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

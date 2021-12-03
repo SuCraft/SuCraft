@@ -43,29 +43,29 @@ data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z
 
 	override fun toString() = "($worldName: $x, $y, $z)"
 
-	override fun compareTo(o: BlockCoordinates): Int {
-		val worldCompare = worldName.compareTo(o.worldName)
+	override fun compareTo(other: BlockCoordinates): Int {
+		val worldCompare = worldName.compareTo(other.worldName)
 		if (worldCompare != 0) return worldCompare
-		val xCompare = x.compareTo(o.x)
+		val xCompare = x.compareTo(other.x)
 		if (xCompare != 0) return xCompare
-		val yCompare = y.compareTo(o.y)
+		val yCompare = y.compareTo(other.y)
 		if (yCompare != 0) return yCompare
-		return z.compareTo(o.z)
+		return z.compareTo(other.z)
 	}
 
 	fun getRelative(face: BlockFace) = getRelative(face.modX, face.modY, face.modZ)
 
 	fun getRelative(dx: Int, dy: Int, dz: Int) = getByCoordinates(worldName, x + dx, y + dy, z + dz)
 
-	fun distanceSquared(o: BlockCoordinates): Double {
-		require(o.worldName == worldName) { "Tried to get block distance between blocks in different worlds" }
-		val dx = (x - o.x).toDouble()
-		val dy = (y - o.y).toDouble()
-		val dz = (z - o.z).toDouble()
+	fun distanceSquared(other: BlockCoordinates): Double {
+		require(other.worldName == worldName) { "Tried to get block distance between blocks in different worlds" }
+		val dx = (x - other.x).toDouble()
+		val dy = (y - other.y).toDouble()
+		val dz = (z - other.z).toDouble()
 		return dx * dx * +dy * dy + dz * dz
 	}
 
-	fun distance(o: BlockCoordinates) = sqrt(distanceSquared(o))
+	fun distance(other: BlockCoordinates) = sqrt(distanceSquared(other))
 
 	companion object {
 

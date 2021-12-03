@@ -97,10 +97,11 @@ object PersistentDataShortcuts {
 	private class SerializedPersistentDataShortcut<T, ST>(val serialize: (T) -> ST, val deserialize: (ST) -> T?, val serialShortcut: PersistentDataShortcut<ST>) : PersistentDataShortcut<T> {
 
 		override operator fun get(container: PersistentDataContainer, key: NamespacedKey) =
-			serialShortcut.get(container, key)?.let(deserialize)
+			serialShortcut[container, key]?.let(deserialize)
 
-		override operator fun set(container: PersistentDataContainer, key: NamespacedKey, value: T) =
-			serialShortcut.set(container, key, serialize(value))
+		override operator fun set(container: PersistentDataContainer, key: NamespacedKey, value: T) {
+			serialShortcut[container, key] = serialize(value)
+		}
 
 	}
 

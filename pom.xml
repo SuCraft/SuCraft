@@ -43,6 +43,7 @@
 		<module>DropMinecartsOnLeave</module>
 		<module>VehicleEjectionOnQuit</module>
 		<module>UnsignBooks</module>
+		<module>UUIDCommand</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -12,8 +12,8 @@ import org.bukkit.entity.Player
 
 object SupportingMessages {
 
-	const val discordSupportInfoChannelName = "guide"
-	const val discordSupportInfoURL = "https://discord.gg/egH7dGX"
+	private const val discordSupportInfoChannelName = "guide"
+	private const val discordSupportInfoURL = "https://discord.gg/egH7dGX"
 
 	fun sendOnlySupportersHaveAbility(player: Player, ability: String) =
 		player.sendMessage(

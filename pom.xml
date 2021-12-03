@@ -16,7 +16,7 @@
 		<pluginDescriptionWebsite>sucraft.org</pluginDescriptionWebsite>
 		<kotlin.version>1.6.0</kotlin.version>
 		<lombok.version>1.18.20</lombok.version>
-<!--		<lombok.encoding>UTF-8</lombok.encoding>-->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<packaging>pom</packaging>
 	<modules>

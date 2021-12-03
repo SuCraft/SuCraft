@@ -5,12 +5,13 @@
 package org.sucraft.core.common.bukkit.log
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.sucraft.core.common.general.log.AbstractLogger
 
 
 /**
  * A nested logger belongs to either a plugin (representing the plugin as a whole), or a parent logger and own name
  */
-abstract class NestedLogger {
+abstract class NestedLogger : AbstractLogger {
 
 	// Abstract methods
 
@@ -21,9 +22,9 @@ abstract class NestedLogger {
 
 	// Exposed methods
 
-	fun info(message: Any?) = delegateInfo(turnGivenMessageToDelegatableString(message))
-	fun warning(message: Any?) = delegateWarning(turnGivenMessageToDelegatableString(message))
-	fun severe(message: Any?) = delegateSevere(turnGivenMessageToDelegatableString(message))
+	override fun info(message: Any?) = delegateInfo(turnGivenMessageToDelegatableString(message))
+	override fun warning(message: Any?) = delegateWarning(turnGivenMessageToDelegatableString(message))
+	override fun severe(message: Any?) = delegateSevere(turnGivenMessageToDelegatableString(message))
 
 	/**
 	 * Convenience method to either call info or warning depending on the given boolean

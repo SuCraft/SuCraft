@@ -15,7 +15,7 @@ object RunInFuture {
 	fun forPlayerIfOnline(plugin: JavaPlugin, player: Player, action: (Player) -> Any?, delay: Long = 1): BukkitTask {
 		val uuid = PlayerUUID.get(player)
 		return Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-			uuid.getPlayer()?.let(action)
+			uuid.getOnlinePlayer()?.let(action)
 		}, delay)
 	}
 

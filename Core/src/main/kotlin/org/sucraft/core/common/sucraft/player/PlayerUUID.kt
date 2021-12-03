@@ -4,8 +4,8 @@
 
 package org.sucraft.core.common.sucraft.player
 
-import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
 import java.util.*
@@ -36,7 +36,17 @@ class PlayerUUID private constructor(val uuid: UUID) {
 
 	}
 
-	fun getPlayer() = Bukkit.getPlayer(uuid)
+	// Convenience methods
+
+	fun getOnlinePlayer() = PlayerByUUID.getOnline(uuid)
+
+	fun getVisibleOnline(requester: CommandSender) = PlayerByUUID.getVisibleOnline(uuid, requester)
+
+	fun getOfflinePlayer() = PlayerByUUID.getOffline(uuid)
+
+	fun isOnline() = getOnlinePlayer()?.isOnline ?: false
+
+	// Record methods
 
 	override fun hashCode() = uuid.hashCode()
 

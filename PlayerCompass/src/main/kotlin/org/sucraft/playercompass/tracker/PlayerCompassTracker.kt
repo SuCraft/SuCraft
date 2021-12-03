@@ -72,7 +72,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 	fun updateCompassesInInventories() {
 		for (player in Bukkit.getOnlinePlayers()) {
 			trackedBy[PlayerUUID.get(player)]?.forEach { (trackerUUID, trackerItemSlot) ->
-				trackerUUID.getPlayer()?.let { possiblyUpdateCompass(it.location, it.inventory.contents[trackerItemSlot], player) }
+				trackerUUID.getOnlinePlayer()?.let { possiblyUpdateCompass(it.location, it.inventory.contents[trackerItemSlot], player) }
 			}
 		}
 	}

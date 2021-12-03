@@ -103,7 +103,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 					Bukkit.getScheduler().runTaskLater(plugin, Runnable { anvilsThatCantBreak.remove(anvilBlockCoordinates) }, anvilCantBreakAfterRenameIntervalInTicks)
 				}
 				// Schedule refunding the repair cost
-				RunInFuture.forPlayerIfOnline(plugin, player, refundRenameCost@{
+				if (tryToRefundRenameCost) RunInFuture.forPlayerIfOnline(plugin, player, refundRenameCost@{
 					try {
 						// Check that the inventory instance is still valid by checking if it has viewers
 						if (inventory.viewers.isEmpty()) return@refundRenameCost null

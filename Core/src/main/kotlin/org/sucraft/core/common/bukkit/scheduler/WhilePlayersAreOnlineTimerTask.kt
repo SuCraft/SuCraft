@@ -32,12 +32,12 @@ open class WhilePlayersAreOnlineTimerTask(plugin: JavaPlugin, run: () -> Any?, i
 	// Implementation
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	fun onPlayerJoin(event: PlayerJoinEvent) {
+	fun onPlayerJoin(@Suppress("UNUSED_PARAMETER") event: PlayerJoinEvent) {
 		attemptToTurnOn()
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	fun onPlayerQuit(event: PlayerQuitEvent) {
+	fun onPlayerQuit(@Suppress("UNUSED_PARAMETER") event: PlayerQuitEvent) {
 		Bukkit.getScheduler().runTaskLater(plugin, ::attemptToTurnOff, 1)
 	}
 

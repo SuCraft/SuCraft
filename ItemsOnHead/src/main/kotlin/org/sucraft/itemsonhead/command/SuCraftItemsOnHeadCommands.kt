@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.command.CommonTabCompletion
 import org.sucraft.core.common.bukkit.material.MaterialGroups
@@ -84,8 +85,31 @@ object SuCraftItemsOnHeadCommands : SuCraftCommands<SuCraftItemsOnHeadPlugin>(Su
 				return@onCommand
 			}
 
-			// Set the item on the head
+			// Check if the item or the item in the helmet slot does not have Curse of Binding
 			val helmet: ItemStack? = player.inventory.helmet?.clone()
+			val itemInHandHasCurseOfBinding = itemInHand.enchantments.keys.contains(Enchantment.BINDING_CURSE)
+			val helmetHasCurseOfBinding = helmet?.enchantments?.keys?.contains(Enchantment.BINDING_CURSE) ?: false
+			val itemsWithCurseOfBindingText =
+				if (itemInHandHasCurseOfBinding)
+					if (helmetHasCurseOfBinding)
+						"The item in your hand and your helmet cannot be swapped because they have Curse of Binding."
+					else
+						"The item in your hand cannot be equipped because it has Curse of Binding."
+				else
+					if (helmetHasCurseOfBinding)
+						"Your helmet cannot be unequipped because it has Curse of Binding."
+					else
+						null
+
+			// If some items have curse of binding
+			if (itemsWithCurseOfBindingText != null) {
+				player.sendMessage(
+					Component.text(itemsWithCurseOfBindingText).color(NamedTextColor.WHITE)
+				)
+				return@onCommand
+			}
+
+			// Set the item on the head
 			player.inventory.setItemInMainHand(helmet)
 			player.inventory.helmet = itemInHand
 			logger.info("${player.name} used /$headCommandName to put $itemInHand on head (was $helmet before)")

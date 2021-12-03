@@ -133,6 +133,22 @@
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
 					<version>2.4.3</version>
+					<configuration>
+						<filters>
+							<filter>
+								<artifact>org.jetbrains.kotlin:kotlin-stdlib-jdk7</artifact>
+								<excludes>META-INF/versions/9/module-info.class</excludes>
+							</filter>
+							<filter>
+								<artifact>org.jetbrains.kotlin:kotlin-stdlib-jdk8</artifact>
+								<excludes>META-INF/versions/9/module-info.class</excludes>
+							</filter>
+							<filter>
+								<artifact>org.jetbrains.kotlin:kotlin-reflect</artifact>
+								<excludes>META-INF/versions/9/module-info.class</excludes>
+							</filter>
+						</filters>
+					</configuration>
 					<executions>
 						<execution>
 							<phase>package</phase>

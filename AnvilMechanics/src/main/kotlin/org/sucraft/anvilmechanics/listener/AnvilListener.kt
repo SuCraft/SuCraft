@@ -98,7 +98,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 				val oldLevel = player.level
 				// Prepare for preventing the anvil being damaged
 				if (inventory.holder is BlockInventoryHolder) {
-					val anvilBlockCoordinates: BlockCoordinates = BlockCoordinates.getByBlock((inventory.holder as BlockInventoryHolder).block)
+					val anvilBlockCoordinates: BlockCoordinates = BlockCoordinates.get((inventory.holder as BlockInventoryHolder).block)
 					anvilsThatCantBreak.add(anvilBlockCoordinates)
 					Bukkit.getScheduler().runTaskLater(plugin, Runnable { anvilsThatCantBreak.remove(anvilBlockCoordinates) }, anvilCantBreakAfterRenameIntervalInTicks)
 				}
@@ -138,7 +138,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 		// TODO: Currently cancelling any damage to anvils, since cancelling damage to anvils in the case of being rename isn't working
 		event.isCancelled = true
 		// Cancel damage to anvils that have just been used in a rename operation
-		val anvilBlockCoordinates = (event.inventory.holder as? BlockInventoryHolder)?.block?.let(BlockCoordinates::getByBlock) ?: return
+		val anvilBlockCoordinates = (event.inventory.holder as? BlockInventoryHolder)?.block?.let(BlockCoordinates::get) ?: return
 		if (anvilBlockCoordinates in anvilsThatCantBreak) event.isCancelled = true
 	}
 

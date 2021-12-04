@@ -46,6 +46,7 @@
 		<module>UUIDCommand</module>
 		<module>ItemsOnHead</module>
 		<module>CustomCraftingRecipes</module>
+		<module>CustomJockeys</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

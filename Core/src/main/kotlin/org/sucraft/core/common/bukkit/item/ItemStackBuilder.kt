@@ -123,6 +123,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLore(lore: List<String?>) =
+		@Suppress("NestedLambdaShadowedImplicitParameter")
 		applyToMeta { it.lore = (it.lore ?: ArrayList()).also { it.addAll(lore) } }
 
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
@@ -238,8 +239,9 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun addEnchantment(enchantmentAndLevel: Pair<Enchantment, Int>) =
 		addEnchantment(enchantmentAndLevel.first, enchantmentAndLevel.second)
 
-	fun addEnchantment(enchantment: Enchantment, level: Int) =
-		also { itemStack.addUnsafeEnchantment(enchantment, level) }
+	fun addEnchantment(enchantment: Enchantment, level: Int) = also {
+		itemStack.addUnsafeEnchantment(enchantment, level)
+	}
 
 	val enchantments: Map<Enchantment, Int> get() = Collections.unmodifiableMap(itemStack.enchantments)
 
@@ -267,8 +269,9 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 		setPersistentData(UnusableItemManager.unusablePersistentDataNamespacedKey, UnusableItemManager.unusablePersistentDataType, UnusableItemManager.unusablePersistentDataValue)
 	 */
 
-	fun removePersistentData(namespacedKey: NamespacedKey) =
+	fun removePersistentData(namespacedKey: NamespacedKey) = also {
 		PersistentDataShortcuts.remove(itemStack, namespacedKey)
+	}
 
 	fun <T, Z: Any> setPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) =
 		applyToMeta { it.persistentDataContainer.set(namespacedKey, type, value) }
@@ -276,22 +279,23 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun <T, Z: Any> getPersistentData(namespacedKey: NamespacedKey, type: PersistentDataType<T, Z>): Z? =
 		getFromMeta { it.persistentDataContainer.get(namespacedKey, type) }
 
-	fun setPersistentDataPlayerUUID(namespacedKey: NamespacedKey, value: PlayerUUID) {
+	fun setPersistentDataPlayerUUID(namespacedKey: NamespacedKey, value: PlayerUUID) = also {
 		PersistentDataShortcuts.PlayerUUID[itemStack, namespacedKey] = value
 	}
 
 	fun getPersistentDataPlayerUUID(namespacedKey: NamespacedKey) =
 		PersistentDataShortcuts.PlayerUUID[itemStack, namespacedKey]
 
-	fun setPersistentDataBoolean(namespacedKey: NamespacedKey, value: Boolean) {
+	fun setPersistentDataBoolean(namespacedKey: NamespacedKey, value: Boolean) = also {
 		PersistentDataShortcuts.Boolean[itemStack, namespacedKey] = value
 	}
 
 	fun getPersistentDataBoolean(namespacedKey: NamespacedKey) =
 		PersistentDataShortcuts.Boolean[itemStack, namespacedKey]
 
-	fun setPersistentDataTag(namespacedKey: NamespacedKey) =
+	fun setPersistentDataTag(namespacedKey: NamespacedKey) = also {
 		PersistentDataShortcuts.Tag.set(itemStack, namespacedKey)
+	}
 
 	fun getPersistentDataTag(namespacedKey: NamespacedKey) =
 		PersistentDataShortcuts.Tag[itemStack, namespacedKey]

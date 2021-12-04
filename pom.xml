@@ -45,6 +45,7 @@
 		<module>UnsignBooks</module>
 		<module>UUIDCommand</module>
 		<module>ItemsOnHead</module>
+		<module>CustomCraftingRecipes</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

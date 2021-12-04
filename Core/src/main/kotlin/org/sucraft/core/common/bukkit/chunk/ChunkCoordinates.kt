@@ -68,7 +68,7 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 
 	fun getSquaredDistanceToCenterOfChunk(blockX: Double, blockZ: Double): Double {
 		val dx = maxMiddleBlockX.toDouble() - blockX
-		val dz = maxMiddleBlockZ.toDouble()  - blockZ
+		val dz = maxMiddleBlockZ.toDouble() - blockZ
 		return dx * dx + dz * dz
 	}
 

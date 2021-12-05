@@ -13,7 +13,7 @@ open class SuCraftDelegateHolder<T: SuCraftDelegate<*>> {
 	fun registerImplementation(implementation: T) {
 		if (isImplementationRegistered())
 			throw java.lang.IllegalStateException("Implementation has already been registered")
-		implementation.getLogger().info("Registered delegate implementation ${implementation.getDelegateImplementationName()} for ${implementation.getDelegateInterfaceName()}")
+		implementation.getDelegateLogger().info("Registered delegate implementation ${implementation.getDelegateImplementationName()} for ${implementation.getDelegateInterfaceName()}")
 		this.implementation = implementation
 	}
 

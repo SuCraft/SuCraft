@@ -23,9 +23,9 @@ object MinecraftClientLocaleByIncludedResource : MinecraftClientLocale<SuCraftCo
 
 	// Delegate overrides
 
-	override fun getPlugin(): SuCraftCorePlugin = plugin
+	override fun getDelegatePlugin(): SuCraftCorePlugin = plugin
 
-	override fun getLogger(): AbstractLogger = logger
+	override fun getDelegateLogger(): AbstractLogger = logger
 
 	// Implementation
 

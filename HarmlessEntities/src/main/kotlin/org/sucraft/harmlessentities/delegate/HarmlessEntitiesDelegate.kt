@@ -24,9 +24,9 @@ object HarmlessEntitiesDelegate : HarmlessEntities<SuCraftHarmlessEntitiesPlugin
 
 	// Delegate overrides
 
-	override fun getPlugin(): SuCraftHarmlessEntitiesPlugin = plugin
+	override fun getDelegatePlugin(): SuCraftHarmlessEntitiesPlugin = plugin
 
-	override fun getLogger(): AbstractLogger = logger
+	override fun getDelegateLogger(): AbstractLogger = logger
 
 	// Implementation
 

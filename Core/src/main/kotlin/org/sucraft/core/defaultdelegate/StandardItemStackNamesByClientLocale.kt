@@ -31,9 +31,9 @@ object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCore
 
 	// Delegate overrides
 
-	override fun getPlugin(): SuCraftCorePlugin = plugin
+	override fun getDelegatePlugin(): SuCraftCorePlugin = plugin
 
-	override fun getLogger(): AbstractLogger = logger
+	override fun getDelegateLogger(): AbstractLogger = logger
 
 	// Data
 

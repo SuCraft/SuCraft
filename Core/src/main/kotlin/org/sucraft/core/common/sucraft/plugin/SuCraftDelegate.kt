@@ -10,9 +10,9 @@ import org.sucraft.core.common.general.log.AbstractLogger
 
 interface SuCraftDelegate<P : SuCraftPlugin> {
 
-	fun getPlugin(): P
+	fun getDelegatePlugin(): P
 
-	fun getLogger(): AbstractLogger
+	fun getDelegateLogger(): AbstractLogger
 
 	fun getDelegateInterfaceName(): String
 

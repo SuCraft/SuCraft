@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.sucraft.bukkitapiextension.event.BukkitAPIExtensionEvent
+import kotlin.reflect.full.companionObjectInstance
 
 
 data class PlayerScoopEntityEvent(
@@ -24,11 +25,12 @@ data class PlayerScoopEntityEvent(
 
 	// Handlers
 
-	override fun getHandlers() = Companion.handlers
+	override fun getHandlers() = Companion.handlerList
 
 	companion object {
 
-		val handlers = HandlerList()
+		@JvmStatic
+		val handlerList = HandlerList()
 
 	}
 

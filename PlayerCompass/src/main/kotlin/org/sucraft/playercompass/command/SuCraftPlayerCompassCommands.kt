@@ -57,7 +57,7 @@ object SuCraftPlayerCompassCommands : SuCraftCommands<SuCraftPlayerCompassPlugin
 				)
 			}
 			// Update the lore
-			val lore: MutableList<Component?> = itemMeta.lore() ?: ArrayList()
+			val lore: MutableList<Component?> = itemMeta.lore() ?: ArrayList(2)
 			lore.add(
 				Component.join(
 					JoinConfiguration.noSeparators(),

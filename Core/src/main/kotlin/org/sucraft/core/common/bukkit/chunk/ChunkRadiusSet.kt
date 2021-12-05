@@ -9,9 +9,10 @@ package org.sucraft.core.common.bukkit.chunk
  * This class stores chunks, and has operations for adding a chunk including its surrounding chunks within a certain radius
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class ChunkRadiusSet {
+class ChunkRadiusSet(initialCapacity: Int = 3) {
 
-	private val set: MutableSet<ChunkCoordinates> = HashSet()
+	// TODO replace by set using Long chunk keys as element
+	private val set: MutableSet<ChunkCoordinates> = HashSet(initialCapacity)
 
 	fun add(chunk: ChunkCoordinates) {
 		set.add(chunk)

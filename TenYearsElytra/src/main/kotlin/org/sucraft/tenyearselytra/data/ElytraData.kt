@@ -45,7 +45,7 @@ object ElytraData {
 		require(!isFestiveElytra(itemStack)) { "itemStack is already festive" }
 		val festiveItemStack = itemStack.clone()
 		PersistentDataShortcuts.PlayerUUID[festiveItemStack, festiveElytraCreatorPersistentDataNamespacedKey] = PlayerUUID.get(creator)
-		val lore = festiveItemStack.lore() ?: ArrayList()
+		val lore = festiveItemStack.lore() ?: ArrayList(loreLines.size)
 		for (i in loreLines.size - 1 downTo 0)
 			if (!lore.contains(loreLines[i])) lore.add(0, loreLines[i])
 		festiveItemStack.lore(lore)
@@ -86,10 +86,11 @@ object ElytraData {
 		for (loreLine in loreLines) {
 			if (!lore.contains(loreLine)) {
 				containsAllLore = false
+				break
 			}
 		}
 		if (containsAllLore) return null
-		lore = ArrayList()
+		lore = ArrayList(lore)
 		lore.removeAll(loreLines.toSet())
 		lore.removeAll(oldLoreLines.toSet())
 		for (i in loreLines.size - 1 downTo 0) {

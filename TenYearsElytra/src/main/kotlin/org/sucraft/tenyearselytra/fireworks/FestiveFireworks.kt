@@ -13,7 +13,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.FireworkMeta
 import org.bukkit.scheduler.BukkitTask
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
+import org.sucraft.core.common.bukkit.scheduler.WhilePlayersAreOnlineTimerTask
 import org.sucraft.core.common.sucraft.delegate.HarmlessEntities
+import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
@@ -40,11 +42,25 @@ object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftT
 
 	private const val minFireworkDelay = 1L // In ticks, so: immediately after (but we wait 1 tick so the velocity has been updated according to the firework boost)
 	private const val fireworkInterval = 4L // In ticks
-	private const val maxFireworkDelay = minFireworkDelay + fireworkInterval * 10 - 1 // In ticks, so: causes exactly 10 fireworks
+	private const val numberOfFireworks = 10
+	private const val maxFireworkDelay = minFireworkDelay + fireworkInterval * numberOfFireworks - 1 // In ticks, so: causes exactly [numberOfFireworks] fireworks
+
+	private const val cleanSpawnTasksMapInterval = 20L * 60
+
+	// Schedule cleaning task
+
+	init {
+		logger.info(SuCraftLogTexts.schedulingTasks)
+		WhilePlayersAreOnlineTimerTask(plugin, {
+			with (spawnTasks.iterator()) {
+				forEach { if (it.value.isEmpty()) remove() }
+			}
+		}, cleanSpawnTasksMapInterval)
+	}
 
 	// Data
 
-	private val spawnTasks: MutableMap<PlayerUUID, MutableList<BukkitTask>> = HashMap()
+	private val spawnTasks: MutableMap<PlayerUUID, MutableList<BukkitTask>> = HashMap(20)
 
 	// Schedule fireworks
 
@@ -54,9 +70,10 @@ object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftT
 		spawnTasks[uuid]?.forEach {
 			try {
 				it.cancel()
-			} catch (_: Exception) {}
+			} catch (_: Exception) {
+			}
 		}
-		val newSpawnFireworksTasksForPlayer: MutableList<BukkitTask> = ArrayList<BukkitTask>().also { spawnTasks[uuid] = it }
+		val newSpawnFireworksTasksForPlayer: MutableList<BukkitTask> = ArrayList<BukkitTask>(numberOfFireworks).also { spawnTasks[uuid] = it }
 		var delay: Long = minFireworkDelay
 		while (delay <= maxFireworkDelay) {
 			newSpawnFireworksTasksForPlayer.add(RunInFuture.forPlayerIfOnline(plugin, player, ::spawnFireworks, delay))

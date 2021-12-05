@@ -14,10 +14,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.BlockInventoryHolder
 import org.sucraft.anvilmechanics.main.SuCraftAnvilMechanicsPlugin
 import org.sucraft.core.common.bukkit.block.BlockCoordinates
+import org.sucraft.core.common.bukkit.item.EmptyItemStack
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
@@ -37,7 +39,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 	 * Repairs will never cost more than this
 	 * To disable, set to an empty value
 	 */
-	val repairCostCap: OptionalInt = OptionalInt.of(60)
+	private val repairCostCap: OptionalInt = OptionalInt.of(60)
 
 	/**
 	 * The level cost of renaming (cannot be 0 due to the server using 0 as a special value for a repair being impossible)
@@ -58,12 +60,12 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 	 * Protect the anvil from damage for this time after doing a rename operation, to prevent anvil from breaking by renaming
 	 * TODO: This is not working: perhaps the damage event happens before the rename operation?
 	 */
-	const val anvilCantBreakAfterRenameIntervalInTicks = 2L
+	private const val anvilCantBreakAfterRenameIntervalInTicks = 2L
 
 	// Data
 
-	private var lastHighLevelCostMessageTimestamps: MutableMap<Pair<PlayerUUID, Int>, Long> = HashMap()
-	private val anvilsThatCantBreak: MutableList<BlockCoordinates> = ArrayList()
+	private var lastHighLevelCostMessageTimestamps: MutableMap<Pair<PlayerUUID, Int>, Long> = HashMap(50)
+	private val anvilsThatCantBreak: MutableList<BlockCoordinates> = ArrayList(5)
 
 	// Events
 
@@ -92,7 +94,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 				if (result.type == Material.AIR) return@modifyRenames
 				// Check that the second item slot is empty
 				val secondItem = inventory.secondItem
-				if (secondItem != null && secondItem.type != Material.AIR) return@modifyRenames
+				if (EmptyItemStack.isNotEmpty(secondItem)) return@modifyRenames
 
 				// Store the old level
 				val oldLevel = player.level
@@ -109,7 +111,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 						if (inventory.viewers.isEmpty()) return@refundRenameCost null
 						// Check that the result slot is now empty
 						val newResult = inventory.result
-						if (newResult != null && newResult.type != Material.AIR) return@refundRenameCost null
+						if (EmptyItemStack.isNotEmpty(newResult)) return@refundRenameCost null
 						// Check that the player's level changed correctly
 						val newLevel = player.level
 						if (newLevel != oldLevel - costToOnlyRename) return@refundRenameCost null
@@ -175,7 +177,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 				updateAnvilRenameOrRepairCost(inventory)
 				// Send a high cost to the player if necessary
 				val result = inventory.result
-				if (result != null && result.type != Material.AIR)
+				if (EmptyItemStack.isNotEmpty(result))
 					if (inventory.repairCost >= 40)
 						sendHighLevelCostToPlayer(it, inventory.repairCost)
 				null
@@ -192,7 +194,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 		if (result.type == Material.AIR) return
 		val secondItem = inventory.secondItem
 		// In case the second item is null, we know it is a repair operation
-		if (secondItem == null || secondItem.type == Material.AIR)
+		if (EmptyItemStack.isEmpty(secondItem))
 			if (inventory.repairCost > costToOnlyRename) inventory.repairCost = costToOnlyRename
 		// Update the anvil's repair cost cap to remove the limit
 		if (repairCostCap.isPresent && inventory.repairCost > repairCostCap.asInt)
@@ -211,6 +213,17 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 				"The actual cost is ${WHITE}${cost}${GRAY} levels." +
 				"It's not possible to display that (the \"Too Expensive!\" message is client-side)," +
 				"but you can still do it if you want to: if you have enough levels and take the item from the result slot it will work.")
+	}
+
+	/**
+	 * Clean stored data
+	 */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	fun onPlayerQuit(event: PlayerQuitEvent) {
+		val playerUUID = PlayerUUID.get(event.player)
+		with (lastHighLevelCostMessageTimestamps.iterator()) {
+			forEach { if (it.key.first == playerUUID) remove() }
+		}
 	}
 
 }

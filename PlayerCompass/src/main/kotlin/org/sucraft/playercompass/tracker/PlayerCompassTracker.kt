@@ -50,7 +50,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 
 	// Data
 
-	private val trackedBy: MutableMap<PlayerUUID, MutableList<Pair<PlayerUUID, Int>>> = HashMap()
+	private val trackedBy: MutableMap<PlayerUUID, MutableList<Pair<PlayerUUID, Int>>> = HashMap(20)
 
 	// Implementation
 

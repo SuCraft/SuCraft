@@ -21,7 +21,7 @@ object StringSplit {
             return partBuilder.toString()
         }
 
-        val result: MutableList<String> = ArrayList()
+        val result: MutableList<String> = ArrayList(5)
         var index = 0
         var textLeft = text
         while (true) {
@@ -65,7 +65,7 @@ object StringSplit {
             whitespaceNormalizedString = newString
         }
         whitespaceNormalizedString = whitespaceNormalizedString.trim { it <= ' ' }
-        val lines: MutableList<String> = ArrayList()
+        val lines: MutableList<String> = ArrayList(5)
         var currentLine = ""
         var index = 0
         while (true) {

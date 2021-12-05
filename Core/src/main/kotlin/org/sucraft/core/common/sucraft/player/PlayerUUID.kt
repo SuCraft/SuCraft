@@ -14,7 +14,8 @@ import java.util.*
 /**
  * A UUID that is confirmed to belong to a player that has played before
  */
-class PlayerUUID private constructor(val uuid: UUID) {
+@JvmInline
+value class PlayerUUID private constructor(val uuid: UUID) {
 
 	// Construction
 
@@ -46,16 +47,16 @@ class PlayerUUID private constructor(val uuid: UUID) {
 
 	fun isOnline() = getOnlinePlayer()?.isOnline ?: false
 
-	// Record methods
+	// Record methods (no longer used due to turning PlayerUUID into an inline class)
 
-	override fun hashCode() = uuid.hashCode()
-
-	override fun equals(other: Any?) =
-		if (other is PlayerUUID)
-			uuid == other.uuid
-		else
-			uuid == other
-
-	override fun toString() = uuid.toString()
+//	override fun hashCode() = uuid.hashCode()
+//
+//	override fun equals(other: Any?) =
+//		if (other is PlayerUUID)
+//			uuid == other.uuid
+//		else
+//			uuid == other
+//
+//	override fun toString() = uuid.toString()
 
 }

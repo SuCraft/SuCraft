@@ -47,19 +47,11 @@ object StringReplacement {
     }
 
     fun prefixAll(strings: Array<String>, prefix: String, condition: (String) -> Boolean = { true }): List<String> {
-        return prefixAll(listOf(*strings), prefix, condition)
+        return strings.map { if (condition(it)) prefix + it else it }
     }
 
     fun prefixAll(strings: Iterable<String>, prefix: String, condition: (String) -> Boolean = { true }): List<String> {
-        val prefixed: MutableList<String> = ArrayList()
-        for (string in strings) {
-            if (condition(string)) {
-                prefixed.add(prefix + string)
-            } else {
-                prefixed.add(string)
-            }
-        }
-        return prefixed
+        return strings.map { if (condition(it)) prefix + it else it }
     }
 
 }

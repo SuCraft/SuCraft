@@ -124,7 +124,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLore(lore: List<String?>) =
 		@Suppress("NestedLambdaShadowedImplicitParameter")
-		applyToMeta { it.lore = (it.lore ?: ArrayList()).also { it.addAll(lore) } }
+		applyToMeta { it.lore = (it.lore ?: ArrayList(lore.size)).also { it.addAll(lore) } }
 
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLore(vararg lore: String): ItemStackBuilder =
@@ -139,7 +139,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
 	fun addLoreWithPossibleSeparatorLine(lore: List<String>) =
 		applyToMeta { meta ->
-			val existingLore = meta.lore ?: ArrayList()
+			val existingLore = meta.lore ?: ArrayList(lore.size)
 			val hasInformation =
 				existingLore.isNotEmpty() ||
 						(meta.enchants.isNotEmpty() && !meta.itemFlags.contains(ItemFlag.HIDE_ENCHANTS)) ||
@@ -333,7 +333,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 			translateLoreNewLines(listOf(*lore), startWithNewLine, endWithNewLine).toTypedArray()
 
 		fun translateLoreNewLines(lore: List<String>, startWithNewLine: Boolean, endWithNewLine: Boolean): List<String> {
-			val translatedLore: MutableList<String> = ArrayList()
+			val translatedLore: MutableList<String> = ArrayList(lore.size + (if (startWithNewLine) 1 else 0) + (if (endWithNewLine) 1 else 0))
 			var shouldPlaceLineWhenSeeingText = false
 			if (startWithNewLine) {
 				shouldPlaceLineWhenSeeingText = true

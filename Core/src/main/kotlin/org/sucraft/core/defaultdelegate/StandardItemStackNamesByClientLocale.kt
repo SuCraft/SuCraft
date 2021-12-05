@@ -38,7 +38,7 @@ object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCore
 	// Data
 
 	private var hasBeenRead = false
-	private val standardNamesByKey: MutableMap<String, String> = HashMap()
+	private val standardNamesByKey: MutableMap<String, String> = HashMap(5000)
 
 	// Implementation
 

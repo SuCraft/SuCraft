@@ -29,9 +29,10 @@ fun relativeWithinRadius(radius: Double) = relativeWithinSquareRadius(radius).fi
  * This class stores some value per chunk, and has operations for updating a chunk including its surrounding chunks within a certain radius
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class ChunkRadiusMap<T> {
+class ChunkRadiusMap<T>(initialCapacity: Int = 3) {
 
-	private val map: MutableMap<ChunkCoordinates, T> = HashMap()
+	// TODO replace by map using Long chunk keys as key
+	private val map: MutableMap<ChunkCoordinates, T> = HashMap(initialCapacity)
 
 	fun set(chunk: ChunkCoordinates, value: T) {
 		map[chunk] = value

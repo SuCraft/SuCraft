@@ -7,7 +7,6 @@ package org.sucraft.customjockeys.data
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.ExperienceOrb
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates

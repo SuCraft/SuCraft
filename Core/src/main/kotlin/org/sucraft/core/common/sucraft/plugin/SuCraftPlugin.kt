@@ -30,7 +30,7 @@ abstract class SuCraftPlugin : JavaPlugin() {
 		nestedLogger = NestedLogger.create(this)
 
 		// Print to console and call enable subroutine
-		nestedLogger!!.info(SuCraftLogTexts.pluginEnabling)
+		//nestedLogger!!.info(SuCraftLogTexts.pluginEnabling) // Commented out because Bukkit already prints this for us (to reduce unnecessary messages)
 		onSuCraftPluginEnable()
 		nestedLogger!!.info(SuCraftLogTexts.pluginEnabled)
 
@@ -45,7 +45,7 @@ abstract class SuCraftPlugin : JavaPlugin() {
 		disabling = true
 
 		// Print to console and call disable subroutine
-		nestedLogger!!.info(SuCraftLogTexts.pluginDisabling)
+		//nestedLogger!!.info(SuCraftLogTexts.pluginDisabling) // Commented out because Bukkit already prints this for us (to reduce unnecessary messages)
 		onSuCraftPluginDisable()
 		nestedLogger!!.info(SuCraftLogTexts.pluginDisabled)
 

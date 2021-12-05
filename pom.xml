@@ -52,6 +52,8 @@
 		<module>ZombieHorses</module>
 		<module>CustomJockeys</module>
 		<module>Giants</module>
+		<module>AxolotlColorInLore</module>
+		<module>BukkitAPIExtension</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

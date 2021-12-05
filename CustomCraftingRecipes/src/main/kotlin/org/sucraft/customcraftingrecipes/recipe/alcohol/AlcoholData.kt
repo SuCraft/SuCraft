@@ -18,9 +18,9 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 object AlcoholData {
 
 	@Suppress("DEPRECATION")
-	private val alcoholPersistentDataNamespacedKey = NamespacedKey("martijnsrecipes", "alcoholicBeverage")
+	private val alcoholPersistentDataNamespacedKey = NamespacedKey("martijnsrecipes", "alcoholicbeverage")
 	@Suppress("DEPRECATION")
-	private val alcoholBrewerPersistentDataNamespacedKey = NamespacedKey("martijnsrecipes", "alcoholicBeverageBrewer")
+	private val alcoholBrewerPersistentDataNamespacedKey = NamespacedKey("martijnsrecipes", "alcoholicbeveragebrewer")
 
 	@Suppress("DEPRECATION")
 	val beerItemStackWithoutBrewer = ItemStackBuilder

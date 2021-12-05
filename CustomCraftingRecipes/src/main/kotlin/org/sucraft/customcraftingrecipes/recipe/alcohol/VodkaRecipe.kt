@@ -26,4 +26,8 @@ object VodkaRecipe : CustomRecipe() {
 			it.addIngredient(Material.POTATO);
 		}
 
+	// Initialization
+
+	init { registerWithBukkit() }
+
 }

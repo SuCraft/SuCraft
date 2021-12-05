@@ -10,9 +10,9 @@ import org.bukkit.inventory.Recipe
 
 abstract class CustomRecipe {
 
-	// Initialization (register the recipe)
+	// Register with Bukkit (to be called in init)
 
-	init {
+	fun registerWithBukkit() {
 		Bukkit.addRecipe(getBukkitRecipe())
 	}
 

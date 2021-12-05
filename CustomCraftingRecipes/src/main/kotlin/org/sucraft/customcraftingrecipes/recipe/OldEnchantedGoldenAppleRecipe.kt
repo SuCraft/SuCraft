@@ -26,4 +26,8 @@ object OldEnchantedGoldenAppleRecipe : CustomRecipe() {
 			it.setIngredient('%', Material.APPLE)
 		}
 
+	// Initialization
+
+	init { registerWithBukkit() }
+
 }

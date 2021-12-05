@@ -26,4 +26,8 @@ object BeerRecipe : CustomRecipe() {
 			it.addIngredient(Material.WHEAT);
 		}
 
+	// Initialization
+
+	init { registerWithBukkit() }
+
 }

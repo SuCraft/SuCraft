@@ -40,6 +40,10 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 	@Suppress("DEPRECATION")
 	private val oldPlayerCompassTrackedPlayerPersistentDataNamespacedKey = NamespacedKey("martijnsextrafeatures", "compass_tracked_player")
 
+	// Data
+
+	private val trackedBy: MutableMap<PlayerUUID, MutableList<Pair<PlayerUUID, Int>>> = HashMap(20)
+
 	// Initialization
 
 	init {
@@ -47,10 +51,6 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 		WhilePlayersAreOnlineTimerTask(plugin, ::checkForCompassesInInventories, interval = checkForCompassesInInventoriesIntervalInTicks, minimumDelayAfterTurningOn = 1)
 		WhilePlayersAreOnlineTimerTask(plugin, ::updateCompassesInInventories, interval = updateCompassesInInventoriesIntervalInTicks, minimumDelayAfterTurningOn = 1)
 	}
-
-	// Data
-
-	private val trackedBy: MutableMap<PlayerUUID, MutableList<Pair<PlayerUUID, Int>>> = HashMap(20)
 
 	// Implementation
 

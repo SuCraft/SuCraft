@@ -22,13 +22,6 @@ object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCore
 
 	private const val readAllFromConfigurationOnInit = true
 
-	// Initialization
-
-	init {
-		StandardItemStackNames.registerImplementation(this)
-		if (readAllFromConfigurationOnInit) readAllFromConfigurationIfNeeded()
-	}
-
 	// Delegate overrides
 
 	override fun getDelegatePlugin(): SuCraftCorePlugin = plugin
@@ -39,6 +32,13 @@ object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCore
 
 	private var hasBeenRead = false
 	private val standardNamesByKey: MutableMap<String, String> = HashMap(5000)
+
+	// Initialization
+
+	init {
+		StandardItemStackNames.registerImplementation(this)
+		if (readAllFromConfigurationOnInit) readAllFromConfigurationIfNeeded()
+	}
 
 	// Implementation
 

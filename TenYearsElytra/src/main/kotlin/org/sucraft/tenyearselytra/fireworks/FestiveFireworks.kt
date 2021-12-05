@@ -47,6 +47,10 @@ object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftT
 
 	private const val cleanSpawnTasksMapInterval = 20L * 60
 
+	// Data
+
+	private val spawnTasks: MutableMap<PlayerUUID, MutableList<BukkitTask>> = HashMap(20)
+
 	// Schedule cleaning task
 
 	init {
@@ -57,10 +61,6 @@ object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftT
 			}
 		}, cleanSpawnTasksMapInterval)
 	}
-
-	// Data
-
-	private val spawnTasks: MutableMap<PlayerUUID, MutableList<BukkitTask>> = HashMap(20)
 
 	// Schedule fireworks
 

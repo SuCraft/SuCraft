@@ -51,6 +51,7 @@
 		<module>CustomCraftingRecipes</module>
 		<module>ZombieHorses</module>
 		<module>CustomJockeys</module>
+		<module>Giants</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

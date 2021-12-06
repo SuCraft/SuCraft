@@ -14,7 +14,7 @@ object EntityAge {
 	fun isAdult(entity: LivingEntity): Boolean? {
 		if (entity is Ageable) return entity.isAdult
 		if (entity is Zombie) return entity.isAdult
-		return false
+		return null
 	}
 
 	fun isBaby(entity: LivingEntity) = isAdult(entity)?.let { !it }

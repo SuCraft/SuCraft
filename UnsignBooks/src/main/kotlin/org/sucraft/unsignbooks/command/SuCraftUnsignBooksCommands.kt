@@ -57,7 +57,7 @@ object SuCraftUnsignBooksCommands : SuCraftCommands<SuCraftUnsignBooksPlugin>(Su
 			newItemStack.itemMeta = newMeta
 			logger.info("${player.name} unsigned a book ${meta.title?.let { "titled '${it}'" } ?: "without a title"}: $itemStack")
 			player.inventory.setItemInMainHand(newItemStack)
-			player.sendMessage("${GREEN}Unsigned ${meta.title?.let { "\"${WHITE}${it}${GREEN}\"" } ?: "${WHITE}}untitled book"}${GREEN}\"!")
+			player.sendMessage("${GREEN}Unsigned ${meta.title?.let { "\"${WHITE}${it}${GREEN}\"" } ?: "${WHITE}untitled book"}${GREEN}!")
 		},
 		CommonTabCompletion.EMPTY
 	)

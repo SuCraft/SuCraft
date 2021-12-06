@@ -31,17 +31,18 @@ object ScoopAxolotlListener : SuCraftComponent<SuCraftAxolotlColorInLorePlugin>(
 		for ((slot, itemStack) in event.player.inventory.withIndex()) {
 			if (!event.resultingItem.isSimilar(itemStack)) continue
 			val itemMeta = GuaranteedItemMetaGetter.get(itemStack) as? AxolotlBucketMeta ?: continue
-			val (variantName, color) = when (if (itemMeta.hasVariant()) itemMeta.variant else null) {
-				BLUE -> Pair("Blue", TextColor.color(179, 183, 252))
-				CYAN -> Pair("Cyan", TextColor.color(239, 247, 255))
-				GOLD -> Pair("Gold", TextColor.color(254, 214, 29))
-				WILD -> Pair("Brown", TextColor.color(139, 105, 77))
-				LUCY -> Pair("Pink", TextColor.color(255, 199, 234))
-				else -> Pair("Unknown variant", NamedTextColor.GRAY)
+			val (variantName, color, customModelData) = when (if (itemMeta.hasVariant()) itemMeta.variant else null) {
+				BLUE -> Triple("Blue", TextColor.color(179, 183, 252), 4)
+				CYAN -> Triple("Cyan", TextColor.color(239, 247, 255), 3)
+				GOLD -> Triple("Gold", TextColor.color(254, 214, 29), 2)
+				WILD -> Triple("Brown", TextColor.color(139, 105, 77), 1)
+				LUCY -> Triple("Pink", TextColor.color(255, 199, 234), null)
+				else -> Triple("Unknown variant", NamedTextColor.GRAY, null)
 			}
 			val lore = itemMeta.lore() ?: ArrayList(1)
 			lore.add(0, Component.text(variantName).color(color).decoration(TextDecoration.ITALIC, false))
 			itemMeta.lore(lore)
+			if (customModelData != null) itemMeta.setCustomModelData(customModelData)
 			itemStack.itemMeta = itemMeta
 			event.player.inventory.setItem(slot, itemStack)
 			return

@@ -41,14 +41,14 @@ object InventoryCounter {
 	@Suppress("NOTHING_TO_INLINE")
 	inline fun getDifferenceMap(before: Array<ItemStack?>, after: Array<ItemStack?>) =
 		getDifferenceMap(
-			before.asSequence().filter { EmptyItemStack.isNotEmpty(it) },
-			after.asSequence().filter { EmptyItemStack.isNotEmpty(it) }
+			before.asSequence(),
+			after.asSequence()
 		)
 
 	inline fun getDifferenceMap(before: Array<ItemStack?>, after: Array<ItemStack?>, crossinline preservePredicate: (ItemStack) -> Boolean) =
 		getDifferenceMap(
-			before.asSequence().filter { EmptyItemStack.isNotEmpty(it) && preservePredicate(it!!) },
-			after.asSequence().filter { EmptyItemStack.isNotEmpty(it) && preservePredicate(it!!) }
+			before.asSequence().filter { it == null || preservePredicate(it) },
+			after.asSequence().filter { it == null || preservePredicate(it) }
 		)
 
 	/**

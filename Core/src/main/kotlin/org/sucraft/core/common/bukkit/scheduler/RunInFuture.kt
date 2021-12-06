@@ -32,12 +32,17 @@ object RunInFuture {
 			plugin,
 			player,
 			{ onlinePlayer ->
+				val afterInventory =
+					if (preservePredicate == null)
+						InventoryCounter.getOrderedSnapshot(onlinePlayer.inventory)
+					else
+						InventoryCounter.getOrderedSnapshot(onlinePlayer.inventory, preservePredicate)
 				action(
 					onlinePlayer,
 					if (preservePredicate == null)
-						InventoryCounter.getDifferenceMap(beforeInventory, onlinePlayer.inventory.contents)
+						InventoryCounter.getDifferenceMap(beforeInventory, afterInventory)
 					else
-						InventoryCounter.getDifferenceMap(beforeInventory, onlinePlayer.inventory.contents, preservePredicate)
+						InventoryCounter.getDifferenceMap(beforeInventory, afterInventory, preservePredicate)
 				)
 			},
 			delay

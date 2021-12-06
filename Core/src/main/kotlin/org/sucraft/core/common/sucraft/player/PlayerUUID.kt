@@ -47,7 +47,7 @@ value class PlayerUUID private constructor(val uuid: UUID) {
 
 	fun isOnline() = getOnlinePlayer()?.isOnline ?: false
 
-	// Record methods (no longer used due to turning PlayerUUID into an inline class)
+	// Record methods (hashCode and equals no longer used due to turning PlayerUUID into a value class)
 
 //	override fun hashCode() = uuid.hashCode()
 //
@@ -56,7 +56,7 @@ value class PlayerUUID private constructor(val uuid: UUID) {
 //			uuid == other.uuid
 //		else
 //			uuid == other
-//
-//	override fun toString() = uuid.toString()
+
+	override fun toString() = uuid.toString()
 
 }

@@ -25,7 +25,7 @@ object ExitMinecartListener : SuCraftComponent<SuCraftDropMinecartsOnLeavePlugin
 	fun onVehicleExit(event: VehicleExitEvent) {
 		val player = event.exited as? Player ?: return
 		val minecart = event.vehicle as? Minecart ?: return
-		val location = player.location
+		val location = player.location.clone().add(0.0, 0.51, 0.0)
 		RunInFuture.forPlayerIfOnline(plugin, player, {
 			if (it.gameMode != GameMode.CREATIVE) location.world.dropItem(location, ItemStack(Material.MINECART))
 			if (!minecart.isDead) {

@@ -40,11 +40,10 @@ object MysteryBoxData {
 		}
 		// Overwrite the lore
 		builder.setLoreComponent(
-			lore = arrayOf(Component.join(
-				JoinConfiguration.separator(Component.newline()),
-				Component.text("☘ The contents of this Shulker Box"),
-				Component.text("are a surprise!")
-			).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false))
+			lore = arrayOf(
+				Component.text("☘ The contents of this Shulker Box").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
+				Component.text("are a surprise!").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
+			)
 		)
 		return builder.build()
 	}
@@ -53,12 +52,18 @@ object MysteryBoxData {
 
 	fun isMysteryBoxDisplayName(type: Material, name: Component) = name == getMysteryBoxDisplayName(type)
 
+	fun isMysteryBox(block: Block): Boolean {
+		if (block.type !in MaterialGroups.shulkerBox) return false
+		val shulkerBox = (block.state as? ShulkerBox) ?: return false
+		val customName = shulkerBox.customName() ?: return false
+		return isMysteryBoxDisplayName(block.type, customName)
+	}
+
 	fun fixMysteryBoxTitleIfNecessary(block: Block) {
-		if (block.type !in MaterialGroups.shulkerBox) return
-		val shulkerBox = (block.state as? ShulkerBox) ?: return
-		val customName = shulkerBox.customName() ?: return
-		if (!isMysteryBoxDisplayName(block.type, customName)) return
+		if (!isMysteryBox(block)) return
+		val shulkerBox = block.state as ShulkerBox
 		shulkerBox.customName(null)
+		shulkerBox.update()
 	}
 
 }

@@ -49,14 +49,14 @@ object SuCraftMysteryBoxesCommands : SuCraftCommands<SuCraftMysteryBoxesPlugin>(
 			player.inventory.setItemInMainHand(newItemStack)
 
 			// Log to console
-			logger.info(player.name + " created a mystery shulker box: " + itemStack + " -> " + newItemStack)
+			logger.info("${player.name} created a mystery shulker box: $itemStack -> $newItemStack")
 
 			// Tell player what happened
 			player.sendMessage(
 				Component.join(
 					JoinConfiguration.noSeparators(),
 					Component.text("You created a "),
-					newItemStack.displayName(),
+					MysteryBoxData.getMysteryBoxDisplayName(newItemStack.type),
 					Component.text("!")
 				).color(NamedTextColor.GRAY)
 			)

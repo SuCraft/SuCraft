@@ -6,6 +6,9 @@ package org.sucraft.core.defaultdelegate
 
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.player.PlayerJoinEvent
 import org.sucraft.core.common.general.log.AbstractLogger
 import org.sucraft.core.common.sucraft.delegate.MinecraftClientLocale
 import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
@@ -39,7 +42,7 @@ object OfflinePlayersInformationByBukkitOfflinePlayerCall : OfflinePlayersInform
 	/**
 	 * null if not cached yet
 	 */
-	private var cachedOfflinePlayerNames: List<String>? = null
+	private var cachedOfflinePlayerNames: MutableList<String>? = null
 
 	// Implementation
 
@@ -55,12 +58,20 @@ object OfflinePlayersInformationByBukkitOfflinePlayerCall : OfflinePlayersInform
 
 	override fun getInformation(uuid: UUID): OfflinePlayersInformation.OfflinePlayerInformation? = getInformation(Bukkit.getOfflinePlayer(uuid))
 
-	override fun getInformation(player: OfflinePlayer): OfflinePlayersInformation.OfflinePlayerInformation? = if (player.hasPlayedBefore()) OfflinePlayerInformationByBukkitOfflinePlayerCall(player.uniqueId) else null
+	override fun getInformation(player: OfflinePlayer): OfflinePlayersInformation.OfflinePlayerInformation? = if (player.hasPlayedBefore() || player.isOnline()) OfflinePlayerInformationByBukkitOfflinePlayerCall(player.uniqueId) else null
+
+	// Get the offline player names by making a call to Bukkit.getOfflinePlayers
 
 	override fun getOfflinePlayerNames(): List<String> {
 		if (cachedOfflinePlayerNames == null)
-			cachedOfflinePlayerNames = Bukkit.getOfflinePlayers().mapNotNull(OfflinePlayer::getName)
+			cachedOfflinePlayerNames = Bukkit.getOfflinePlayers().mapNotNull(OfflinePlayer::getName).toMutableList()
 		return cachedOfflinePlayerNames!!
 	}
+
+	// Since the offline player names may have been cached when a player joins, add any names of joining players to the offline player names
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	fun onPlayerJoin(event: PlayerJoinEvent) =
+		cachedOfflinePlayerNames?.add(event.player.name)
 
 }

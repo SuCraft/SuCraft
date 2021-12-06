@@ -42,30 +42,30 @@ interface OfflinePlayersInformation<P: SuCraftPlugin>: SuCraftDelegate<P> {
 	}
 
 	/**
-	 * Returns null if no such player has ever played on the server
+	 * Returns null if no such player has ever joined the server
 	 * The name is case-insensitive, so the resulting information may have a differently capitalized name than the one that was given
 	 */
 	@Suppress("DEPRECATION")
 	fun getInformation(name: String) = Bukkit.getPlayerExact(name)?.let { getInformation(it) } ?: Bukkit.getOfflinePlayerIfCached(name)?.let { getInformation(it) } ?: getInformation(Bukkit.getOfflinePlayer(name))
 
 	/**
-	 * Returns null if no such player has ever played on the server
+	 * Returns null if no such player has ever joined the server
 	 */
 	fun getInformation(uuid: UUID): OfflinePlayerInformation?
 
 	/**
-	 * Returns null if no such player has ever played on the server
+	 * Returns null if no such player has ever joined the server
 	 */
 	fun getInformation(player: OfflinePlayer) = getInformation(player.uniqueId)
 
 	fun getInformation(uuid: PlayerUUID) = getInformation(uuid.uuid)
 
-	fun hasPlayedBefore(uuid: UUID) = getInformation(uuid) != null
+	fun hasJoinedBefore(uuid: UUID) = getInformation(uuid) != null
 
-	fun hasPlayedBefore(player: OfflinePlayer) = getInformation(player) != null
+	fun hasJoinedBefore(player: OfflinePlayer) = getInformation(player) != null
 
 	/**
-	 * Returns a list of all the correctly cased names of players that have played before
+	 * Returns a list of all the correctly cased names of players that have joined before
 	 */
 	fun getOfflinePlayerNames(): List<String>
 

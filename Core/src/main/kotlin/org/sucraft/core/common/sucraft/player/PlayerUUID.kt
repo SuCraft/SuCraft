@@ -21,7 +21,7 @@ value class PlayerUUID private constructor(val uuid: UUID) {
 
 	companion object {
 
-		fun get(uuid: UUID) = if (OfflinePlayersInformation.get().hasPlayedBefore(uuid)) PlayerUUID(uuid) else null
+		fun get(uuid: UUID) = if (OfflinePlayersInformation.get().hasJoinedBefore(uuid)) PlayerUUID(uuid) else null
 
 		fun get(player: Player): PlayerUUID = getAlreadyConfirmed(player.uniqueId)
 

@@ -13,7 +13,7 @@
 	<artifactId>anvilmechanics</artifactId>
 	<name>SuCraft-AnvilMechanics</name>
 	<description>Increases and caps maximum anvil level cost and makes renaming free</description>
-	<version>0.1</version>
+	<version>0.2</version>
 	<build>
 		<plugins>
 			<plugin>

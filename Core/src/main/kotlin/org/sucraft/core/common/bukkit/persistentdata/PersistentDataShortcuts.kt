@@ -48,7 +48,7 @@ object PersistentDataShortcuts {
 	fun remove(itemStack: ItemStack?, key: NamespacedKey) {
 		if (itemStack == null) return
 		if (!itemStack.hasItemMeta()) return
-		remove(itemStack.itemMeta, key)
+		itemStack.itemMeta.also { remove(it, key) }.also { itemStack.itemMeta = it }
 	}
 
 	interface PersistentDataShortcut<T> {
@@ -70,7 +70,7 @@ object PersistentDataShortcuts {
 			set(holder.persistentDataContainer, key, value)
 
 		operator fun set(itemStack: ItemStack, key: NamespacedKey, value: T) =
-			set(GuaranteedItemMetaGetter.get(itemStack), key, value)
+			GuaranteedItemMetaGetter.get(itemStack).also { set(it, key, value) }.also { itemStack.itemMeta = it }
 
 	}
 
@@ -207,7 +207,7 @@ object PersistentDataShortcuts {
 			set(holder.persistentDataContainer, key)
 
 		fun set(itemStack: ItemStack, key: NamespacedKey) =
-			set(itemStack.itemMeta, key)
+			GuaranteedItemMetaGetter.get(itemStack).also { set(it, key) }.also { itemStack.itemMeta = it }
 
 	}
 

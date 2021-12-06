@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.raiddifficulty.main.SuCraftRaidDifficultyPlugin
+import kotlin.math.max
 
 
 object RaidStartListener : SuCraftComponent<SuCraftRaidDifficultyPlugin>(SuCraftRaidDifficultyPlugin.getInstance()) {
@@ -53,7 +54,7 @@ object RaidStartListener : SuCraftComponent<SuCraftRaidDifficultyPlugin>(SuCraft
 		// The raid conforms to the requirements, let this raid happen and remove the bad omen now
 		RunInFuture.forPlayerIfOnline(plugin, event.player, { it.removePotionEffect(PotionEffectType.BAD_OMEN) } )
 		// Log to console
-		logger.info("A raid was triggered by ${event.player.name} at ${event.raid.location} with bad omen level ${event.raid.badOmenLevel}, ${event.raid.totalWaves} total waves and ${event.raid.totalGroups} total groups")
+		logger.info("A raid was triggered by ${event.player.name} at ${event.raid.location} with bad omen level ${max(event.raid.badOmenLevel, event.player.getPotionEffect(PotionEffectType.BAD_OMEN)?.amplifier ?: 0) + 1}, ${event.raid.totalWaves} total waves and ${event.raid.totalGroups} total groups")
 
 	}
 

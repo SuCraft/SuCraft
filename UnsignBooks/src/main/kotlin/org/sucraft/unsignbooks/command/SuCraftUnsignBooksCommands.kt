@@ -49,6 +49,7 @@ object SuCraftUnsignBooksCommands : SuCraftCommands<SuCraftUnsignBooksPlugin>(Su
 			val permissionToUnsign = !meta.hasAuthor() || meta.author.equals(player.name, ignoreCase = true) || player.hasPermission(SuCraftUnsignBooksPermissions.UNSIGN_OTHER_PLAYERS_BOOKS)
 			if (!permissionToUnsign) {
 				player.sendMessage(Component.text("You can only unsign books signed by yourself.").color(NamedTextColor.GRAY))
+				return@onCommand
 			}
 			// Unsign the book
 			val newMeta = meta.clone()

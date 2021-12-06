@@ -12,8 +12,8 @@
 	</parent>
 	<artifactId>enderdragondrops</artifactId>
 	<name>SuCraft-EnderDragonDrops</name>
-	<description>Adds item drops from the Ender dragon</description>
-	<version>0.1</version>
+	<description>Adds elytra drops from the Ender dragon</description>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

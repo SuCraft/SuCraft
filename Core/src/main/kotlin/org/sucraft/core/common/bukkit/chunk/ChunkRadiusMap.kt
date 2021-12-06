@@ -34,7 +34,7 @@ class ChunkRadiusMap<T>(initialCapacity: Int = 3) {
 	// TODO replace by map using Long chunk keys as key
 	private val map: MutableMap<ChunkCoordinates, T> = HashMap(initialCapacity)
 
-	fun set(chunk: ChunkCoordinates, value: T) {
+	operator fun set(chunk: ChunkCoordinates, value: T) {
 		map[chunk] = value
 	}
 
@@ -60,8 +60,8 @@ class ChunkRadiusMap<T>(initialCapacity: Int = 3) {
 
 	fun remove(chunk: ChunkCoordinates) = map.remove(chunk)
 
-	fun get(chunk: ChunkCoordinates) = map[chunk]
+	operator fun get(chunk: ChunkCoordinates) = map[chunk]
 
-	fun contains(chunk: ChunkCoordinates) = chunk in map
+	operator fun contains(chunk: ChunkCoordinates) = chunk in map
 
 }

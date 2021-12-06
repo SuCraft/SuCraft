@@ -40,6 +40,6 @@ class ChunkRadiusSet(initialCapacity: Int = 3) {
 
 	fun remove(chunk: ChunkCoordinates) = set.remove(chunk)
 
-	fun contains(chunk: ChunkCoordinates) = chunk in set
+	operator fun contains(chunk: ChunkCoordinates) = chunk in set
 
 }

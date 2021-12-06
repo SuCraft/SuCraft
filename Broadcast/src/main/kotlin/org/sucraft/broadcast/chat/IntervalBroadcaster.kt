@@ -4,13 +4,17 @@
 
 package org.sucraft.broadcast.chat
 
-import org.bukkit.ChatColor.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.sucraft.broadcast.main.SuCraftBroadcastPlugin
 import org.sucraft.broadcast.player.permission.SuCraftBroadcastPermissions
 import org.sucraft.core.common.bukkit.scheduler.WhilePlayersAreOnlineTimerTask
 import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
+import org.sucraft.discordinfo.data.DiscordChannel
 
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -29,8 +33,21 @@ object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBro
 	private const val broadcastMinimumDelayAfterTurningOn = 20L * 60
 
 	private val messages = arrayOf(
-		"${GREEN}SuCraft Info${WHITE}: Want to join our Discord? Go to ${YELLOW}https://discord.gg/egH7dGX",
-		"${GREEN}SuCraft Info${WHITE}: You can ${YELLOW}/vote${WHITE}, it helps to have more new people join the server :)"
+		Component.join(
+			JoinConfiguration.noSeparators(),
+			Component.text("SuCraft Info").color(NamedTextColor.GREEN),
+			Component.text(": "),
+			Component.text("Want to join our Discord server? Go to "),
+			DiscordChannel.GENERAL.getURLComponent(color = NamedTextColor.YELLOW)
+		).color(NamedTextColor.WHITE),
+		Component.join(
+			JoinConfiguration.noSeparators(),
+			Component.text("SuCraft Info").color(NamedTextColor.GREEN),
+			Component.text(": "),
+			Component.text("You can "),
+			Component.text("/vote").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/vote")),
+			Component.text(", it helps to have more new people join the server :)")
+		).color(NamedTextColor.WHITE)
 	)
 
 	// Initialization

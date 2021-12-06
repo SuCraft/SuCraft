@@ -29,7 +29,7 @@ object SuCraftPlayerCompassCommands : SuCraftCommands<SuCraftPlayerCompassPlugin
 		"playercompass",
 		onCommand@{ player, _, _, _ ->
 			if (!player.hasPermission(SuCraftPlayerCompassPermissions.CREATE_OWN_COMPASS)) {
-				SupportingMessages.sendOnlySupportersHaveAbility(player, "create compasses that always point to them (even when you give it to someone else)")
+				SupportingMessages.sendOnlySupportersHaveAbility(player, "create compasses that always point to them (and give them to other players)")
 				return@onCommand
 			}
 			// Make sure the player is holding a compass

@@ -54,7 +54,7 @@ object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlug
 			}
 			// Check if the elytra is already festive
 			if (ElytraData.isFestiveElytra(itemStack)) {
-				player.sendMessage("${WHITE}This elytra is already festive!${GRAY} You can remove it with ${WHITE}/${tenYearsElytraCommandName} ${removeTenYearsElytraSubArgument}${GRAY}.")
+				player.sendMessage("${WHITE}This elytra is already festive!${GRAY} If you are sure want to remove the effect, you can do so with ${WHITE}/${tenYearsElytraCommandName} ${removeTenYearsElytraSubArgument}${GRAY}.")
 				return@onCommand
 			}
 			val festiveItemStack: ItemStack = ElytraData.festivizeElytra(player, itemStack)

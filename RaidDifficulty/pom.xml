@@ -13,7 +13,7 @@
 	<artifactId>raiddifficulty</artifactId>
 	<name>SuCraft-RaidDifficulty</name>
 	<description>All raids are at hard difficulty</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

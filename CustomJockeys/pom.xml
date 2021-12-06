@@ -13,7 +13,7 @@
 	<artifactId>customjockeys</artifactId>
 	<name>SuCraft-CustomJockeys</name>
 	<description>Spawns custom combinations of jockeys</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

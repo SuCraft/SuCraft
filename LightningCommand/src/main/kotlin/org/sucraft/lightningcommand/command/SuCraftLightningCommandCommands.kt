@@ -19,7 +19,7 @@ object SuCraftLightningCommandCommands : SuCraftCommands<SuCraftLightningCommand
 		"lightning",
 		onCommand@{ player, _, _, _ ->
 			if (!player.hasPermission(SuCraftLightningCommandPermissions.LIGHTNING)) {
-				SupportingMessages.sendOnlySupportersHaveAbility(player, "create decorative lightning")
+				SupportingMessages.sendOnlySupportersHaveAbility(player, "summon decorative lightning")
 				return@onCommand
 			}
 			logger.info("${player.name} struck decorative lightning at ${player.location}")

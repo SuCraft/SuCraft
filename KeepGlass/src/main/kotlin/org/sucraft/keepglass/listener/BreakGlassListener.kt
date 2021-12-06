@@ -25,7 +25,7 @@ object BreakGlassListener : SuCraftComponent<SuCraftKeepGlassPlugin>(SuCraftKeep
 		// Make sure the player is in survival mode
 		if (player.gameMode != GameMode.SURVIVAL) return
 		// Make sure the player is not using silk touch
-		if (player.inventory.itemInMainHand.enchantments.keys.stream().anyMatch { it == Enchantment.SILK_TOUCH }) return
+		if (player.inventory.itemInMainHand.enchantments.keys.any { it == Enchantment.SILK_TOUCH }) return
 		// Make sure the block is glass
 		val block = event.block
 		val type = block.type

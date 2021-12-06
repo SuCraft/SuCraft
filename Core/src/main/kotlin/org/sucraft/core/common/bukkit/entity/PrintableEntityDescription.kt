@@ -258,7 +258,7 @@ object PrintableEntityDescription {
 
         // The passengers this entity is carrying
         if (entity.passengers.isNotEmpty()) {
-            builder.append("(passengers: ${entity.passengers.map { if (doNotPrintOtherEntities) getShort(it) else get(it, true) }})")
+            builder.append("(passengers: ${entity.passengers.asSequence().map { if (doNotPrintOtherEntities) getShort(it) else get(it, true) }})")
             builder.append(' ')
         }
 

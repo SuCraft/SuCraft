@@ -39,7 +39,7 @@ class Pair<A, B>(val first: A, val second: B) {
 
 		fun <A, B> putAll(pairs: List<Pair<A, B>>, map: MutableMap<A, B>) = pairs.forEach { map[it.first] = it.second }
 
-		fun <A, B> pairSet(map: Map<A, B>): Set<Pair<A, B>> = map.map(::Pair).toSet()
+		fun <A, B> pairSet(map: Map<A, B>): Set<Pair<A, B>> = map.asSequence().map(::Pair).toSet()
 
 		fun <A, B, A2> mapFirst(function: (A) -> A2): (Pair<A, B>) -> Pair<A2, B> = { it.applyFirst(function) }
 

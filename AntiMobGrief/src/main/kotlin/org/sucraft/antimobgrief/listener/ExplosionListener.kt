@@ -30,7 +30,7 @@ object ExplosionListener : SuCraftComponent<SuCraftAntiMobGriefPlugin>(SuCraftAn
 			// Instead of replacing broken blocks by fire, place fire on top of the blocks that would be broken
 			is Ghast,
 			is Fireball -> {
-				val newBlockList = event.blockList().map { it.getRelative(BlockFace.UP) }.filter { it.type.isAir }
+				val newBlockList = event.blockList().asSequence().map { it.getRelative(BlockFace.UP) }.filter { it.type.isAir }
 				event.blockList().clear()
 				event.blockList().addAll(newBlockList)
 			}

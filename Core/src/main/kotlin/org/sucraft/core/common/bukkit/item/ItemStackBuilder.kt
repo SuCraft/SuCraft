@@ -164,7 +164,7 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 			return this
 		}
 		val newLore: MutableList<Component> = ArrayList(loreComponent)
-		newLore.addAll(if (!removeItalic) lore else lore.map { component: Component -> component.decoration(TextDecoration.ITALIC, false) })
+		newLore.addAll(if (!removeItalic) lore.asSequence() else lore.asSequence().map { component: Component -> component.decoration(TextDecoration.ITALIC, false) })
 		return setLoreComponent(false, newLore)
 	}
 
@@ -174,8 +174,10 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun addLoreComponent(unformattedString: String, componentPostprocessing: ((Component) -> Component)?, loreMaxLineLength: Int) =
 		addLoreComponent(
 			lore = StringSplit.cutStringIntoParts(unformattedString, null, null, loreMaxLineLength)
+				.asSequence()
 				.map(Component::text)
 				.map(componentPostprocessing ?: { it })
+				.toList()
 		)
 
 	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")

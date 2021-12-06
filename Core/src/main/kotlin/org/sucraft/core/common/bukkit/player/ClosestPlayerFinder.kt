@@ -14,7 +14,7 @@ import java.util.function.Predicate
 object ClosestPlayerFinder {
 
 	fun getClosestPlayer(location: Location, predicate: ((Player) -> Boolean)? = null): Player? =
-		location.world.players.let { if (predicate == null) it else it.filter(predicate) }.minByOrNull{it.location.distanceSquared(location)}
+		location.world.players.asSequence().let { if (predicate == null) it else it.filter(predicate) }.minByOrNull{it.location.distanceSquared(location)}
 
 	fun getClosestPlayer(entity: Entity, predicate: ((Player) -> Boolean)? = null): Player? =
 		getClosestPlayer(entity.location, predicate)

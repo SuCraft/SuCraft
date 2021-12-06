@@ -63,7 +63,7 @@ object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBro
 
 	fun broadcastMessage() {
 		val message = messages[nextMessageIndex]
-		Bukkit.getOnlinePlayers().filter { !it.hasPermission(SuCraftBroadcastPermissions.IGNORE) }.forEach { it.sendMessage(message) }
+		Bukkit.getOnlinePlayers().asSequence().filter { !it.hasPermission(SuCraftBroadcastPermissions.IGNORE) }.forEach { it.sendMessage(message) }
 		nextMessageIndex++
 		if (nextMessageIndex >= messages.size) nextMessageIndex = 0
 	}

@@ -21,10 +21,6 @@ object InventoryCounter {
 	fun getOrderedSnapshot(inventory: Inventory, preservePredicate: (ItemStack) -> Boolean): Array<ItemStack?> =
 		Array(inventory.contents.size) { inventory.contents[it]?.takeIf(preservePredicate)?.clone() }
 
-	// Implementation switched because keeping empty spaces was the point of it being ordered
-//	fun getOrderedSnapshot(inventory: Inventory, preservePredicate: (ItemStack) -> Boolean): List<ItemStack> =
-//		inventory.contents.asSequence().filter { !EmptyItemStack.isEmpty(it) && preservePredicate(it) }.map(ItemStack::clone).toList()
-
 	/**
 	 * @return A map where all keys are itemstacks with amount 1
 	 */

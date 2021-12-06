@@ -63,7 +63,12 @@ object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlug
 			player.sendTitle("Thank you~", "Thank you for being a part of this wonderful community <3", 10, 100, 45)
 			player.sendMessage(MiniMessage.builder().build().parse("<rainbow:2>Enjoy your special festive elytra :)</rainbow>"))
 		},
-		CommonTabCompletion.EMPTY
+		CommonTabCompletion.onlyFirstArgumentPlayer { player, _, _, arguments ->
+			if (ElytraData.isFestiveElytra(player.inventory.itemInMainHand))
+				listOf(removeTenYearsElytraSubArgument)
+			else
+				emptyList()
+		}
 	)
 
 }

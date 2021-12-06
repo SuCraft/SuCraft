@@ -28,9 +28,9 @@ object CommonTabCompletion {
 		{ player, command, label, arguments -> completer(player, command, label, arguments)(player, command, label, arguments) }
 
 	fun onlyFirstArgument(completer: TabCompleter): TabCompleter =
-		deferred { _, _, _, arguments -> if (arguments.size >= 2) completer else EMPTY }
+		deferred { _, _, _, arguments -> if (arguments.size <= 1) completer else EMPTY }
 
 	fun onlyFirstArgumentPlayer(completer: PlayerTabCompleter): PlayerTabCompleter =
-		deferredPlayer { _, _, _, arguments -> if (arguments.size >= 2) completer else EMPTY }
+		deferredPlayer { _, _, _, arguments -> if (arguments.size <= 1) completer else EMPTY }
 
 }

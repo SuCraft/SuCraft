@@ -54,6 +54,6 @@ object GiantData : SuCraftComponent<SuCraftGiantsPlugin>(SuCraftGiantsPlugin.get
 
 	internal fun incrementChunkGiantSpawns(chunk: ChunkCoordinates) = giantChunksThisSession.addWithinRadius(chunk, maxOneGiantPerSessionChunkRadius)
 
-	internal fun canSpawnGiantInChunkThisSession(chunk: ChunkCoordinates) = giantChunksThisSession.contains(chunk)
+	internal fun canSpawnGiantInChunkThisSession(chunk: ChunkCoordinates) = chunk !in giantChunksThisSession
 
 }

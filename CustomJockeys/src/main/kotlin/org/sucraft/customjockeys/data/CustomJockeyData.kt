@@ -53,6 +53,6 @@ object CustomJockeyData : SuCraftComponent<SuCraftCustomJockeysPlugin>(SuCraftCu
 
 	internal fun incrementChunkJockeySpawns(chunk: ChunkCoordinates) = jockeyChunksThisSession.addWithinRadius(chunk, maxOneJockeyPerSessionChunkRadius)
 
-	internal fun canSpawnJockeyInChunkThisSession(chunk: ChunkCoordinates) = jockeyChunksThisSession.contains(chunk)
+	internal fun canSpawnJockeyInChunkThisSession(chunk: ChunkCoordinates) = chunk !in jockeyChunksThisSession
 
 }

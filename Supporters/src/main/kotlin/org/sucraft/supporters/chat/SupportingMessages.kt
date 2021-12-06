@@ -8,26 +8,28 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
+import org.sucraft.discordinfo.data.DiscordChannel
 
 
 object SupportingMessages {
 
-	private const val discordSupportInfoChannelName = "guide"
-	private const val discordSupportInfoURL = "https://discord.gg/egH7dGX"
+	private val discordSupportInfoChannel = DiscordChannel.GUIDE
 
-	fun sendOnlySupportersHaveAbility(player: Player, ability: String) =
+	fun sendOnlySupportersHaveAbility(player: Player, ability: String) {
 		player.sendMessage(
-			Component.text("Supporters can ${ability}!").color(NamedTextColor.AQUA)
+			Component.text("Supporters can ${ability}! \\o/").color(NamedTextColor.AQUA)
 		)
+		sendSupportingInfoLink(player)
+	}
 
 	fun sendSupportingInfoLink(player: Player) =
 		player.sendMessage(
 			Component.join(
 				JoinConfiguration.noSeparators(),
-				Component.text("Check the Discord server #${discordSupportInfoChannelName} channel :)").color(NamedTextColor.WHITE),
-				Component.text(" "),
-				Component.text(discordSupportInfoURL).color(NamedTextColor.GREEN)
-			)
+				Component.text("Check the Discord server ${discordSupportInfoChannel.hashtagChannelName} channel:"),
+				Component.space(),
+				discordSupportInfoChannel.getURLComponent(color = NamedTextColor.GREEN)
+			).color(NamedTextColor.WHITE)
 		)
 
 }

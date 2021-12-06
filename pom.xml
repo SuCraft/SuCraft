@@ -54,6 +54,7 @@
 		<module>Giants</module>
 		<module>AxolotlColorInLore</module>
 		<module>BukkitAPIExtension</module>
+		<module>DiscordInfo</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -13,7 +13,7 @@
 	<artifactId>axolotlcolorinlore</artifactId>
 	<name>SuCraft-AxolotlColorInLore</name>
 	<description>Shows the color of axolotls in your inventory</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>sucraft</groupId>
 			<artifactId>bukkitapiextension</artifactId>
-			<version>0.1</version>
+			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

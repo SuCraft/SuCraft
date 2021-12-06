@@ -13,7 +13,7 @@
 	<artifactId>invisibleitemframes</artifactId>
 	<name>SuCraft-InvisibleItemFrames</name>
 	<description>Shift-right-click item frames to make them invisible</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

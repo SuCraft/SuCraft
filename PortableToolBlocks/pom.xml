@@ -13,7 +13,7 @@
 	<artifactId>portabletoolblocks</artifactId>
 	<name>SuCraft-PortableToolBlocks</name>
 	<description>Access portable tool blocks</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -39,12 +39,6 @@
 		<dependency>
 			<groupId>sucraft</groupId>
 			<artifactId>core</artifactId>
-			<version>0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>sucraft</groupId>
-			<artifactId>supporters</artifactId>
 			<version>0.1</version>
 			<scope>provided</scope>
 		</dependency>

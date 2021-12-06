@@ -13,7 +13,7 @@
 	<artifactId>mysteryboxes</artifactId>
 	<name>SuCraft-MysteryBoxes</name>
 	<description>Turn shulker boxes into mystery boxes</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>sucraft</groupId>
 			<artifactId>supporters</artifactId>
-			<version>0.1</version>
+			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

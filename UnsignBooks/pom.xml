@@ -13,7 +13,7 @@
 	<artifactId>unsignbooks</artifactId>
 	<name>SuCraft-UnsignBooks</name>
 	<description>Unsign books with /unsign</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

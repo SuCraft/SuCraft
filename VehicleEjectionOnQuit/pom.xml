@@ -13,7 +13,7 @@
 	<artifactId>vehicleejectiononquit</artifactId>
 	<name>SuCraft-VehicleEjectionOnQuit</name>
 	<description>Ejects passengers and leaves otherwise bound vehicles when a player quits</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

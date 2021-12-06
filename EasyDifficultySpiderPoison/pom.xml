@@ -13,7 +13,7 @@
 	<artifactId>easydifficultyspiderpoison</artifactId>
 	<name>SuCraft-EasyDifficultySpiderPoison</name>
 	<description>Make cave spiders inflict poison on easy difficulty</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

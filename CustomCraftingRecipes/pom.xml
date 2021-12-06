@@ -13,7 +13,7 @@
 	<artifactId>customcraftingrecipes</artifactId>
 	<name>SuCraft-CustomCraftingRecipes</name>
 	<description>Custom crafting recipes such as enchanted golden apples</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

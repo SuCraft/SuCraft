@@ -13,7 +13,7 @@
 	<artifactId>opmecommand</artifactId>
 	<name>SuCraft-OpMeCommand</name>
 	<description>Adds the troll command /opme</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>

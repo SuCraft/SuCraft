@@ -13,7 +13,7 @@
 	<artifactId>supporters</artifactId>
 	<name>SuCraft-Supporters</name>
 	<description>Provides information related to supporting the server by donating</description>
-	<version>0.1</version>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>sucraft</groupId>
 			<artifactId>discordinfo</artifactId>
-			<version>0.1</version>
+			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

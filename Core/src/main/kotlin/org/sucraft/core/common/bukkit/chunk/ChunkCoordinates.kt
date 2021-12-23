@@ -48,6 +48,13 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 
 	fun getRelative(dx: Int, dz: Int) = copy(x = x + dx, z = z + dz)
 
+	// Get the region
+
+	val regionX get() = x shr 5
+	val regionZ get() = z shr 5
+
+	val regionCoordinates get() = RegionCoordinates.get(worldName, regionX, regionZ)
+
 	// Get blocks
 
 	val minBlockX get() = x * 16

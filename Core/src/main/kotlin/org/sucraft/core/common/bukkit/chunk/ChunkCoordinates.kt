@@ -11,7 +11,6 @@ import org.bukkit.block.Block
 import org.bukkit.util.Vector
 import org.json.JSONObject
 import org.sucraft.core.common.bukkit.block.BlockCoordinates
-import java.lang.Exception
 
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -52,7 +51,7 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 	// Get blocks
 
 	val minBlockX get() = x * 16
-	val minBlockZ get() = x * 16
+	val minBlockZ get() = z * 16
 	val minMiddleBlockX get() = minBlockX + 7
 	val minMiddleBlockZ get() = minBlockZ + 7
 	/**

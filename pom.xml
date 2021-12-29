@@ -290,9 +290,11 @@
 									<id>copy-built-jar</id>
 									<configuration>
 										<target>
+											<!--suppress UnresolvedMavenProperty -->
 											<echo>Copying ${project.build.directory}/${project.build.finalName}.jar to
 												${exportPluginsPath}
 											</echo>
+											<!--suppress UnresolvedMavenProperty -->
 											<copy file="${project.build.directory}/${project.build.finalName}.jar"
 												  todir="${exportPluginsPath}"/>
 										</target>

@@ -4,13 +4,13 @@
 
 package org.sucraft.core.common.sucraft.plugin
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.sucraft.core.common.bukkit.log.NestedLogger
-import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
+import org.bukkit.plugin.java.JavaPlugin
+import org.sucraft.core.common.bukkit.log.NestedLogger
 import org.sucraft.core.common.general.pattern.SingletonContainer
+import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -61,6 +61,10 @@ abstract class SuCraftPlugin : JavaPlugin() {
 		private set
 	var disabling = false
 		private set
+
+	val isEnabledOrEnabling get() = enabling || isEnabled
+
+	val isDisabledOrDisabling get() = disabling || !isEnabled
 
 	// Logger
 

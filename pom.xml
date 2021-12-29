@@ -55,6 +55,7 @@
 		<module>AxolotlColorInLore</module>
 		<module>BukkitAPIExtension</module>
 		<module>DiscordInfo</module>
+		<module>AntiCorruption</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

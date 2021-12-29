@@ -6,7 +6,8 @@ package org.sucraft.anvilmechanics.listener
 
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor.*
+import org.bukkit.ChatColor.GRAY
+import org.bukkit.ChatColor.WHITE
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

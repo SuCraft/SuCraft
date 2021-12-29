@@ -18,11 +18,11 @@ data class FileToBackup(
 
 	val sourceFile get() = File(relativeFilePath)
 
-	val airlockFile get() = Path.of(airlockFolder.path, relativeFilePath).toFile()
+	val airlockFile get(): File = Path.of(airlockFolder.path, relativeFilePath).toFile()
 
-	val backupFile get() = Path.of(backupFolder.path, relativeFilePath).toFile()
+	val backupFile get(): File = Path.of(backupFolder.path, relativeFilePath).toFile()
 
-	val longBackupFile get() = Path.of(longBackupFolder.path, relativeFilePath).toFile()
+	val longBackupFile get(): File = Path.of(longBackupFolder.path, relativeFilePath).toFile()
 
 	companion object {
 
@@ -30,9 +30,9 @@ data class FileToBackup(
 		const val backupFolderName = """backup"""
 		const val longBackupFolderName = """longbackup"""
 
-		val airlockFolder = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, airlockFolderName).toFile()
-		val backupFolder = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, backupFolderName).toFile()
-		val longBackupFolder = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, longBackupFolderName).toFile()
+		val airlockFolder: File = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, airlockFolderName).toFile()
+		val backupFolder: File = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, backupFolderName).toFile()
+		val longBackupFolder: File = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, longBackupFolderName).toFile()
 
 	}
 

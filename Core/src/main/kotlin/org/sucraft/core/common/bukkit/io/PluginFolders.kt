@@ -14,6 +14,6 @@ object PluginFolders {
 
 	fun getPluginsFolder() = File(pluginsFolderName)
 
-	fun getPluginDataFolder(pluginName: String) = Path.of(getPluginsFolder().path, pluginName).toFile()
+	fun getPluginDataFolder(pluginName: String): File = Path.of(getPluginsFolder().path, pluginName).toFile()
 
 }

@@ -14,7 +14,7 @@ import java.util.*
 
 object WorldFolders {
 
-	val mainWorld get() = Bukkit.getWorlds()[0]
+	val mainWorld get(): World = Bukkit.getWorlds()[0]
 
 	val regionFolderName = """region"""
 	val entitiesFolderName = """entities"""

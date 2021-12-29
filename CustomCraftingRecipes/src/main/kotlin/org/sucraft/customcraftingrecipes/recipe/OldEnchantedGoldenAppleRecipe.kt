@@ -21,7 +21,7 @@ object OldEnchantedGoldenAppleRecipe : CustomRecipe() {
 
 	override fun getBukkitRecipe() =
 		ShapedRecipe(recipeNamespacedKey, ItemStack(Material.ENCHANTED_GOLDEN_APPLE)).also {
-			it.shape(*arrayOf("$$$", "$%$", "$$$"))
+			it.shape("$$$", "$%$", "$$$")
 			it.setIngredient('$', Material.GOLD_BLOCK)
 			it.setIngredient('%', Material.APPLE)
 		}

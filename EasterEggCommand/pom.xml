@@ -12,7 +12,7 @@
 	</parent>
 	<artifactId>eastereggcommand</artifactId>
 	<name>SuCraft-EasterEggCommand</name>
-	<description>Adds the easter egg command /easteregg</description>
+	<description>Adds the Easter egg command /easteregg</description>
 	<version>1.0</version>
 	<build>
 		<plugins>

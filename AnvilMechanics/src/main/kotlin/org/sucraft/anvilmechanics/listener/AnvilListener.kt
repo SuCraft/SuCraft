@@ -48,7 +48,7 @@ object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvi
 	private const val costToOnlyRename = 1
 
 	/**
-	 * Whether ty try to refund the level rename cost (since it cannot be 0 but we may want it to not cost any levels just to rename items)
+	 * Whether ty try to refund the level rename cost (since it cannot be 0, but we may want it to not cost any levels just to rename items)
 	 */
 	private const val tryToRefundRenameCost = true
 

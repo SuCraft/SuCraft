@@ -5,7 +5,7 @@
 This repository contains the source code for SuCraft. You can help in three ways:
 * If there is a bug on the server, please report it, or if there is a feature you want, request it (create a new issue under Issues)
 * Change the code yourself, and make a pull request (so I can add your changes)
-* If there is a tiny mistake in the code or you think you identified something, you can also just create an issue for it or send me updated code directly
+* If there is a tiny mistake in the code, or you think you identified something, you can also just create an issue for it or send me updated code directly
 
 ## How to help with the code
 
@@ -31,15 +31,15 @@ Of course, you must have installed [Java JDK 17](https://www.oracle.com/java/tec
 
 ### 3. Start a test server
 
-You should start a new Paper server (download the latest .jar from the [Paper website](https://papermc.io/downloads) and place it where you want to run the test server (for example *C:/Users/Martijn/Desktop/SuCraft/testserver*). Rename the jar you downloaded to *server.jar*.
+You should start a new Paper server (download the latest .jar from the [Paper website](https://papermc.io/downloads) and place it where you want to run the test server (for example *C:/Users/Martijn/Desktop/SuCraft/testserver*)). Rename the jar you downloaded to *server.jar*.
 
 Create a new file in the same folder, called *server.bat*, and open it with Notepad, and type
 
 > java -jar server.jar
 
-Now you can run *server.bat* and it will start the server. One time, you will have to open *eula.txt* and set it to *true*. The first time the server has started, it will generated a folder called *plugins*.
+Now you can run *server.bat* and it will start the server. One time, you will have to open *eula.txt* and set it to *true*. The first time the server has started, it will generate a folder called *plugins*.
 
-Then you should add all the plugins to the */plugins* folder. In IntelliJ you can easily compile all plugins. The first time, you must do this:
+Then you should add all the plugins to the */plugins* folder. In IntelliJ, you can easily compile all plugins. The first time, you must do this:
 
 * To have the plugin .jars automatically placed into the test server plugins folder, you have to create a new file called *sucraft.properties* in the root folder (next to the *LICENSE* and *README.md* files). In the file, type (replace the *C:/Users/Martijn/Desktop/SuCraft/testserver* with your own test server path, please use / instead of \\):
   > exportPluginsPath=C:/Users/Martijn/Desktop/SuCraft/testserver/plugins

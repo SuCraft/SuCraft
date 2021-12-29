@@ -100,7 +100,7 @@ object SuCraftItemsOnHeadCommands : SuCraftCommands<SuCraftItemsOnHeadPlugin>(Su
 					else
 						null
 
-			// If some items have curse of binding
+			// If some items have Curse of Binding
 			if (itemsWithCurseOfBindingText != null) {
 				player.sendMessage(
 					Component.text(itemsWithCurseOfBindingText).color(NamedTextColor.WHITE)

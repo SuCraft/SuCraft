@@ -50,7 +50,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 	// Steps in backing up
 
 	/**
-	 * Step 1: checks whether needs to be backed up, if so, copies the file to airlock and verifies the airlock file
+	 * Step 1: checks whether the file needs to be backed up, if so, copies the file to airlock and verifies the airlock file
 	 */
 	private fun copyToAirlock(task: BackupTask) {
 		try {
@@ -269,7 +269,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			if (queueExecutionBukkitTask != null) {
 				// If the task already started is scheduled in time, we don't need to do anything
 				if (queueExecutionBukkitTaskPlannedTimeInMillis <= timeNextTaskWouldBeScheduledFor) return
-				// Otherwise we have to cancel the already started task and schedule a new one
+				// Otherwise, we have to cancel the already started task and schedule a new one
 				queueExecutionBukkitTask!!.cancel()
 				queueExecutionBukkitTask = null
 			}

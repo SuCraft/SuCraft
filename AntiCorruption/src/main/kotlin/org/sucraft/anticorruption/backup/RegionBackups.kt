@@ -16,7 +16,7 @@ object RegionBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAnti
 
 	// Settings
 
-	const val minimumChunkInhabitedTimeToBackup = 20L * 60 * 10 // 1 player for 10 minutes
+	private const val minimumChunkInhabitedTimeToBackup = 20L * 60 * 10 // 1 player for 10 minutes
 
 	// Implementation
 

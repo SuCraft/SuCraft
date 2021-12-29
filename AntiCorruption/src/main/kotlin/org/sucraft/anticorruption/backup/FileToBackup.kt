@@ -26,9 +26,9 @@ data class FileToBackup(
 
 	companion object {
 
-		const val airlockFolderName = """airlock"""
-		const val backupFolderName = """backup"""
-		const val longBackupFolderName = """longbackup"""
+		private const val airlockFolderName = """airlock"""
+		private const val backupFolderName = """backup"""
+		private const val longBackupFolderName = """longbackup"""
 
 		val airlockFolder: File = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, airlockFolderName).toFile()
 		val backupFolder: File = Path.of(SuCraftAntiCorruptionPlugin.getInstance().dataFolder.path, backupFolderName).toFile()

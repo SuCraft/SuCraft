@@ -20,8 +20,6 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.playercompass.main.SuCraftPlayerCompassPlugin
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.min
@@ -69,7 +67,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 		}
 	}
 
-	fun updateCompassesInInventories() {
+	private fun updateCompassesInInventories() {
 		for (player in Bukkit.getOnlinePlayers()) {
 			trackedBy[PlayerUUID.get(player)]?.forEach { (trackerUUID, trackerItemSlot) ->
 				trackerUUID.getOnlinePlayer()?.let { possiblyUpdateCompass(it.location, it.inventory.contents[trackerItemSlot], player) }

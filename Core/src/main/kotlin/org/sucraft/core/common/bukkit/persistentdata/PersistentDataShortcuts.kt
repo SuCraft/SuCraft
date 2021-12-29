@@ -12,9 +12,9 @@ import org.bukkit.persistence.PersistentDataType
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
-import java.util.UUID
+import org.sucraft.core.common.sucraft.player.PlayerUUID
+import java.util.*
 import kotlin.reflect.KClass
 
 
@@ -173,6 +173,7 @@ object PersistentDataShortcuts {
 		JSONArray
 	)
 
+	@Suppress("FunctionName")
 	fun <E : _Enum<E>> Enum(type: KClass<E>): PersistentDataShortcut<E> = SerializedPersistentDataShortcut(
 		{ it.name },
 		{

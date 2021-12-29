@@ -24,11 +24,11 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 
 	// Settings
 
-	private const val maxFileSizeInBytes = 1024L * 1024 * 50; // 50 MB
+	private const val maxFileSizeInBytes = 1024L * 1024 * 50 // 50 MB
 
-	private const val intervalBetweenTaskStepsInMillis = 100L;
-	private const val retryBackupAttemptAfterMillis = 1000L * 10; // 10 seconds
-	private const val maxBackupTaskAttempts = 40;
+	private const val intervalBetweenTaskStepsInMillis = 100L
+	private const val retryBackupAttemptAfterMillis = 1000L * 10 // 10 seconds
+	private const val maxBackupTaskAttempts = 40
 
 	private const val keepBackupFileIntervalInMillis = 1000L * 3600 * 24 * 2 // 2 days
 	private const val keepLongBackupFileIntervalInMillis = 1000L * 3600 * 24 * 7 // 7 days
@@ -77,7 +77,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			// If the source file is empty, try again later
 			if (sourceFileLength == 0L) {
 				rescheduleTask(task) { copyToAirlock(task) }
-				return;
+				return
 			}
 			// Read the contents of the source file
 			val sourceFileContents = FileInputStream(sourceFile).readAllBytes()
@@ -90,7 +90,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			// If the source file has changed, try again later
 			if (!Arrays.equals(sourceFileContents, updatedSourceFileContents)) {
 				rescheduleTask(task) { copyToAirlock(task) }
-				return;
+				return
 			}
 			// The airlock file is a consistent copy, so we can move it to the backup location: schedule that task
 			queueLock.withLock {
@@ -125,7 +125,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			// If the airlock file is empty, try again later
 			if (airlockFileLength == 0L) {
 				rescheduleTask(task) { copyToBackup(task) }
-				return;
+				return
 			}
 			// Move the airlock file to the backup file
 			val backupFile = task.backupFile
@@ -171,7 +171,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			// If the backup file is empty, try again later
 			if (backupFileLength == 0L) {
 				rescheduleTask(task) { copyToLongBackup(task) }
-				return;
+				return
 			}
 			// Copy the backup file to the long backup file
 			longBackupFile.parentFile.mkdirs()

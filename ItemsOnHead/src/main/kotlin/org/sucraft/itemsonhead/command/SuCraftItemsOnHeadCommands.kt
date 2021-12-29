@@ -63,7 +63,7 @@ object SuCraftItemsOnHeadCommands : SuCraftCommands<SuCraftItemsOnHeadPlugin>(Su
 			// See if the player can use their currently held item
 			val itemInHand: ItemStack = player.inventory.itemInMainHand.clone()
 			val itemType = itemInHand.type
-			var canPutCurrentlyHeldItemOnHead =
+			val canPutCurrentlyHeldItemOnHead =
 				itemType != Material.AIR
 						&& (
 						player.hasPermission(SuCraftItemsOnHeadPermissions.ALL_ITEMS)

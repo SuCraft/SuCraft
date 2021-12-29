@@ -22,8 +22,8 @@ object BeerRecipe : CustomRecipe() {
 
 	override fun getBukkitRecipe() =
 		ShapelessRecipe(recipeNamespacedKey, AlcoholData.beerItemStackWithoutBrewer).also {
-			it.addIngredient(ItemStackBuilder.createWaterBottle().build());
-			it.addIngredient(Material.WHEAT);
+			it.addIngredient(ItemStackBuilder.createWaterBottle().build())
+			it.addIngredient(Material.WHEAT)
 		}
 
 	// Initialization

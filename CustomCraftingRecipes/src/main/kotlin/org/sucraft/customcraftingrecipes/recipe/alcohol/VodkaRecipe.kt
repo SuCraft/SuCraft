@@ -22,8 +22,8 @@ object VodkaRecipe : CustomRecipe() {
 
 	override fun getBukkitRecipe() =
 		ShapelessRecipe(recipeNamespacedKey, AlcoholData.vodkaItemStackWithoutBrewer).also {
-			it.addIngredient(ItemStackBuilder.createWaterBottle().build());
-			it.addIngredient(Material.POTATO);
+			it.addIngredient(ItemStackBuilder.createWaterBottle().build())
+			it.addIngredient(Material.POTATO)
 		}
 
 	// Initialization

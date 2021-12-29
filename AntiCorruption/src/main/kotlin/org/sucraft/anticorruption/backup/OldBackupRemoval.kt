@@ -12,9 +12,9 @@ object OldBackupRemoval : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftA
 
 	// Settings
 
-	private const val airlockFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24; // 1 day
-	private const val backupFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24 * 2; // 2 days
-	private const val longBackupFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24 * 7; // 7 days
+	private const val airlockFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24 // 1 day
+	private const val backupFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24 * 2 // 2 days
+	private const val longBackupFileMinimumAgeToRemoveInMillis = 1000L * 3600 * 24 * 7 // 7 days
 
 	// Implementation
 

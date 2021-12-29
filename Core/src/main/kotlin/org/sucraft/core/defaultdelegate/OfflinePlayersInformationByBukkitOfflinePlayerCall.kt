@@ -57,7 +57,7 @@ object OfflinePlayersInformationByBukkitOfflinePlayerCall : OfflinePlayersInform
 
 	override fun getInformation(uuid: UUID): OfflinePlayersInformation.OfflinePlayerInformation? = getInformation(Bukkit.getOfflinePlayer(uuid))
 
-	override fun getInformation(player: OfflinePlayer): OfflinePlayersInformation.OfflinePlayerInformation? = if (player.hasPlayedBefore() || player.isOnline()) OfflinePlayerInformationByBukkitOfflinePlayerCall(player.uniqueId) else null
+	override fun getInformation(player: OfflinePlayer): OfflinePlayersInformation.OfflinePlayerInformation? = if (player.hasPlayedBefore() || player.isOnline) OfflinePlayerInformationByBukkitOfflinePlayerCall(player.uniqueId) else null
 
 	// Get the offline player names by making a call to Bukkit.getOfflinePlayers
 

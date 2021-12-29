@@ -10,10 +10,10 @@ import org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 import org.sucraft.core.common.bukkit.time.TickTime
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -80,13 +80,13 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 				return
 			}
 			// Read the contents of the source file
-			val sourceFileContents = FileInputStream(sourceFile).use { it.readAllBytes() }
+			val sourceFileContents = Files.newInputStream(sourceFile.toPath(), StandardOpenOption.READ).use { it.readAllBytes() }
 			// Write the contents of the source file to the airlock file
 			val airlockFile = task.airlockFile
 			airlockFile.parentFile.mkdirs()
 			FileOutputStream(airlockFile).use { it.write(sourceFileContents) }
 			// Read the new contents of the source file
-			val updatedSourceFileContents = FileInputStream(sourceFile).readAllBytes()
+			val updatedSourceFileContents = Files.newInputStream(sourceFile.toPath(), StandardOpenOption.READ).use { it.readAllBytes() }
 			// If the source file has changed, try again later
 			if (!Arrays.equals(sourceFileContents, updatedSourceFileContents)) {
 				rescheduleTask(task) { copyToAirlock(task) }

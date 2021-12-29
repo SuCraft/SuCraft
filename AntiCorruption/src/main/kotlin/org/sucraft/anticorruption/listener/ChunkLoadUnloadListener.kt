@@ -17,7 +17,7 @@ object ChunkLoadUnloadListener : SuCraftComponent<SuCraftAntiCorruptionPlugin>(S
 
 	// Settings
 
-	private const val backupRegionFilesAfterChunkLoadDelayInMillis = 1000L * 5 // 5 seconds
+	private const val backupRegionFilesAfterChunkLoadDelayInMillis = 1000L * 10 // 10 seconds
 	private const val backupRegionFilesAfterChunkUnloadDelayInMillis = 1000L * 60 * 2 // 2 minutes
 
 	// Events

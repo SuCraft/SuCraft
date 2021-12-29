@@ -17,7 +17,8 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 object PlayerJoinQuitListener : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Settings
-	private const val backupPlayerFilesAfterJoinDelayInTicks = 1000L * 5 // 5 seconds
+
+	private const val backupPlayerFilesAfterJoinDelayInTicks = 1000L * 10 // 10 seconds
 	private const val backupPlayerFilesAfterQuitDelayInTicks = 1000L * 90 // 1.5 minutes
 
 	// Events

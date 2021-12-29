@@ -2,7 +2,7 @@
  * Copyright (c) SuCraft 2021 sucraft.org
  */
 
-package org.sucraft.core.common.bukkit.world
+package org.sucraft.core.common.bukkit.io
 
 import org.bukkit.Bukkit
 import org.bukkit.World
@@ -108,7 +108,8 @@ object WorldFolders {
 		Path.of(world.worldFolder.path, """level.dat""").toFile()
 
 	fun getRaidsFile(world: World): File =
-		Path.of(getDataFolder(world).path, when (world.environment) {
+		Path.of(
+			getDataFolder(world).path, when (world.environment) {
 			World.Environment.NETHER -> """raids_nether.dat"""
 			World.Environment.THE_END -> """raids_end.dat"""
 			else -> """raids.dat"""

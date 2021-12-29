@@ -8,7 +8,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 import org.sucraft.core.common.bukkit.chunk.RegionCoordinates
-import org.sucraft.core.common.bukkit.world.WorldFolders
+import org.sucraft.core.common.bukkit.io.WorldFolders
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
 

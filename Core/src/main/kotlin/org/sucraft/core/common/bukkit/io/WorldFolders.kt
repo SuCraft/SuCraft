@@ -16,15 +16,15 @@ object WorldFolders {
 
 	val mainWorld get(): World = Bukkit.getWorlds()[0]
 
-	val regionFolderName = """region"""
-	val entitiesFolderName = """entities"""
-	val poiFolderName = """poi"""
-	val dataFolderName = """data"""
-	val dataPacksFolderName = """datapacks"""
-	val playerDataFolderName = """playerdata"""
-	val unknownPlayersFolderName = """unknownplayers"""
-	val advancementsFolderName = """advancements"""
-	val statsFolderName = """stats"""
+	const val regionFolderName = """region"""
+	const val entitiesFolderName = """entities"""
+	const val poiFolderName = """poi"""
+	const val dataFolderName = """data"""
+	const val dataPacksFolderName = """datapacks"""
+	const val playerDataFolderName = """playerdata"""
+	const val unknownPlayersFolderName = """unknownplayers"""
+	const val advancementsFolderName = """advancements"""
+	const val statsFolderName = """stats"""
 
 	fun getRegionMCAFilename(regionX: Int, regionZ: Int) =
 		"""r.$regionX.$regionZ.mca"""

@@ -56,7 +56,7 @@ object EnderDragonDeathListener : SuCraftComponent<SuCraftEnderDragonDropsPlugin
 		val dragonKills = mostLikelyKiller?.getStatistic(Statistic.KILL_ENTITY, EntityType.ENDER_DRAGON)
 		val chanceForElytra = getChanceForElytraDrop(dragonKills)
 		if (Math.random() < chanceForElytra) {
-			logger.info("Dropping an elytra for ${mostLikelyKiller?.name}, beating the odds of ${chanceForElytra} based on ${dragonKills} existing dragon kills")
+			logger.info("Dropping an elytra for ${mostLikelyKiller?.name}, beating the odds of $chanceForElytra based on $dragonKills existing dragon kills")
 			event.drops.add(ItemStack(Material.ELYTRA))
 			mostLikelyKiller?.takeIf { it.location.distance(dragon.location) <= maxDistanceToDragonToGetNotifiedOfElytra }?.sendMessage(
 				Component.join(

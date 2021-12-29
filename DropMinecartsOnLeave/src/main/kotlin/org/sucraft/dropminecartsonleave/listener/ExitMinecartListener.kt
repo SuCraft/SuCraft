@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.vehicle.VehicleExitEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.dropminecartsonleave.main.SuCraftDropMinecartsOnLeavePlugin

@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.player
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import java.util.function.Predicate
 
 
 @Suppress("MemberVisibilityCanBePrivate")

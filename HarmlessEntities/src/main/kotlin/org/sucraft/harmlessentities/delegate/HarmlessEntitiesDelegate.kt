@@ -8,8 +8,6 @@ import org.bukkit.entity.Entity
 import org.sucraft.core.common.general.log.AbstractLogger
 import org.sucraft.core.common.sucraft.delegate.HarmlessEntities
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
-import org.sucraft.core.defaultdelegate.MinecraftClientLocaleByIncludedResource
-import org.sucraft.core.main.SuCraftCorePlugin
 import org.sucraft.harmlessentities.data.HarmlessEntitiesData
 import org.sucraft.harmlessentities.main.SuCraftHarmlessEntitiesPlugin
 

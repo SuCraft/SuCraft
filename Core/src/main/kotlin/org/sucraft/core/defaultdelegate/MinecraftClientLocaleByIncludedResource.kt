@@ -5,9 +5,7 @@
 package org.sucraft.core.defaultdelegate
 
 import org.json.JSONObject
-import org.sucraft.core.common.bukkit.log.NestedLogger
 import org.sucraft.core.common.general.log.AbstractLogger
-import org.sucraft.core.common.sucraft.delegate.HarmlessEntities
 import org.sucraft.core.common.sucraft.delegate.MinecraftClientLocale
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.main.SuCraftCorePlugin

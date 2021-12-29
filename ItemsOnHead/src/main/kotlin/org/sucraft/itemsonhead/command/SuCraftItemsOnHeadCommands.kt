@@ -18,7 +18,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.core.common.sucraft.delegate.StandardItemStackNames
 import org.sucraft.itemsonhead.main.SuCraftItemsOnHeadPlugin
 import org.sucraft.itemsonhead.player.permission.SuCraftItemsOnHeadPermissions
-import javax.sql.rowset.JoinRowSet
 
 
 object SuCraftItemsOnHeadCommands : SuCraftCommands<SuCraftItemsOnHeadPlugin>(SuCraftItemsOnHeadPlugin.getInstance()) {

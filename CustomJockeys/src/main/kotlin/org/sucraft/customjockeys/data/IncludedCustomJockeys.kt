@@ -7,7 +7,6 @@ package org.sucraft.customjockeys.data
 import org.bukkit.World
 import org.bukkit.block.Biome
 import org.bukkit.entity.EntityType
-import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates
 
 
 object IncludedCustomJockeys {

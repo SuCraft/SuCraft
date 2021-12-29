@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerJoinEvent
 import org.sucraft.core.common.general.log.AbstractLogger
-import org.sucraft.core.common.sucraft.delegate.MinecraftClientLocale
 import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent

@@ -70,6 +70,8 @@ object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCore
 
 	override fun get(type: Material) = get(type.key) ?: type.name
 
+	// TODO localized names as strings are deprecated, we could switch to components later (but not yet, since strings are a lot easier in most currently foreseeable scenarios)
+	@Suppress("DEPRECATION")
 	override fun get(itemStack: ItemStack): String {
 		val itemMeta = GuaranteedItemMetaGetter.get(itemStack)
 		if (itemMeta.hasLocalizedName()) {

@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
+import org.sucraft.core.common.bukkit.inventory.setNullableContents
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.customcraftingrecipes.main.SuCraftCustomCraftingRecipesPlugin
@@ -32,7 +33,7 @@ object CraftAlcoholListener : SuCraftComponent<SuCraftCustomCraftingRecipesPlugi
 		RunInFuture.forPlayerIfOnline(plugin, player, {
 
 			val inventory = it.inventory
-			val contents: Array<ItemStack?> = inventory.contents
+			val contents: Array<ItemStack?> = inventory.contents!!
 			var changedInventoryContents = false
 
 			for (i in contents.indices) {
@@ -42,7 +43,7 @@ object CraftAlcoholListener : SuCraftComponent<SuCraftCustomCraftingRecipesPlugi
 				}
 			}
 
-			if (changedInventoryContents) inventory.contents = contents
+			if (changedInventoryContents) inventory.setNullableContents(contents)
 
 			val cursor = event.view.cursor
 			if (cursor != null && AlcoholData.isSimilarToAlcoholicItemStackWithoutBrewer(cursor)) {

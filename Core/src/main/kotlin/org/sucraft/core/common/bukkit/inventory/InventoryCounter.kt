@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.inventory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.item.EmptyItemStack
-import java.util.*
 
 
 /**
@@ -16,16 +15,16 @@ import java.util.*
 object InventoryCounter {
 
 	fun getOrderedSnapshot(inventory: Inventory): Array<ItemStack?> =
-		Array(inventory.contents.size) { inventory.contents[it]?.clone() }
+		Array(inventory.contents!!.size) { inventory.contents!![it]?.clone() }
 
 	fun getOrderedSnapshot(inventory: Inventory, preservePredicate: (ItemStack) -> Boolean): Array<ItemStack?> =
-		Array(inventory.contents.size) { inventory.contents[it]?.takeIf(preservePredicate)?.clone() }
+		Array(inventory.contents!!.size) { inventory.contents!![it]?.takeIf(preservePredicate)?.clone() }
 
 	/**
 	 * @return A map where all keys are itemstacks with amount 1
 	 */
 	fun getUnorderedSnapshot(inventory: Inventory, preservePredicate: ((ItemStack) -> Boolean)? = null): Map<ItemStack, Int> {
-		var interestingInventoryContents = inventory.contents.asSequence().filter { EmptyItemStack.isNotEmpty(it) }
+		var interestingInventoryContents = inventory.contents!!.asSequence().filter { EmptyItemStack.isNotEmpty(it) }.filterNotNull()
 		if (preservePredicate != null)
 			interestingInventoryContents = interestingInventoryContents.filter(preservePredicate)
 		val map: MutableMap<ItemStack, Int> = HashMap(interestingInventoryContents.count())

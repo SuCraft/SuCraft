@@ -56,7 +56,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 		trackedBy.clear()
 		for (player in Bukkit.getOnlinePlayers()) {
 			val trackingPlayerIdentifier: PlayerUUID = PlayerUUID.get(player)
-			player.inventory.contents.forEachIndexed forInventoryContents@{ i, itemStack ->
+			player.inventory.contents!!.forEachIndexed forInventoryContents@{ i, itemStack ->
 				val trackedPlayer = getTrackedPlayer(itemStack) ?: return@forInventoryContents
 				if (trackedPlayer == player) return@forInventoryContents
 				val trackedPlayerIdentifier = PlayerUUID.get(trackedPlayer)
@@ -70,7 +70,7 @@ object PlayerCompassTracker : SuCraftComponent<SuCraftPlayerCompassPlugin>(SuCra
 	private fun updateCompassesInInventories() {
 		for (player in Bukkit.getOnlinePlayers()) {
 			trackedBy[PlayerUUID.get(player)]?.forEach { (trackerUUID, trackerItemSlot) ->
-				trackerUUID.getOnlinePlayer()?.let { possiblyUpdateCompass(it.location, it.inventory.contents[trackerItemSlot], player) }
+				trackerUUID.getOnlinePlayer()?.let { possiblyUpdateCompass(it.location, it.inventory.contents!![trackerItemSlot], player) }
 			}
 		}
 	}

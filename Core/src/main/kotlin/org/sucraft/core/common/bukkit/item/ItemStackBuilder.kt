@@ -121,22 +121,24 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 	fun setLoreComponent(removeItalic: Boolean = true, vararg lore: Component) =
 		setLoreComponent(removeItalic, listOf(*lore))
 
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLore(lore: List<String?>) =
 		@Suppress("NestedLambdaShadowedImplicitParameter")
 		applyToMeta { it.lore = (it.lore ?: ArrayList(lore.size)).also { it.addAll(lore) } }
 
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLore(vararg lore: String): ItemStackBuilder =
 		addLore(listOf(*lore))
 
-
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLore(loreText: String, lorePrefix: String, loreMaxPartLength: Int) =
 		addLore(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
 
-
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLoreWithPossibleSeparatorLine(lore: List<String>) =
 		applyToMeta { meta ->
 			val existingLore = meta.lore ?: ArrayList(lore.size)
@@ -151,11 +153,13 @@ class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 			meta.lore = existingLore
 		}
 
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLoreWithPossibleSeparatorLine(vararg lore: String) =
 		addLoreWithPossibleSeparatorLine(listOf(*lore))
 
-	@Deprecated("Components should be used instead")@Suppress("DEPRECATION")
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated("Components should be used instead")
 	fun addLoreWithPossibleSeparatorLine(loreText: String, lorePrefix: String, loreMaxPartLength: Int) =
 		addLoreWithPossibleSeparatorLine(StringSplit.cutStringIntoParts(loreText, lorePrefix, null, loreMaxPartLength))
 

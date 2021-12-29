@@ -1,14 +1,13 @@
 package org.sucraft.core.common.bukkit.block
 
-import org.bukkit.World
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.util.Vector
 import org.json.JSONObject
 import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates
-import java.lang.Exception
 import kotlin.math.sqrt
 
 
@@ -36,6 +35,7 @@ data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z
 
 	// Get the block
 
+	@Suppress("DeprecatedCallableAddReplaceWith")
 	@Deprecated("This loads the chunk, which is usually not desired")
 	val blockLoadChunkIfNotLoaded get() = world?.getBlockAt(x, y, z)
 

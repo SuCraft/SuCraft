@@ -38,6 +38,7 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 
 	val isLoaded get() = world?.isChunkLoaded(x, z) ?: false
 
+	@Suppress("DeprecatedCallableAddReplaceWith")
 	@Deprecated("This loads the chunk, which is usually not desired")
 	val chunkLoadIfNotLoaded get() = world?.getChunkAt(x, z)
 

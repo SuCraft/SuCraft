@@ -136,7 +136,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 				queue.add(RunnableAfterMinimumSystemTime.after(intervalBetweenTaskStepsInMillis) { copyToLongBackup(task) })
 			}
 			// Log success of step
-			logger.info("Copied airlock file for source file '${task.sourceFile.path}' to backup file")
+			logger.info("Moved airlock file for source file '${task.sourceFile.path}' to backup file")
 		} catch (e: Exception) {
 			// If an exception happens, try again later
 			rescheduleTask(task) { copyToAirlock(task) }

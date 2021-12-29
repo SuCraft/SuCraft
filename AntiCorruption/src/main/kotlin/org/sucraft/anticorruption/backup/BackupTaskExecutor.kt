@@ -80,7 +80,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 				return
 			}
 			// Read the contents of the source file
-			val sourceFileContents = FileInputStream(sourceFile).readAllBytes()
+			val sourceFileContents = FileInputStream(sourceFile).use { it.readAllBytes() }
 			// Write the contents of the source file to the airlock file
 			val airlockFile = task.airlockFile
 			airlockFile.parentFile.mkdirs()

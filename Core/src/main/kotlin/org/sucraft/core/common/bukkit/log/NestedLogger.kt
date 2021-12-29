@@ -48,8 +48,8 @@ abstract class NestedLogger : AbstractLogger {
 
 		override fun turnGivenMessageToDelegatableString(message: Any?) = "[$name] $message"
 		override fun delegateInfo(message: String) = parentLogger.info(message)
-		override fun delegateWarning(message: String) = parentLogger.info(message)
-		override fun delegateSevere(message: String) = parentLogger.info(message)
+		override fun delegateWarning(message: String) = parentLogger.warning(message)
+		override fun delegateSevere(message: String) = parentLogger.severe(message)
 
 	}
 

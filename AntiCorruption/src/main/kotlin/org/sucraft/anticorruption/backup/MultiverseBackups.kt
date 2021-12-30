@@ -49,7 +49,7 @@ object MultiverseBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraft
 	fun schedulePlayerBackup(player: Player, delayInMillis: Long? = null) {
 		for (folder in arrayOf(getInventoriesGroupsFolder(), getInventoriesWorldsFolder())) {
 			folder.takeIf(File::isDirectory)?.listFiles()?.asSequence()?.filter(File::isDirectory)?.forEach {
-				for (extension in arrayOf("yml, json")) {
+				for (extension in arrayOf("yml", "json")) {
 					val file = Path.of(it.path, """${player.name}.$extension""").toFile()
 					if (file.exists())
 						BackupTaskExecutor.scheduleBackup(FileToBackup(file.path), delayInMillis)
@@ -58,7 +58,7 @@ object MultiverseBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraft
 		}
 		getInventoriesPlayersFolder().takeIf(File::isDirectory)?.let {
 			for (playerIdentifierString in arrayOf(player.name, player.uniqueId.toString())) {
-				for (extension in arrayOf("yml, json")) {
+				for (extension in arrayOf("yml", "json")) {
 					val file = Path.of(it.path, """$playerIdentifierString.$extension""").toFile()
 					if (file.exists())
 						BackupTaskExecutor.scheduleBackup(FileToBackup(file.path), delayInMillis)

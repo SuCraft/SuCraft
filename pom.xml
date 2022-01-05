@@ -64,6 +64,7 @@
 		<module>DiscordInfo</module>
 		<module>AntiCorruption</module>
 		<module>MeasureTPS</module>
+		<module>TemporaryMobFarmLimits</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

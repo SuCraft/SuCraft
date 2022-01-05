@@ -69,7 +69,10 @@ abstract class AmountByChunkAndSecondaryKeyMeasurementData<K>(
 			val newAmount = (existingAmount ?: 0) + 1
 
 			// Log to console if this chunk has become marked as a farm
-			if (newAmount >= chunkAmountToClassifyAsFarm) {
+			if (
+				(existingAmount?.let { it < chunkAmountToClassifyAsFarm} != false)
+				&& newAmount >= chunkAmountToClassifyAsFarm
+			) {
 				val closestPlayerName = ClosestPlayerFinder.getClosestPlayer(location)?.name ?: "<none>"
 				logger.info("The chunk $relativeChunk has been marked as a farm of type $measurementName by key $secondaryKey, with recent amount being $newAmount and the closest player being $closestPlayerName")
 			}

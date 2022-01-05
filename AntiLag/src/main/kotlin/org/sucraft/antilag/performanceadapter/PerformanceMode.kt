@@ -61,7 +61,7 @@ enum class PerformanceMode(
 
 		displayName = "Best",//"Bonus+",
 		tpsMinima = TPSMinima(
-			19.98,
+			19.99,
 			19.85
 		),
 
@@ -99,7 +99,7 @@ enum class PerformanceMode(
 
 		displayName = "Excellent",//"Bonus",
 		tpsMinima = TPSMinima(
-			19.95,
+			19.98,
 			19.7
 		),
 
@@ -134,7 +134,7 @@ enum class PerformanceMode(
 
 		displayName = "Great",//"Regular + farms",
 		tpsMinima = TPSMinima(
-			19.9,
+			19.96,
 			19.5
 		),
 
@@ -155,7 +155,7 @@ enum class PerformanceMode(
 
 		displayName = "Very good",//"Regular",
 		tpsMinima = TPSMinima(
-			19.8,
+			19.93,
 			19.3
 		),
 
@@ -185,7 +185,7 @@ enum class PerformanceMode(
 
 		displayName = "Good",//"Regular-",
 		tpsMinima = TPSMinima(
-			19.7,
+			19.9,
 			19.0
 		),
 
@@ -227,7 +227,7 @@ enum class PerformanceMode(
 
 		displayName = "Good-medium",//"Fine",
 		tpsMinima = TPSMinima(
-			19.5,
+			19.85,
 			18.0
 		),
 
@@ -270,7 +270,7 @@ enum class PerformanceMode(
 
 		displayName = "Medium",//"Barely fine",
 		tpsMinima = TPSMinima(
-			19.0,
+			19.8,
 			17.0
 		),
 
@@ -324,7 +324,7 @@ enum class PerformanceMode(
 
 		displayName = "Medium-low",//"Minimum non-redstone-breaking",
 		tpsMinima = TPSMinima(
-			17.5,
+			19.5,
 			10.0
 		),
 
@@ -366,7 +366,7 @@ enum class PerformanceMode(
 
 		displayName = "Low",//"Poor",
 		tpsMinima = TPSMinima(
-			15.0,
+			19.0,
 			5.0,
 		),
 
@@ -408,7 +408,7 @@ enum class PerformanceMode(
 
 		displayName = "Very low",//"Very poor",
 		tpsMinima = TPSMinima(
-			13.0,
+			18.0,
 			0.0,
 		),
 

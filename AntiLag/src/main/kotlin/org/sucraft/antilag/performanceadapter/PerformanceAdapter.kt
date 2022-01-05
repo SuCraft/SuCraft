@@ -89,16 +89,17 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 		loopBreakingAction: (averageTPS: Double, desiredTPS: Double) -> Boolean
 	) {
 		val historyIterator = measurementHistory.asReversed().iterator()
-		val lastTime = currentTime
+		var lastTime = currentTime
 		var totalTPSWeightedByMillis = 0.0
 		while (historyIterator.hasNext()) {
 			val dataPoint = historyIterator.next()
 			val timeIntervalOfDataPoint = lastTime - dataPoint.time
+			lastTime = dataPoint.time
 			if (timeIntervalOfDataPoint > 0) totalTPSWeightedByMillis += dataPoint.tps * timeIntervalOfDataPoint
 			val totalTime = currentTime - dataPoint.time
 			if (totalTime in minimumTimeAgoToCheckInMillis..maximumTimeAgoToCheckInMillis) {
 				val averageTPS = totalTPSWeightedByMillis / totalTime
-				val totalTimeRatioToCheckRange = (totalTime.toDouble() - minimumTimeAgoToCheckInMillis) / (totalTime.toDouble() - maximumTimeAgoToCheckInMillis)
+				val totalTimeRatioToCheckRange = (totalTime.toDouble() - minimumTimeAgoToCheckInMillis) / (maximumTimeAgoToCheckInMillis - minimumTimeAgoToCheckInMillis)
 				val desiredTPS =
 					if (interpolateToGetDesiredTPS)
 						modeFromWhichToDeriveDesiredTPS.tpsMinima.atMinimumInterval + totalTimeRatioToCheckRange * (modeFromWhichToDeriveDesiredTPS.tpsMinima.atMaximumInterval - modeFromWhichToDeriveDesiredTPS.tpsMinima.atMinimumInterval)

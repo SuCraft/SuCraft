@@ -4,17 +4,15 @@
 
 package org.sucraft.core.common.bukkit.io
 
-import org.bukkit.Bukkit
 import org.bukkit.World
 import org.sucraft.core.common.bukkit.chunk.RegionCoordinates
+import org.sucraft.core.common.bukkit.world.mainWorld
 import java.io.File
 import java.nio.file.Path
 import java.util.*
 
 
 object WorldFolders {
-
-	val mainWorld get(): World = Bukkit.getWorlds()[0]
 
 	const val regionFolderName = """region"""
 	const val entitiesFolderName = """entities"""

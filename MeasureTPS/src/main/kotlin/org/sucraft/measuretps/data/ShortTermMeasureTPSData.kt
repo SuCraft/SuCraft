@@ -35,7 +35,7 @@ object ShortTermMeasureTPSData : SuCraftComponent<SuCraftMeasureTPSPlugin>(SuCra
 
 	init {
 		logger.info(SuCraftLogTexts.schedulingTasks)
-		WhilePlayersAreOnlineTimerTask(SuCraftMeasureTPSPlugin.getInstance(), this::measureAndUpdateTPS, measureTPSIntervalInTicks)
+		WhilePlayersAreOnlineTimerTask(plugin, this::measureAndUpdateTPS, measureTPSIntervalInTicks)
 	}
 
 	// Implementation

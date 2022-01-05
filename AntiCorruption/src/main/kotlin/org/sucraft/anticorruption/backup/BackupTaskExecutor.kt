@@ -213,7 +213,7 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 
 	private fun rescheduleTask(task: BackupTask, action: () -> Unit) {
 		queueLock.withLock {
-			if (SuCraftAntiCorruptionPlugin.getInstance().isDisabledOrDisabling || backupTasksInProgress[task]!! >= maxBackupTaskAttempts) {
+			if (plugin.isDisabledOrDisabling || backupTasksInProgress[task]!! >= maxBackupTaskAttempts) {
 				unscheduleTask(task)
 			} else {
 				backupTasksInProgress[task] = backupTasksInProgress[task]!! + 1
@@ -275,9 +275,9 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			}
 			// Schedule the task with Bukkit
 			if (nextTask.isDue())
-				Bukkit.getScheduler().runTaskAsynchronously(SuCraftAntiCorruptionPlugin.getInstance(), ::executeQueueItem)
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, ::executeQueueItem)
 			else
-				Bukkit.getScheduler().runTaskLaterAsynchronously(SuCraftAntiCorruptionPlugin.getInstance(), Runnable { executeQueueItem() }, ceil(TickTime.millisToTicks(nextTask.minimumSystemTime - System.currentTimeMillis())).toLong())
+				Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, Runnable { executeQueueItem() }, ceil(TickTime.millisToTicks(nextTask.minimumSystemTime - System.currentTimeMillis())).toLong())
 			queueExecutionBukkitTaskPlannedTimeInMillis = timeNextTaskWouldBeScheduledFor
 		}
 	}

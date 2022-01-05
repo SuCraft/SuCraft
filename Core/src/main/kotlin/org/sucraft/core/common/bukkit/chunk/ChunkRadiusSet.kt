@@ -4,18 +4,20 @@
 
 package org.sucraft.core.common.bukkit.chunk
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet
+import org.sucraft.core.common.general.math.RelativeCoordinates
+
 
 /**
  * This class stores chunks, and has operations for adding a chunk including its surrounding chunks within a certain radius
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class ChunkRadiusSet(initialCapacity: Int = 3) {
+class ChunkRadiusSet(private val set: LongOpenHashSet) : MutableIterable<Long> by set {
 
-	// TODO replace by set using Long chunk keys as element
-	private val set: MutableSet<ChunkCoordinates> = HashSet(initialCapacity)
+	constructor(initialCapacity: Int = 3) : this(LongOpenHashSet(initialCapacity))
 
 	fun add(chunk: ChunkCoordinates) {
-		set.add(chunk)
+		set.add(chunk.longKeyWithWorld)
 	}
 
 	fun addAll(chunkSequence: Sequence<ChunkCoordinates>) {
@@ -23,23 +25,23 @@ class ChunkRadiusSet(initialCapacity: Int = 3) {
 	}
 
 	fun addWithinSquareRadius(chunk: ChunkCoordinates, radius: Int) {
-		addAll(relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
+		addAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
 	}
 
 	fun addWithinSquareRadius(chunk: ChunkCoordinates, radius: Double) {
-		addAll(relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
+		addAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
 	}
 
 	fun addWithinRadius(chunk: ChunkCoordinates, radius: Int) {
-		addAll(relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
+		addAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
 	}
 
 	fun addWithinRadius(chunk: ChunkCoordinates, radius: Double) {
-		addAll(relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
+		addAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) })
 	}
 
-	fun remove(chunk: ChunkCoordinates) = set.remove(chunk)
+	fun remove(chunk: ChunkCoordinates) = set.remove(chunk.longKeyWithWorld)
 
-	operator fun contains(chunk: ChunkCoordinates) = chunk in set
+	operator fun contains(chunk: ChunkCoordinates) = chunk.longKeyWithWorld in set
 
 }

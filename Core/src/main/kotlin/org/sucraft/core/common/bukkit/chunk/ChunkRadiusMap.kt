@@ -4,24 +4,9 @@
 
 package org.sucraft.core.common.bukkit.chunk
 
-import kotlin.math.ceil
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import org.sucraft.core.common.general.math.RelativeCoordinates
 
-
-// Utility
-
-fun relativeWithinSquareRadius(radius: Int): Sequence<Pair<Int, Int>> = sequence {
-	for (dx in -radius..radius) {
-		for (dz in -radius..radius) {
-			yield(Pair(dz, dz))
-		}
-	}
-}
-
-fun relativeWithinSquareRadius(radius: Double) = relativeWithinSquareRadius(ceil(radius).toInt())
-
-fun relativeWithinRadius(radius: Int) = relativeWithinSquareRadius(radius).filter { (dx, dz) -> dx * dx + dz * dz <= radius * radius }
-
-fun relativeWithinRadius(radius: Double) = relativeWithinSquareRadius(radius).filter { (dx, dz) -> dx * dx + dz * dz <= radius * radius }
 
 // Class
 
@@ -29,13 +14,14 @@ fun relativeWithinRadius(radius: Double) = relativeWithinSquareRadius(radius).fi
  * This class stores some value per chunk, and has operations for updating a chunk including its surrounding chunks within a certain radius
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class ChunkRadiusMap<T>(initialCapacity: Int = 3) {
+open class ChunkRadiusMap<T>(
+	private val map: Long2ObjectOpenHashMap<T>
+	) : MutableIterable<MutableMap.MutableEntry<Long, T>> by map.long2ObjectEntrySet() {
 
-	// TODO replace by map using Long chunk keys as key
-	private val map: MutableMap<ChunkCoordinates, T> = HashMap(initialCapacity)
+	constructor(initialCapacity: Int = 3) : this(Long2ObjectOpenHashMap(initialCapacity))
 
 	operator fun set(chunk: ChunkCoordinates, value: T) {
-		map[chunk] = value
+		map[chunk.longKeyWithWorld] = value
 	}
 
 	fun setAll(chunkSequence: Sequence<ChunkCoordinates>, value: T) {
@@ -43,25 +29,51 @@ class ChunkRadiusMap<T>(initialCapacity: Int = 3) {
 	}
 
 	fun setWithinSquareRadius(chunk: ChunkCoordinates, value: T, radius: Int) {
-		setAll(relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
+		setAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
 	}
 
 	fun setWithinSquareRadius(chunk: ChunkCoordinates, value: T, radius: Double) {
-		setAll(relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
+		setAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
 	}
 
 	fun setWithinRadius(chunk: ChunkCoordinates, value: T, radius: Int) {
-		setAll(relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
+		setAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
 	}
 
 	fun setWithinRadius(chunk: ChunkCoordinates, value: T, radius: Double) {
-		setAll(relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
+		setAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, value)
 	}
 
-	fun remove(chunk: ChunkCoordinates) = map.remove(chunk)
+	fun update(chunk: ChunkCoordinates, valueFunction: (T?) -> T) {
+		map[chunk.longKeyWithWorld] = valueFunction(map[chunk.longKeyWithWorld])
+	}
 
-	operator fun get(chunk: ChunkCoordinates) = map[chunk]
+	fun updateAll(chunkSequence: Sequence<ChunkCoordinates>, valueFunction: (T?, ChunkCoordinates) -> T) {
+		chunkSequence.forEach { chunk -> update(chunk) { valueFunction(it, chunk) } }
+	}
 
-	operator fun contains(chunk: ChunkCoordinates) = chunk in map
+	fun updateWithinSquareRadius(chunk: ChunkCoordinates, valueFunction: (T?, ChunkCoordinates) -> T, radius: Int) {
+		updateAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, valueFunction)
+	}
+
+	fun updateWithinSquareRadius(chunk: ChunkCoordinates, valueFunction: (T?, ChunkCoordinates) -> T, radius: Double) {
+		updateAll(RelativeCoordinates.relativeWithinSquareRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, valueFunction)
+	}
+
+	fun updateWithinRadius(chunk: ChunkCoordinates, valueFunction: (T?, ChunkCoordinates) -> T, radius: Int) {
+		updateAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, valueFunction)
+	}
+
+	fun updateWithinRadius(chunk: ChunkCoordinates, valueFunction: (T?, ChunkCoordinates) -> T, radius: Double) {
+		updateAll(RelativeCoordinates.relativeWithinRadius(radius).map { (dx, dz) -> chunk.getRelative(dx, dz) }, valueFunction)
+	}
+
+	fun remove(chunk: ChunkCoordinates) = map.remove(chunk.longKeyWithWorld)
+
+	operator fun get(chunk: ChunkCoordinates) = map[chunk.longKeyWithWorld]
+
+	operator fun contains(chunk: ChunkCoordinates) = chunk.longKeyWithWorld in map
+
+	fun getMutableInternalMap(): MutableMap<Long, T> = map
 
 }

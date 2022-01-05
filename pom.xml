@@ -20,6 +20,13 @@
 		<snakeyaml.version>1.27</snakeyaml.version>
 		<adventureminimessage.version>4.1.0-SNAPSHOT</adventureminimessage.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<paper.api.version>1.18.1-R0.1-SNAPSHOT</paper.api.version>
+		<paper.stub.version>1.18.1-132</paper.stub.version>
+		<paper.stub.url>https://icecube-eu-402.icedrive.io/download?p=OCyrSQShneLR6DqwxqRof46eVqfUyQociifcl508SlqTBxjRKzA%2FyVAObB71nXtWXljV5BEOD2j%2Bgk%2BhpCLhpqd1VbguXTM4Cre%2Bma50GOeuCGt9PrbVMMwVA0px2S5NYKOmoQBzLXKW5%2BO1S8qAXU%2BjjajvTe%2BG8Q%2FZbH2bvNx%2BOfkgb7rA6Fwr%2FEbOa1MNDj3oIK84vZEohsjuQ0COkIr2OIZM4cxRYfKzunRAqBs%3D</paper.stub.url>
+		<paper.stub.jarfilename>paper-${paper.stub.version}.jar</paper.stub.jarfilename>
+		<fartherviewdistance.stub.version>8.7.1</fartherviewdistance.stub.version>
+		<fartherviewdistance.stub.url>https://icecube-eu-400.icedrive.io/download?p=dw7M2nA7R9npjKxRc7Xoct1yBOEXjov8sPyfpy0kB8D0aEAFrKXp409DZJpQtFXhJ9vuxGsAGZVuUGgVgsTBDEzgIPtNqQYxKKyRK%2FrgXPdNKvV0QYOUkOZi2bl0HjT%2FO7VbEc%2BXo4nBIZujoeG%2FNz%2FOpi3iFm6QsF6Q5WtZ0bRKlR57FXHUughbtbWn0%2BD65Vu6EOF8Ebphq3Aeu6ZIveYuSKvMtm81ykaS7w1fEME%3D</fartherviewdistance.stub.url>
+		<fartherviewdistance.stub.jarfilename>FartherViewDistance-${fartherviewdistance.stub.version}.jar</fartherviewdistance.stub.jarfilename>
 	</properties>
 	<packaging>pom</packaging>
 	<modules>
@@ -61,6 +68,74 @@
 	<build>
 		<finalName>${project.name}</finalName>
 		<plugins>
+			<plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<version>1.4.2</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>download-paper</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>${paper.stub.url}</url>
+							<outputFileName>${paper.stub.jarfilename}</outputFileName>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>download-fartherviewdistance</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>${fartherviewdistance.stub.url}</url>
+							<outputFileName>${fartherviewdistance.stub.jarfilename}</outputFileName>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-paper</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>io.papermc.paper</groupId>
+							<artifactId>paper-stub</artifactId>
+							<version>${paper.stub.version}</version>
+							<packaging>jar</packaging>
+							<file>${project.build.directory}/${paper.stub.jarfilename}</file>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-fartherviewdistance</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>xuan.cat.fartherviewdistance</groupId>
+							<artifactId>fartherviewdistance-stub</artifactId>
+							<version>${fartherviewdistance.stub.version}</version>
+							<packaging>jar</packaging>
+							<file>${project.build.directory}/${fartherviewdistance.stub.jarfilename}</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -248,10 +323,26 @@
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.18.1-R0.1-SNAPSHOT</version>
+			<version>${paper.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.papermc.paper</groupId>
+				<artifactId>paper-stub</artifactId>
+				<version>${paper.stub.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>xuan.cat.fartherviewdistance</groupId>
+				<artifactId>fartherviewdistance-stub</artifactId>
+				<version>${fartherviewdistance.stub.version}</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<profiles>
 		<profile>
 			<id>local</id>

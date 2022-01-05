@@ -93,6 +93,12 @@ data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z
 
 	companion object {
 
+		// World size bounds (not tight)
+
+		const val blockCoordinateUpperBound = 31000000
+		const val blockCoordinateLowerBound = -blockCoordinateUpperBound
+		const val blockCoordinateRangeSize = blockCoordinateUpperBound - blockCoordinateLowerBound + 1
+
 		// Construction
 
 		fun get(worldName: String, x: Int, y: Int, z: Int) = BlockCoordinates(worldName, x, y, z)

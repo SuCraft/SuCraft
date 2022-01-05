@@ -11,6 +11,7 @@ import org.bukkit.block.Block
 import org.bukkit.util.Vector
 import org.json.JSONObject
 import org.sucraft.core.common.bukkit.block.BlockCoordinates
+import kotlin.math.min
 
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -40,10 +41,29 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 
 	@Suppress("DeprecatedCallableAddReplaceWith")
 	@Deprecated("This loads the chunk, which is usually not desired")
-	val chunkLoadIfNotLoaded get() = world?.getChunkAt(x, z)
+	val chunkLoadIfNotLoaded
+		get() = world?.getChunkAt(x, z)
 
 	@Suppress("DEPRECATION")
-	val chunkIfIsLoaded get() = if (isLoaded) chunkLoadIfNotLoaded else null
+	val chunkIfIsLoaded
+		get() = if (isLoaded) chunkLoadIfNotLoaded else null
+
+	// Get long keys
+
+	/**
+	 * This key is not necessarily the same as the one that Paper provides
+	 */
+	val longKeyWithoutWorld
+		get() =
+			(x - chunkCoordinateLowerBound) +
+					chunkCoordinateRangeSize.toLong() *
+					(z - chunkCoordinateLowerBound)
+	val longKeyWithWorld
+		get() =
+			longKeyWithoutWorld +
+					chunkCoordinateRangeSize.toLong() *
+					chunkCoordinateRangeSize *
+					(worldName.hashCode() % longKeyWithWorldWorldRangeSize)
 
 	// Get other chunk coordinates
 
@@ -62,10 +82,12 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 	val minBlockZ get() = z * 16
 	val minMiddleBlockX get() = minBlockX + 7
 	val minMiddleBlockZ get() = minBlockZ + 7
+
 	/**
 	 * This is the x-coordinate at the center of the chunk
 	 */
 	val maxMiddleBlockX get() = minBlockX + 8
+
 	/**
 	 * This is the z-coordinate at the center of the chunk
 	 */
@@ -98,6 +120,21 @@ data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Com
 	// Companion
 
 	companion object {
+
+		// World size bounds (not tight)
+
+		const val chunkCoordinateUpperBound = (BlockCoordinates.blockCoordinateUpperBound + 15) / 16
+		const val chunkCoordinateLowerBound = -chunkCoordinateUpperBound
+		const val chunkCoordinateRangeSize = chunkCoordinateUpperBound - chunkCoordinateLowerBound + 1
+
+		// For a world range size of 500000, the chance of a collision with 50 worlds is ~0.2%, and with 15 worlds is ~0.02%
+		val longKeyWithWorldWorldRangeSize = min(500000, Long.MAX_VALUE / chunkCoordinateRangeSize / chunkCoordinateRangeSize)
+
+		fun getLongKeyWithWorldWorldPart(world: World) =
+			getLongKeyWithWorldWorldPart(world.name)
+
+		fun getLongKeyWithWorldWorldPart(worldName: String) =
+			Math.floorMod(worldName.hashCode().toLong(), longKeyWithWorldWorldRangeSize)
 
 		// Construction
 

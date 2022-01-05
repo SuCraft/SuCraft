@@ -4,5 +4,5 @@ description: ${project.description}
 author: ${pluginDescriptionAuthor}
 website: ${pluginDescriptionWebsite}
 api-version: 1.18
-main: org.sucraft.anticorruption.main.SuCraftAntiLagPlugin
+main: org.sucraft.antilag.main.SuCraftAntiLagPlugin
 depend: [SuCraft-Core, SuCraft-MeasureTPS, SuCraft-TemporaryMobFarmLimits, FartherViewDistance]

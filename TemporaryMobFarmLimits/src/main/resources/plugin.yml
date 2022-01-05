@@ -4,5 +4,5 @@ description: ${project.description}
 author: ${pluginDescriptionAuthor}
 website: ${pluginDescriptionWebsite}
 api-version: 1.18
-main: org.sucraft.measuretps.main.SuCraftTemporaryMobFarmLimitsPlugin
+main: org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 depend: [SuCraft-Core]

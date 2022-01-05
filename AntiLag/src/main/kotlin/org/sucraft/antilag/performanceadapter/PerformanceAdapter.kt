@@ -64,7 +64,7 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 		currentMode.applyDifferingSettingValues(oldMode)
 		modeLastTimes[currentMode] = System.currentTimeMillis()
 		// Log to console
-		logger.info("The performance mode has been updated to ${currentMode.name} (${currentMode.displayName}) with current TPS ${getTPSToUse()}")
+		logger.info("The performance mode has been updated to ${currentMode.name} ('${currentMode.displayName}') with current TPS ${getTPSToUse()}")
 	}
 
 	/**

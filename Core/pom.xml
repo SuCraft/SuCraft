@@ -89,6 +89,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>joor</artifactId>
+			<version>${joor.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>net.kyori</groupId>
 			<artifactId>adventure-text-minimessage</artifactId>
 			<version>${adventureminimessage.version}</version>

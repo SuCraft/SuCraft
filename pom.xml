@@ -18,6 +18,7 @@
 		<lombok.version>1.18.20</lombok.version>
 		<json.version>20210307</json.version>
 		<snakeyaml.version>1.27</snakeyaml.version>
+		<joor.version>0.9.14</joor.version>
 		<adventureminimessage.version>4.1.0-SNAPSHOT</adventureminimessage.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<paper.api.version>1.18.1-R0.1-SNAPSHOT</paper.api.version>
@@ -308,6 +309,12 @@
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>${snakeyaml.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>joor</artifactId>
+			<version>${joor.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -16,6 +16,8 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 
 	// Settings
 
+	private const val printSettingsAtModeChange = false
+
 	internal val tpsMinimaTimeIntervalsInMillis = arrayOf(
 		1000L * 60, // 60 seconds
 		1000L // 1 second
@@ -65,6 +67,10 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 		modeLastTimes[currentMode] = System.currentTimeMillis()
 		// Log to console
 		logger.info("The performance mode has been updated to ${currentMode.name} ('${currentMode.displayName}') with current TPS ${getTPSToUse()}")
+		if (printSettingsAtModeChange) {
+			logger.info("The settings are now:")
+			PerformanceSetting.values.forEach { logger.info("* ${it.displayName} = ${it.get()}") }
+		}
 	}
 
 	/**

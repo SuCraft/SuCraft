@@ -8,6 +8,7 @@ import com.destroystokyo.paper.PaperConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
 import org.sucraft.core.common.bukkit.config.PaperConfigUtils
+import org.sucraft.core.common.bukkit.world.ViewDistanceUtils
 import org.sucraft.core.common.bukkit.world.mainWorld
 import org.sucraft.core.common.sucraft.delegate.MobFarmWeight
 import xuan.cat.fartherviewdistance.code.Index
@@ -53,7 +54,10 @@ class PerformanceSetting<T>(
 
 		val simulationDistance = PerformanceSetting(
 			{ mainWorld.simulationDistance },
-			{ value -> Bukkit.getWorlds().forEach { it.viewDistance = value } }
+			{ value ->
+				//Bukkit.getWorlds().forEach { it.viewDistance = value }
+				Bukkit.getWorlds().forEach { ViewDistanceUtils.setSimulationDistance(it, value) }
+			}
 		)
 
 		val monsterEntityActivationRange = PerformanceSetting(

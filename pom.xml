@@ -23,10 +23,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<paper.api.version>1.18.1-R0.1-SNAPSHOT</paper.api.version>
 		<paper.stub.version>1.18.1-132</paper.stub.version>
-		<paper.stub.url>https://cdn-121.anonfiles.com/pb29q557xf/b432b059-1641407576/paper-1.18.1-132-stub.jar</paper.stub.url>
+		<paper.stub.url>https://screpo.000webhostapp.com/paper-1.18.1-132-stub.jar</paper.stub.url>
 		<paper.stub.jarfilename>paper-${paper.stub.version}.jar</paper.stub.jarfilename>
 		<fartherviewdistance.stub.version>8.7.1</fartherviewdistance.stub.version>
-		<fartherviewdistance.stub.url>https://cdn-122.anonfiles.com/rd28qf56xb/2b53c6aa-1641407539/FartherViewDistance-8.7.1-stub.jar</fartherviewdistance.stub.url>
+		<fartherviewdistance.stub.url>https://screpo.000webhostapp.com/FartherViewDistance-8.7.1-stub.jar</fartherviewdistance.stub.url>
 		<fartherviewdistance.stub.jarfilename>FartherViewDistance-${fartherviewdistance.stub.version}.jar</fartherviewdistance.stub.jarfilename>
 	</properties>
 	<packaging>pom</packaging>

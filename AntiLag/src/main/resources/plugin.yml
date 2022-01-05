@@ -1,0 +1,8 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${pluginDescriptionAuthor}
+website: ${pluginDescriptionWebsite}
+api-version: 1.18
+main: org.sucraft.anticorruption.main.SuCraftAntiLagPlugin
+depend: [SuCraft-Core, SuCraft-MeasureTPS, SuCraft-TemporaryMobFarmLimits]

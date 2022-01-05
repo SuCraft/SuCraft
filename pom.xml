@@ -63,6 +63,7 @@
 		<module>BukkitAPIExtension</module>
 		<module>DiscordInfo</module>
 		<module>AntiCorruption</module>
+		<module>AntiLag</module>
 		<module>MeasureTPS</module>
 		<module>TemporaryMobFarmLimits</module>
 	</modules>

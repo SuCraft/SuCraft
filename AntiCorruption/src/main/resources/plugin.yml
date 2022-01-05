@@ -3,6 +3,6 @@ version: ${project.version}
 description: ${project.description}
 author: ${pluginDescriptionAuthor}
 website: ${pluginDescriptionWebsite}
-api-version: 1.17
+api-version: 1.18
 main: org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 depend: [SuCraft-Core]

@@ -4,12 +4,14 @@
 
 package org.sucraft.antilag.performanceadapter
 
+import org.bukkit.Bukkit
 import org.sucraft.antilag.main.SuCraftAntiLagPlugin
 import org.sucraft.core.common.sucraft.delegate.measuretps.ShortTermMeasureTPS
 import org.sucraft.core.common.sucraft.delegate.measuretps.ShortTermMeasuredTPSListener
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.util.*
 import kotlin.collections.ArrayDeque
+import kotlin.math.min
 
 
 object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLagPlugin.getInstance()), ShortTermMeasuredTPSListener {
@@ -27,8 +29,8 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 	val minimumTimeAgoToCheckInMillis get() = tpsMinimaTimeIntervalsInMillis[1]
 
 	private fun getTPSToUse() =
-		//min(20.0, maxOf(0.01, ShortTermMeasureTPS.get().getRecentTPS(), Bukkit.getTPS()[0]))
-		ShortTermMeasureTPS.get().getRecentTPS()
+		min(20.0, maxOf(0.01, ShortTermMeasureTPS.get().getRecentTPS(), Bukkit.getTPS()[0]))
+		//ShortTermMeasureTPS.get().getRecentTPS()
 
 	private const val minimumDelayBeforeGoingDownAModeInMillis = -1L // Functionally disabled
 	private const val minimumDelayBeforeGoingUpAModeInMillis = 1000L * 5 // 5 seconds

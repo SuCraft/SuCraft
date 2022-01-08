@@ -11,6 +11,7 @@ import org.sucraft.core.common.sucraft.delegate.measuretps.ShortTermMeasuredTPSL
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.util.*
 import kotlin.collections.ArrayDeque
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -29,7 +30,20 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 	val minimumTimeAgoToCheckInMillis get() = tpsMinimaTimeIntervalsInMillis[1]
 
 	private fun getTPSToUse() =
-		min(20.0, maxOf(0.01, ShortTermMeasureTPS.get().getRecentTPS(), Bukkit.getTPS()[0]))
+		max(
+			0.01,
+			min(
+				20.0,
+				min(
+					max(
+						ShortTermMeasureTPS.get().getRecentTPS(),
+						Bukkit.getTPS()[0]
+					),
+					ShortTermMeasureTPS.get().getRecentTPS() + 1.0 // Avoid the Bukkit TPS causing the used TPS to lag too much behind when the suddenly drops
+				)
+			)
+		)
+		//min(20.0, maxOf(0.01, ShortTermMeasureTPS.get().getRecentTPS(), Bukkit.getTPS()[0]))
 		//ShortTermMeasureTPS.get().getRecentTPS()
 
 	private const val minimumDelayBeforeGoingDownAModeInMillis = -1L // Functionally disabled

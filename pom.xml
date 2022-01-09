@@ -67,6 +67,7 @@
 		<module>AntiLag</module>
 		<module>MeasureTPS</module>
 		<module>TemporaryMobFarmLimits</module>
+		<module>HomeQuotes</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

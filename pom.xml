@@ -68,6 +68,7 @@
 		<module>MeasureTPS</module>
 		<module>TemporaryMobFarmLimits</module>
 		<module>HomeQuotes</module>
+		<module>DeathQuotes</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

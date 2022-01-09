@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.sucraft.delegate.home
 
-import lombok.Getter
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
@@ -22,8 +21,8 @@ abstract class PlayerHomeEvent : Event() {
 
 	companion object {
 
-		@Getter@JvmField
-		val handlerList = HandlerList()
+		@JvmStatic
+		open val handlerList = HandlerList()
 
 	}
 

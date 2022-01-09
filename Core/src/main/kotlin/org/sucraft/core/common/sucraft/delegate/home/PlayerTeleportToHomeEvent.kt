@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.sucraft.delegate.home
 
-import lombok.Getter
 import org.bukkit.event.HandlerList
 import org.sucraft.core.common.bukkit.event.ArrayHandlerList
 
@@ -17,8 +16,8 @@ abstract class PlayerTeleportToHomeEvent : PlayerHomeEvent() {
 
 	companion object {
 
-		@Getter@JvmField
-		val handlerList = HandlerList()
+		@JvmStatic
+		open val handlerList = HandlerList()
 
 	}
 

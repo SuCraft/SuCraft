@@ -47,6 +47,8 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 	private var queueExecutionBukkitTask: BukkitTask? = null
 	private var queueExecutionBukkitTaskPlannedTimeInMillis: Long = 0
 
+	private val executeQueueItemRunnable = this::executeQueueItem
+
 	// Steps in backing up
 
 	/**
@@ -275,9 +277,9 @@ object BackupTaskExecutor : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraf
 			}
 			// Schedule the task with Bukkit
 			if (nextTask.isDue())
-				Bukkit.getScheduler().runTaskAsynchronously(plugin, ::executeQueueItem)
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, executeQueueItemRunnable)
 			else
-				Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, Runnable { executeQueueItem() }, ceil(TickTime.millisToTicks(nextTask.minimumSystemTime - System.currentTimeMillis())).toLong())
+				Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, executeQueueItemRunnable, ceil(TickTime.millisToTicks(nextTask.minimumSystemTime - System.currentTimeMillis())).toLong())
 			queueExecutionBukkitTaskPlannedTimeInMillis = timeNextTaskWouldBeScheduledFor
 		}
 	}

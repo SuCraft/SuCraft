@@ -65,6 +65,8 @@ enum class PerformanceMode(
 			19.85
 		),
 
+		SettingValue(mobFarmFactor, 1.0),
+
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 2),
 
 		SettingValue(simulationDistance, 12),
@@ -103,6 +105,8 @@ enum class PerformanceMode(
 			19.7
 		),
 
+		SettingValue(mobFarmFactor, 0.35),
+
 		SettingValue(simulationDistance, 11),
 
 		SettingValue(monsterEntityActivationRange, 41),
@@ -138,7 +142,7 @@ enum class PerformanceMode(
 			19.5
 		),
 
-		SettingValue(mobFarmFactor, 1.0),
+		SettingValue(mobFarmFactor, 0.1),
 		SettingValue(pistonDuplicationEnabled, true),
 
 		SettingValue(ticksPerWaterAnimalSpawns, 1),

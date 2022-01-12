@@ -69,6 +69,7 @@
 		<module>TemporaryMobFarmLimits</module>
 		<module>HomeQuotes</module>
 		<module>DeathQuotes</module>
+		<module>MonsterFreeAreas</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

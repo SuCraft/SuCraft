@@ -22,7 +22,7 @@ class SuCraftMonsterFreeAreasPlugin : SuCraftPlugin() {
 		// Check for WorldGuard
 		try {
 			(server.pluginManager.getPlugin("WorldGuard") as WorldGuardPlugin?)
-				?: logger.warning("Could not find WorldGuard plugin! Preventing monster spawns in towns may not work.")
+				?: logger.warning("Could not find WorldGuard plugin: preventing monster spawns in towns may not work")
 		} catch (e: Exception) {
 			logger.warning("Exception occurred while getting WorldGuard plugin: $e")
 		}

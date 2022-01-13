@@ -95,6 +95,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>${apache.commons.math.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>net.kyori</groupId>
 			<artifactId>adventure-text-minimessage</artifactId>
 			<version>${adventureminimessage.version}</version>

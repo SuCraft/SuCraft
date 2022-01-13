@@ -19,6 +19,7 @@
 		<json.version>20210307</json.version>
 		<snakeyaml.version>1.27</snakeyaml.version>
 		<joor.version>0.9.14</joor.version>
+		<apache.commons.math.version>3.6.1</apache.commons.math.version>
 		<adventureminimessage.version>4.1.0-SNAPSHOT</adventureminimessage.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<paper.api.version>1.18.1-R0.1-SNAPSHOT</paper.api.version>
@@ -328,6 +329,12 @@
 			<groupId>org.jooq</groupId>
 			<artifactId>joor</artifactId>
 			<version>${joor.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>${apache.commons.math.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

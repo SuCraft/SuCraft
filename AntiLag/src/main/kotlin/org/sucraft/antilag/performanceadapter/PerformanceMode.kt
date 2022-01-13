@@ -165,6 +165,8 @@ enum class PerformanceMode(
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 1),
 
+		SettingValue(tickInactiveVillagers, true),
+
 		SettingValue(ticksPerMonsterSpawns, 1),
 		SettingValue(ticksPerWaterAnimalSpawns, 2),
 		SettingValue(ticksPerWaterAmbientSpawns, 1),
@@ -344,8 +346,6 @@ enum class PerformanceMode(
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 4),
 		SettingValue(wakeUpInactiveFlyingMonstersPerTick, 4),
-
-		SettingValue(tickInactiveVillagers, true),
 
 		SettingValue(ticksPerMonsterSpawns, 6),
 		SettingValue(ticksPerAnimalSpawns, 400),

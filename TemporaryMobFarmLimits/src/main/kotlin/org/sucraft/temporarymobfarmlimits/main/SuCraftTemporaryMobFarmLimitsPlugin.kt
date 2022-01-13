@@ -9,6 +9,9 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.temporarymobfarmlimits.creaturespawn.CreatureSpawnCancelListener
 import org.sucraft.temporarymobfarmlimits.creaturespawn.CreatureSpawnMeasureListener
 import org.sucraft.temporarymobfarmlimits.creaturespawn.CreatureSpawnMeasurementData
+import org.sucraft.temporarymobfarmlimits.creaturespawn.absolutelimit.AbsoluteSpawnLimitCreatureSpawnCancelListener
+import org.sucraft.temporarymobfarmlimits.creaturespawn.absolutelimit.AbsoluteSpawnLimitCreatureSpawnMeasureListener
+import org.sucraft.temporarymobfarmlimits.creaturespawn.absolutelimit.AbsoluteSpawnLimitData
 import org.sucraft.temporarymobfarmlimits.delegate.MobFarmWeightDelegate
 import org.sucraft.temporarymobfarmlimits.raid.RaidCancelListener
 import org.sucraft.temporarymobfarmlimits.raid.RaidMeasureListener
@@ -32,6 +35,9 @@ class SuCraftTemporaryMobFarmLimitsPlugin : SuCraftPlugin() {
 		RaidMeasurementData
 		RaidMeasureListener
 		RaidCancelListener
+		AbsoluteSpawnLimitData
+		AbsoluteSpawnLimitCreatureSpawnMeasureListener
+		AbsoluteSpawnLimitCreatureSpawnCancelListener
 	}
 
 }

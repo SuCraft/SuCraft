@@ -18,19 +18,20 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 
 	// Settings
 
-	// 60 spawns per minute
+	// Number of spawns is limited per minute
 	private const val intervalInTicks = 20 * 60.0
-	private const val targetSpawnsInInterval = 60.0
 
 	private val decrementCountDelayDistribution = PoissonDistribution(intervalInTicks)
 
 	fun areAbsoluteNaturalSpawnsLimitedForEntityType(entityType: EntityType) =
+		getTargetSpawnsInIntervalForEntityType(entityType) != null
+
+	fun getTargetSpawnsInIntervalForEntityType(entityType: EntityType): Double? =
 		when(entityType) {
 			AXOLOTL,
 			CREEPER,
 			DROWNED,
 			ELDER_GUARDIAN,
-			ENDERMAN,
 			GHAST,
 			GLOW_SQUID,
 			GUARDIAN,
@@ -45,8 +46,9 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 			WITHER_SKELETON,
 			ZOMBIE,
 			ZOMBIE_VILLAGER,
-			ZOMBIFIED_PIGLIN -> true
-			else -> false
+			ZOMBIFIED_PIGLIN -> 60.0
+			ENDERMAN -> 170.0
+			else -> null
 		}
 
 	fun areSpawnsOfSpawnReasonLimited(spawnReason: CreatureSpawnEvent.SpawnReason) =
@@ -73,6 +75,8 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 
 	fun evaluateChanceForEntityToSpawn(entityType: EntityType) =
 		// Multiply by 2 to account for the fact that the chance keeps decreasing linearly, so the average chance is 0.5 (this is true only if the spawn limit is always eventually fully fulfilled, but it's a good enough estimation) (were the chance a constant, we wouldn't need to)
-		recentSpawnCounts[entityType]?.let { Math.random() >= it / (targetSpawnsInInterval * 2) } ?: true
+		getTargetSpawnsInIntervalForEntityType(entityType)?.let { targetSpawnsInInterval ->
+			recentSpawnCounts[entityType]?.let { Math.random() >= it / (targetSpawnsInInterval * 2) } ?: true
+		} ?: true
 
 }

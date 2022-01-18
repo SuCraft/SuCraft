@@ -38,7 +38,7 @@ object ViewDistanceUtils {
 			it.k().b(usedSimulationDistance)
 			// Update the Spigot world configuration values
 			it.spigotConfig.simulationDistance = (on(it.k()).field("d").field("t").get() as Number).toInt() - 1
-			it.spigotConfig.viewDistance = (on(it.k().a).field("L").get() as Number).toInt() - 1
+			it.spigotConfig.viewDistance = (on(it.k().a).field("worldViewDistance").get() as Number).toInt() - 1
 		}
 
 	}

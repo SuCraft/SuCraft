@@ -24,8 +24,11 @@ The code is currently fully written in the Kotlin programming language. Minecraf
 But don't fear, it's not super hard, and programming is very useful and this is a very fun way to learn! If you don't know some of these, don't worry too much, you can figure it out along the way too, that's how most people learn these.
 
 Here are some tutorials that anyone can follow:
+
    [Minecraft plugins](https://www.youtube.com/playlist?list=PLfu_Bpi_zcDNEKmR82hnbv9UxQ16nUBF7)
+
    [Java](https://www.youtube.com/watch?v=GoXwIVyNvX0)
+
    [Kotlin](https://www.youtube.com/watch?v=F9UC9DY-vIU)
 
 For questions, you can ask on Discord in [#development](https://discord.gg/pbsPkpUjG4).
@@ -52,16 +55,23 @@ If you think you've made an improvement to the code somewhere, you can suggest i
 ### 2. Download the code
 
 Clone this repository. The easiest way is by going to:
+
    **Fork** (in the right top)
+
 Then go to the forked version (*YourGitHubName/SuCraft* in your repositories) and do:
+
    **Code** > **Open with GitHub Desktop**
+
 Using your Git program (like GitHub Desktop), clone the code to wherever you like (for example *C:/Users/Martijn/Desktop/SuCraft/code*).
 
 ### 3. Open it in the code editor
 
 You can import all the SuCraft code in IntelliJ at once:
+
    **File** > **New** > **Project from Existing Sources...**
+
    > Select the directory you put the code in (e.g. *C:/Users/Martijn/Desktop/SuCraft/code*)
+
    > **Import project from external model** > **Maven** > **Finish**
 
 ### 3. Create a Paper server

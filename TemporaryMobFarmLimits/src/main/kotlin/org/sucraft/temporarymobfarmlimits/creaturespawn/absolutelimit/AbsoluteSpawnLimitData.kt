@@ -47,7 +47,7 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 			SPIDER,
 			STRAY,
 			WITCH -> 120.0
-			ENDERMAN -> 200.0
+			ENDERMAN -> 240.0
 			else -> null
 		}
 

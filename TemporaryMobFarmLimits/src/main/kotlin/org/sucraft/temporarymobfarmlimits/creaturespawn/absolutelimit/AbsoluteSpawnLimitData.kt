@@ -54,6 +54,7 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 	fun areSpawnsOfSpawnReasonLimited(spawnReason: CreatureSpawnEvent.SpawnReason) =
 		when (spawnReason) {
 			CreatureSpawnEvent.SpawnReason.NATURAL,
+			CreatureSpawnEvent.SpawnReason.REINFORCEMENTS,
 			CreatureSpawnEvent.SpawnReason.SPAWNER -> true
 			else -> false
 		}

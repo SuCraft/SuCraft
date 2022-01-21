@@ -26,6 +26,7 @@ object CreatureSpawnCancelListener : SuCraftComponent<SuCraftTemporaryMobFarmLim
 	private fun isSpawnReasonHandledByPreCreatureSpawnEvent(reason: CreatureSpawnEvent.SpawnReason) =
 		when (reason) {
 			CreatureSpawnEvent.SpawnReason.NATURAL,
+			CreatureSpawnEvent.SpawnReason.REINFORCEMENTS,
 			CreatureSpawnEvent.SpawnReason.SPAWNER -> true
 			else -> false
 		}

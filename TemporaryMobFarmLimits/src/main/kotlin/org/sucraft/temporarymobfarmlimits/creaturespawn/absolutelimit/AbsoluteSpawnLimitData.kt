@@ -28,26 +28,26 @@ object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPl
 
 	fun getTargetSpawnsInIntervalForEntityType(entityType: EntityType): Double? =
 		when(entityType) {
+			ELDER_GUARDIAN,
+			GUARDIAN -> 45.0
+			GLOW_SQUID,
+			SQUID -> 60.0
+			DROWNED,
+			GHAST,
+			HUSK,
+			WITHER_SKELETON,
+			ZOMBIE,
+			ZOMBIE_VILLAGER,
+			ZOMBIFIED_PIGLIN -> 90.0
 			AXOLOTL,
 			CREEPER,
-			DROWNED,
-			ELDER_GUARDIAN,
-			GHAST,
-			GLOW_SQUID,
-			GUARDIAN,
-			HUSK,
 			MAGMA_CUBE,
 			SKELETON,
 			SLIME,
 			SPIDER,
-			SQUID,
 			STRAY,
-			WITCH,
-			WITHER_SKELETON,
-			ZOMBIE,
-			ZOMBIE_VILLAGER,
-			ZOMBIFIED_PIGLIN -> 60.0
-			ENDERMAN -> 170.0
+			WITCH -> 120.0
+			ENDERMAN -> 200.0
 			else -> null
 		}
 

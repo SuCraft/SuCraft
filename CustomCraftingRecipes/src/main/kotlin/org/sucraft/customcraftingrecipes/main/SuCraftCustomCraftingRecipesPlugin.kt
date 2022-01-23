@@ -6,7 +6,9 @@ package org.sucraft.customcraftingrecipes.main
 
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
+import org.sucraft.customcraftingrecipes.recipe.BarrierRecipe
 import org.sucraft.customcraftingrecipes.recipe.DebugStickRecipe
+import org.sucraft.customcraftingrecipes.recipe.LightRecipe
 import org.sucraft.customcraftingrecipes.recipe.OldEnchantedGoldenAppleRecipe
 import org.sucraft.customcraftingrecipes.recipe.alcohol.BeerRecipe
 import org.sucraft.customcraftingrecipes.recipe.alcohol.CraftAlcoholListener
@@ -26,6 +28,8 @@ class SuCraftCustomCraftingRecipesPlugin : SuCraftPlugin() {
 		// Initialize components
 		OldEnchantedGoldenAppleRecipe
 		DebugStickRecipe
+		BarrierRecipe
+		LightRecipe
 		DrinkAlcoholListener
 		CraftAlcoholListener
 		BeerRecipe

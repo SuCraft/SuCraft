@@ -14,7 +14,7 @@ import org.sucraft.core.common.sucraft.delegate.MobFarmWeight
 import xuan.cat.fartherviewdistance.code.Index
 
 
-class PerformanceSetting<T>(
+open class PerformanceSetting<T>(
 	val displayName: String,
 	private val getter: () -> T,
 	private val setter: (T) -> Unit
@@ -22,7 +22,7 @@ class PerformanceSetting<T>(
 
 	fun get() = getter()
 
-	fun set(value: T) = setter(value)
+	open fun set(value: T) = setter(value)
 
 	val index: Int
 
@@ -65,10 +65,12 @@ class PerformanceSetting<T>(
 			}
 		)
 
-		val maxTrackViewDistance = PerformanceSetting(
+		val maxTrackViewDistance = HighIntIsBestDelayedPerformanceSetting(
 			"max track view distance",
 			{ PaperConfigUtils.getFromPaperMainWorldConfig { it.maxTrackViewDistance } },
-			{ value -> PaperConfigUtils.modifyInPaperWorldsConfig { it.maxTrackViewDistance = value } }
+			{ value -> PaperConfigUtils.modifyInPaperWorldsConfig { it.maxTrackViewDistance = value } },
+			20L * 60, // 1 minute
+			12
 		)
 
 		val monsterEntityActivationRange = PerformanceSetting(

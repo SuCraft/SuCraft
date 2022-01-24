@@ -19,6 +19,7 @@ import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.itemM
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.maxAutoSaveChunksPerTick
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.maxEntityCollisions
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.maxPrimedTNT
+import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.maxTrackViewDistance
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.miscEntityActivationRange
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.mobFarmFactor
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.mobSpawnChunkRange
@@ -106,6 +107,7 @@ enum class PerformanceMode(
 		SettingValue(mobFarmFactor, 0.35),
 
 		SettingValue(simulationDistance, 11),
+		SettingValue(maxTrackViewDistance, 12),
 
 		SettingValue(monsterEntityActivationRange, 34),
 		SettingValue(animalEntityActivationRange, 32),
@@ -205,6 +207,7 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(simulationDistance, 10),
+		SettingValue(maxTrackViewDistance, 11),
 
 		SettingValue(monsterEntityActivationRange, 26),
 		SettingValue(animalEntityActivationRange, 25),
@@ -247,6 +250,7 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(simulationDistance, 8),
+		SettingValue(maxTrackViewDistance, 10),
 
 		SettingValue(monsterEntityActivationRange, 24),
 		SettingValue(animalEntityActivationRange, 22),
@@ -289,7 +293,8 @@ enum class PerformanceMode(
 			17.0
 		),
 
-		SettingValue(simulationDistance, 22),
+		SettingValue(simulationDistance, 7),
+		SettingValue(maxTrackViewDistance, 9),
 
 		SettingValue(monsterEntityActivationRange, 22),
 		SettingValue(animalEntityActivationRange, 19),
@@ -344,6 +349,7 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(simulationDistance, 5),
+		SettingValue(maxTrackViewDistance, 8),
 
 		SettingValue(monsterEntityActivationRange, 18),
 		SettingValue(animalEntityActivationRange, 11),
@@ -384,6 +390,7 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(simulationDistance, 4),
+		SettingValue(maxTrackViewDistance, 7),
 
 		SettingValue(monsterEntityActivationRange, 16),
 		SettingValue(animalEntityActivationRange, 9),
@@ -430,6 +437,7 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(simulationDistance, 3),
+		SettingValue(maxTrackViewDistance, 6),
 
 		SettingValue(monsterEntityActivationRange, 15),
 		SettingValue(animalEntityActivationRange, 7),
@@ -482,6 +490,7 @@ enum class PerformanceMode(
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 0),
 
 		SettingValue(simulationDistance, 2),
+		SettingValue(maxTrackViewDistance, 5),
 
 		SettingValue(monsterEntityActivationRange, 12),
 		SettingValue(animalEntityActivationRange, 4),

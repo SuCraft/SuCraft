@@ -65,6 +65,12 @@ class PerformanceSetting<T>(
 			}
 		)
 
+		val maxTrackViewDistance = PerformanceSetting(
+			"max track view distance",
+			{ PaperConfigUtils.getFromPaperMainWorldConfig { it.maxTrackViewDistance } },
+			{ value -> PaperConfigUtils.modifyInPaperWorldsConfig { it.maxTrackViewDistance = value } }
+		)
+
 		val monsterEntityActivationRange = PerformanceSetting(
 			"activation range (monsters)",
 			{ PaperConfigUtils.getFromSpigotMainWorldConfig { it.monsterActivationRange } },

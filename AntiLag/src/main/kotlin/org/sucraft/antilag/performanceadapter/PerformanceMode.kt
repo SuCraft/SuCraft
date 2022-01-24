@@ -82,7 +82,7 @@ enum class PerformanceMode(
 		SettingValue(wakeUpInactiveVillagersPerTick, 5),
 		SettingValue(wakeUpInactiveFlyingMonstersPerTick, 16),
 
-		SettingValue(mobSpawnChunkRange, 7),
+		SettingValue(mobSpawnChunkRange, 6),
 
 		//SettingValue(globalMaxConcurrentChunkLoads, 700),
 		SettingValue(maxAutoSaveChunksPerTick, 40),
@@ -122,7 +122,7 @@ enum class PerformanceMode(
 
 		SettingValue(tickInactiveVillagers, true),
 
-		SettingValue(mobSpawnChunkRange, 6),
+		SettingValue(mobSpawnChunkRange, 5),
 
 		//SettingValue(globalMaxConcurrentChunkLoads, 600),
 		SettingValue(maxAutoSaveChunksPerTick, 32),
@@ -514,7 +514,7 @@ enum class PerformanceMode(
 		SettingValue(ticksPerWaterUndergroundCreatureSpawns, 40),
 		SettingValue(ticksPerAmbientSpawns, 40),
 
-		SettingValue(mobSpawnChunkRange, 5),
+		SettingValue(mobSpawnChunkRange, 4),
 
 		SettingValue(mobSpawnerTickRate, 5),
 

@@ -69,13 +69,13 @@ enum class PerformanceMode(
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 2),
 
-		SettingValue(monsterEntityActivationRange, 40),
-		SettingValue(animalEntityActivationRange, 36),
-		SettingValue(villagerEntityActivationRange, 34),
+		SettingValue(monsterEntityActivationRange, 36),
+		SettingValue(animalEntityActivationRange, 32),
+		SettingValue(villagerEntityActivationRange, 32),
 		SettingValue(raiderEntityActivationRange, 80),
-		SettingValue(waterEntityActivationRange, 35),
+		SettingValue(waterEntityActivationRange, 32),
 		SettingValue(flyingMonsterEntityActivationRange, 90),
-		SettingValue(miscEntityActivationRange, 20),
+		SettingValue(miscEntityActivationRange, 16),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 10),
 		SettingValue(wakeUpInactiveVillagersPerTick, 5),
@@ -107,13 +107,13 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 11),
 
-		SettingValue(monsterEntityActivationRange, 36),
-		SettingValue(animalEntityActivationRange, 34),
-		SettingValue(villagerEntityActivationRange, 33),
+		SettingValue(monsterEntityActivationRange, 34),
+		SettingValue(animalEntityActivationRange, 32),
+		SettingValue(villagerEntityActivationRange, 30),
 		SettingValue(raiderEntityActivationRange, 64),
-		SettingValue(waterEntityActivationRange, 32),
+		SettingValue(waterEntityActivationRange, 30),
 		SettingValue(flyingMonsterEntityActivationRange, 64),
-		SettingValue(miscEntityActivationRange, 18),
+		SettingValue(miscEntityActivationRange, 15),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 9),
 		SettingValue(wakeUpInactiveFlyingMonstersPerTick, 12),
@@ -145,6 +145,9 @@ enum class PerformanceMode(
 		SettingValue(mobFarmFactor, 0.1),
 		SettingValue(pistonDuplicationEnabled, true),
 
+		SettingValue(monsterEntityActivationRange, 32),
+		SettingValue(miscEntityActivationRange, 14),
+
 		SettingValue(ticksPerWaterAnimalSpawns, 1),
 
 		SettingValue(zombifiedPiglinPortalSpawns, true)
@@ -164,6 +167,14 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 1),
+
+		SettingValue(monsterEntityActivationRange, 28),
+		SettingValue(animalEntityActivationRange, 28),
+		SettingValue(villagerEntityActivationRange, 26),
+		SettingValue(raiderEntityActivationRange, 56),
+		SettingValue(waterEntityActivationRange, 28),
+		SettingValue(flyingMonsterEntityActivationRange, 56),
+		SettingValue(miscEntityActivationRange, 13),
 
 		SettingValue(ticksPerMonsterSpawns, 1),
 		SettingValue(ticksPerWaterAnimalSpawns, 2),
@@ -195,9 +206,9 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 10),
 
-		SettingValue(monsterEntityActivationRange, 32),
-		SettingValue(animalEntityActivationRange, 32),
-		SettingValue(villagerEntityActivationRange, 32),
+		SettingValue(monsterEntityActivationRange, 26),
+		SettingValue(animalEntityActivationRange, 25),
+		SettingValue(villagerEntityActivationRange, 24),
 		SettingValue(raiderEntityActivationRange, 50),
 		SettingValue(waterEntityActivationRange, 24),
 
@@ -237,11 +248,11 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 8),
 
-		SettingValue(monsterEntityActivationRange, 27),
-		SettingValue(animalEntityActivationRange, 20),
-		SettingValue(villagerEntityActivationRange, 28),
+		SettingValue(monsterEntityActivationRange, 24),
+		SettingValue(animalEntityActivationRange, 22),
+		SettingValue(villagerEntityActivationRange, 22),
 		SettingValue(raiderEntityActivationRange, 45),
-		SettingValue(waterEntityActivationRange, 15),
+		SettingValue(waterEntityActivationRange, 19),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 8),
 		SettingValue(wakeUpInactiveAnimalsPerTick, 4),
@@ -280,13 +291,13 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 22),
 
-		SettingValue(monsterEntityActivationRange, 23),
-		SettingValue(animalEntityActivationRange, 16),
-		SettingValue(villagerEntityActivationRange, 24),
+		SettingValue(monsterEntityActivationRange, 22),
+		SettingValue(animalEntityActivationRange, 19),
+		SettingValue(villagerEntityActivationRange, 20),
 		SettingValue(raiderEntityActivationRange, 40),
-		SettingValue(waterEntityActivationRange, 12),
+		SettingValue(waterEntityActivationRange, 16),
 		SettingValue(flyingMonsterEntityActivationRange, 48),
-		SettingValue(miscEntityActivationRange, 16),
+		SettingValue(miscEntityActivationRange, 12),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 6),
 		SettingValue(wakeUpInactiveAnimalsPerTick, 3),
@@ -336,11 +347,11 @@ enum class PerformanceMode(
 
 		SettingValue(monsterEntityActivationRange, 18),
 		SettingValue(animalEntityActivationRange, 11),
-		SettingValue(villagerEntityActivationRange, 19),
+		SettingValue(villagerEntityActivationRange, 16),
 		SettingValue(raiderEntityActivationRange, 30),
-		SettingValue(waterEntityActivationRange, 9),
+		SettingValue(waterEntityActivationRange, 10),
 		SettingValue(flyingMonsterEntityActivationRange, 25),
-		SettingValue(miscEntityActivationRange, 14),
+		SettingValue(miscEntityActivationRange, 9),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 4),
 		SettingValue(wakeUpInactiveFlyingMonstersPerTick, 4),
@@ -374,9 +385,13 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 4),
 
-		SettingValue(animalEntityActivationRange, 8),
-		SettingValue(flyingMonsterEntityActivationRange, 20),
-		SettingValue(miscEntityActivationRange, 10),
+		SettingValue(monsterEntityActivationRange, 16),
+		SettingValue(animalEntityActivationRange, 9),
+		SettingValue(villagerEntityActivationRange, 14),
+		SettingValue(raiderEntityActivationRange, 28),
+		SettingValue(waterEntityActivationRange, 9),
+		SettingValue(flyingMonsterEntityActivationRange, 23),
+		SettingValue(miscEntityActivationRange, 8),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 2),
 		SettingValue(wakeUpInactiveAnimalsPerTick, 2),
@@ -416,12 +431,12 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 3),
 
-		SettingValue(monsterEntityActivationRange, 16),
-		SettingValue(animalEntityActivationRange, 6),
-		SettingValue(villagerEntityActivationRange, 16),
+		SettingValue(monsterEntityActivationRange, 15),
+		SettingValue(animalEntityActivationRange, 7),
+		SettingValue(villagerEntityActivationRange, 13),
 		SettingValue(raiderEntityActivationRange, 24),
 		SettingValue(waterEntityActivationRange, 8),
-		SettingValue(flyingMonsterEntityActivationRange, 18),
+		SettingValue(flyingMonsterEntityActivationRange, 22),
 		SettingValue(miscEntityActivationRange, 7),
 
 		SettingValue(ticksPerMonsterSpawns, 20),
@@ -470,10 +485,10 @@ enum class PerformanceMode(
 
 		SettingValue(monsterEntityActivationRange, 12),
 		SettingValue(animalEntityActivationRange, 4),
-		SettingValue(villagerEntityActivationRange, 14),
+		SettingValue(villagerEntityActivationRange, 11),
 		SettingValue(raiderEntityActivationRange, 18),
 		SettingValue(waterEntityActivationRange, 6),
-		SettingValue(flyingMonsterEntityActivationRange, 16),
+		SettingValue(flyingMonsterEntityActivationRange, 18),
 		SettingValue(miscEntityActivationRange, 5),
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 1),

@@ -69,13 +69,11 @@ enum class PerformanceMode(
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 2),
 
-		SettingValue(simulationDistance, 12),
-
-		SettingValue(monsterEntityActivationRange, 50),
-		SettingValue(animalEntityActivationRange, 42),
-		SettingValue(villagerEntityActivationRange, 46),
+		SettingValue(monsterEntityActivationRange, 40),
+		SettingValue(animalEntityActivationRange, 36),
+		SettingValue(villagerEntityActivationRange, 34),
 		SettingValue(raiderEntityActivationRange, 80),
-		SettingValue(waterEntityActivationRange, 38),
+		SettingValue(waterEntityActivationRange, 35),
 		SettingValue(flyingMonsterEntityActivationRange, 90),
 		SettingValue(miscEntityActivationRange, 20),
 
@@ -109,9 +107,9 @@ enum class PerformanceMode(
 
 		SettingValue(simulationDistance, 11),
 
-		SettingValue(monsterEntityActivationRange, 41),
-		SettingValue(animalEntityActivationRange, 37),
-		SettingValue(villagerEntityActivationRange, 39),
+		SettingValue(monsterEntityActivationRange, 36),
+		SettingValue(animalEntityActivationRange, 34),
+		SettingValue(villagerEntityActivationRange, 33),
 		SettingValue(raiderEntityActivationRange, 64),
 		SettingValue(waterEntityActivationRange, 32),
 		SettingValue(flyingMonsterEntityActivationRange, 64),
@@ -119,6 +117,8 @@ enum class PerformanceMode(
 
 		SettingValue(wakeUpInactiveMonstersPerTick, 9),
 		SettingValue(wakeUpInactiveFlyingMonstersPerTick, 12),
+
+		SettingValue(tickInactiveVillagers, true),
 
 		SettingValue(mobSpawnChunkRange, 6),
 
@@ -164,8 +164,6 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 1),
-
-		SettingValue(tickInactiveVillagers, true),
 
 		SettingValue(ticksPerMonsterSpawns, 1),
 		SettingValue(ticksPerWaterAnimalSpawns, 2),

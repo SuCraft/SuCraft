@@ -19,7 +19,7 @@ object BarrierRecipe : CustomRecipe() {
 	// Implementation
 
 	override fun getBukkitRecipe() =
-		ShapedRecipe(recipeNamespacedKey, ItemStack(Material.BARRIER, 4)).also {
+		ShapedRecipe(recipeNamespacedKey, ItemStack(Material.BARRIER, 10)).also {
 			it.shape("$$$", "$%$", "$$$")
 			it.setIngredient('$', Material.RED_WOOL)
 			it.setIngredient('%', Material.DIAMOND)

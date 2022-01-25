@@ -19,7 +19,7 @@ object LightRecipe : CustomRecipe() {
 	// Implementation
 
 	override fun getBukkitRecipe() =
-		ShapedRecipe(recipeNamespacedKey, ItemStack(Material.LIGHT, 4)).also {
+		ShapedRecipe(recipeNamespacedKey, ItemStack(Material.LIGHT, 10)).also {
 			it.shape("$$$", "$%$", "$$$")
 			it.setIngredient('$', Material.GLASS)
 			it.setIngredient('%', Material.DIAMOND)

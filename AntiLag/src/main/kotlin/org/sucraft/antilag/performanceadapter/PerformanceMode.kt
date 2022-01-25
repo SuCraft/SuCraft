@@ -68,6 +68,7 @@ enum class PerformanceMode(
 
 		SettingValue(mobFarmFactor, 1.0),
 
+		SettingValue(simulationDistance, 8),
 		SettingValue(maxTrackViewDistance, 12),
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 2),
@@ -107,8 +108,6 @@ enum class PerformanceMode(
 		),
 
 		SettingValue(mobFarmFactor, 0.35),
-
-		SettingValue(simulationDistance, 11),
 
 		SettingValue(monsterEntityActivationRange, 29),
 		SettingValue(animalEntityActivationRange, 24),
@@ -176,6 +175,8 @@ enum class PerformanceMode(
 
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 1),
 
+		SettingValue(simulationDistance, 7),
+
 		SettingValue(monsterEntityActivationRange, 24),
 		SettingValue(animalEntityActivationRange, 16),
 		SettingValue(villagerEntityActivationRange, 20),
@@ -212,7 +213,6 @@ enum class PerformanceMode(
 			19.0
 		),
 
-		SettingValue(simulationDistance, 10),
 		SettingValue(maxTrackViewDistance, 11),
 
 		SettingValue(monsterEntityActivationRange, 22),
@@ -255,7 +255,7 @@ enum class PerformanceMode(
 			18.0
 		),
 
-		SettingValue(simulationDistance, 8),
+		SettingValue(simulationDistance, 6),
 		SettingValue(maxTrackViewDistance, 10),
 
 		SettingValue(monsterEntityActivationRange, 20),
@@ -299,7 +299,6 @@ enum class PerformanceMode(
 			17.0
 		),
 
-		SettingValue(simulationDistance, 7),
 		SettingValue(maxTrackViewDistance, 9),
 
 		SettingValue(monsterEntityActivationRange, 18),

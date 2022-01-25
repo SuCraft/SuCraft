@@ -46,8 +46,8 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 		//min(20.0, maxOf(0.01, ShortTermMeasureTPS.get().getRecentTPS(), Bukkit.getTPS()[0]))
 		//ShortTermMeasureTPS.get().getRecentTPS()
 
-	private const val minimumDelayBeforeGoingDownAModeInMillis = -1L // Functionally disabled
-	private const val minimumDelayBeforeGoingUpAModeInMillis = 1000L * 5 // 5 seconds
+	private const val minimumDelayBeforeGoingDownAModeInMillis = 1000L * 4 // 4 seconds
+	private const val minimumDelayBeforeGoingUpAModeInMillis = 1000L * 7 // 7 seconds
 
 	// Data
 

@@ -16,7 +16,7 @@ object ShortTermMeasureTPSData : SuCraftComponent<SuCraftMeasureTPSPlugin>(SuCra
 	// Settings
 
 	private const val measureTPSIntervalInTicks = 2L
-	private const val keepLastTPSMomentum = 0.985
+	private const val keepLastTPSMomentum = 0.99
 	private const val clampSystemTimeDifferenceBelowInMillis = 40L // 1/25th second
 
 	private const val ignoreSystemTimeDifferenceAboveInMillis = 1000L * 5 // 5 seconds

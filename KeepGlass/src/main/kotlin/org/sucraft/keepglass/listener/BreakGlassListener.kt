@@ -4,15 +4,15 @@
 
 package org.sucraft.keepglass.listener
 
-import org.bukkit.event.EventPriority
-import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.GameMode
-import org.bukkit.inventory.ItemStack
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.material.MaterialGroups
-import org.sucraft.keepglass.main.SuCraftKeepGlassPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
+import org.sucraft.keepglass.main.SuCraftKeepGlassPlugin
 
 
 object BreakGlassListener : SuCraftComponent<SuCraftKeepGlassPlugin>(SuCraftKeepGlassPlugin.getInstance()) {
@@ -32,7 +32,7 @@ object BreakGlassListener : SuCraftComponent<SuCraftKeepGlassPlugin>(SuCraftKeep
 		if (!(type in MaterialGroups.stainedOrRegularGlassPane || type in MaterialGroups.stainedOrRegularGlass)) return
 		// Drop the item
 		val dropLocation = block.location
-		dropLocation.world.dropItem(dropLocation, ItemStack(type))
+		dropLocation.world.dropItem(dropLocation.clone().add(0.5, 0.5, 0.5), ItemStack(type))
 	}
 
 }

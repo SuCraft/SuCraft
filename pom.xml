@@ -71,6 +71,7 @@
 		<module>HomeQuotes</module>
 		<module>DeathQuotes</module>
 		<module>MonsterFreeAreas</module>
+		<module>BarriersAndLightsDrop</module>
 	</modules>
 	<build>
 		<finalName>${project.name}</finalName>

@@ -23,7 +23,7 @@ object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLa
 
 	internal val tpsMinimaTimeIntervalsInMillis = arrayOf(
 		1000L * 60, // 60 seconds
-		1000L // 1 second
+		1000L * 5 // 5 seconds // Increased to 5 from 1 second because the TPS can sometimes be highly unstable over short times under Oracle's OCPU conditions
 	)
 
 	val maximumTimeAgoToCheckInMillis get() = tpsMinimaTimeIntervalsInMillis[0]

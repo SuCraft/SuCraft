@@ -130,11 +130,132 @@ open class PerformanceSetting<T>(
 			{ value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.wakeUpInactiveFlying = value } }
 		)
 
+		val skippedActiveEntityRatio: PerformanceSetting<Pair<Int, Int>> = PerformanceSetting(
+			"skip active entity ratio",
+			{ Pair(PaperConfig.skippedActiveEntityRatioNumerator, PaperConfig.skippedActiveEntityRatioDenominator) },
+			{ value ->
+				PaperConfig.skippedActiveEntityRatioNumerator = value.first
+				PaperConfig.skippedActiveEntityRatioDenominator = value.second
+			}
+		)
+
 		val tickInactiveVillagers = PerformanceSetting(
 			"tick inactive villagers",
 			{ PaperConfigUtils.getFromSpigotMainWorldConfig { it.tickInactiveVillagers } },
 			{ value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.tickInactiveVillagers = value } }
 		)
+		val babyImmunityFor = PerformanceSetting(
+			"baby inactivity immune time",
+			{ PaperConfigUtils.getFromSpigotMainWorldConfig { it.babyImmunityFor } },
+			{ value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.babyImmunityFor = value } }
+		)
+		val areShearedSheepImmune = PerformanceSetting(
+			"sheared sheep inactivity immunity",
+			{ PaperConfigUtils.getFromSpigotMainWorldConfig { it.areShearedSheepImmune } },
+			{ value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.areShearedSheepImmune = value } }
+		)
+
+		val guardianTargetingSquidImmunityFor = PerformanceSetting(
+            "guardian targeting squid inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.guardianTargetingSquidImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.guardianTargetingSquidImmunityFor = value } }
+        )
+		val endermanTargetingEndermiteImmunityFor = PerformanceSetting(
+            "enderman targeting endermite inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.endermanTargetingEndermiteImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.endermanTargetingEndermiteImmunityFor = value } }
+        )
+		val piglinTargetingWitherSkeletonImmunityFor = PerformanceSetting(
+            "piglin targetin wither skeleton inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.piglinTargetingWitherSkeletonImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.piglinTargetingWitherSkeletonImmunityFor = value } }
+        )
+		val witherSkeletonTargetingPiglinImmunityFor = PerformanceSetting(
+            "wither skeleton targeting piglin inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.witherSkeletonTargetingPiglinImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.witherSkeletonTargetingPiglinImmunityFor = value } }
+        )
+		val witherSkeletonTargetingIronGolemImmunityFor = PerformanceSetting(
+            "wither skeleton targeting iron golem inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.witherSkeletonTargetingIronGolemImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.witherSkeletonTargetingIronGolemImmunityFor = value } }
+        )
+		val witherSkeletonTargetingSnowGolemImmunityFor = PerformanceSetting(
+            "wither skeleton targeting snow golem inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.witherSkeletonTargetingSnowGolemImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.witherSkeletonTargetingSnowGolemImmunityFor = value } }
+        )
+		val snowGolemTargetingNonPlayerImmunityFor = PerformanceSetting(
+            "snow golem targeting non-player mob inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.snowGolemTargetingNonPlayerImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.snowGolemTargetingNonPlayerImmunityFor = value } }
+        )
+		val mobTargetingTurtleImmunityFor = PerformanceSetting(
+            "mob targeting turtle inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.mobTargetingTurtleImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.mobTargetingTurtleImmunityFor = value } }
+        )
+
+		val wolfTargetingSheepImmunityFor = PerformanceSetting(
+            "wolf targeting sheep inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.wolfTargetingSheepImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.wolfTargetingSheepImmunityFor = value } }
+        )
+		val wolfTargetingFoxImmunityFor = PerformanceSetting(
+            "wolf targeting fox inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.wolfTargetingFoxImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.wolfTargetingFoxImmunityFor = value } }
+        )
+		val llamaTargetingWolfImmunityFor = PerformanceSetting(
+            "llama targeting wolf inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.llamaTargetingWolfImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.llamaTargetingWolfImmunityFor = value } }
+        )
+		val polarBearTargetingFoxImmunityFor = PerformanceSetting(
+            "polar bear targeting fox inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.polarBearTargetingFoxImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.polarBearTargetingFoxImmunityFor = value } }
+        )
+		val foxTargetingChickenImmunityFor = PerformanceSetting(
+            "fox targeting chicken inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.foxTargetingChickenImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.foxTargetingChickenImmunityFor = value } }
+        )
+		val ocelotTargetingChickenImmunityFor = PerformanceSetting(
+            "ocelot targeting chicken inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.ocelotTargetingChickenImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.ocelotTargetingChickenImmunityFor = value } }
+        )
+		val catTargetingRabbitImmunityFor = PerformanceSetting(
+            "cat targeting rabbit inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.catTargetingRabbitImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.catTargetingRabbitImmunityFor = value } }
+        )
+		val piglinTargetingHoglinImmunityFor = PerformanceSetting(
+            "piglin targeting hoglin inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.piglinTargetingHoglinImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.piglinTargetingHoglinImmunityFor = value } }
+        )
+		val zoglinTargetingNonPlayerImmunityFor = PerformanceSetting(
+            "zoglin targeting non-player mob inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.zoglinTargetingNonPlayerImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.zoglinTargetingNonPlayerImmunityFor = value } }
+        )
+		val axolotlTargetingFishImmunityFor = PerformanceSetting(
+            "axolotl targeting fish inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.axolotlTargetingFishImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.axolotlTargetingFishImmunityFor = value } }
+        )
+		val axolotlTargetingSquidImmunityFor = PerformanceSetting(
+            "axolotl targeting squid inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.axolotlTargetingSquidImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.axolotlTargetingSquidImmunityFor = value } }
+        )
+		val witchTargetingWitchImmunityFor = PerformanceSetting(
+            "witch targeting witch inactivity immune time",
+            { PaperConfigUtils.getFromSpigotMainWorldConfig { it.witchTargetingWitchImmunityFor } },
+            { value -> PaperConfigUtils.modifyInSpigotWorldsConfig { it.witchTargetingWitchImmunityFor = value } }
+        )
 
 		val ticksPerMonsterSpawns = PerformanceSetting(
 			"ticks per spawns (monsters)",
@@ -179,10 +300,11 @@ open class PerformanceSetting<T>(
 			{ value -> PaperConfigUtils.modifyInPaperWorldsConfig { it.mobSpawnerTickRate = value } }
 		)
 
-		/*val globalMaxConcurrentChunkLoads = PerformanceSetting(
+		val globalMaxConcurrentChunkLoads = PerformanceSetting(
+			"max concurrent chunk loads",
 			{ PaperConfig.globalMaxConcurrentChunkLoads },
 			{ PaperConfig.globalMaxConcurrentChunkLoads = it }
-		)*/
+		)
 		val maxAutoSaveChunksPerTick = PerformanceSetting(
 			"max auto-save chunks per tick",
 			{ PaperConfigUtils.getFromPaperMainWorldConfig { it.maxAutoSaveChunksPerTick } },

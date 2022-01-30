@@ -9,7 +9,7 @@ depend: [SuCraft-Core]
 commands:
   ping:
     description: Ping for lag
-    aliases: [lag, lagg, testlag, lagtest]
+    aliases: [lag, lagg, testlag, lagtest, tps]
     permission: sucraft.pingcommand.ping
   pong:
     description: Be a curious little shit

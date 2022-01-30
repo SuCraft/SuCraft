@@ -47,6 +47,7 @@ object EventClassification {
 			SILVERFISH_BLOCK,
 			SLIME_SPLIT,
 			SPAWNER_EGG,
+			SPELL,
 			TRAP,
 			VILLAGE_INVASION -> false
 		}

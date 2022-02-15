@@ -9,6 +9,7 @@ import org.bukkit.Bukkit
 import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
+import org.sucraft.core.defaultdelegate.GlobalTickCounterUsingScheduledTask
 import org.sucraft.core.defaultdelegate.MinecraftClientLocaleByIncludedResource
 import org.sucraft.core.defaultdelegate.OfflinePlayersInformationByBukkitOfflinePlayerCall
 import org.sucraft.core.defaultdelegate.StandardItemStackNamesByClientLocale
@@ -24,6 +25,7 @@ class SuCraftCorePlugin : SuCraftPlugin() {
 
 	override fun onSuCraftPluginEnable() {
 		// Initialize components
+		GlobalTickCounterUsingScheduledTask
 		MinecraftClientLocaleByIncludedResource
 		OfflinePlayersInformationByBukkitOfflinePlayerCall
 		StandardItemStackNamesByClientLocale

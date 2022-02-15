@@ -16,7 +16,7 @@ import org.sucraft.core.common.general.math.RelativeCoordinates
 @Suppress("MemberVisibilityCanBePrivate")
 open class ChunkRadiusMap<T>(
 	private val map: Long2ObjectOpenHashMap<T>
-	) : MutableIterable<MutableMap.MutableEntry<Long, T>> by map.long2ObjectEntrySet() {
+	) : MutableIterable<MutableMap.MutableEntry<Long, T>> by map.entries {
 
 	constructor(initialCapacity: Int = 3) : this(Long2ObjectOpenHashMap(initialCapacity))
 

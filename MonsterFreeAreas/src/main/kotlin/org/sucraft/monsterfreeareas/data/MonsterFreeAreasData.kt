@@ -13,7 +13,6 @@ import org.bukkit.entity.EntityType.*
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.*
 
-
 object MonsterFreeAreasData {
 
 	// Settings

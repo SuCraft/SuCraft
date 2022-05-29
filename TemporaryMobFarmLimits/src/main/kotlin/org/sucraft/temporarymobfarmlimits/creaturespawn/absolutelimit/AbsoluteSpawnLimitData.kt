@@ -13,7 +13,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 import java.util.*
 
-
 object AbsoluteSpawnLimitData : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPlugin>(SuCraftTemporaryMobFarmLimitsPlugin.getInstance()) {
 
 	// Settings

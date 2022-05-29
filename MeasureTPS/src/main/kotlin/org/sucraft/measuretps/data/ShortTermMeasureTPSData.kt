@@ -10,7 +10,6 @@ import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.measuretps.main.SuCraftMeasureTPSPlugin
 
-
 object ShortTermMeasureTPSData : SuCraftComponent<SuCraftMeasureTPSPlugin>(SuCraftMeasureTPSPlugin.getInstance()) {
 
 	// Settings

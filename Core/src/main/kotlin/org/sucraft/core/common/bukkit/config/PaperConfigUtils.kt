@@ -11,7 +11,6 @@ import org.bukkit.craftbukkit.v1_18_R2.CraftWorld
 import org.spigotmc.SpigotWorldConfig
 import org.sucraft.core.common.bukkit.world.mainWorld
 
-
 object PaperConfigUtils {
 
 	fun modifyInPaperWorldConfig(world: World, modifier: (PaperWorldConfig) -> Unit) =

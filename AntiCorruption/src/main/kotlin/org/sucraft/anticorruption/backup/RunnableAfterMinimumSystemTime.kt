@@ -4,7 +4,6 @@
 
 package org.sucraft.anticorruption.backup
 
-
 internal data class RunnableAfterMinimumSystemTime(
 	val runnable: Runnable,
 	val minimumSystemTime: Long

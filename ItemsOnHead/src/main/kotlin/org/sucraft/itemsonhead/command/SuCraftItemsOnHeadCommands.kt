@@ -19,7 +19,6 @@ import org.sucraft.core.common.sucraft.delegate.StandardItemStackNames
 import org.sucraft.itemsonhead.main.SuCraftItemsOnHeadPlugin
 import org.sucraft.itemsonhead.player.permission.SuCraftItemsOnHeadPermissions
 
-
 object SuCraftItemsOnHeadCommands : SuCraftCommands<SuCraftItemsOnHeadPlugin>(SuCraftItemsOnHeadPlugin.getInstance()) {
 
 	// Settings

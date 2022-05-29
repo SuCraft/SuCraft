@@ -8,7 +8,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.CommandSender
 
-
 object SuCraftChatTexts {
 
 	fun sendNoPermission(audience: CommandSender) =

@@ -10,7 +10,6 @@ import org.sucraft.core.common.sucraft.delegate.MinecraftClientLocale
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.main.SuCraftCorePlugin
 
-
 object MinecraftClientLocaleByIncludedResource : MinecraftClientLocale<SuCraftCorePlugin>, SuCraftComponent<SuCraftCorePlugin>(SuCraftCorePlugin.getInstance()) {
 
 	// Initialization

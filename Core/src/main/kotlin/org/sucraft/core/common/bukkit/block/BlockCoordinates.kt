@@ -10,7 +10,6 @@ import org.json.JSONObject
 import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates
 import kotlin.math.sqrt
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 data class BlockCoordinates(val worldName: String, val x: Int, val y: Int, val z: Int) : Comparable<BlockCoordinates> {
 

@@ -6,7 +6,6 @@ package org.sucraft.core.common.bukkit.entity
 
 import org.bukkit.entity.EntityType
 
-
 object EntityUtils {
 
 	fun canSpawnFromBucket(type: EntityType): Boolean {

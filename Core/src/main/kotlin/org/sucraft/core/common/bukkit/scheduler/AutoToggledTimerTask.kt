@@ -11,7 +11,6 @@ import org.sucraft.core.common.bukkit.time.TickTime
 import kotlin.math.max
 import kotlin.math.roundToLong
 
-
 /**
  * A task that runs at a certain interval in ticks, but can be temporarily turned off if a certain condition fails
  *

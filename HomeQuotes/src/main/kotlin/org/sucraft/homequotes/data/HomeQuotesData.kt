@@ -7,7 +7,6 @@ package org.sucraft.homequotes.data
 import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.chat.Quote
 
-
 object HomeQuotesData {
 
 	// Settings

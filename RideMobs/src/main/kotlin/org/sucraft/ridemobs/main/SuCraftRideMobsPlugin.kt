@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.ridemobs.listener.EjectOnQuitListener
 import org.sucraft.ridemobs.listener.RightClickPandaListener
 
-
 class SuCraftRideMobsPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

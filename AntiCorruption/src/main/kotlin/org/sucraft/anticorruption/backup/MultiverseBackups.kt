@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.io.File
 import java.nio.file.Path
 
-
 object MultiverseBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Settings

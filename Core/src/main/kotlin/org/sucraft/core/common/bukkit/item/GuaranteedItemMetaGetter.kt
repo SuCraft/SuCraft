@@ -8,7 +8,6 @@ import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-
 object GuaranteedItemMetaGetter {
 
 	fun get(itemStack: ItemStack, setNewItemMetaBeforeReturn: Boolean = true): ItemMeta {

@@ -15,7 +15,6 @@ import org.sucraft.core.common.sucraft.delegate.StandardItemStackNames
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.main.SuCraftCorePlugin
 
-
 object StandardItemStackNamesByClientLocale : StandardItemStackNames<SuCraftCorePlugin>, SuCraftComponent<SuCraftCorePlugin>(SuCraftCorePlugin.getInstance()) {
 
 	// Settings

@@ -6,7 +6,6 @@ package org.sucraft.core.common.bukkit.item
 
 import org.bukkit.inventory.ItemStack
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object ItemNBTUtils {
 

@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitTask
 import org.sucraft.core.common.bukkit.inventory.InventoryCounter
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 
-
 object RunInFuture {
 
 	fun forPlayerIfOnline(plugin: JavaPlugin, player: Player, action: (Player) -> Any?, delay: Long = 1): BukkitTask {

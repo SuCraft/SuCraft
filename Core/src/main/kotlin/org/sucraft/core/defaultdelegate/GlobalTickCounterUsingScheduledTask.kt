@@ -10,7 +10,6 @@ import org.sucraft.core.common.sucraft.delegate.GlobalTickCounter
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.main.SuCraftCorePlugin
 
-
 object GlobalTickCounterUsingScheduledTask : GlobalTickCounter<SuCraftCorePlugin>, SuCraftComponent<SuCraftCorePlugin>(SuCraftCorePlugin.getInstance()) {
 
 	// Data

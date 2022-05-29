@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.chunk
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import org.sucraft.core.common.general.math.RelativeCoordinates
 
-
 // Class
 
 /**

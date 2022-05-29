@@ -8,7 +8,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.deathquotes.listener.DeathListener
 
-
 class SuCraftDeathQuotesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

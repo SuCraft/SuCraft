@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack
 import org.sucraft.barriersandlightsdrop.main.SuCraftBarriersAndLightsDropPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object BreakBarrierOrLightListener : SuCraftComponent<SuCraftBarriersAndLightsDropPlugin>(SuCraftBarriersAndLightsDropPlugin.getInstance()) {
 
 	// Events

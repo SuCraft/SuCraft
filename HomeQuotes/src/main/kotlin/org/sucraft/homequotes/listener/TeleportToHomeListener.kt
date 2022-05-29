@@ -11,7 +11,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.homequotes.data.HomeQuotesData
 import org.sucraft.homequotes.main.SuCraftHomeQuotesPlugin
 
-
 object TeleportToHomeListener : SuCraftComponent<SuCraftHomeQuotesPlugin>(SuCraftHomeQuotesPlugin.getInstance()) {
 
 	// Events

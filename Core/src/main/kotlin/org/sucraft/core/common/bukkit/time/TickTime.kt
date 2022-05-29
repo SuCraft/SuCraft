@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.bukkit.time
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object TickTime {
 

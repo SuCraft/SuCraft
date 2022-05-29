@@ -13,7 +13,6 @@ import org.sucraft.bukkitapiextension.event.EventDispatcher
 import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import java.util.*
 
-
 object PlayerScoopEntityEventDispatcher : EventDispatcher<PlayerScoopEntityEvent>() {
 
 	// Settings

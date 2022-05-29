@@ -16,7 +16,6 @@ import org.sucraft.mysteryboxes.command.SuCraftMysteryBoxesCommands
 import org.sucraft.mysteryboxes.data.MysteryBoxData
 import org.sucraft.mysteryboxes.main.SuCraftMysteryBoxesPlugin
 
-
 object MysteryBoxPlaceMessageListener : SuCraftComponent<SuCraftMysteryBoxesPlugin>(SuCraftMysteryBoxesPlugin.getInstance()) {
 
 	// Events

@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.general.string
 
-
 object StringSubstring {
 
 	fun safeSubstring(string: String, start: Int, end: Int = string.length): String {

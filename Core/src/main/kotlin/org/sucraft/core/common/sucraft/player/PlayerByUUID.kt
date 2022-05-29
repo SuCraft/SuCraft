@@ -11,7 +11,6 @@ import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
 import java.util.*
 
-
 object PlayerByUUID {
 
 	// Functionality

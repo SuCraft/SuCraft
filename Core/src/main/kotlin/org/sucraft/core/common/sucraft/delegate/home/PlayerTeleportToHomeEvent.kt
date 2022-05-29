@@ -7,7 +7,6 @@ package org.sucraft.core.common.sucraft.delegate.home
 import org.bukkit.event.HandlerList
 import org.sucraft.core.common.bukkit.event.ArrayHandlerList
 
-
 abstract class PlayerTeleportToHomeEvent : PlayerHomeEvent() {
 
 	// Handlers

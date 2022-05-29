@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.general.string
 
-
 object StringAnalysis {
 
 	fun countCapitalLetters(string: String): Long {

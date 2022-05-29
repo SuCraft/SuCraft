@@ -17,7 +17,6 @@ import org.sucraft.core.common.sucraft.delegate.MobFarmWeight
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 
-
 object CreatureSpawnCancelListener : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPlugin>(SuCraftTemporaryMobFarmLimitsPlugin.getInstance()) {
 
 	// Settings

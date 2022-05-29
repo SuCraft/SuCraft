@@ -6,7 +6,6 @@ package org.sucraft.unsignbooks.player.permission
 
 import org.sucraft.core.common.sucraft.player.permission.SuCraftPermissions
 
-
 object SuCraftUnsignBooksPermissions : SuCraftPermissions("unsignbooks") {
 
 	val UNSIGN_OWN_BOOKS = createPermission("unsign.own")

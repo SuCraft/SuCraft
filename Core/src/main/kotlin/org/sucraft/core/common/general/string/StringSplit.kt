@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.general.string
 
-
 object StringSplit {
 
     fun cutStringIntoParts(text: String, partPrefix: String?, partSuffix: String?, maxPartLength: Int): List<String> {

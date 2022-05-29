@@ -11,7 +11,6 @@ import org.sucraft.lightningcommand.main.SuCraftLightningCommandPlugin
 import org.sucraft.lightningcommand.player.permission.SuCraftLightningCommandPermissions
 import org.sucraft.supporters.chat.SupportingMessages
 
-
 object SuCraftLightningCommandCommands : SuCraftCommands<SuCraftLightningCommandPlugin>(SuCraftLightningCommandPlugin.getInstance()) {
 
 	val LIGHTNING = SuCraftCommand.createPlayerOnly(

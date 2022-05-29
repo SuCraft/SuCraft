@@ -8,7 +8,6 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.item.EmptyItemStack
 
-
 /**
  * Reasonably optimized inventory counting operations
  */

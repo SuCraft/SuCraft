@@ -7,7 +7,6 @@ package org.sucraft.customcraftingrecipes.recipe
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Recipe
 
-
 abstract class CustomRecipe {
 
 	// Register with Bukkit (to be called in init)

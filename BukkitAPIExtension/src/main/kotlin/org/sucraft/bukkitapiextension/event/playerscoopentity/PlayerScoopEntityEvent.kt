@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.sucraft.bukkitapiextension.event.BukkitAPIExtensionEvent
 
-
 data class PlayerScoopEntityEvent(
 	val originalEvent: PlayerInteractEntityEvent,
 	val resultingItem: ItemStack

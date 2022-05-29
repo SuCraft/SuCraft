@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.invisibleitemframes.main.SuCraftInvisibleItemFramesPlugin
 
-
 object RightClickItemFrameListener : SuCraftComponent<SuCraftInvisibleItemFramesPlugin>(SuCraftInvisibleItemFramesPlugin.getInstance()) {
 
 	// Events

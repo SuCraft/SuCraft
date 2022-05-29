@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.sucraft.delegate.measuretps
 
-
 interface ShortTermMeasuredTPSListener {
 
 	fun measuredTPSWasUpdated()

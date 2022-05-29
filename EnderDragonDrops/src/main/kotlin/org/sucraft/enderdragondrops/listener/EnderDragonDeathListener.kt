@@ -21,7 +21,6 @@ import org.sucraft.core.common.bukkit.player.ClosestPlayerFinder
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.enderdragondrops.main.SuCraftEnderDragonDropsPlugin
 
-
 object EnderDragonDeathListener : SuCraftComponent<SuCraftEnderDragonDropsPlugin>(SuCraftEnderDragonDropsPlugin.getInstance()) {
 
 	// Settings

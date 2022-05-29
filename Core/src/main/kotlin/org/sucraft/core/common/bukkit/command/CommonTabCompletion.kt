@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.command.DeferredTabCompleter
 import org.sucraft.core.common.sucraft.command.PlayerTabCompleter
 import org.sucraft.core.common.sucraft.delegate.OfflinePlayersInformation
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object CommonTabCompletion {
 

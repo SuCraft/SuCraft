@@ -11,7 +11,6 @@ import java.io.File
 import java.nio.file.Path
 import java.util.*
 
-
 object WorldFolders {
 
 	const val regionFolderName = """region"""

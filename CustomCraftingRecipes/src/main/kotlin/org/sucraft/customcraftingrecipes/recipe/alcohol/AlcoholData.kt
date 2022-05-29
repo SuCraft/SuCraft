@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.item.ItemStackBuilder
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 
-
 object AlcoholData {
 
 	@Suppress("DEPRECATION")

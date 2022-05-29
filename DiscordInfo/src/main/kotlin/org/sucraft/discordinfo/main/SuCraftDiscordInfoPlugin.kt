@@ -8,7 +8,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.discordinfo.command.SuCraftDiscordInfoCommands
 
-
 class SuCraftDiscordInfoPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

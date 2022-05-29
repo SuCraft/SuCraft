@@ -12,7 +12,6 @@ import org.sucraft.core.common.bukkit.player.ClosestPlayerFinder
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 
-
 abstract class AmountByChunkAndSecondaryKeyMeasurementData<K>(
 	protected val measurementName: String,
 	// Settings

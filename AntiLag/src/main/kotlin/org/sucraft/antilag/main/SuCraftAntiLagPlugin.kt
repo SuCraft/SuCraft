@@ -8,7 +8,6 @@ import org.sucraft.antilag.performanceadapter.PerformanceAdapter
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 
-
 class SuCraftAntiLagPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

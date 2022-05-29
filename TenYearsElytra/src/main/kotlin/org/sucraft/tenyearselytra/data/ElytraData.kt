@@ -17,7 +17,6 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object ElytraData {
 

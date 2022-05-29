@@ -16,7 +16,6 @@ import org.sucraft.tenyearselytra.data.ElytraData
 import org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
 import org.sucraft.tenyearselytra.player.permission.SuCraftTenYearsElytraPermissions
 
-
 object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlugin>(SuCraftTenYearsElytraPlugin.getInstance()) {
 
 	// Settings

@@ -14,7 +14,6 @@ import org.sucraft.core.common.bukkit.chunk.ChunkRadiusSet
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.giants.main.SuCraftGiantsPlugin
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object GiantData : SuCraftComponent<SuCraftGiantsPlugin>(SuCraftGiantsPlugin.getInstance()) {
 

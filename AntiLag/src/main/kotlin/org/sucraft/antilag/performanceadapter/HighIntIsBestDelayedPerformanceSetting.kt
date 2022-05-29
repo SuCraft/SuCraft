@@ -4,7 +4,6 @@
 
 package org.sucraft.antilag.performanceadapter
 
-
 class HighIntIsBestDelayedPerformanceSetting(
 	displayName: String,
 	getter: () -> Int,

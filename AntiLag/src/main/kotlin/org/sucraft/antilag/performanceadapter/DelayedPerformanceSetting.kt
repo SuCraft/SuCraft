@@ -8,7 +8,6 @@ import org.bukkit.Bukkit
 import org.sucraft.antilag.main.SuCraftAntiLagPlugin
 import org.sucraft.core.common.bukkit.time.TickTime
 
-
 /**
  * Uses the lowest value over an interval of time
  */

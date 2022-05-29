@@ -13,7 +13,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.discordinfo.data.DiscordChannel
 import org.sucraft.discordinfo.main.SuCraftDiscordInfoPlugin
 
-
 object SuCraftDiscordInfoCommands : SuCraftCommands<SuCraftDiscordInfoPlugin>(SuCraftDiscordInfoPlugin.getInstance()) {
 
 	val SEE_DISCORD_URL = SuCraftCommand.createPlayerOnly(

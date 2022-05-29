@@ -9,8 +9,6 @@ import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegate
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegateHolder
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
-
-
 interface StandardItemStackNames<P: SuCraftPlugin> : SuCraftDelegate<P> {
 
 	// Companion (implementation)

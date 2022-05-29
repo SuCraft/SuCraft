@@ -13,7 +13,6 @@ import org.sucraft.core.common.bukkit.chunk.ChunkCoordinates
 import org.sucraft.core.common.bukkit.entity.EntityAge
 import org.sucraft.core.common.bukkit.entity.PrintableEntityDescription
 
-
 // Settings
 
 val defaultEntityPredicate: (Any?) -> Boolean = { true }

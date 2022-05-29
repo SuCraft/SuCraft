@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.zombiehorses.listener.CustomJockeyRegistrant
 import org.sucraft.zombiehorses.listener.ZombieRiderDeathListener
 
-
 class SuCraftZombieHorsesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

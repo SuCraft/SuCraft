@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.tenyearselytra.command.SuCraftTenYearsElytraCommands
 import org.sucraft.tenyearselytra.listener.ElytraBoostListener
 
-
 class SuCraftTenYearsElytraPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

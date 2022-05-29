@@ -10,7 +10,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 
-
 object AbsoluteSpawnLimitCreatureSpawnMeasureListener : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPlugin>(SuCraftTemporaryMobFarmLimitsPlugin.getInstance()) {
 
 	// Events

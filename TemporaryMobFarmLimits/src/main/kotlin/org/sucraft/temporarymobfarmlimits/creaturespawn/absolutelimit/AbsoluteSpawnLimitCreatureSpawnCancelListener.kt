@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.creaturespawn.CreatureSpawnMeasurementData
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 
-
 object AbsoluteSpawnLimitCreatureSpawnCancelListener : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPlugin>(SuCraftTemporaryMobFarmLimitsPlugin.getInstance()) {
 
 	// Events

@@ -5,7 +5,9 @@
 package org.sucraft.core.common.sucraft.command
 
 import org.bukkit.Bukkit
-import org.bukkit.command.*
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.command.PluginCommand
 import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 

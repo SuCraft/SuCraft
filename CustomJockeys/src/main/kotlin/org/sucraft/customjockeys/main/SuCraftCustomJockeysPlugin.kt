@@ -10,7 +10,6 @@ import org.sucraft.customjockeys.data.CustomJockeyData
 import org.sucraft.customjockeys.data.IncludedCustomJockeys
 import org.sucraft.customjockeys.listener.CreatureSpawnListener
 
-
 class SuCraftCustomJockeysPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

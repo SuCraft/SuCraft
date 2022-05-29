@@ -4,7 +4,6 @@
 
 package org.sucraft.antilag.performanceadapter
 
-
 class MeasurementDataPoint(
 	/**
 	 * System time in millis

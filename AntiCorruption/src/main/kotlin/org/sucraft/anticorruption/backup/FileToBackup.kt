@@ -8,10 +8,10 @@ import org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 import java.io.File
 import java.nio.file.Path
 
-
 /**
  * The given path must be relative
  */
+
 data class FileToBackup(
 	var relativeFilePath: String
 ) {

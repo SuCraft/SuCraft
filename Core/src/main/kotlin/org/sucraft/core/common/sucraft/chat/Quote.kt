@@ -8,7 +8,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor
 
-
 /**
  * A class to contain the quotes used by SuCraft-HomeQuotes and SuCraft-DeathQuotes
  */

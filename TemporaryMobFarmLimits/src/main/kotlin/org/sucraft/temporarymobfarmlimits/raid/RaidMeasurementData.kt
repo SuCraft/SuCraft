@@ -6,7 +6,6 @@ package org.sucraft.temporarymobfarmlimits.raid
 
 import org.sucraft.temporarymobfarmlimits.data.AmountByChunkMeasurementData
 
-
 object RaidMeasurementData : AmountByChunkMeasurementData(
 	"raids",
 	// Settings

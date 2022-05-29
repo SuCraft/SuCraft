@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.playercompass.command.SuCraftPlayerCompassCommands
 import org.sucraft.playercompass.tracker.PlayerCompassTracker
 
-
 class SuCraftPlayerCompassPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

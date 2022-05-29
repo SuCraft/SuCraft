@@ -10,7 +10,6 @@ import org.bukkit.inventory.ShapelessRecipe
 import org.sucraft.core.common.bukkit.item.ItemStackBuilder
 import org.sucraft.customcraftingrecipes.recipe.CustomRecipe
 
-
 object BeerRecipe : CustomRecipe() {
 
 	// Settings

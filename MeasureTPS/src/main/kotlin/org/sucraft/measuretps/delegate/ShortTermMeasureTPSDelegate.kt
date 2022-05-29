@@ -11,7 +11,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.measuretps.data.ShortTermMeasureTPSData
 import org.sucraft.measuretps.main.SuCraftMeasureTPSPlugin
 
-
 object ShortTermMeasureTPSDelegate : ShortTermMeasureTPS<SuCraftMeasureTPSPlugin>, SuCraftComponent<SuCraftMeasureTPSPlugin>(SuCraftMeasureTPSPlugin.getInstance()) {
 
 	// Initialization

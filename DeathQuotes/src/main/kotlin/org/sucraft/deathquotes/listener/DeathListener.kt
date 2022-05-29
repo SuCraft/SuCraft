@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.deathquotes.data.DeathQuotesData
 import org.sucraft.deathquotes.main.SuCraftDeathQuotesPlugin
 
-
 object DeathListener : SuCraftComponent<SuCraftDeathQuotesPlugin>(SuCraftDeathQuotesPlugin.getInstance()) {
 
 	// Events

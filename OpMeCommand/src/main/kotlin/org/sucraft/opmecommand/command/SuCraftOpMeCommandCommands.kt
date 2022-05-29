@@ -13,7 +13,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommand
 import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.opmecommand.main.SuCraftOpMeCommandPlugin
 
-
 object SuCraftOpMeCommandCommands : SuCraftCommands<SuCraftOpMeCommandPlugin>(SuCraftOpMeCommandPlugin.getInstance()) {
 
 	val OP_ME = SuCraftCommand.createPlayerOnly(

@@ -16,7 +16,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.unsignbooks.main.SuCraftUnsignBooksPlugin
 import org.sucraft.unsignbooks.player.permission.SuCraftUnsignBooksPermissions
 
-
 object SuCraftUnsignBooksCommands : SuCraftCommands<SuCraftUnsignBooksPlugin>(SuCraftUnsignBooksPlugin.getInstance()) {
 
 	val UNSIGN_BOOK = SuCraftCommand.createPlayerOnly(

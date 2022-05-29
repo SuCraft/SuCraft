@@ -16,7 +16,6 @@ import org.sucraft.pingcommand.main.SuCraftPingCommandPlugin
 import java.text.DecimalFormat
 import kotlin.math.min
 
-
 object SuCraftPingCommandCommands : SuCraftCommands<SuCraftPingCommandPlugin>(SuCraftPingCommandPlugin.getInstance()) {
 
 	private val tpsFormat: DecimalFormat = DecimalUtils.createAmericanDecimalFormat("0.0")

@@ -9,7 +9,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.measuretps.data.ShortTermMeasureTPSData
 import org.sucraft.measuretps.delegate.ShortTermMeasureTPSDelegate
 
-
 class SuCraftMeasureTPSPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

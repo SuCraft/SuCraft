@@ -12,7 +12,6 @@ import org.joor.Reflect.on
 import kotlin.math.max
 import kotlin.math.min
 
-
 object ViewDistanceUtils {
 
 	fun clampViewDistanceToAllowedPaperValues(viewDistance: Int) =

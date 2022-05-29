@@ -5,8 +5,6 @@
 package org.sucraft.core.common.sucraft.plugin
 
 import org.sucraft.core.common.general.log.AbstractLogger
-
-
 interface SuCraftDelegate<P : SuCraftPlugin> {
 
 	fun getDelegatePlugin(): P

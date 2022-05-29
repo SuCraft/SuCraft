@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.giants.data.GiantData
 import org.sucraft.giants.listener.ZombieSpawnListener
 
-
 class SuCraftGiantsPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

@@ -9,7 +9,6 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 
-
 object OldEnchantedGoldenAppleRecipe : CustomRecipe() {
 
 	// Settings

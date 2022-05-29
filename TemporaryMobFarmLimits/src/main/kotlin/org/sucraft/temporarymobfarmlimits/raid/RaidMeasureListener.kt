@@ -10,7 +10,6 @@ import org.bukkit.event.raid.RaidTriggerEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.temporarymobfarmlimits.main.SuCraftTemporaryMobFarmLimitsPlugin
 
-
 object RaidMeasureListener : SuCraftComponent<SuCraftTemporaryMobFarmLimitsPlugin>(SuCraftTemporaryMobFarmLimitsPlugin.getInstance()) {
 
 	// Events

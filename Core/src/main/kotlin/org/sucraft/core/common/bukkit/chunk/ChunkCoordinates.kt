@@ -13,7 +13,6 @@ import org.json.JSONObject
 import org.sucraft.core.common.bukkit.block.BlockCoordinates
 import kotlin.math.min
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 data class ChunkCoordinates(val worldName: String, val x: Int, val z: Int) : Comparable<ChunkCoordinates> {
 

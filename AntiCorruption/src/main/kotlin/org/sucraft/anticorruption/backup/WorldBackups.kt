@@ -11,7 +11,6 @@ import org.sucraft.core.common.bukkit.io.WorldFolders
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.io.File
 
-
 object WorldBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Implementation

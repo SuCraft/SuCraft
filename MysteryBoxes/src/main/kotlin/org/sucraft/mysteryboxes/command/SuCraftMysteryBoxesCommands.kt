@@ -16,7 +16,6 @@ import org.sucraft.mysteryboxes.main.SuCraftMysteryBoxesPlugin
 import org.sucraft.mysteryboxes.player.permission.SuCraftMysteryBoxesPermissions
 import org.sucraft.supporters.chat.SupportingMessages
 
-
 object SuCraftMysteryBoxesCommands : SuCraftCommands<SuCraftMysteryBoxesPlugin>(SuCraftMysteryBoxesPlugin.getInstance()) {
 
 	val CREATE_MYSTERY_BOX = SuCraftCommand.createPlayerOnly(

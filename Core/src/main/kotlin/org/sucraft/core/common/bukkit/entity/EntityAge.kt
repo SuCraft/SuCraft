@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.entity
 import org.bukkit.entity.Ageable
 import org.bukkit.entity.LivingEntity
 
-
 object EntityAge {
 
 	fun isAdult(entity: LivingEntity): Boolean? {

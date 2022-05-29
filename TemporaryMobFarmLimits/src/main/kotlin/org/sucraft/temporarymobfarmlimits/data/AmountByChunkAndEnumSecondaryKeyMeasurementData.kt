@@ -7,7 +7,6 @@ package org.sucraft.temporarymobfarmlimits.data
 import org.sucraft.core.common.bukkit.chunk.EnumSecondaryKeyChunkRadiusMap
 import org.sucraft.core.common.bukkit.chunk.SecondaryKeyChunkRadiusMap
 
-
 abstract class AmountByChunkAndEnumSecondaryKeyMeasurementData<K : Enum<K>>(
 	measurementName: String,
 	protected val secondaryKeyType: Class<K>,

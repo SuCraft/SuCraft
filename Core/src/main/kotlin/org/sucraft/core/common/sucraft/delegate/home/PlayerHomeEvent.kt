@@ -8,7 +8,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-
 abstract class PlayerHomeEvent : Event() {
 
 	abstract fun getPlayer(): Player

@@ -12,7 +12,6 @@ import org.sucraft.tenyearselytra.data.ElytraData
 import org.sucraft.tenyearselytra.fireworks.FestiveFireworks
 import org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
 
-
 object ElytraBoostListener : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftTenYearsElytraPlugin.getInstance()) {
 
 	// Events

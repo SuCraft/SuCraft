@@ -10,7 +10,6 @@ import org.sucraft.mysteryboxes.command.SuCraftMysteryBoxesCommands
 import org.sucraft.mysteryboxes.listener.MysteryBoxPlaceMessageListener
 import org.sucraft.mysteryboxes.listener.MysteryBoxRemoveNameOnUseListener
 
-
 class SuCraftMysteryBoxesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

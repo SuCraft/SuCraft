@@ -17,7 +17,6 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.*
 import kotlin.reflect.KClass
 
-
 typealias _Byte = Byte
 typealias _Short = Short
 typealias _Int = Int

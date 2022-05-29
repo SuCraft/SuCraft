@@ -6,7 +6,6 @@ package org.sucraft.bukkitapiextension.event
 
 import org.bukkit.event.Event
 
-
 abstract class EventAdapter<O: Event, A: BukkitAPIExtensionEvent> : EventDispatcher<A>() {
 
 	fun fire(event: O) {

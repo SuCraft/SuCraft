@@ -6,7 +6,6 @@ package org.sucraft.core.common.sucraft.persistentdata
 
 import org.bukkit.NamespacedKey
 
-
 object DefaultSuCraftNamespace {
 
 	private const val defaultNamespace = "sucraft"

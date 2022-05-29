@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.sucraft.player.permission
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class SuCraftPermissions(val pluginNamespace: String) {
 

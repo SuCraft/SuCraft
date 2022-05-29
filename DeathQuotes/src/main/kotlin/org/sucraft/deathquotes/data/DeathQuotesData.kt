@@ -7,7 +7,6 @@ package org.sucraft.deathquotes.data
 import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.chat.Quote
 
-
 object DeathQuotesData {
 
 	// Settings

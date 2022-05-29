@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.general.log
 
-
 interface AbstractLogger {
 
 	fun info(message: Any?)

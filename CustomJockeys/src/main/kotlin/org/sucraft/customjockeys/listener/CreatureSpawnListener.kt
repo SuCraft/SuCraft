@@ -11,7 +11,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.customjockeys.data.CustomJockeyData
 import org.sucraft.customjockeys.main.SuCraftCustomJockeysPlugin
 
-
 object CreatureSpawnListener : SuCraftComponent<SuCraftCustomJockeysPlugin>(SuCraftCustomJockeysPlugin.getInstance()) {
 
 	// Events

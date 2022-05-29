@@ -2,10 +2,8 @@ package org.sucraft.core.common.general.collection
 
 import org.json.JSONObject
 import java.util.AbstractMap.SimpleEntry
-import java.util.Comparator
 import java.util.stream.Collector
 import java.util.stream.Collectors
-
 
 @Suppress("MemberVisibilityCanBePrivate")
 class Pair<A, B>(val first: A, val second: B) {

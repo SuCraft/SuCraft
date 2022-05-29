@@ -14,7 +14,6 @@ import org.sucraft.core.common.bukkit.material.MaterialGroups
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.keepglass.main.SuCraftKeepGlassPlugin
 
-
 object BreakGlassListener : SuCraftComponent<SuCraftKeepGlassPlugin>(SuCraftKeepGlassPlugin.getInstance()) {
 
 	// Events

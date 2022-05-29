@@ -6,7 +6,6 @@ package org.sucraft.itemsonhead.player.permission
 
 import org.sucraft.core.common.sucraft.player.permission.SuCraftPermissions
 
-
 object SuCraftItemsOnHeadPermissions : SuCraftPermissions("itemsonhead") {
 
 	val ALL_ITEMS = createPermission("all")

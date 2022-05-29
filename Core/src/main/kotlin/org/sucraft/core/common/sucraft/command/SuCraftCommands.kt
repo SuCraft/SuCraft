@@ -10,7 +10,6 @@ import org.bukkit.entity.Player
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 
-
 typealias CommandExecutor = (sender: CommandSender, command: Command, label: String, arguments: Array<String>) -> Unit
 typealias TabCompleter = (sender: CommandSender, command: Command, label: String, arguments: Array<String>) -> List<String>?
 typealias PlayerCommandExecutor = (player: Player, command: Command, label: String, arguments: Array<String>) -> Unit

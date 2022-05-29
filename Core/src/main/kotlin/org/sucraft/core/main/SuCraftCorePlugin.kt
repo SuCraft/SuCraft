@@ -14,7 +14,6 @@ import org.sucraft.core.defaultdelegate.MinecraftClientLocaleByIncludedResource
 import org.sucraft.core.defaultdelegate.OfflinePlayersInformationByBukkitOfflinePlayerCall
 import org.sucraft.core.defaultdelegate.StandardItemStackNamesByClientLocale
 
-
 class SuCraftCorePlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

@@ -15,7 +15,6 @@ import org.sucraft.customcraftingrecipes.recipe.alcohol.CraftAlcoholListener
 import org.sucraft.customcraftingrecipes.recipe.alcohol.DrinkAlcoholListener
 import org.sucraft.customcraftingrecipes.recipe.alcohol.VodkaRecipe
 
-
 class SuCraftCustomCraftingRecipesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

@@ -10,7 +10,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 import org.sucraft.discordinfo.data.DiscordChannel
 
-
 object SupportingMessages {
 
 	private val discordSupportInfoChannel = DiscordChannel.GUIDE

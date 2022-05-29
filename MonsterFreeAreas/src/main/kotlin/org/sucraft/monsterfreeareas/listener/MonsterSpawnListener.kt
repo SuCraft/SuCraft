@@ -11,7 +11,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.monsterfreeareas.data.MonsterFreeAreasData
 import org.sucraft.monsterfreeareas.main.SuCraftMonsterFreeAreasPlugin
 
-
 object MonsterSpawnListener : SuCraftComponent<SuCraftMonsterFreeAreasPlugin>(SuCraftMonsterFreeAreasPlugin.getInstance()) {
 
 	// Events

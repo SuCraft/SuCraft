@@ -9,7 +9,6 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 enum class DiscordChannel(val channelName: String, val actualURL: String, val visualURL: String) {
 

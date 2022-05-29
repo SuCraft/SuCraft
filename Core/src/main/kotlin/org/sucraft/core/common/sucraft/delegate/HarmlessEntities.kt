@@ -8,8 +8,6 @@ import org.bukkit.entity.Entity
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegate
 import org.sucraft.core.common.sucraft.plugin.SuCraftDelegateHolder
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
-
-
 interface HarmlessEntities<P: SuCraftPlugin> : SuCraftDelegate<P> {
 
 	// Companion (implementation)

@@ -6,7 +6,6 @@ package org.sucraft.portabletoolblocks.player.permission
 
 import org.sucraft.core.common.sucraft.player.permission.SuCraftPermissions
 
-
 object SuCraftPortableToolBlocksPermissions : SuCraftPermissions("portabletoolblocks") {
 
 	val CRAFTING_TABLE = createPermission("craftingtable")

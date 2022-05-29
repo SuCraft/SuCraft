@@ -8,7 +8,6 @@ import org.bukkit.World
 import org.bukkit.block.Biome
 import org.bukkit.entity.EntityType
 
-
 object IncludedCustomJockeys {
 
 	// Settings

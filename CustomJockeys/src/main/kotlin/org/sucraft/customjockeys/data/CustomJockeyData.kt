@@ -15,7 +15,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.customjockeys.main.SuCraftCustomJockeysPlugin
 import java.util.*
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object CustomJockeyData : SuCraftComponent<SuCraftCustomJockeysPlugin>(SuCraftCustomJockeysPlugin.getInstance()) {
 

@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.log
 import org.bukkit.plugin.java.JavaPlugin
 import org.sucraft.core.common.general.log.AbstractLogger
 
-
 /**
  * A nested logger belongs to either a plugin (representing the plugin as a whole), or a parent logger and own name
  */

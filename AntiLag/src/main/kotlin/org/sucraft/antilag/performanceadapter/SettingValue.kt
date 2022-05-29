@@ -4,5 +4,4 @@
 
 package org.sucraft.antilag.performanceadapter
 
-
 class SettingValue<T>(val setting: PerformanceSetting<T>, val value: T)

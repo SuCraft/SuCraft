@@ -16,7 +16,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.raiddifficulty.main.SuCraftRaidDifficultyPlugin
 import kotlin.math.max
 
-
 object RaidStartListener : SuCraftComponent<SuCraftRaidDifficultyPlugin>(SuCraftRaidDifficultyPlugin.getInstance()) {
 
 	// Events

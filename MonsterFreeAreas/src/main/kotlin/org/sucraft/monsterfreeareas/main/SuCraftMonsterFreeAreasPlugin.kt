@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.monsterfreeareas.listener.MonsterSpawnListener
 
-
 class SuCraftMonsterFreeAreasPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

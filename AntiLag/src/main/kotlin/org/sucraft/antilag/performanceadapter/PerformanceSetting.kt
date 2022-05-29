@@ -14,7 +14,6 @@ import org.sucraft.core.common.bukkit.world.mainWorld
 import org.sucraft.core.common.sucraft.delegate.MobFarmWeight
 import xuan.cat.fartherviewdistance.code.Index
 
-
 open class PerformanceSetting<T>(
 	val displayName: String,
 	private val getter: () -> T,

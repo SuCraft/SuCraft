@@ -16,7 +16,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.core.main.SuCraftCorePlugin
 import java.util.*
 
-
 object OfflinePlayersInformationByBukkitOfflinePlayerCall : OfflinePlayersInformation<SuCraftCorePlugin>, SuCraftComponent<SuCraftCorePlugin>(SuCraftCorePlugin.getInstance()) {
 
 	// Settings

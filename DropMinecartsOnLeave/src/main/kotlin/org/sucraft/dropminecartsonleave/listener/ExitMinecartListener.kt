@@ -16,7 +16,6 @@ import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.dropminecartsonleave.main.SuCraftDropMinecartsOnLeavePlugin
 
-
 object ExitMinecartListener : SuCraftComponent<SuCraftDropMinecartsOnLeavePlugin>(SuCraftDropMinecartsOnLeavePlugin.getInstance()) {
 
 	// Events

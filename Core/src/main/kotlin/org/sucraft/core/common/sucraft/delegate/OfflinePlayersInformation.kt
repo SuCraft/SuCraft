@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftDelegateHolder
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import java.util.*
 
-
 interface OfflinePlayersInformation<P: SuCraftPlugin>: SuCraftDelegate<P> {
 
 	// Companion (implementation)

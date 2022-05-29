@@ -12,7 +12,6 @@ import org.bukkit.event.entity.EntityExplodeEvent
 import org.sucraft.antimobgrief.main.SuCraftAntiMobGriefPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object ExplosionListener : SuCraftComponent<SuCraftAntiMobGriefPlugin>(SuCraftAntiMobGriefPlugin.getInstance()) {
 
 	// Events

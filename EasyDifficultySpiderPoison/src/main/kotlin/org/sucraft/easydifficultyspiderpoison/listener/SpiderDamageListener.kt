@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionEffectType
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.easydifficultyspiderpoison.main.SuCraftEasyDifficultySpiderPoisonPlugin
 
-
 object SpiderDamageListener : SuCraftComponent<SuCraftEasyDifficultySpiderPoisonPlugin>(SuCraftEasyDifficultySpiderPoisonPlugin.getInstance()) {
 
 	// Settings

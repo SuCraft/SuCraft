@@ -10,7 +10,6 @@ import org.sucraft.anticorruption.listener.PlayerJoinQuitListener
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 
-
 class SuCraftAntiCorruptionPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

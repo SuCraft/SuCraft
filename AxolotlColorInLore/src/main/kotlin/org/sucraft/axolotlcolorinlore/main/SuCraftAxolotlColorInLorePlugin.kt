@@ -8,7 +8,6 @@ import org.sucraft.axolotlcolorinlore.listener.ScoopAxolotlListener
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 import org.sucraft.core.common.general.pattern.SingletonContainer
 
-
 class SuCraftAxolotlColorInLorePlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

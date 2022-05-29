@@ -13,7 +13,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.core.common.sucraft.player.PlayerByInputString
 import org.sucraft.uuidcommand.main.SuCraftUUIDCommandPlugin
 
-
 object SuCraftUUIDCommandCommands : SuCraftCommands<SuCraftUUIDCommandPlugin>(SuCraftUUIDCommandPlugin.getInstance()) {
 
 	// Settings

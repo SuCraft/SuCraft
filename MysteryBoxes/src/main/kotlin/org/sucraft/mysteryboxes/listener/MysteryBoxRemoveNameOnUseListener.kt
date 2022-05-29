@@ -15,7 +15,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.mysteryboxes.data.MysteryBoxData
 import org.sucraft.mysteryboxes.main.SuCraftMysteryBoxesPlugin
 
-
 object MysteryBoxRemoveNameOnUseListener : SuCraftComponent<SuCraftMysteryBoxesPlugin>(SuCraftMysteryBoxesPlugin.getInstance()) {
 
 	// Events

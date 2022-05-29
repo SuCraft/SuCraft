@@ -11,7 +11,6 @@ import org.bukkit.block.Block
 import org.json.JSONObject
 import org.sucraft.core.common.bukkit.block.BlockCoordinates
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 data class RegionCoordinates(val worldName: String, val x: Int, val z: Int) : Comparable<RegionCoordinates> {
 

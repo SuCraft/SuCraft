@@ -21,7 +21,6 @@ import org.sucraft.playercompass.player.permission.SuCraftPlayerCompassPermissio
 import org.sucraft.playercompass.tracker.PlayerCompassTracker
 import org.sucraft.supporters.chat.SupportingMessages
 
-
 object SuCraftPlayerCompassCommands : SuCraftCommands<SuCraftPlayerCompassPlugin>(SuCraftPlayerCompassPlugin.getInstance()) {
 
 	val CREATE_OWN_COMPASS = SuCraftCommand.createPlayerOnly(

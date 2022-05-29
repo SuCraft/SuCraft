@@ -12,7 +12,6 @@ import org.sucraft.core.common.bukkit.log.NestedLogger
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class SuCraftPlugin : JavaPlugin() {
 

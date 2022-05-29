@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.sucraft.customcraftingrecipes.main.SuCraftCustomCraftingRecipesPlugin
 
-
 object LightRecipe : CustomRecipe() {
 
 	// Settings

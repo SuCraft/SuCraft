@@ -15,7 +15,6 @@ import org.sucraft.core.common.bukkit.player.ClosestPlayerFinder
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.zombiehorses.main.SuCraftZombieHorsesPlugin
 
-
 object ZombieRiderDeathListener : SuCraftComponent<SuCraftZombieHorsesPlugin>(SuCraftZombieHorsesPlugin.getInstance()) {
 
 	// Settings

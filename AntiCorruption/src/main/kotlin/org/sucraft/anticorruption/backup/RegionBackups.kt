@@ -11,7 +11,6 @@ import org.sucraft.core.common.bukkit.chunk.RegionCoordinates
 import org.sucraft.core.common.bukkit.io.WorldFolders
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object RegionBackups : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Settings

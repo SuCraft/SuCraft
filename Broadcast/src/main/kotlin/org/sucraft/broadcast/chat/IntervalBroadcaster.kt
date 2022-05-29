@@ -16,7 +16,6 @@ import org.sucraft.core.common.sucraft.log.SuCraftLogTexts
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.discordinfo.data.DiscordChannel
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object IntervalBroadcaster : SuCraftComponent<SuCraftBroadcastPlugin>(SuCraftBroadcastPlugin.getInstance()) {
 

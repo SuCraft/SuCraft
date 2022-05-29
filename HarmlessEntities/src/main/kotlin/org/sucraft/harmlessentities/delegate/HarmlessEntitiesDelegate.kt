@@ -11,7 +11,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.harmlessentities.data.HarmlessEntitiesData
 import org.sucraft.harmlessentities.main.SuCraftHarmlessEntitiesPlugin
 
-
 object HarmlessEntitiesDelegate : HarmlessEntities<SuCraftHarmlessEntitiesPlugin>, SuCraftComponent<SuCraftHarmlessEntitiesPlugin>(SuCraftHarmlessEntitiesPlugin.getInstance()) {
 
 	// Initialization

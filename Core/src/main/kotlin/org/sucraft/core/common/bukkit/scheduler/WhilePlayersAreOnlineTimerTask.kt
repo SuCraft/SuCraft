@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 
-
 /**
  * A task that runs at a certain interval in ticks, but only while players are online
  * This task attempts to turn on immediately after creation (in case it is created when players are already online)

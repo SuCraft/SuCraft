@@ -8,7 +8,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object ClosestPlayerFinder {
 

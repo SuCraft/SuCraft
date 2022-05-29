@@ -14,7 +14,6 @@ import org.sucraft.core.common.sucraft.command.SuCraftCommand
 import org.sucraft.core.common.sucraft.command.SuCraftCommands
 import org.sucraft.eastereggcommand.main.SuCraftEasterEggCommandPlugin
 
-
 object SuCraftEasterEggCommandCommands : SuCraftCommands<SuCraftEasterEggCommandPlugin>(SuCraftEasterEggCommandPlugin.getInstance()) {
 
 	val EASTER_EGG = SuCraftCommand.create(

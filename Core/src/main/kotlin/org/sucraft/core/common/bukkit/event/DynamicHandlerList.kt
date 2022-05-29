@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.event
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.RegisteredListener
 
-
 /**
  * A definition for clarity (could be done directly as well) of a Bukkit HandlerList that has an abstract method for returning the registered listeners
  */

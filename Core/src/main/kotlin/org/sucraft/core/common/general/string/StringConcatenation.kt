@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.general.string
 
-
 object StringConcatenation {
 
 	fun concatenateSpaced(strings: Array<String?>, start: Int = 0, end: Int = strings.size): String {

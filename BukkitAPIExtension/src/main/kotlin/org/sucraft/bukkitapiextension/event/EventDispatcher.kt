@@ -8,7 +8,6 @@ import org.bukkit.Bukkit
 import org.sucraft.bukkitapiextension.main.SuCraftBukkitAPIExtensionPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 abstract class EventDispatcher<E: BukkitAPIExtensionEvent> : SuCraftComponent<SuCraftBukkitAPIExtensionPlugin>(SuCraftBukkitAPIExtensionPlugin.getInstance()) {
 
 	fun fire(event: E) {

@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapelessRecipe
 import org.sucraft.customcraftingrecipes.main.SuCraftCustomCraftingRecipesPlugin
 
-
 object DebugStickRecipe : CustomRecipe() {
 
 	// Settings

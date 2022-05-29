@@ -8,7 +8,6 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 
-
 object DecimalUtils {
 
 	fun createAmericanDecimalFormat(formatString: String): DecimalFormat {

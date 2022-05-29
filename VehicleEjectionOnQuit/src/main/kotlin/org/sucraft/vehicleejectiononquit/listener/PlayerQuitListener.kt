@@ -12,7 +12,6 @@ import org.sucraft.core.common.bukkit.entity.PrintableEntityDescription
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.vehicleejectiononquit.main.SuCraftVehicleEjectionOnQuitPlugin
 
-
 object PlayerQuitListener : SuCraftComponent<SuCraftVehicleEjectionOnQuitPlugin>(SuCraftVehicleEjectionOnQuitPlugin.getInstance()) {
 
 	// Events

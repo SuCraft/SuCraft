@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.customcraftingrecipes.main.SuCraftCustomCraftingRecipesPlugin
 
-
 object DrinkAlcoholListener : SuCraftComponent<SuCraftCustomCraftingRecipesPlugin>(SuCraftCustomCraftingRecipesPlugin.getInstance()) {
 
 	// Events

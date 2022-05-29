@@ -6,7 +6,6 @@ package org.sucraft.core.common.general.math
 
 import kotlin.math.ceil
 
-
 object RelativeCoordinates {
 
 	fun relativeWithinSquareRadius(radius: Int): Sequence<Pair<Int, Int>> = sequence {

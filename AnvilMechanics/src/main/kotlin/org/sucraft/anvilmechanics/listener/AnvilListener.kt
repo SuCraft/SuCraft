@@ -26,7 +26,6 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import java.util.*
 
-
 object AnvilListener : SuCraftComponent<SuCraftAnvilMechanicsPlugin>(SuCraftAnvilMechanicsPlugin.getInstance()) {
 
 	// Settings

@@ -7,7 +7,6 @@ package org.sucraft.anticorruption.backup
 import org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object OldBackupRemoval : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Settings

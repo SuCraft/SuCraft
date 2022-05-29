@@ -13,7 +13,6 @@ import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.giants.data.GiantData
 import org.sucraft.giants.main.SuCraftGiantsPlugin
 
-
 object ZombieSpawnListener : SuCraftComponent<SuCraftGiantsPlugin>(SuCraftGiantsPlugin.getInstance()) {
 
 	// Events

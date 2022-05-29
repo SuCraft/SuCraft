@@ -17,7 +17,6 @@ import org.sucraft.temporarymobfarmlimits.raid.RaidCancelListener
 import org.sucraft.temporarymobfarmlimits.raid.RaidMeasureListener
 import org.sucraft.temporarymobfarmlimits.raid.RaidMeasurementData
 
-
 class SuCraftTemporaryMobFarmLimitsPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

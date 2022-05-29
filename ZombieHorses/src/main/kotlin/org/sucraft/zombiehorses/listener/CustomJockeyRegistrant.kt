@@ -9,7 +9,6 @@ import org.bukkit.entity.EntityType
 import org.sucraft.customjockeys.data.CustomJockey
 import org.sucraft.customjockeys.data.CustomJockeyData
 
-
 object CustomJockeyRegistrant {
 
 	// Settings

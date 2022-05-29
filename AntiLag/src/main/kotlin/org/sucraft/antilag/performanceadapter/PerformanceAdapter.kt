@@ -14,7 +14,6 @@ import kotlin.collections.ArrayDeque
 import kotlin.math.max
 import kotlin.math.min
 
-
 object PerformanceAdapter : SuCraftComponent<SuCraftAntiLagPlugin>(SuCraftAntiLagPlugin.getInstance()), ShortTermMeasuredTPSListener {
 
 	// Settings

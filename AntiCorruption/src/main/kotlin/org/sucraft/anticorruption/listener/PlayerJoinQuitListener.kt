@@ -13,7 +13,6 @@ import org.sucraft.anticorruption.backup.PlayerBackups
 import org.sucraft.anticorruption.main.SuCraftAntiCorruptionPlugin
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object PlayerJoinQuitListener : SuCraftComponent<SuCraftAntiCorruptionPlugin>(SuCraftAntiCorruptionPlugin.getInstance()) {
 
 	// Settings

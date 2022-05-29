@@ -7,7 +7,6 @@ package org.sucraft.core.common.bukkit.item
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-
 object EmptyItemStack {
 
 	@Suppress("NOTHING_TO_INLINE")

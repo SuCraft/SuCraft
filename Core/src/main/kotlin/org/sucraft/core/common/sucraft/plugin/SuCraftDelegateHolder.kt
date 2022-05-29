@@ -4,7 +4,6 @@
 
 package org.sucraft.core.common.sucraft.plugin
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 open class SuCraftDelegateHolder<T: SuCraftDelegate<*>> {
 

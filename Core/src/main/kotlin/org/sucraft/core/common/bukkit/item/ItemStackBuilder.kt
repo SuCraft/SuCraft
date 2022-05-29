@@ -19,7 +19,6 @@ import org.sucraft.core.common.general.string.StringSplit
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.*
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 class ItemStackBuilder private constructor(private var itemStack: ItemStack) {
 

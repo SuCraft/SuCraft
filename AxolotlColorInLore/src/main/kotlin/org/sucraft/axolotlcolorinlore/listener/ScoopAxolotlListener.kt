@@ -19,7 +19,6 @@ import org.sucraft.bukkitapiextension.event.playerscoopentity.PlayerScoopEntityE
 import org.sucraft.core.common.bukkit.item.GuaranteedItemMetaGetter
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 
-
 object ScoopAxolotlListener : SuCraftComponent<SuCraftAxolotlColorInLorePlugin>(SuCraftAxolotlColorInLorePlugin.getInstance()) {
 
 	// Events

@@ -8,7 +8,6 @@ import org.bukkit.entity.*
 import org.bukkit.projectiles.BlockProjectileSource
 import org.sucraft.core.common.bukkit.item.ItemNBTUtils
 
-
 object PrintableEntityDescription {
 
     private fun getShortAndLongBuilderCommonBegin(entity: Entity): StringBuilder {

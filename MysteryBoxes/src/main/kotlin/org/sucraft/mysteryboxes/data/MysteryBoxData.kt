@@ -16,7 +16,6 @@ import org.sucraft.core.common.bukkit.item.ItemStackBuilder
 import org.sucraft.core.common.bukkit.material.MaterialGroups
 import org.sucraft.core.common.sucraft.delegate.StandardItemStackNames
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 object MysteryBoxData {
 

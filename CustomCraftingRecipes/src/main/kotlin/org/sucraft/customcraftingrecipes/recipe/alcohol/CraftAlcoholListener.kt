@@ -15,7 +15,6 @@ import org.sucraft.core.common.bukkit.scheduler.RunInFuture
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.customcraftingrecipes.main.SuCraftCustomCraftingRecipesPlugin
 
-
 object CraftAlcoholListener : SuCraftComponent<SuCraftCustomCraftingRecipesPlugin>(SuCraftCustomCraftingRecipesPlugin.getInstance()) {
 
 	// Events

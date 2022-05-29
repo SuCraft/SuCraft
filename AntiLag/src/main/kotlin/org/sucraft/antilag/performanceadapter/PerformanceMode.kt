@@ -69,7 +69,6 @@ import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.wolfT
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.zoglinTargetingNonPlayerImmunityFor
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.zombifiedPiglinPortalSpawns
 
-
 enum class PerformanceMode(
 
 	val displayName: String,

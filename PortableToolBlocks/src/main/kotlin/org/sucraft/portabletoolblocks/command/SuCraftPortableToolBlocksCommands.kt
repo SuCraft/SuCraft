@@ -12,7 +12,6 @@ import org.sucraft.core.common.sucraft.player.PlayerByInputString
 import org.sucraft.portabletoolblocks.main.SuCraftPortableToolBlocksPlugin
 import org.sucraft.portabletoolblocks.player.permission.SuCraftPortableToolBlocksPermissions
 
-
 object SuCraftPortableToolBlocksCommands : SuCraftCommands<SuCraftPortableToolBlocksPlugin>(SuCraftPortableToolBlocksPlugin.getInstance()) {
 
 	val CRAFTING_TABLE = SuCraftCommand.createPlayerOnly(

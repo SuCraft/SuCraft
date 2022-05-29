@@ -4,7 +4,6 @@
 
 package org.sucraft.anticorruption.backup
 
-
 data class BackupTask(
 	val file: FileToBackup
 ) {

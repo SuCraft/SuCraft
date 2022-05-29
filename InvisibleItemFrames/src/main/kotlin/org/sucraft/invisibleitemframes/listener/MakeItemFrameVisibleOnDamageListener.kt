@@ -11,7 +11,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.invisibleitemframes.main.SuCraftInvisibleItemFramesPlugin
 
-
 object MakeItemFrameVisibleOnDamageListener : SuCraftComponent<SuCraftInvisibleItemFramesPlugin>(SuCraftInvisibleItemFramesPlugin.getInstance()) {
 
 	// Events

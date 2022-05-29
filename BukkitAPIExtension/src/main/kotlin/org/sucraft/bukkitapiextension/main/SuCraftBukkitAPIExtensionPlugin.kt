@@ -8,7 +8,6 @@ import org.sucraft.bukkitapiextension.event.playerscoopentity.PlayerScoopEntityE
 import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.core.common.sucraft.plugin.SuCraftPlugin
 
-
 class SuCraftBukkitAPIExtensionPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

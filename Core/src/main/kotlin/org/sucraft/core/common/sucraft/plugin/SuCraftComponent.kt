@@ -8,7 +8,6 @@ import org.bukkit.event.Listener
 import org.sucraft.core.common.bukkit.log.NestedLogger
 import java.lang.IllegalStateException
 
-
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class SuCraftComponent<P: SuCraftPlugin>(val plugin: P, private val customName: String? = null) : Listener {
 

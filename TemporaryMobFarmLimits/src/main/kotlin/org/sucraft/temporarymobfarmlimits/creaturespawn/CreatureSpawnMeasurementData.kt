@@ -7,7 +7,6 @@ package org.sucraft.temporarymobfarmlimits.creaturespawn
 import org.bukkit.entity.EntityType
 import org.sucraft.temporarymobfarmlimits.data.AmountByChunkAndEnumSecondaryKeyMeasurementData
 
-
 object CreatureSpawnMeasurementData : AmountByChunkAndEnumSecondaryKeyMeasurementData<EntityType>(
 	"creature spawns",
 	EntityType::class.java,

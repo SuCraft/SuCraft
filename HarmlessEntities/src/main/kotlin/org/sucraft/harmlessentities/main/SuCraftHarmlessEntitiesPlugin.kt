@@ -9,7 +9,6 @@ import org.sucraft.core.common.general.pattern.SingletonContainer
 import org.sucraft.harmlessentities.delegate.HarmlessEntitiesDelegate
 import org.sucraft.harmlessentities.listener.EntityDamageListener
 
-
 class SuCraftHarmlessEntitiesPlugin : SuCraftPlugin() {
 
 	// Companion (singleton)

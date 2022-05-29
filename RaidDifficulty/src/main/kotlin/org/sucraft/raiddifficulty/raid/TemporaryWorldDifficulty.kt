@@ -10,7 +10,6 @@ import org.bukkit.World
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.raiddifficulty.main.SuCraftRaidDifficultyPlugin
 
-
 object TemporaryWorldDifficulty : SuCraftComponent<SuCraftRaidDifficultyPlugin>(SuCraftRaidDifficultyPlugin.getInstance()) {
 
 	// Settings

@@ -20,7 +20,6 @@ import org.sucraft.core.common.sucraft.player.PlayerUUID
 import org.sucraft.core.common.sucraft.plugin.SuCraftComponent
 import org.sucraft.tenyearselytra.main.SuCraftTenYearsElytraPlugin
 
-
 object FestiveFireworks : SuCraftComponent<SuCraftTenYearsElytraPlugin>(SuCraftTenYearsElytraPlugin.getInstance()) {
 
 	// Settings

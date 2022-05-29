@@ -7,8 +7,6 @@ package org.sucraft.core.common.bukkit.chunk
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import org.sucraft.core.common.general.math.RelativeCoordinates
 
-// Class
-
 /**
  * This class stores some value per chunk, and has operations for updating a chunk including its surrounding chunks within a certain radius
  */

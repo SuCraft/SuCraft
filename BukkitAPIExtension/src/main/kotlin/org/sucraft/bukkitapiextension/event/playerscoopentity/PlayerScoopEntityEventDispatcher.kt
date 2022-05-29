@@ -34,7 +34,7 @@ object PlayerScoopEntityEventDispatcher : EventDispatcher<PlayerScoopEntityEvent
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	fun onPlayerInteractEntity(event: PlayerInteractEntityEvent) {
 		val expectedResultingItemType: Material = entityScoopMaterialByEntityType[event.rightClicked.type] ?: return
-		val usedItem = event.player.inventory.getItem(event.hand) ?: return
+		val usedItem = event.player.inventory.getItem(event.hand)
 		if (usedItem.type in itemTypesUsableToScoop) {
 			RunInFuture.useInventoryDifference(plugin, event.player, forInventoryDifference@{ _, inventoryDifference ->
 				for ((itemStack, amountChange) in inventoryDifference) {

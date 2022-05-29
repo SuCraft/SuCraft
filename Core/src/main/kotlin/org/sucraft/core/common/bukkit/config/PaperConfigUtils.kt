@@ -7,7 +7,7 @@ package org.sucraft.core.common.bukkit.config
 import com.destroystokyo.paper.PaperWorldConfig
 import org.bukkit.Bukkit
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld
 import org.spigotmc.SpigotWorldConfig
 import org.sucraft.core.common.bukkit.world.mainWorld
 

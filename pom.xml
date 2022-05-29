@@ -23,8 +23,8 @@
 		<adventureminimessage.version>4.1.0-SNAPSHOT</adventureminimessage.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<paper.api.version>1.18.1-R0.1-SNAPSHOT</paper.api.version>
-		<paper.stub.version>martijn-1.18.1-5cde762</paper.stub.version>
-		<paper.stub.url>https://screpo.000webhostapp.com/martijn-paper-1.18.1-5cde762-stub.jar</paper.stub.url>
+		<paper.stub.version>martijn-1.18.2-306dd45</paper.stub.version>
+		<paper.stub.url>https://screpo.000webhostapp.com/martijn-paper-1.18.2-306dd45-stub.jar</paper.stub.url>
 		<paper.stub.jarfilename>paper-${paper.stub.version}.jar</paper.stub.jarfilename>
 		<fartherviewdistance.stub.version>8.7.1</fartherviewdistance.stub.version>
 		<fartherviewdistance.stub.url>https://screpo.000webhostapp.com/FartherViewDistance-8.7.1-stub.jar</fartherviewdistance.stub.url>

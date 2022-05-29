@@ -6,8 +6,8 @@ package org.sucraft.core.common.bukkit.world
 
 import net.minecraft.network.protocol.game.ClientboundSetSimulationDistancePacket
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer
 import org.joor.Reflect.on
 import kotlin.math.max
 import kotlin.math.min

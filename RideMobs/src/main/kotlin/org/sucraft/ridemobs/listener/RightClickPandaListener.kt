@@ -23,16 +23,14 @@ object RightClickPandaListener : SuCraftComponent<SuCraftRideMobsPlugin>(SuCraft
 		val player = event.player
 		// Make sure the player is not using an item with an effect
 		val usedItem = player.inventory.getItem(event.hand)
-		if (usedItem != null) {
-			when (usedItem.type) {
-				Material.BAMBOO,
-				Material.CAKE,
-				Material.LEAD,
-				Material.MILK_BUCKET,
-				Material.NAME_TAG,
-				Material.PANDA_SPAWN_EGG -> return
-				else -> {}
-			}
+		when (usedItem.type) {
+			Material.BAMBOO,
+			Material.CAKE,
+			Material.LEAD,
+			Material.MILK_BUCKET,
+			Material.NAME_TAG,
+			Material.PANDA_SPAWN_EGG -> return
+			else -> {}
 		}
 		if (!player.hasPermission(SuCraftRideMobsPermissions.SIT_ON_PANDAS)) return
 		if (player.isInsideVehicle) {

@@ -7,6 +7,7 @@ package org.sucraft.antilag.performanceadapter
 import com.destroystokyo.paper.PaperConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.SpawnCategory
 import org.sucraft.core.common.bukkit.config.PaperConfigUtils
 import org.sucraft.core.common.bukkit.world.ViewDistanceUtils
 import org.sucraft.core.common.bukkit.world.mainWorld
@@ -259,33 +260,33 @@ open class PerformanceSetting<T>(
 
 		val ticksPerMonsterSpawns = PerformanceSetting(
 			"ticks per spawns (monsters)",
-			{ mainWorld.ticksPerMonsterSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerMonsterSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.MONSTER) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.MONSTER, value.toInt()) } }
 		)
 		val ticksPerAnimalSpawns = PerformanceSetting(
 			"ticks per spawns (animals)",
-			{ mainWorld.ticksPerAnimalSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerAnimalSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.ANIMAL) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.ANIMAL, value.toInt()) } }
 		)
 		val ticksPerWaterAnimalSpawns = PerformanceSetting(
 			"ticks per spawns (water animals)",
-			{ mainWorld.ticksPerWaterSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerWaterSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.WATER_ANIMAL) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.WATER_ANIMAL, value.toInt()) } }
 		)
 		val ticksPerWaterAmbientSpawns = PerformanceSetting(
 			"ticks per spawns (water ambient)",
-			{ mainWorld.ticksPerWaterAmbientSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerWaterAmbientSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.WATER_AMBIENT) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.WATER_AMBIENT, value.toInt()) } }
 		)
 		val ticksPerWaterUndergroundCreatureSpawns = PerformanceSetting(
 			"ticks per spawns (water underground creatures)",
-			{ mainWorld.ticksPerWaterUndergroundCreatureSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerWaterUndergroundCreatureSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.WATER_UNDERGROUND_CREATURE) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.WATER_UNDERGROUND_CREATURE, value.toInt()) } }
 		)
 		val ticksPerAmbientSpawns = PerformanceSetting(
 			"ticks per spawns (ambient)",
-			{ mainWorld.ticksPerAmbientSpawns },
-			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerAmbientSpawns(value.toInt()) } }
+			{ mainWorld.getTicksPerSpawns(SpawnCategory.AMBIENT) },
+			{ value -> Bukkit.getWorlds().forEach { it.setTicksPerSpawns(SpawnCategory.AMBIENT, value.toInt()) } }
 		)
 
 		val mobSpawnChunkRange = PerformanceSetting(

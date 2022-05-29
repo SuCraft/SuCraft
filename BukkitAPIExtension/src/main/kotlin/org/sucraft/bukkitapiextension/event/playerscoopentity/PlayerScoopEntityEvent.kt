@@ -27,8 +27,9 @@ data class PlayerScoopEntityEvent(
 
 	companion object {
 
+		@Suppress("NON_FINAL_MEMBER_IN_OBJECT")
 		@JvmStatic
-		val handlerList = HandlerList()
+		open val handlerList = HandlerList()
 
 	}
 

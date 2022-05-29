@@ -15,6 +15,7 @@ abstract class PlayerTeleportToHomeEvent : PlayerHomeEvent() {
 
 	companion object {
 
+		@Suppress("NON_FINAL_MEMBER_IN_OBJECT")
 		@JvmStatic
 		open val handlerList = HandlerList()
 

@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.persistentdata.PersistentDataShortcuts
 import org.sucraft.core.common.sucraft.player.PlayerUUID
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate")
 object ElytraData {
@@ -24,7 +23,7 @@ object ElytraData {
 	private val festiveElytraCreatorPersistentDataNamespacedKey: NamespacedKey = NamespacedKey("martijnsextrafeatures", "elytra_ten_years")
 
 	private val loreLines: Array<Component> = arrayOf(
-		MiniMessage.builder().build().parse("<rainbow:2>Thank you for 10 years of SuCraft! ❤</rainbow>"),
+		MiniMessage.builder().build().deserialize("<rainbow:2>Thank you for 10 years of SuCraft! ❤</rainbow>"),
 		Component.text("This elytra will leave fireworks").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
 		Component.text("when you boost with rockets!").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
 	)

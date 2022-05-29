@@ -7,7 +7,8 @@ package org.sucraft.tenyearselytra.command
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.ChatColor.*
+import org.bukkit.ChatColor.GRAY
+import org.bukkit.ChatColor.WHITE
 import org.bukkit.inventory.ItemStack
 import org.sucraft.core.common.bukkit.command.CommonTabCompletion
 import org.sucraft.core.common.sucraft.command.SuCraftCommand
@@ -60,7 +61,7 @@ object SuCraftTenYearsElytraCommands : SuCraftCommands<SuCraftTenYearsElytraPlug
 			player.inventory.setItemInMainHand(festiveItemStack)
 			@Suppress("DEPRECATION")
 			player.sendTitle("Thank you~", "Thank you for being a part of this wonderful community <3", 10, 100, 45)
-			player.sendMessage(MiniMessage.builder().build().parse("<rainbow:2>Enjoy your special festive elytra :)</rainbow>"))
+			player.sendMessage(MiniMessage.builder().build().deserialize("<rainbow:2>Enjoy your special festive elytra :)</rainbow>"))
 		},
 		CommonTabCompletion.onlyFirstArgumentPlayer { player, _, _, _ ->
 			if (ElytraData.isFestiveElytra(player.inventory.itemInMainHand))

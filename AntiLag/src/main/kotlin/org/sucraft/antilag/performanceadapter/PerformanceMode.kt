@@ -657,6 +657,7 @@ enum class PerformanceMode(
 
 	fun <T> getSettingValue(setting: PerformanceSetting<T>): T =
 		if (setting.index in valuesBySetting)
+			@Suppress("UNCHECKED_CAST")
 			valuesBySetting[setting.index] as T
 		else
 			getLowerMode().getSettingValue(setting)

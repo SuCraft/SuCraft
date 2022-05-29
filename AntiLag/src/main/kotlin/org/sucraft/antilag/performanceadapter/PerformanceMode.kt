@@ -17,7 +17,9 @@ import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.disab
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.disablePillagerPatrols
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.endermanTargetingEndermiteImmunityFor
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.experienceMergeRadius
+/*
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.fartherViewDistanceMaxChunksGeneratedPerTick
+*/
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.flyingMonsterEntityActivationRange
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.foxTargetingChickenImmunityFor
 import org.sucraft.antilag.performanceadapter.PerformanceSetting.Companion.globalMaxConcurrentChunkLoads
@@ -94,7 +96,9 @@ enum class PerformanceMode(
 		SettingValue(simulationDistance, 8),
 		SettingValue(maxTrackViewDistance, 12),
 
+		/*
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 2),
+		*/
 
 		SettingValue(monsterEntityActivationRange, 32),
 		SettingValue(animalEntityActivationRange, 32),
@@ -212,7 +216,9 @@ enum class PerformanceMode(
 			19.3
 		),
 
+		/*
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 1),
+		*/
 
 		SettingValue(simulationDistance, 7),
 
@@ -573,7 +579,9 @@ enum class PerformanceMode(
 		SettingValue(mobFarmFactor, 0.0),
 		SettingValue(pistonDuplicationEnabled, false),
 
+		/*
 		SettingValue(fartherViewDistanceMaxChunksGeneratedPerTick, 0),
+		*/
 
 		SettingValue(simulationDistance, 2),
 		SettingValue(maxTrackViewDistance, 5),

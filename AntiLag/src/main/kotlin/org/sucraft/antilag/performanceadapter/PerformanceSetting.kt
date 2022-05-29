@@ -12,7 +12,9 @@ import org.sucraft.core.common.bukkit.config.PaperConfigUtils
 import org.sucraft.core.common.bukkit.world.ViewDistanceUtils
 import org.sucraft.core.common.bukkit.world.mainWorld
 import org.sucraft.core.common.sucraft.delegate.MobFarmWeight
+/*
 import xuan.cat.fartherviewdistance.code.Index
+*/
 
 open class PerformanceSetting<T>(
 	val displayName: String,
@@ -50,11 +52,13 @@ open class PerformanceSetting<T>(
 			{ PaperConfig.allowPistonDuplication = it }
 		)
 
+		/*
 		val fartherViewDistanceMaxChunksGeneratedPerTick = PerformanceSetting(
 			"FartherViewDistance max chunks generated per tick",
 			{ Index.getConfigData().serverTickMaxGenerateAmount },
 			{ Index.getConfigData().serverTickMaxGenerateAmount = it }
 		)
+		*/
 
 		val simulationDistance = PerformanceSetting(
 			"simulation distance",
@@ -389,7 +393,9 @@ open class PerformanceSetting<T>(
 
 			pistonDuplicationEnabled,
 
+			/*
 			fartherViewDistanceMaxChunksGeneratedPerTick,
+			*/
 
 			simulationDistance,
 

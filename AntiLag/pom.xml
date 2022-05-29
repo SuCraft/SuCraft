@@ -46,9 +46,11 @@
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-stub</artifactId>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>xuan.cat.fartherviewdistance</groupId>
 			<artifactId>fartherviewdistance-stub</artifactId>
 		</dependency>
+		-->
 	</dependencies>
 </project>

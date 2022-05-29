@@ -15,7 +15,6 @@
 		<pluginDescriptionAuthor>SuCraft</pluginDescriptionAuthor>
 		<pluginDescriptionWebsite>sucraft.org</pluginDescriptionWebsite>
 		<kotlin.version>1.6.0</kotlin.version>
-		<lombok.version>1.18.20</lombok.version>
 		<json.version>20210307</json.version>
 		<snakeyaml.version>1.27</snakeyaml.version>
 		<joor.version>0.9.14</joor.version>
@@ -153,23 +152,7 @@
 					<version>${kotlin.version}</version>
 					<configuration>
 						<jvmTarget>17</jvmTarget>
-						<compilerPlugins>
-							<plugin>lombok</plugin>
-						</compilerPlugins>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.jetbrains.kotlin</groupId>
-							<artifactId>kotlin-maven-lombok</artifactId>
-							<version>${kotlin.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-							<scope>compile</scope>
-						</dependency>
-					</dependencies>
 					<executions>
 						<execution>
 							<id>compile</id>
@@ -295,12 +278,6 @@
 			<artifactId>kotlin-test</artifactId>
 			<version>${kotlin.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains</groupId>

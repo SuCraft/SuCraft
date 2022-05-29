@@ -87,6 +87,7 @@ object PrintableEntityDescription {
 
         // The non-player entity's custom name
         if (entity !is Player) {
+            @Suppress("Deprecation")
             if (entity.customName != null) {
                 builder.append("(custom name: '${entity.customName}')")
                 builder.append(' ')

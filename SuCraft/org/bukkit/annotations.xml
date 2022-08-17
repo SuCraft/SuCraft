@@ -1,0 +1,12 @@
+<!--
+  ~ Copyright (c) SuCraft 2022 sucraft.org
+  -->
+
+<root>
+	<item name='org.bukkit.Bukkit org.bukkit.OfflinePlayer getOfflinePlayer(java.util.UUID)'>
+		<annotation name='java.lang.Deprecated'/>
+	</item>
+	<item name='org.bukkit.OfflinePlayer'>
+		<annotation name='java.lang.Deprecated'/>
+	</item>
+</root>

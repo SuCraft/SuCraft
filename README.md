@@ -27,6 +27,6 @@ As a universal point of contact, Martijn Muijsers, the lead developer since 2011
 This project is written in the [Kotlin programming language](https://kotlinlang.org/), and is built on [Paper](https://papermc.io/), which is written in Java. It is recommended to have a good grasp of both languages to understand and modify this code.
 
 Below are some effective video tutorial series for new learners of these languages who have an interest in creating Minecraft plugins:
-   [Java](https://www.youtube.com/watch?v=GoXwIVyNvX0)
-   [Kotlin](https://www.youtube.com/watch?v=F9UC9DY-vIU)
-   [Making plugins](https://www.youtube.com/playlist?list=PLfu_Bpi_zcDNEKmR82hnbv9UxQ16nUBF7)
+* [Java](https://www.youtube.com/watch?v=GoXwIVyNvX0)
+* [Kotlin](https://www.youtube.com/watch?v=F9UC9DY-vIU)
+* [Making plugins](https://www.youtube.com/playlist?list=PLfu_Bpi_zcDNEKmR82hnbv9UxQ16nUBF7)

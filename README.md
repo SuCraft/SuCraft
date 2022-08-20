@@ -10,13 +10,13 @@ As this project has been developed for the Paper platform and knowledge of the d
 
 **Requirements**
 * A [Java SDK for Java 17](https://www.oracle.com/java/technologies/downloads/) or higher
-* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/)
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) with the [Kotlin plugin](https://www.jetbrains.com/help/idea/get-started-with-kotlin.html)
 
 **Steps**
 * Open IntelliJ
 * *File* > *New* > *Project from Version Control...*
 * Paste the Git URL clone URL for this repository: https://github.com/SuCraft/SuCraft.git
-* (If prompted) Select the Java SDK, select a Kotlin SDK to use or download
+* Open *SuCraft/build.gradle.kts* > *Link gradle project* > *OK*
 
 ### Contact
 

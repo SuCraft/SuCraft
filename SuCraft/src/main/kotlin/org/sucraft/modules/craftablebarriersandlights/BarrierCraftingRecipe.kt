@@ -11,6 +11,7 @@ import org.sucraft.common.itemstack.recipe.ShapedCustomRecipe
 
 val barrierCraftingRecipe = ShapedCustomRecipe(
 	"barrier_recipe",
+	false,
 	ItemStack(BARRIER, 10)
 ) {
 	shape("$$$", "$%$", "$$$")

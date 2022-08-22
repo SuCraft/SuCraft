@@ -10,6 +10,7 @@ import org.sucraft.common.itemstack.recipe.ShapedCustomRecipe
 
 val repeaterFromUncraftedTorchesCraftingRecipe = ShapedCustomRecipe(
 	"repeater_from_uncrafted_torches_recipe",
+	true,
 	ItemStack(REPEATER)
 ) {
 	shape("% %", "@%@", "$$$")

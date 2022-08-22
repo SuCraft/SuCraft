@@ -12,6 +12,7 @@ import org.sucraft.common.itemstack.recipe.ShapedCustomRecipe
 
 val chestsFromLogsCraftingRecipe = ShapedCustomRecipe(
 	"chests_from_logs_recipe",
+	true,
 	ItemStack(CHEST, 4)
 ) {
 	shape("$$$", "$ $", "$$$")

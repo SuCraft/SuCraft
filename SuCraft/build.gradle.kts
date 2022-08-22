@@ -115,7 +115,7 @@ fun downloadLibraryJar(
 }
 
 val paperMinecraftVersion = "1.19.2"
-val paperBuildGitVersion = "c5b0f18ba"
+val paperBuildGitVersion = "20f4a06fa"
 val paperBuildVersion = "martijn-$paperMinecraftVersion-$paperBuildGitVersion"
 
 val paperStubFilename =

@@ -4,10 +4,7 @@
 
 package org.sucraft.common.itemstack.recipe
 
-import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.Tag
+import org.bukkit.*
 import org.bukkit.advancement.Advancement
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -32,6 +29,7 @@ import org.sucraft.main.SuCraftPlugin
 open class CustomRecipe<R : Recipe>(
 	private val constructRecipe: (NamespacedKey, ItemStack) -> R,
 	getNamespacedKey: () -> NamespacedKey,
+	private val isSkippableForPlayersThatCannotAcceptLargePackets: Boolean,
 	getResult: () -> ItemStack,
 	private val setIngredients: R.() -> Unit
 ) {
@@ -39,11 +37,13 @@ open class CustomRecipe<R : Recipe>(
 	constructor(
 		constructRecipe: (NamespacedKey, ItemStack) -> R,
 		key: String,
+		isSkippableForPlayersThatCannotAcceptLargePackets: Boolean,
 		getResult: () -> ItemStack,
 		setIngredients: R.() -> Unit
 	) : this(
 		constructRecipe,
 		key::toSuCraftNamespacedKey,
+		isSkippableForPlayersThatCannotAcceptLargePackets,
 		getResult,
 		setIngredients
 	)
@@ -51,11 +51,13 @@ open class CustomRecipe<R : Recipe>(
 	constructor(
 		constructRecipe: (NamespacedKey, ItemStack) -> R,
 		getNamespacedKey: () -> NamespacedKey,
+		isSkippableForPlayersThatCannotAcceptLargePackets: Boolean,
 		result: ItemStack,
 		setIngredients: R.() -> Unit
 	) : this(
 		constructRecipe,
 		getNamespacedKey,
+		isSkippableForPlayersThatCannotAcceptLargePackets,
 		{ result },
 		setIngredients
 	)
@@ -63,11 +65,13 @@ open class CustomRecipe<R : Recipe>(
 	constructor(
 		constructRecipe: (NamespacedKey, ItemStack) -> R,
 		key: String,
+		isSkippableForPlayersThatCannotAcceptLargePackets: Boolean,
 		result: ItemStack,
 		setIngredients: R.() -> Unit
 	) : this(
 		constructRecipe,
 		key::toSuCraftNamespacedKey,
+		isSkippableForPlayersThatCannotAcceptLargePackets,
 		{ result },
 		setIngredients
 	)
@@ -81,7 +85,7 @@ open class CustomRecipe<R : Recipe>(
 	fun register() {
 		if (isRegistered) return
 		bukkitRecipe = constructRecipe(namespacedKey, result).apply(setIngredients)
-		Bukkit.addRecipe(bukkitRecipe)
+		Bukkit.addRecipe(bukkitRecipe, isSkippableForPlayersThatCannotAcceptLargePackets)
 		// If Permissions are needed for recipe, register an event listener to check for them
 		if (permissions.isNotEmpty())
 			Bukkit.getPluginManager().registerEvents(

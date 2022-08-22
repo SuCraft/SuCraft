@@ -18,6 +18,7 @@ fun createMinecartFromContentAndIronCraftingRecipe(
 	vararg materialsToDiscover: Material = arrayOf(IRON_INGOT)
 ) = ShapedCustomRecipe(
 	"${name}_minecart_from_${name}_and_iron_recipe",
+	true,
 	ItemStack(minecart)
 ) {
 	shape("$%$", "$$$")

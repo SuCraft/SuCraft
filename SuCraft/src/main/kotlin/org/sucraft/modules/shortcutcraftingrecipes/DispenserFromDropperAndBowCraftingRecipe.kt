@@ -10,6 +10,7 @@ import org.sucraft.common.itemstack.recipe.ShapelessCustomRecipe
 
 val dispenserFromDropperAndBowCraftingRecipe = ShapelessCustomRecipe(
 	"dispenser_from_dropper_and_bow_recipe",
+	true,
 	ItemStack(DISPENSER)
 ) {
 	addIngredient(DROPPER)

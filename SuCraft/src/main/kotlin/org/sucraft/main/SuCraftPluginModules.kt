@@ -50,6 +50,7 @@ import org.sucraft.modules.shorttermtps.ShortTermTPS
 import org.sucraft.modules.tenyearselytra.TenYearsElytra
 import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
+import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
 
 val modules by lazy {
@@ -100,6 +101,7 @@ val modules by lazy {
 		TenYearsElytra,
 		UnsignBooks,
 		UUIDCommand,
+		ViaVersionPlayerLargePackets,
 		ZombieHorseJockeys
 	)
 }

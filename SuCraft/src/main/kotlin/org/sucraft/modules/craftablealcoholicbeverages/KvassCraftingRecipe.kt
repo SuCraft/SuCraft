@@ -43,6 +43,7 @@ val kvassItemStackWithoutBrewer =
 
 val kvassCraftingRecipe = ShapelessCustomRecipe(
 	{ @Suppress("DEPRECATION") NamespacedKey("martijnsrecipes", "kvass_recipe") },
+	false,
 	kvassItemStackWithoutBrewer
 ) {
 	addIngredient(createWaterBottle())

@@ -69,6 +69,7 @@ object RedyeingRecipes : SuCraftModule<RedyeingRecipes>() {
 					val newDyeColor = new.dyeColor!!
 					ShapelessCustomRecipe(
 						"redye_${recipeAmount}_${materialCategoryName}_to_${newDyeColor.name.lowercase()}",
+						true,
 						ItemStack(new, recipeAmount)
 					) {
 						repeat(recipeAmount) {
@@ -91,6 +92,7 @@ object RedyeingRecipes : SuCraftModule<RedyeingRecipes>() {
 			else listOf(maxRecipeAmount)).map { recipeAmount ->
 				ShapelessCustomRecipe(
 					"undye_${recipeAmount}_${newMaterial.keyKey}",
+					true,
 					ItemStack(newMaterial, recipeAmount)
 				) {
 					repeat(recipeAmount) {

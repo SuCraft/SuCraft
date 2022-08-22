@@ -4,18 +4,21 @@
 
 package org.sucraft.modules.resourcepackwarnings
 
-import com.viaversion.viaversion.api.Via
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion.getProtocol
 import net.kyori.adventure.text.Component.join
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.JoinConfiguration.noSeparators
 import org.bukkit.event.player.PlayerResourcePackStatusEvent
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status.*
 import org.sucraft.common.event.on
+import org.sucraft.common.module.AbstractSuCraftComponent
 import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.scheduler.runLater
 import org.sucraft.common.text.*
 import org.sucraft.common.time.TimeInTicks
+import org.sucraft.common.viaversion.clientVersion
+import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets
+import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets.minimumProtocolVersionThatCanAcceptLargePackets
 
 /**
  * Shows a warning to players if they have not accepted the resource pack,
@@ -23,6 +26,12 @@ import org.sucraft.common.time.TimeInTicks
  * (thereby potentially not being able to read the resource pack correctly).
  */
 object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
+
+	// Dependencies
+
+	override val dependencies = listOf(
+		ViaVersionPlayerLargePackets
+	)
 
 	// Settings
 
@@ -56,24 +65,33 @@ object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
 			text("Optifine 1.19", INFORMATIVE_UNIMPORTANT_FOCUS)
 				.underlined()
 				.clickOpenURL("https://optifine.net/downloads"),
-			text(" with Video Settings > Quality > Antialiasing = 16", INFORMATIVE_UNIMPORTANT)
+			text(" with Video Settings > Quality > Antialiasing = 4 or higher", INFORMATIVE_UNIMPORTANT)
 		)
 
-	private val recommendedOlderVersion =
+	private val recommendedVersionOrOldRecommendedVersion =
 		join(
 			noSeparators(),
-			text("Forge 1.16.5", INFORMATIVE_UNIMPORTANT_FOCUS)
-				.underlined()
-				.clickOpenURL("https://files.minecraftforge.net/net/minecraftforge/forge/index_1.16.5.html"),
-			text(" with ", INFORMATIVE_UNIMPORTANT),
-			text("Optifine", INFORMATIVE_UNIMPORTANT_FOCUS)
+			text("Optifine 1.19 or 1.16.5", INFORMATIVE_UNIMPORTANT_FOCUS)
 				.underlined()
 				.clickOpenURL("https://optifine.net/downloads"),
-			text(" and ", INFORMATIVE_UNIMPORTANT),
-			text("XL Packets", INFORMATIVE_UNIMPORTANT_FOCUS)
-				.underlined()
-				.clickOpenURL("https://www.curseforge.com/minecraft/mc-mods/xl-packets/download/3629577")
+			text(" with Video Settings > Quality > Antialiasing = 4 or higher", INFORMATIVE_UNIMPORTANT)
 		)
+
+//	private val recommendedOlderVersion =
+//		join(
+//			noSeparators(),
+//			text("Forge 1.16.5", INFORMATIVE_UNIMPORTANT_FOCUS)
+//				.underlined()
+//				.clickOpenURL("https://files.minecraftforge.net/net/minecraftforge/forge/index_1.16.5.html"),
+//			text(" with ", INFORMATIVE_UNIMPORTANT),
+//			text("Optifine", INFORMATIVE_UNIMPORTANT_FOCUS)
+//				.underlined()
+//				.clickOpenURL("https://optifine.net/downloads"),
+//			text(" and ", INFORMATIVE_UNIMPORTANT),
+//			text("XL Packets", INFORMATIVE_UNIMPORTANT_FOCUS)
+//				.underlined()
+//				.clickOpenURL("https://www.curseforge.com/minecraft/mc-mods/xl-packets/download/3629577")
+//		)
 
 	private const val minimumProtocolVersionFullyCompatibleWithResourcePack = 759 // 1.19
 
@@ -86,23 +104,33 @@ object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
 					when (resourcePackStatus) {
 						SUCCESSFULLY_LOADED -> {
 							try {
-								val viaAPI = Via.getAPI()
-								val playerVersion = viaAPI.getPlayerVersion(this)
+								val playerVersion = clientVersion
 								if (playerVersion < minimumProtocolVersionFullyCompatibleWithResourcePack) {
 									info(
 										"Sending $name a message because their version may not be " +
 												"compatible with the resource pack"
 									)
-									sendMessage(
-										485992563785673333L, INFORMATIVE_UNIMPORTANT,
-										ProtocolVersion
-											.getProtocol(minimumProtocolVersionFullyCompatibleWithResourcePack).name
-//										ProtocolVersion.getProtocol(playerVersion).name
-									) {
-										+"The server is on version" + INFORMATIVE_UNIMPORTANT_FOCUS * variable - "." +
-												"It is recommended to use" + recommendedVersion -
-												", or" + recommendedOlderVersion - "."
-									}
+									if (playerVersion >= minimumProtocolVersionThatCanAcceptLargePackets)
+										sendMessage(
+											485992563785673333L, INFORMATIVE_UNIMPORTANT,
+											getProtocol(minimumProtocolVersionFullyCompatibleWithResourcePack).name
+//											getProtocol(playerVersion).name
+										) {
+											+"The server is on version" + INFORMATIVE_UNIMPORTANT_FOCUS * variable - "." +
+													"It is recommended to use" + recommendedVersion - "."
+										}
+									else
+										sendMessage(
+											879678587089067032L, INFORMATIVE_UNIMPORTANT,
+											getProtocol(minimumProtocolVersionFullyCompatibleWithResourcePack).name
+//											getProtocol(playerVersion).name
+										) {
+											+"The server is on version" + INFORMATIVE_UNIMPORTANT_FOCUS * variable - "." +
+													"It is recommended to use" +
+													recommendedVersionOrOldRecommendedVersion - "."
+//											"It is recommended to use" + recommendedVersion -
+//													", or" + recommendedOlderVersion - "."
+										}
 								}
 							} catch (e: Exception) {
 								warning(
@@ -113,14 +141,17 @@ object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
 								e.printStackTrace()
 							}
 						}
+
 						DECLINED -> {
 							info("Sending $name a message because they declined the resource pack")
 							sendMessage(declinedResourcePackMessage)
 						}
+
 						FAILED_DOWNLOAD -> {
 							info("Sending $name a message because their resource pack download failed")
 							sendMessage(failedDownloadMessage)
 						}
+
 						else -> {}
 					}
 				}

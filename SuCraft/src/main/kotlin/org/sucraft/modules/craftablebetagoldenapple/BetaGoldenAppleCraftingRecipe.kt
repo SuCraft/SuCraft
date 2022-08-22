@@ -21,6 +21,7 @@ private const val betaGoldenAppleCustomModelData = 1
 
 val betaGoldenAppleCraftingRecipe = ShapedCustomRecipe(
 	"beta_golden_apple_recipe",
+	false,
 	ItemStack(GOLDEN_APPLE).apply {
 		setPersistentFlag(betaGoldenAppleKey)
 		customModelData = betaGoldenAppleCustomModelData

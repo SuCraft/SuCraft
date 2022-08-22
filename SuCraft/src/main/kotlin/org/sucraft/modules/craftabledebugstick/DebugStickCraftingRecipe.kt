@@ -13,6 +13,7 @@ import org.sucraft.common.permission.survivallikeDebugStickPermission
 
 val debugStickCraftingRecipe = ShapelessCustomRecipe(
 	"debug_stick_recipe",
+	false,
 	ItemStack(Material.DEBUG_STICK, 1)
 ) {
 	addIngredient(STICK)

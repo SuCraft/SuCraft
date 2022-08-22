@@ -43,6 +43,7 @@ val beerItemStackWithoutBrewer =
 
 val beerCraftingRecipe = ShapelessCustomRecipe(
 	{ @Suppress("DEPRECATION") NamespacedKey("martijnsrecipes", "beer_recipe") },
+	false,
 	beerItemStackWithoutBrewer
 ) {
 	addIngredient(createWaterBottle())

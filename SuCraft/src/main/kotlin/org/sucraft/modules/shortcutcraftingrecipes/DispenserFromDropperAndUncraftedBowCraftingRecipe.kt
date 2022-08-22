@@ -10,6 +10,7 @@ import org.sucraft.common.itemstack.recipe.ShapedCustomRecipe
 
 val dispenserFromDropperAndUncraftedBowCraftingRecipe = ShapedCustomRecipe(
 	"dispenser_from_dropper_and_uncrafted_bow_recipe",
+	true,
 	ItemStack(DISPENSER)
 ) {
 	shape("$% ", "$@%", "$% ")

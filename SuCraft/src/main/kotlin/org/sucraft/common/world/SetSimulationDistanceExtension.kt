@@ -25,14 +25,14 @@ fun World.forceSetSimulationDistance(simulationDistance: Int) {
 		(player as CraftPlayer).handle._connection()._send(packet, null)
 
 	// Set the simulation distance
-	// TODO use deobfuscation helper here
 	(this as CraftWorld).handle.run {
-		k().b(usedSimulationDistance)
+		val chunkSource = _chunkSource()
+		chunkSource._setSimulationDistance(usedSimulationDistance)
 		// Update the Spigot world configuration values
 		spigotConfig.simulationDistance =
-			(on(k()).field("c").field("t").get() as Number).toInt() - 1
+			chunkSource._distanceManager()._simulationDistance() - 1
 		spigotConfig.viewDistance =
-			(on(k().a).field("vanillaWorldViewDistancePlusOne").get() as Number).toInt() - 1
+			chunkSource._chunkMap()._vanillaWorldViewDistancePlusOne() - 1
 	}
 
 }

@@ -11,11 +11,9 @@ import org.joor.Reflect.on
 
 /**
  * The [NBT][NBTTagCompound] of this [ItemStack], or null if there is no NBT present, or if it could not be retrieved.
- *
- * TODO use deobfuscation helper here
  */
 val ItemStack.nbt
-	get() = (this as? CraftItemStack)?.handle?.run { on(this).get<Any?>("u") } as? NBTTagCompound
+	get() = (this as? CraftItemStack)?.handle?._tag()
 
 /**
  * The [NBT][NBTTagCompound] of this [ItemStack] in string form,

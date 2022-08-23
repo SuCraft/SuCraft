@@ -23,11 +23,13 @@ object CraftableBetaGoldenApple : SuCraftModule<CraftableBetaGoldenApple>() {
 	// Permissions
 
 	object Permissions {
+
 		val craftBetaGoldenApple = permission(
 			"craft.betagoldenapple",
 			"Craft Beta golden apples",
 			PermissionDefault.TRUE
 		)
+
 	}
 
 	// Recipes

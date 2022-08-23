@@ -12,6 +12,7 @@ import org.sucraft.modules.coloredbucketsofaquaticmob.ColoredBucketsOfAquaticMob
 import org.sucraft.modules.craftablealcoholicbeverages.CraftableAlcoholicBeverages
 import org.sucraft.modules.craftablebarriersandlights.CraftableBarriersAndLights
 import org.sucraft.modules.craftablebetagoldenapple.CraftableBetaGoldenApple
+import org.sucraft.modules.craftablecoral.CraftableCoral
 import org.sucraft.modules.craftabledebugstick.CraftableDebugStick
 import org.sucraft.modules.customjockeys.CustomJockeys
 import org.sucraft.modules.deathquotes.DeathQuotes
@@ -63,6 +64,7 @@ val modules by lazy {
 		CraftableAlcoholicBeverages,
 		CraftableBarriersAndLights,
 		CraftableBetaGoldenApple,
+		CraftableCoral,
 		CraftableDebugStick,
 		CustomJockeys,
 		DeathQuotes,

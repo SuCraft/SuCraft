@@ -51,6 +51,7 @@ val kvassCraftingRecipe = ShapelessCustomRecipe(
 }.apply {
 	addPermission(CraftableAlcoholicBeverages.Permissions.craftKvass)
 	addItemStackToDiscover { type == POTION && basePotionDate.type == PotionType.WATER }
+	doNotAddResultMaterialAsMaterialToDiscover()
 }
 
 val ItemStack.isKvass

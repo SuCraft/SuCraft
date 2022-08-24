@@ -51,6 +51,7 @@ val beerCraftingRecipe = ShapelessCustomRecipe(
 }.apply {
 	addPermission(CraftableAlcoholicBeverages.Permissions.craftBeer)
 	addItemStackToDiscover { type == POTION && basePotionDate.type == PotionType.WATER }
+	doNotAddResultMaterialAsMaterialToDiscover()
 }
 
 val ItemStack.isBeer

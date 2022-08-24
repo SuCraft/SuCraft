@@ -137,6 +137,9 @@ open class CustomRecipe<R : Recipe>(
 				},
 				SuCraftPlugin.instance
 			)
+		// Add the result item stack material as a material to discover, if desired
+		if (addResultMaterialAsMaterialToDiscover)
+			materialsToDiscover += result.type
 		// If there exist item stack conditions or materials to discover, register an event listener to check for them
 		if (
 			(itemStackConditionsToDiscover.isNotEmpty()) ||
@@ -228,6 +231,7 @@ open class CustomRecipe<R : Recipe>(
 	val itemStackConditionsToDiscover: MutableList<ItemStack.() -> Boolean> = ArrayList(0)
 	val materialsToDiscover: MutableList<Material> = ArrayList(0)
 	val advancementsToDiscover: MutableList<Advancement> = ArrayList(0)
+	var addResultMaterialAsMaterialToDiscover: Boolean = true
 
 	/**
 	 * @param condition A condition on a [Player], that if they meet,
@@ -287,6 +291,10 @@ open class CustomRecipe<R : Recipe>(
 	 */
 	fun addAdvancementToDiscover(advancement: Advancement) {
 		advancementsToDiscover.add(advancement)
+	}
+
+	fun doNotAddResultMaterialAsMaterialToDiscover() {
+		addResultMaterialAsMaterialToDiscover = false
 	}
 
 }

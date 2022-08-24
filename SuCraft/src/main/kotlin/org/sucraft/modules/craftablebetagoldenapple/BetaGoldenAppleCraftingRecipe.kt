@@ -34,6 +34,7 @@ val betaGoldenAppleCraftingRecipe = ShapedCustomRecipe(
 }.apply {
 	addPermission(CraftableBetaGoldenApple.Permissions.craftBetaGoldenApple)
 	addItemMaterialsToDiscover(GOLD_BLOCK)
+	doNotAddResultMaterialAsMaterialToDiscover()
 }
 
 val ItemStack.isBetaGoldenApple

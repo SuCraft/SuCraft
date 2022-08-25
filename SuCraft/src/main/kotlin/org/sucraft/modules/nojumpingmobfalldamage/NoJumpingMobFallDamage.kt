@@ -8,6 +8,7 @@ import com.sk89q.worldedit.world.entity.EntityTypes.MOOSHROOM
 import org.bukkit.entity.EntityType.*
 import org.bukkit.event.EventPriority.NORMAL
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause.FALL
 import org.sucraft.common.event.on
 import org.sucraft.common.module.SuCraftModule
 
@@ -76,6 +77,7 @@ object NoJumpingMobFallDamage : SuCraftModule<NoJumpingMobFallDamage>() {
 
 	init {
 		on(EntityDamageEvent::class, priority = NORMAL) {
+			if (cause != FALL) return@on
 			// Cancel fall damage
 			if (entityType in entityTypesThatDoNotTakeFallDamage) {
 				damage = 0.0

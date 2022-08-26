@@ -23,6 +23,7 @@ val pluginNamesToProcessAllCommandsOf = setOf(
 	"FastAsyncWorldEdit",
 	"FastLogin",
 	"Geyser-Spigot",
+	"GrimAC",
 	"ImageOnMap",
 	"InventoryRollback",
 	"InventoryRollbackPlus",

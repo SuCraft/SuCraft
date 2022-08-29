@@ -62,19 +62,27 @@ object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
 	private val recommendedVersion =
 		join(
 			noSeparators(),
-			text("Optifine 1.19", INFORMATIVE_UNIMPORTANT_FOCUS)
+			text("Optifine 1.19.2", INFORMATIVE_UNIMPORTANT_FOCUS)
 				.underlined()
 				.clickOpenURL("https://optifine.net/downloads"),
-			text(" with Video Settings > Quality > Antialiasing = 4 or higher", INFORMATIVE_UNIMPORTANT)
+			text(
+				", and if you have a very good GPU (graphics card): " +
+						"with Video Settings > Quality > Antialiasing = 2 or higher ",
+				INFORMATIVE_UNIMPORTANT
+			)
 		)
 
 	private val recommendedVersionOrOldRecommendedVersion =
 		join(
 			noSeparators(),
-			text("Optifine 1.19 or 1.16.5", INFORMATIVE_UNIMPORTANT_FOCUS)
+			text("Optifine 1.19.2 or 1.16.5", INFORMATIVE_UNIMPORTANT_FOCUS)
 				.underlined()
 				.clickOpenURL("https://optifine.net/downloads"),
-			text(" with Video Settings > Quality > Antialiasing = 4 or higher", INFORMATIVE_UNIMPORTANT)
+			text(
+				", and if you have a very good GPU (graphics card): " +
+						"with Video Settings > Quality > Antialiasing = 2 or higher ",
+				INFORMATIVE_UNIMPORTANT
+			)
 		)
 
 //	private val recommendedOlderVersion =

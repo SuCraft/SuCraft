@@ -262,6 +262,7 @@ bukkit {
 		"FastAsyncWorldEdit",
 		"FastLogin",
 		"Geyser-Spigot",
+		"GrimAC",
 		"ImageOnMap",
 		"InventoryRollback",
 		"InventoryRollbackPlus",

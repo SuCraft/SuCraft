@@ -248,6 +248,7 @@ bukkit {
 		"PacketWrapper",
 		"PermissionsBukkit",
 		"ProtocolLib",
+		"ViaVersion",
 		"WorldGuard"
 	)
 	softDepend = listOf(
@@ -280,7 +281,6 @@ bukkit {
 		"RoyalGrenadier",
 		"ViaBackwards",
 		"ViaRewind",
-		"ViaVersion",
 		"ViaVersionStatus",
 		"Votifier",
 		"WebConsole",

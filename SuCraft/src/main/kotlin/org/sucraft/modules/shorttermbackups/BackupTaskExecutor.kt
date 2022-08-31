@@ -34,6 +34,7 @@ object BackupTaskExecutor : SuCraftComponent<ShortTermBackups>() {
 	// Settings
 
 	private val intervalBetweenTaskSteps = TimeInMillis(100)
+	private val waitForAllTasksToCompleteTimeout = TimeInSeconds(30)
 
 	// Note that at the moment, if the server is stopping, waiting for all tasks will wait for the delays caused be
 	// retries to finish, so stopping server may take this much extra time
@@ -80,25 +81,28 @@ object BackupTaskExecutor : SuCraftComponent<ShortTermBackups>() {
 	 */
 	fun waitForAllTasksToComplete() {
 		runBlocking {
-			// Wait for completion of every type of task
-			var printedToConsole = false
-			while (true) {
-				val jobToWaitFor: Job
-				val numberOfJobsLeft: Int
-				taskInProgressJobsMutex.withLock {
-					if (taskInProgressJobs.isEmpty()) return@runBlocking
-					jobToWaitFor = taskInProgressJobs.first()
-					numberOfJobsLeft = taskInProgressJobs.size
+			withTimeoutOrNull(waitForAllTasksToCompleteTimeout.millis) {
+				// Wait for completion of every type of task
+				var printedToConsole = false
+				while (true) {
+					val jobToWaitFor: Job
+					val numberOfJobsLeft: Int
+					taskInProgressJobsMutex.withLock {
+						if (taskInProgressJobs.isEmpty()) return@withTimeoutOrNull
+						jobToWaitFor = taskInProgressJobs.first()
+						numberOfJobsLeft = taskInProgressJobs.size
+					}
+					retriesShouldBeCancelled = true
+					if (!printedToConsole) {
+						info(
+							"Waiting for tasks ($numberOfJobsLeft) in progress to complete" +
+									" (this may take around ${retryBackupAttemptAfter.seconds} seconds," +
+									"and will time out after ${waitForAllTasksToCompleteTimeout.seconds} seconds)..."
+						)
+						printedToConsole = true
+					}
+					jobToWaitFor.join()
 				}
-				retriesShouldBeCancelled = true
-				if (!printedToConsole) {
-					info(
-						"Waiting for tasks ($numberOfJobsLeft) in progress to complete" +
-								" (this may take around ${retryBackupAttemptAfter.seconds} seconds)..."
-					)
-					printedToConsole = true
-				}
-				jobToWaitFor.join()
 			}
 		}
 	}

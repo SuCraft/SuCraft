@@ -41,7 +41,7 @@ object CraftAlcoholicBeverageListener : SuCraftComponent<CraftableAlcoholicBever
 
 			// Log to console
 			info(
-				"$name crafted an alcoholic beverage: ${currentItem!!.amountAndTypeAndNBT}"
+				"${player.name} crafted an alcoholic beverage: ${currentItem!!.amountAndTypeAndNBT}"
 			)
 
 			// Schedule to add lore to all items in the player's inventory and on their cursor, just in case

@@ -26,7 +26,7 @@ object DrinkAlcoholListener : SuCraftComponent<CraftableAlcoholicBeverages>() {
 
 			// Log to console
 			info(
-				"$name drank an alcoholic beverage: ${item.amountAndTypeAndNBT}"
+				"${player.name} drank an alcoholic beverage: ${item.amountAndTypeAndNBT}"
 			)
 
 			// Add the effect

@@ -33,6 +33,7 @@ import org.sucraft.modules.invisibleitemframes.InvisibleItemFrames
 import org.sucraft.modules.lightningcommand.LightningCommand
 import org.sucraft.modules.monsterfreeareas.MonsterFreeAreas
 import org.sucraft.modules.mysteryboxes.MysteryBoxes
+import org.sucraft.modules.networkratelimits.NetworkRateLimits
 import org.sucraft.modules.nojumpingmobfalldamage.NoJumpingMobFallDamage
 import org.sucraft.modules.offlineplayerinformation.OfflinePlayerInformation
 import org.sucraft.modules.opmecommand.OpMeCommand
@@ -87,6 +88,7 @@ val modules by lazy {
 		LightningCommand,
 		MonsterFreeAreas,
 		MysteryBoxes,
+		NetworkRateLimits,
 		NoJumpingMobFallDamage,
 		OfflinePlayerInformation,
 		OpMeCommand,

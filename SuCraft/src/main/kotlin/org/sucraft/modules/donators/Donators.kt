@@ -8,16 +8,27 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.NamedTextColor.AQUA
 import net.kyori.adventure.text.format.NamedTextColor.WHITE
 import org.bukkit.entity.Player
+import org.sucraft.common.function.runEach
 import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.text.component
 import org.sucraft.common.text.sendMessage
 import org.sucraft.modules.discordinformation.DiscordChannel
 
 /**
- * Since donator perks are managed by permissions, this module currently only provides
- * a way to inform players of donating if they are not a donator.
+ * Donator perks are managed by permissions.
+ * This module currently also provides a way to inform players of donating if they are not a donator.
  */
 object Donators : SuCraftModule<Donators>() {
+
+	// Initialization
+
+	override fun onInitialize() {
+		super.onInitialize()
+		// Make sure we know the donator names for each rank
+		PerpetualDonatorRank.values().runEach { startComputingPlayerNames() }
+	}
+
+	// Donation information
 
 	private val discordDonationsInfoChannel = DiscordChannel.GUIDE
 

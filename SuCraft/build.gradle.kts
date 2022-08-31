@@ -114,6 +114,8 @@ fun downloadLibraryJar(
 		downloadedLibraryJarPathsForCompileOnly += arrayOf(jarPath)
 }
 
+val repoDomain = "https://screpo.000webhostapp.com"
+
 val paperMinecraftVersion = "1.19.2"
 val paperBuildGitVersion = "20f4a06fa"
 val paperBuildVersion = "martijn-$paperMinecraftVersion-$paperBuildGitVersion"
@@ -121,12 +123,12 @@ val paperBuildVersion = "martijn-$paperMinecraftVersion-$paperBuildGitVersion"
 val paperStubFilename =
 	"paper-$paperBuildVersion.jar"
 val paperStubURL =
-	"https://screpo.000webhostapp.com/martijn-paper-$paperMinecraftVersion-$paperBuildGitVersion-stub.jar"
+	"$repoDomain/martijn-paper-$paperMinecraftVersion-$paperBuildGitVersion-stub.jar"
 
 val paperAPIFilename =
 	"paper-api-$paperBuildVersion.jar"
 val paperAPIURL =
-	"https://screpo.000webhostapp.com/martijn-paper-api-$paperMinecraftVersion-R0.1-SNAPSHOT-$paperBuildGitVersion.jar"
+	"$repoDomain/martijn-paper-api-$paperMinecraftVersion-R0.1-SNAPSHOT-$paperBuildGitVersion.jar"
 
 downloadLibraryJar(
 	"PaperStub",
@@ -145,6 +147,23 @@ downloadLibraryJar(
 	"io.papermc.paper",
 	"paper-api",
 	paperBuildVersion
+)
+
+val permissionsBukkitVersion =
+	"2.5"
+val permissionsBukkitFilename =
+	"PermissionsBukkit-$permissionsBukkitVersion.jar"
+val permissionsBukkitURL =
+	"$repoDomain/$permissionsBukkitFilename"
+
+downloadLibraryJar(
+	"PermissionsBukkit",
+	permissionsBukkitURL,
+	permissionsBukkitFilename,
+	false,
+	"com.platymuus.bukkit.permissions",
+	"permissions-bukkit",
+	permissionsBukkitVersion
 )
 
 // Compile and build tasks

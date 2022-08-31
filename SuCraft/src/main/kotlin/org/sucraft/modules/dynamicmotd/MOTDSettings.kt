@@ -4,13 +4,17 @@
 
 package org.sucraft.modules.dynamicmotd
 
+import com.platymuus.bukkit.permissions.PermissionsPlugin
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor.*
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration.BOLD
 import net.kyori.adventure.text.format.TextDecoration.OBFUSCATED
+import org.bukkit.Bukkit
 import org.sucraft.common.text.*
+import org.sucraft.modules.donators.PerpetualDonatorRank
 
 // General settings
 
@@ -28,7 +32,7 @@ val unnoticeableColor: TextColor = DARK_GRAY
 
 // Special case
 
-const val wonderfulIPAddress = "47.36.3.76"
+val wonderfulIPAddresses = setOf("47.36.3.76", "71.14.42.138", "71.90.199.207")
 const val wonderfulMessageProbability = 0.2
 val wonderfulMOTD = text("You're wonderful \u2665")
 
@@ -57,7 +61,7 @@ val forFewPlayersJoinConfiguration = JoinConfiguration.separator(forFewPlayersSe
 val miscMOTDs = arrayOf(
 	"Since August 2011!",
 	"Since Minecraft beta!",
-	*Array(2) { "Single-player, but together!" },
+	*Array(2) { "Like single-player, but together!" },
 	*Array(5) { "From Cottage to Citadel!" },
 	"Here be penguins!",
 	"Build your dirt.",
@@ -76,7 +80,7 @@ val miscMOTDs = arrayOf(
 	"Epic survival!",
 	"Potion of best server.",
 	"Nom nom nom.",
-	"Allez allays!",
+	"Allez allay!",
 	"Stay fit, eat bicycle.",
 	"Our wheat is 10% glutenfree.",
 	"Eek! Spiders!",
@@ -140,5 +144,31 @@ val miscMOTDs = arrayOf(
 	"\"No officer, this is bone meal for my crops\"",
 	component { +"\"F\"" + unnoticeableColor * "-" + neutralColor * "Sun Tzu" },
 	"Double-click to see status",
-	"Knee-deep in powdered snow"
+	"Knee-deep in powdered snow",
+	"Hey, smell this wither rose",
+	"Concrete art!"//"Is abstract art with concrete concrete art?"
 ).map(::valueToComponent)
+
+// Donator MOTD
+
+val donatorMOTDProbability = 3.0 / miscMOTDs.size
+
+private lateinit var donatorNames: Array<String>
+private fun getDonatorNamesIfComputed(): Array<String>? {
+	if (!::donatorNames.isInitialized) {
+		PerpetualDonatorRank.STONE.getPlayerNamesIfComputed()?.let { donatorNames = it }
+	}
+	return if (::donatorNames.isInitialized) donatorNames else null
+}
+
+private lateinit var donatorMOTDs: Array<Component>
+fun getDonatorMOTDsIfComputed(): Array<Component>? {
+	if (!::donatorMOTDs.isInitialized) {
+		getDonatorNamesIfComputed()?.let {
+			donatorMOTDs = it.asSequence().map {
+				"$it is awesome!"
+			}.map(::valueToComponent).toList().toTypedArray()
+		}
+	}
+	return if (::donatorMOTDs.isInitialized) donatorMOTDs else null
+}

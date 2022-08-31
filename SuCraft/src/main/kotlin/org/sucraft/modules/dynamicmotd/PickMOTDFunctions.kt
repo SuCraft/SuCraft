@@ -15,8 +15,9 @@ private fun pickFocusColor() = focusColors.random()
 
 fun pickMOTD(address: InetAddress): Component {
 	// A special message
-	if (wonderfulIPAddress in "$address" && testProbability(wonderfulMessageProbability))
+	if (wonderfulIPAddresses.any { it in "$address" } && testProbability(wonderfulMessageProbability))
 		return wonderfulMOTD.color(pickFocusColor())
+	// Pick a MOTD based on the number of players online
 	val onlinePlayers = Bukkit.getOnlinePlayers()
 	return when (onlinePlayers.size) {
 		1 -> pickMOTDFor1Player(onlinePlayers.first().name)
@@ -34,6 +35,15 @@ private fun pickMOTDForFewPlayers(names: List<String>) =
 	join(forFewPlayersJoinConfiguration, names.map { text(it, pickFocusColor()) })
 		.colorIfAbsent(forFewPlayersBaseColor)
 
-private fun pickMOTDIndependentOfPlayers() =
-	miscMOTDs.random()
+private fun pickMOTDIndependentOfPlayers(): Component {
+	// Show a donator MOTD (only if donator names have been computed already)
+	if (testProbability(donatorMOTDProbability))
+		pickDonatorMOTD()?.let { return it }
+	// Show a randomly picked MOTD
+	return miscMOTDs.random()
 		.colorIfAbsent(pickFocusColor())
+}
+
+private fun pickDonatorMOTD() =
+	getDonatorMOTDsIfComputed()?.random()
+		?.colorIfAbsent(pickFocusColor())

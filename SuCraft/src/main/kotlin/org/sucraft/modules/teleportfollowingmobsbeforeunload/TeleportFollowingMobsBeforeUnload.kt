@@ -6,7 +6,6 @@ package org.sucraft.modules.teleportfollowingmobsbeforeunload
 
 import org.bukkit.Chunk
 import org.bukkit.Location
-import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.World.Environment.NORMAL
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -17,7 +16,6 @@ import org.bukkit.event.world.EntitiesUnloadEvent
 import org.sucraft.common.entity.getEntitiesTeleportingFollowingPlayer
 import org.sucraft.common.entity.playerBeingTeleportingFollowed
 import org.sucraft.common.event.on
-import org.sucraft.common.function.runEach
 import org.sucraft.common.module.SuCraftModule
 
 /**
@@ -66,16 +64,17 @@ object TeleportFollowingMobsBeforeUnload : SuCraftModule<TeleportFollowingMobsBe
 		return false
 	}
 
-	private fun teleportFollowingMobsInChunkToPlayers(chunk: Chunk) {
+	private fun teleportFollowingMobsInChunkToPlayers(chunk: Chunk, entities: List<Entity>?) {
 		try {
 			// We don't want to call for loading the chunk again
 			// if it is unloaded (should not happen here but asynchronous chunk loading is unpredictable)
-			if (!chunk.isEntitiesLoaded) return
-			chunk.entities.toList().runEach {
-				if (isDead || !isValid) return@runEach null
-				val player = playerBeingTeleportingFollowed ?: return@runEach null
-				teleportFollowingMobToPlayerIfPossible(this, player)
-			}
+			if (entities == null && !chunk.isEntitiesLoaded) return
+			(entities?.asSequence() ?: chunk.entities.asSequence())
+				.filter { !it.isDead && it.isValid }
+				.mapNotNull { entity -> entity.playerBeingTeleportingFollowed?.let { player -> entity to player } }
+				.toList().forEach { (entity, player) ->
+					teleportFollowingMobToPlayerIfPossible(entity, player)
+				}
 		} catch (_: Exception) {
 			// Many things could go wrong, such as chunk not being loaded properly
 			// In all of those expected cases, there is nothing we can do about it,
@@ -101,12 +100,14 @@ object TeleportFollowingMobsBeforeUnload : SuCraftModule<TeleportFollowingMobsBe
 	init {
 
 		// Listen for chunk unloads to teleport mobs in the chunk to the player
-		on(ChunkUnloadEvent::class) {
-			teleportFollowingMobsInChunkToPlayers(chunk)
-		}
+		// Temporarily disabled because this seems unnecessary (and computationally costly)
+		// if we are also listening to EntitiesUnloadEvent
+//		on(ChunkUnloadEvent::class) {
+//			teleportFollowingMobsInChunkToPlayers(chunk, null)
+//		}
 		// Listen for chunk entities unloads to teleport mobs in the chunk to the player
 		on(EntitiesUnloadEvent::class) {
-			teleportFollowingMobsInChunkToPlayers(chunk)
+			teleportFollowingMobsInChunkToPlayers(chunk, entities)
 		}
 
 		// Teleport any following mobs to a player when they leave, but only those that are nearby

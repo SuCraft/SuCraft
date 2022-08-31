@@ -48,6 +48,8 @@ import org.sucraft.modules.ridemobs.RideMobs
 import org.sucraft.modules.shortcutcraftingrecipes.ShortcutCraftingRecipes
 import org.sucraft.modules.shorttermbackups.ShortTermBackups
 import org.sucraft.modules.shorttermtps.ShortTermTPS
+import org.sucraft.modules.teleportfollowingmobsbeforeunload.TeleportFollowingMobsBeforeUnload
+import org.sucraft.modules.teleportfollowingmobsfromthevoid.TeleportFollowingMobsFromTheVoid
 import org.sucraft.modules.tenyearselytra.TenYearsElytra
 import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
@@ -100,6 +102,8 @@ val modules by lazy {
 		ShortcutCraftingRecipes,
 		ShortTermBackups,
 		ShortTermTPS,
+		TeleportFollowingMobsBeforeUnload,
+		TeleportFollowingMobsFromTheVoid,
 		TenYearsElytra,
 		UnsignBooks,
 		UUIDCommand,

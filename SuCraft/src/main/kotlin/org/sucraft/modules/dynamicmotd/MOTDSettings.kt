@@ -4,17 +4,13 @@
 
 package org.sucraft.modules.dynamicmotd
 
-import com.platymuus.bukkit.permissions.PermissionsPlugin
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.NamedTextColor.*
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration.BOLD
 import net.kyori.adventure.text.format.TextDecoration.OBFUSCATED
-import org.bukkit.Bukkit
 import org.sucraft.common.text.*
-import org.sucraft.modules.donators.PerpetualDonatorRank
 
 // General settings
 
@@ -154,21 +150,69 @@ val miscMOTDs = arrayOf(
 val donatorMOTDProbability = 3.0 / miscMOTDs.size
 
 private lateinit var donatorNames: Array<String>
-private fun getDonatorNamesIfComputed(): Array<String>? {
-	if (!::donatorNames.isInitialized) {
-		PerpetualDonatorRank.STONE.getPlayerNamesIfComputed()?.let { donatorNames = it }
-	}
-	return if (::donatorNames.isInitialized) donatorNames else null
-}
+private fun getDonatorNamesIfComputed(): Array<String>? = //{
+// Don't use the names based on the permission group, because some people are in the permission group
+// on multiple accounts, and some test accounts are in the group too
+//	if (!::donatorNames.isInitialized) {
+//		PerpetualDonatorRank.STONE.getPlayerNamesIfComputed()?.let { donatorNames = it }
+//	}
+//	return if (::donatorNames.isInitialized) donatorNames else null
+	// Instead, we get the names based on a specific permission
+	if (::donatorNames.isInitialized) donatorNames else null
+//}
 
-private lateinit var donatorMOTDs: Array<Component>
-fun getDonatorMOTDsIfComputed(): Array<Component>? {
-	if (!::donatorMOTDs.isInitialized) {
-		getDonatorNamesIfComputed()?.let {
-			donatorMOTDs = it.asSequence().map {
-				"$it is awesome!"
-			}.map(::valueToComponent).toList().toTypedArray()
-		}
-	}
-	return if (::donatorMOTDs.isInitialized) donatorMOTDs else null
-}
+// Disabled because of some glitch in PermissionsBukkit that breaks the config.yml if this is called
+///**
+// * Must only be called in [DynamicMOTD.onInitialize], exactly once.
+// */
+//fun startComputingDonatorMOTDs() {
+//	bukkitScope.launch {
+//		donatorNames = OfflinePlayerInformation.getAllUsedUUIDs().filter {
+//			permissionsBukkitInstance.getPlayerInfo(it)
+//				?.permissions?.let { permissionsMap ->
+//					permissionsMap[DynamicMOTD.Permissions.appearInDonatorMOTD.key]
+//				} == true
+//		}.mapNotNull {
+//			it.getDetailedOfflinePlayer()?.getName()
+//		}.toTypedArray()
+//		DynamicMOTD.logger.info("Computed MOTD donator names: ${donatorNames.contentToString()}")
+//	}
+//}
+//
+//private lateinit var donatorMOTDs: Array<Component>
+//fun getDonatorMOTDsIfComputed(): Array<Component>? {
+//	if (!::donatorMOTDs.isInitialized) {
+//		getDonatorNamesIfComputed()?.let {
+//			donatorMOTDs = it.asSequence().map { name ->
+//				"$name is awesome!"
+//			}.map(::valueToComponent).toList().toTypedArray()
+//		}
+//	}
+//	return if (::donatorMOTDs.isInitialized) donatorMOTDs else null
+//}
+
+// Currently hardcoded because of a glitch in PermissionsBukkit
+@Suppress("SpellCheckingInspection")
+private val donatorMOTDs = sequenceOf(
+	"EnzoMortelli",
+	"Heedi93",
+	"Avidan2",
+	"Rammus",
+	"Bangboomjoe",
+	"Saigai",
+	"DerUberKaiser",
+	"Siel_Poppythorn",
+	"__Dragonfly__",
+	"Bingus1",
+	"Humanius",
+	"SpiderLock",
+	"LukePage111",
+	"ThunderM",
+	"Antonow",
+	"y0giOP",
+	"TrunkS"
+).map { name ->
+	"$name is awesome!"
+}.map(::valueToComponent).toList().toTypedArray()
+
+fun getDonatorMOTDsIfComputed() = donatorMOTDs

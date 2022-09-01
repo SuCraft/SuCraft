@@ -13,6 +13,7 @@ import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.text.component
 import org.sucraft.common.text.sendMessage
 import org.sucraft.modules.discordinformation.DiscordChannel
+import org.sucraft.modules.offlineplayerinformation.OfflinePlayerInformation
 
 /**
  * Donator perks are managed by permissions.
@@ -20,12 +21,19 @@ import org.sucraft.modules.discordinformation.DiscordChannel
  */
 object Donators : SuCraftModule<Donators>() {
 
+	// Dependencies
+
+	override val dependencies = listOf(
+		OfflinePlayerInformation
+	)
+
 	// Initialization
 
 	override fun onInitialize() {
 		super.onInitialize()
 		// Make sure we know the donator names for each rank
-		PerpetualDonatorRank.values().runEach { startComputingPlayerNames() }
+		// Disabled because of some glitch in PermissionsBukkit that breaks the config.yml if this is called
+//		PerpetualDonatorRank.values().runEach { startComputingPlayerNames() }
 	}
 
 	// Donation information

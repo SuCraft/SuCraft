@@ -8,6 +8,7 @@ import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.bukkit.Bukkit
 import org.sucraft.common.log.NestedLogger
 import org.sucraft.common.log.SuCraftLogTexts
 import org.sucraft.common.pattern.SingletonContainer
@@ -36,6 +37,7 @@ class SuCraftPlugin : SuspendingJavaPlugin() {
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override fun onEnable() {
+		try {
 		// Mark as enabling
 		isEnabling = true
 		// Call super method
@@ -58,6 +60,11 @@ class SuCraftPlugin : SuspendingJavaPlugin() {
 		// Mark as finished enabling
 		isEnabling = false
 		hasFinishedOnEnable = true
+		} catch (e: Exception) {
+			logger.severe("Exception occurred while initializing plugin")
+			Bukkit.shutdown()
+			throw e
+		}
 	}
 
 	override fun onDisable() {

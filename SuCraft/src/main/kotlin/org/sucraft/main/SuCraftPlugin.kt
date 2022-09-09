@@ -51,7 +51,7 @@ class SuCraftPlugin : SuspendingJavaPlugin() {
 			try {
 				it.initialize()
 			} catch (e: Exception) {
-				logger.severe("Exception occurred while initializing module " + it.name)
+				logger.severe("Exception occurred while initializing module ${it.name}")
 				throw e
 			}
 		}
@@ -75,7 +75,7 @@ class SuCraftPlugin : SuspendingJavaPlugin() {
 			try {
 				it.terminate()
 			} catch (e: Exception) {
-				logger.severe("Exception occurred while terminating module " + it.name)
+				logger.severe("Exception occurred while terminating module ${it.name}")
 				throw e
 			}
 		}

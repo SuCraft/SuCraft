@@ -6,6 +6,9 @@ package org.sucraft.modules.craftablealcoholicbeverages
 
 import org.bukkit.permissions.PermissionDefault
 import org.sucraft.common.module.SuCraftModule
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.beerCraftingRecipe
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.kvassCraftingRecipe
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.vodkaCraftingRecipe
 
 /**
  * Adds crafting recipes for a selection of alcoholic beverages,
@@ -16,6 +19,7 @@ object CraftableAlcoholicBeverages : SuCraftModule<CraftableAlcoholicBeverages>(
 	// Permissions
 
 	object Permissions {
+
 		val craftBeer = permission(
 			"craft.beer",
 			"Craft beer",
@@ -31,6 +35,7 @@ object CraftableAlcoholicBeverages : SuCraftModule<CraftableAlcoholicBeverages>(
 			"Craft kvass",
 			PermissionDefault.TRUE
 		)
+
 	}
 
 	// Recipes

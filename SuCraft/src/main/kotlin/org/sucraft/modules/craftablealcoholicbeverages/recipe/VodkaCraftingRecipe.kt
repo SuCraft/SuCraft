@@ -2,7 +2,7 @@
  * Copyright (c) SuCraft 2022 sucraft.org
  */
 
-package org.sucraft.modules.craftablealcoholicbeverages
+package org.sucraft.modules.craftablealcoholicbeverages.recipe
 
 import org.bukkit.Color
 import org.bukkit.Material.POTATO
@@ -23,6 +23,8 @@ import org.sucraft.common.persistentdata.getPersistentFlag
 import org.sucraft.common.persistentdata.setPersistentFlag
 import org.sucraft.common.text.unstyledText
 import org.sucraft.common.time.TimeInSeconds
+import org.sucraft.modules.craftablealcoholicbeverages.CraftableAlcoholicBeverages
+import org.sucraft.modules.craftablealcoholicbeverages.setAlcoholicBeveragePersistentFlag
 
 private val vodkaKey by lazy {
 	"vodka".toSuCraftNamespacedKey()

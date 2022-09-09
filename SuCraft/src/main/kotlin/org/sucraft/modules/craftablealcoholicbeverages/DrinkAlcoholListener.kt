@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffectType.CONFUSION
 import org.sucraft.common.event.on
 import org.sucraft.common.itemstack.amountAndTypeAndNBT
 import org.sucraft.common.module.SuCraftComponent
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.*
 
 /**
  * Gives players drinking alcoholic beverages an effect.

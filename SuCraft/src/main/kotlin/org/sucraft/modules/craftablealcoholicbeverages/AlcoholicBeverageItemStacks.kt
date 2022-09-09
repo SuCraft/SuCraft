@@ -14,6 +14,9 @@ import org.sucraft.common.persistentdata.hasPersistent
 import org.sucraft.common.persistentdata.setPersistentFlag
 import org.sucraft.common.persistentdata.typedvalueextensions.setPersistentUUID
 import org.sucraft.common.text.unstyledText
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.beerItemStackWithoutBrewer
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.kvassItemStackWithoutBrewer
+import org.sucraft.modules.craftablealcoholicbeverages.recipe.vodkaItemStackWithoutBrewer
 
 private val alcoholicBeverageKey by lazy {
 	@Suppress("DEPRECATION")

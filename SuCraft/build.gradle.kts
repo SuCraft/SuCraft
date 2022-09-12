@@ -221,6 +221,10 @@ dependencies {
 	library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.4.0")
 	library("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 	library("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.2")
+	library("org.apache.avro:avro:1.11.1")
+	compileOnly("org.apache.commons:commons-lang3:3.12.0")
+	library("mysql:mysql-connector-java:8.0.30")
+	library("com.zaxxer:HikariCP:5.0.1")
 	downloadedLibraryJarPathsForImplementation.forEach {
 		implementation(files(it))
 	}

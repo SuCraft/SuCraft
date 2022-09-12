@@ -28,8 +28,8 @@ fun Player.rateLimitNetworkConnection(maxSpeed: Long) {
 		}
 		val newHandler = ChannelTrafficShapingHandler(maxSpeed, 0L)
 		(player as CraftPlayer).handle._connection()
-			.b // TODO replace by deobf _connection()
-			.m // TODO replace by deobf _channel()
+			._connection()
+			._channel()
 			.pipeline().addFirst(newHandler)
 		return@compute newHandler
 	}

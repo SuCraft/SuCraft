@@ -2,7 +2,7 @@
  * Copyright (c) SuCraft 2022 sucraft.org
  */
 
-package org.sucraft.modules.resourcepackwarnings
+package org.sucraft.modules.resourcepackandversionwarnings
 
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion.getProtocol
 import net.kyori.adventure.text.Component.join
@@ -11,26 +11,26 @@ import net.kyori.adventure.text.JoinConfiguration.noSeparators
 import org.bukkit.event.player.PlayerResourcePackStatusEvent
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status.*
 import org.sucraft.common.event.on
-import org.sucraft.common.module.AbstractSuCraftComponent
+import org.sucraft.common.geyser.isConnectedViaGeyser
 import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.scheduler.runLater
 import org.sucraft.common.text.*
 import org.sucraft.common.time.TimeInTicks
 import org.sucraft.common.viaversion.clientVersion
-import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets
-import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets.minimumProtocolVersionThatCanAcceptLargePackets
+import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
+import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance.minimumProtocolVersionThatCanAcceptLargePackets
 
 /**
  * Shows a warning to players if they have not accepted the resource pack,
  * or if they have accepted the resource pack but are on a major Minecraft version less than the server
  * (thereby potentially not being able to read the resource pack correctly).
  */
-object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
+object ResourcePackAndVersionWarnings : SuCraftModule<ResourcePackAndVersionWarnings>() {
 
 	// Dependencies
 
 	override val dependencies = listOf(
-		ViaVersionPlayerLargePackets
+		ClientPacketAcceptance
 	)
 
 	// Settings
@@ -156,8 +156,15 @@ object ResourcePackWarnings : SuCraftModule<ResourcePackWarnings>() {
 						}
 
 						FAILED_DOWNLOAD -> {
-							info("Sending $name a message because their resource pack download failed")
-							sendMessage(failedDownloadMessage)
+							if (isConnectedViaGeyser)
+								info(
+									"Not sending $name a message about the resource pack, " +
+											"because they are connected via Geyser"
+								)
+							else {
+								info("Sending $name a message because their resource pack download failed")
+								sendMessage(failedDownloadMessage)
+							}
 						}
 
 						else -> {}

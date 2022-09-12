@@ -61,5 +61,10 @@
       <option name="name" value="maven6" />
       <option name="url" value="https://repo.viaversion.com" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven7" />
+      <option name="name" value="maven7" />
+      <option name="url" value="https://repo.opencollab.dev/maven-snapshots/" />
+    </remote-repository>
   </component>
 </project>

@@ -44,7 +44,7 @@ import org.sucraft.modules.portabletoolblocks.PortableToolBlocks
 import org.sucraft.modules.preventmobexplosionblockdamage.PreventMobExplosionBlockDamage
 import org.sucraft.modules.redyeingrecipes.RedyeingRecipes
 import org.sucraft.modules.replacepermissionmessages.ReplacePermissionMessages
-import org.sucraft.modules.resourcepackwarnings.ResourcePackWarnings
+import org.sucraft.modules.resourcepackandversionwarnings.ResourcePackAndVersionWarnings
 import org.sucraft.modules.ridemobs.RideMobs
 import org.sucraft.modules.shortcutcraftingrecipes.ShortcutCraftingRecipes
 import org.sucraft.modules.shorttermbackups.ShortTermBackups
@@ -54,7 +54,7 @@ import org.sucraft.modules.teleportfollowingmobsfromthevoid.TeleportFollowingMob
 import org.sucraft.modules.tenyearselytra.TenYearsElytra
 import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
-import org.sucraft.modules.viaversionplayerlargepackets.ViaVersionPlayerLargePackets
+import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
 
 val modules by lazy {
@@ -63,6 +63,7 @@ val modules by lazy {
 		AnvilMechanics,
 		BarriersAndLightsDrop,
 		BreakFreeIndependentEntitiesOnQuit,
+		ClientPacketAcceptance,
 		ColoredBucketsOfAquaticMob,
 		CraftableAlcoholicBeverages,
 		CraftableBarriersAndLights,
@@ -99,7 +100,7 @@ val modules by lazy {
 		PreventMobExplosionBlockDamage,
 		RedyeingRecipes,
 		ReplacePermissionMessages,
-		ResourcePackWarnings,
+		ResourcePackAndVersionWarnings,
 		RideMobs,
 		ShortcutCraftingRecipes,
 		ShortTermBackups,
@@ -109,7 +110,6 @@ val modules by lazy {
 		TenYearsElytra,
 		UnsignBooks,
 		UUIDCommand,
-		ViaVersionPlayerLargePackets,
 		ZombieHorseJockeys
 	)
 }

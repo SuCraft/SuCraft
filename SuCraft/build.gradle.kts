@@ -44,6 +44,12 @@ repositories {
 	maven { url = uri("https://libraries.minecraft.net") }
 	maven { url = uri("https://repo.codemc.org/repository/maven-public/") }
 	maven { url = uri("https://repo.viaversion.com") }
+	maven {
+		url = uri("https://repo.opencollab.dev/maven-snapshots/")
+		mavenContent {
+			snapshotsOnly()
+		}
+	}
 }
 
 // Download library jars
@@ -117,7 +123,7 @@ fun downloadLibraryJar(
 val repoDomain = "https://screpo.000webhostapp.com"
 
 val paperMinecraftVersion = "1.19.2"
-val paperBuildGitVersion = "20f4a06fa"
+val paperBuildGitVersion = "e25506f61"
 val paperBuildVersion = "martijn-$paperMinecraftVersion-$paperBuildGitVersion"
 
 val paperStubFilename =
@@ -225,6 +231,8 @@ dependencies {
 	compileOnly("org.apache.commons:commons-lang3:3.12.0")
 	library("mysql:mysql-connector-java:8.0.30")
 	library("com.zaxxer:HikariCP:5.0.1")
+	compileOnly("org.geysermc:core:2.0.0-SNAPSHOT") { isTransitive = false }
+	compileOnly("org.geysermc:base-api:2.0.0-SNAPSHOT") { isTransitive = false }
 	downloadedLibraryJarPathsForImplementation.forEach {
 		implementation(files(it))
 	}
@@ -268,6 +276,7 @@ bukkit {
 	apiVersion = "1.19"
 	depend = listOf(
 		"CommandAPI",
+		"Geyser-Spigot",
 		"PacketWrapper",
 		"PermissionsBukkit",
 		"ProtocolLib",
@@ -285,7 +294,6 @@ bukkit {
 		"FartherViewDistance",
 		"FastAsyncWorldEdit",
 		"FastLogin",
-		"Geyser-Spigot",
 		"GrimAC",
 		"ImageOnMap",
 		"InventoryRollback",

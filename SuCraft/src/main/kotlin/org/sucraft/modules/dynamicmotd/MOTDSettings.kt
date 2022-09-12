@@ -206,6 +206,7 @@ private val donatorMOTDs = sequenceOf(
 	"Bingus1",
 	"Humanius",
 	"SpiderLock",
+	"hkwhipitup",
 	"LukePage111",
 	"ThunderM",
 	"Antonow",

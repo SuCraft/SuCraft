@@ -9,6 +9,7 @@ import org.bukkit.entity.Player
 import org.sucraft.common.entity.y
 import org.sucraft.common.location.distance.distance
 import org.sucraft.common.location.distance.distance2D
+import org.sucraft.common.location.distance.distanceLargerThanWorldSize
 import org.sucraft.common.location.distance.distanceSquared
 import org.sucraft.common.player.PlayerPredicate
 import kotlin.math.abs
@@ -37,9 +38,9 @@ fun Location.getNearbyPlayers(
 	predicate: PlayerPredicate? = null
 ) = world.getNearbyPlayers(
 	this,
-	xDistance ?: Long.MAX_VALUE.toDouble(),
-	yDistance ?: Long.MAX_VALUE.toDouble(),
-	zDistance ?: Long.MAX_VALUE.toDouble(),
+	xDistance ?: distanceLargerThanWorldSize,
+	yDistance ?: distanceLargerThanWorldSize,
+	zDistance ?: distanceLargerThanWorldSize,
 	predicate
 ).asSequence()
 

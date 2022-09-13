@@ -10,6 +10,7 @@ import org.sucraft.common.entity.EntityByTypePredicate
 import org.sucraft.common.entity.y
 import org.sucraft.common.location.distance.distance
 import org.sucraft.common.location.distance.distance2D
+import org.sucraft.common.location.distance.distanceLargerThanWorldSize
 import org.sucraft.common.location.distance.distanceSquared
 import kotlin.math.abs
 
@@ -38,9 +39,9 @@ inline fun <reified E : Entity> Location.getNearbyEntitiesByType(
 ) = world.getNearbyEntitiesByType(
 	E::class.java,
 	this,
-	xDistance ?: Long.MAX_VALUE.toDouble(),
-	yDistance ?: Long.MAX_VALUE.toDouble(),
-	zDistance ?: Long.MAX_VALUE.toDouble(),
+	xDistance ?: distanceLargerThanWorldSize,
+	yDistance ?: distanceLargerThanWorldSize,
+	zDistance ?: distanceLargerThanWorldSize,
 	predicate
 ).asSequence()
 

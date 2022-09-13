@@ -10,7 +10,6 @@ import org.sucraft.common.entity.LivingEntityPredicate
 import org.sucraft.common.entity.y
 import org.sucraft.common.location.distance.distance
 import org.sucraft.common.location.distance.distance2D
-import org.sucraft.common.location.distance.distanceLargerThanWorldSize
 import org.sucraft.common.location.distance.distanceSquared
 import kotlin.math.abs
 
@@ -36,13 +35,20 @@ fun Location.getNearbyLivingEntities(
 	yDistance: Double?,
 	zDistance: Double?,
 	predicate: LivingEntityPredicate? = null
-) = world.getNearbyLivingEntities(
-	this,
-	xDistance ?: distanceLargerThanWorldSize,
-	yDistance ?: distanceLargerThanWorldSize,
-	zDistance ?: distanceLargerThanWorldSize,
-	predicate
-).asSequence()
+) =
+
+	if (xDistance == null && yDistance == null && zDistance == null)
+		world.livingEntities.asSequence().run {
+			if (predicate == null) this else filter(predicate)
+		}
+	else
+		world.getNearbyLivingEntities(
+			this,
+			xDistance!!,
+			yDistance!!,
+			zDistance!!,
+			predicate
+		).asSequence()
 
 // Get living entities within chessboard distance
 

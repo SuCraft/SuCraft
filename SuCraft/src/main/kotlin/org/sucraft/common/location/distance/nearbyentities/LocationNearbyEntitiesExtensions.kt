@@ -10,7 +10,6 @@ import org.sucraft.common.entity.EntityPredicate
 import org.sucraft.common.entity.y
 import org.sucraft.common.location.distance.distance
 import org.sucraft.common.location.distance.distance2D
-import org.sucraft.common.location.distance.distanceLargerThanWorldSize
 import org.sucraft.common.location.distance.distanceSquared
 import kotlin.math.abs
 
@@ -30,19 +29,26 @@ fun EntityDistancePredicate.asEntityPredicate(fromLocation: Location) =
 /**
  * @return All [entities][Entity] within the given distance per axis from this [Location].
  * Any null distance is assumed to be infinite.
+ * [xDistance], [yDistance] and [zDistance] must all be null or all be non-null.
  */
 fun Location.getNearbyEntities(
 	xDistance: Double?,
 	yDistance: Double?,
 	zDistance: Double?,
 	predicate: EntityPredicate? = null
-) = world.getNearbyEntities(
-	this,
-	xDistance ?: distanceLargerThanWorldSize,
-	yDistance ?: distanceLargerThanWorldSize,
-	zDistance ?: distanceLargerThanWorldSize,
-	predicate
-).asSequence()
+) =
+	if (xDistance == null && yDistance == null && zDistance == null)
+		world.entities.asSequence().run {
+			if (predicate == null) this else filter(predicate)
+		}
+	else
+		world.getNearbyEntities(
+			this,
+			xDistance!!,
+			yDistance!!,
+			zDistance!!,
+			predicate
+		).asSequence()
 
 // Get entities within chessboard distance
 

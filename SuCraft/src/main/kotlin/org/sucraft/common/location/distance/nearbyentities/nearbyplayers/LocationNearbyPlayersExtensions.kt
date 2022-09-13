@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import org.sucraft.common.entity.y
 import org.sucraft.common.location.distance.distance
 import org.sucraft.common.location.distance.distance2D
-import org.sucraft.common.location.distance.distanceLargerThanWorldSize
 import org.sucraft.common.location.distance.distanceSquared
 import org.sucraft.common.player.PlayerPredicate
 import kotlin.math.abs
@@ -36,13 +35,19 @@ fun Location.getNearbyPlayers(
 	yDistance: Double?,
 	zDistance: Double?,
 	predicate: PlayerPredicate? = null
-) = world.getNearbyPlayers(
-	this,
-	xDistance ?: distanceLargerThanWorldSize,
-	yDistance ?: distanceLargerThanWorldSize,
-	zDistance ?: distanceLargerThanWorldSize,
-	predicate
-).asSequence()
+) =
+	if (xDistance == null && yDistance == null && zDistance == null)
+		world.players.asSequence().run {
+			if (predicate == null) this else filter(predicate)
+		}
+	else
+		world.getNearbyPlayers(
+			this,
+			xDistance!!,
+			yDistance!!,
+			zDistance!!,
+			predicate
+		).asSequence()
 
 // Get players within chessboard distance
 

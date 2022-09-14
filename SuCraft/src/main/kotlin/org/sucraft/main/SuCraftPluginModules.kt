@@ -55,6 +55,7 @@ import org.sucraft.modules.tenyearselytra.TenYearsElytra
 import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
+import org.sucraft.modules.geyserpermissions.GeyserPermissions
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
 
 val modules by lazy {
@@ -79,6 +80,7 @@ val modules by lazy {
 		DynamicMOTD,
 		EasterEggCommand,
 		EnderDragonDropsElytra,
+		GeyserPermissions,
 		GiantsSpawn,
 		GlassAlwaysDrops,
 		HarmlessEntities,

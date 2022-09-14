@@ -16,6 +16,7 @@ import org.enginehub.piston.CommandManager
 import org.enginehub.piston.inject.InjectedValueAccess
 import org.enginehub.piston.inject.Key
 import org.sucraft.common.module.SuCraftModule
+import org.sucraft.common.permission.suCraftPermissionPrefix
 import org.sucraft.common.scheduler.runLater
 import org.sucraft.common.time.TimeInTicks
 import java.util.*
@@ -47,7 +48,21 @@ object AddPermissionsToCommands : SuCraftModule<AddPermissionsToCommands>() {
 	 */
 	private const val logCommandsWithoutDefaultOperatorPermission = false
 
+	// Provided functionality
+
+	fun getOverridePermissionKey(pluginName: String, commandName: String) =
+		"$suCraftPermissionPrefix$permissionPrefix${getUnprefixedOverridePermissionKey(pluginName, commandName)}"
+
 	// Implementation
+
+	private fun normalizePluginOrCommandName(name: String?) =
+		name?.lowercase()?.filter {
+			it in 'a'..'z' || it in '0'..'9'
+		} ?: "unknown"
+
+	private fun getUnprefixedOverridePermissionKey(pluginName: String?, commandName: String?) =
+		"${overridePermissionPrefix}${normalizePluginOrCommandName(pluginName)}" +
+				".${normalizePluginOrCommandName(commandName)}"
 
 	private fun attemptToAddPermissions() {
 		val commandMap = Bukkit.getCommandMap()
@@ -66,8 +81,7 @@ object AddPermissionsToCommands : SuCraftModule<AddPermissionsToCommands>() {
 				// bypasses the normal Bukkit permission check: we always create a new permission for the command
 				// and add it to their custom required permission list
 				val newPermission = permission(
-					"${overridePermissionPrefix}${plugin?.name?.lowercase() ?: "unknown"}" +
-							".${command.name.lowercase()}",
+					getUnprefixedOverridePermissionKey(plugin?.name, command.name),
 					"Use the /${command.name.lowercase()} command",
 					PermissionDefault.OP
 				)
@@ -103,7 +117,7 @@ object AddPermissionsToCommands : SuCraftModule<AddPermissionsToCommands>() {
 													if (!hasPermission(newPermission.key))
 														return false
 												} ?: return false
-											return existingCondition?.satisfied(context) ?: true;
+											return existingCondition?.satisfied(context) ?: true
 										}
 
 										override fun toString() =
@@ -122,6 +136,7 @@ object AddPermissionsToCommands : SuCraftModule<AddPermissionsToCommands>() {
 				when (existingPermission.default) {
 					PermissionDefault.TRUE, PermissionDefault.NOT_OP ->
 						existingPermission.default = PermissionDefault.OP
+
 					else -> {}
 				}
 			}
@@ -145,6 +160,7 @@ object AddPermissionsToCommands : SuCraftModule<AddPermissionsToCommands>() {
 				PermissionDefault.TRUE, PermissionDefault.NOT_OP ->
 					commandsWithNonOperatorOnlyPermission.computeIfAbsent(permission.default) { TreeSet() }
 						.add(commandNameWithPlugin)
+
 				else -> {}
 			}
 		}

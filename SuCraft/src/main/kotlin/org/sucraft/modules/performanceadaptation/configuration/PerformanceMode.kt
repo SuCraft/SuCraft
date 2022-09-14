@@ -56,8 +56,8 @@ enum class PerformanceMode(
 		globalMaxConcurrentChunkLoads at 700.0,
 		maxAutoSaveChunksPerTick at 40,
 
-		itemMergeRadius at 1.0,
-		experienceMergeRadius at 0.3,
+		itemMergeRadius at 0.5,
+		experienceMergeRadius at 0.0,
 		itemDespawnRate at 18000
 
 	),
@@ -76,7 +76,7 @@ enum class PerformanceMode(
 //		mobFarmFactor at 0.35, // Disabled due to temporarily no mob farm nerfs in 1.19
 
 		simulationDistance at 6,
-		maxTrackViewDistance at 11,
+		maxTrackViewDistance at 10,
 
 		monsterEntityActivationRange at 29,
 		animalEntityActivationRange at 24,
@@ -100,8 +100,8 @@ enum class PerformanceMode(
 		globalMaxConcurrentChunkLoads at 475.0,
 		maxAutoSaveChunksPerTick at 32,
 
-		itemMergeRadius at 1.5,
-		experienceMergeRadius at 0.7,
+		itemMergeRadius at 1.0,
+		experienceMergeRadius at 0.3,
 		itemDespawnRate at 15000
 
 	),
@@ -144,7 +144,10 @@ enum class PerformanceMode(
 
 		ticksPerWaterAnimalSpawns at 1,
 
-		zombifiedPiglinPortalSpawns at true
+		zombifiedPiglinPortalSpawns at true,
+
+		itemMergeRadius at 1.5,
+		experienceMergeRadius at 0.7
 
 	),
 
@@ -390,7 +393,7 @@ enum class PerformanceMode(
 
 		wakeUpInactiveFlyingMonstersPerTick at 3,
 
-		skippedActiveEntityRatio at (1 to 2), // ~ 0.5
+		skippedActiveEntityRatio at (1 to 2), // 0.5
 
 		ticksPerMonsterSpawns at 6,
 		ticksPerAnimalSpawns at 400,
@@ -476,7 +479,7 @@ enum class PerformanceMode(
 		flyingMonsterEntityActivationRange at 28,
 		miscEntityActivationRange at 5,
 
-		skippedActiveEntityRatio at (3 to 5), // ~ 0.6
+		skippedActiveEntityRatio at (3 to 5), // 0.6
 
 		ticksPerMonsterSpawns at 20,
 		ticksPerAnimalSpawns at 800,

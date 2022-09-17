@@ -32,6 +32,13 @@ object TeleportFollowingMobsBeforeUnload : SuCraftModule<TeleportFollowingMobsBe
 
 	private const val minimumDistanceToTeleportFollowingMobToPlayerOnQuit = 16.0
 
+	// Data
+
+	/**
+	 * Live setting, can be changed at any time to temporarily not check mobs when chunks are unloaded.
+	 */
+	var checkOnChunkUnload = true
+
 	// Implementation
 
 	/**
@@ -107,6 +114,7 @@ object TeleportFollowingMobsBeforeUnload : SuCraftModule<TeleportFollowingMobsBe
 //		}
 		// Listen for chunk entities unloads to teleport mobs in the chunk to the player
 		on(EntitiesUnloadEvent::class) {
+			if (!checkOnChunkUnload) return@on
 			teleportFollowingMobsInChunkToPlayers(chunk, entities)
 		}
 

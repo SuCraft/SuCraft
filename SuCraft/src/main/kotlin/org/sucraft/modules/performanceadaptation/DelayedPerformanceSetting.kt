@@ -2,7 +2,7 @@
  * Copyright (c) SuCraft 2022 sucraft.org
  */
 
-package org.sucraft.modules.performanceadaptation.model
+package org.sucraft.modules.performanceadaptation
 
 import org.sucraft.common.scheduler.runLater
 import org.sucraft.common.time.TimeInTicks
@@ -11,14 +11,16 @@ import org.sucraft.common.time.TimeInTicks
  * A performance setting that uses the lowest value over an interval of time.
  */
 open class DelayedPerformanceSetting<T>(
-	displayName: String,
+	parseValue: (String) -> T,
+	key: String,
 	getter: () -> T,
 	setter: (T) -> Unit,
 	private val comparator: Comparator<T>,
 	private val delay: TimeInTicks,
 	private val defaultHighValue: T
 ) : PerformanceSetting<T>(
-	displayName,
+	parseValue,
+	key,
 	getter,
 	setter
 ) {

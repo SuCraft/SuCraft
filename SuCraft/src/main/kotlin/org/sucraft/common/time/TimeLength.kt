@@ -191,6 +191,9 @@ interface TimeLength : Comparable<TimeLength> {
 	 */
 	fun asWeeksRounded() = TimeInWeeks(weeksRounded)
 
+	infix operator fun plus(other: TimeLength): TimeLength =
+		TimeInMillis(millis + other.millis)
+
 	override fun compareTo(other: TimeLength) =
 		millis.compareTo(other.millis)
 

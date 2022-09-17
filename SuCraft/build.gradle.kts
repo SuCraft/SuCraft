@@ -122,37 +122,37 @@ fun downloadLibraryJar(
 
 val repoDomain = "https://screpo.000webhostapp.com"
 
-val paperMinecraftVersion = "1.19.2"
-val paperBuildGitVersion = "e25506f61"
-val paperBuildVersion = "martijn-$paperMinecraftVersion-$paperBuildGitVersion"
+val sukiMinecraftVersion = "1.19.2"
+val sukiBuildGitVersion = "689fd38"
+val sukiBuildVersion = "$sukiMinecraftVersion-$sukiBuildGitVersion"
 
-val paperStubFilename =
-	"paper-$paperBuildVersion.jar"
-val paperStubURL =
-	"$repoDomain/martijn-paper-$paperMinecraftVersion-$paperBuildGitVersion-stub.jar"
+val sukiStubFilename =
+	"suki-server-$sukiMinecraftVersion-R0.1-SNAPSHOT-reobf-stub-$sukiBuildGitVersion.jar"
+val sukiStubURL =
+	"$repoDomain/$sukiStubFilename"
 
-val paperAPIFilename =
-	"paper-api-$paperBuildVersion.jar"
-val paperAPIURL =
-	"$repoDomain/martijn-paper-api-$paperMinecraftVersion-R0.1-SNAPSHOT-$paperBuildGitVersion.jar"
+val sukiAPIFilename =
+	"suki-api-$sukiMinecraftVersion-R0.1-SNAPSHOT-$sukiBuildGitVersion.jar"
+val sukiAPIURL =
+	"$repoDomain/$sukiAPIFilename"
 
 downloadLibraryJar(
-	"PaperStub",
-	paperStubURL,
-	paperStubFilename,
+	"SukiStub",
+	sukiStubURL,
+	sukiStubFilename,
 	false,
-	"io.papermc.paper",
-	"paper-stub",
-	paperBuildVersion
+	"org.sucraft.suki",
+	"suki-stub",
+	sukiBuildVersion
 )
 downloadLibraryJar(
-	"PaperAPI",
-	paperAPIURL,
-	paperAPIFilename,
+	"SukiAPI",
+	sukiAPIURL,
+	sukiAPIFilename,
 	false,
-	"io.papermc.paper",
-	"paper-api",
-	paperBuildVersion
+	"org.sucraft.suki",
+	"suki-api",
+	sukiBuildVersion
 )
 
 val permissionsBukkitVersion =
@@ -175,11 +175,11 @@ downloadLibraryJar(
 // Compile and build tasks
 
 tasks.getByName<Task>("compileKotlin") {
-	dependsOn("clean", *downloadLibraryJarTasks)
+	dependsOn(/*"clean", */*downloadLibraryJarTasks)
 }
 
 tasks.getByName<Task>("build") {
-	dependsOn("clean", *downloadLibraryJarTasks)
+	dependsOn(/*"clean", */*downloadLibraryJarTasks)
 }
 
 // Dependencies
@@ -205,6 +205,7 @@ dependencies {
 	library("org.yaml:snakeyaml:$snakeYAMLVersion")
 	library("org.jooq:joor:$joorVersion")
 	library("org.apache.commons:commons-math3:$apacheCommonsMathVersion")
+	library("org.apache.commons:commons-math3:$apacheCommonsMathVersion")
 	compileOnly("it.unimi.dsi:fastutil:$fastutilVersion")
 	testImplementation("it.unimi.dsi:fastutil:$fastutilVersion")
 	compileOnly("net.kyori:adventure-api:$adventureAPIVersion")
@@ -229,6 +230,8 @@ dependencies {
 	library("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.2")
 	library("org.apache.avro:avro:1.11.1")
 	compileOnly("org.apache.commons:commons-lang3:3.12.0")
+	library("org.apache.commons:commons-csv:1.9.0")
+	compileOnly("com.google.guava:guava:31.1-jre")
 	library("mysql:mysql-connector-java:8.0.30")
 	library("com.zaxxer:HikariCP:5.0.1")
 	compileOnly("org.geysermc:core:2.0.0-SNAPSHOT") { isTransitive = false }

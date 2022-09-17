@@ -13,9 +13,9 @@ import org.joor.Reflect.on
 /**
  * This method is based on com.froobworld.viewdistancetweaks.hook.viewdistance.SpigotSimulationDistanceHook.setDistance.
  */
-fun World.forceSetSimulationDistance(simulationDistance: Int) {
+fun World.forceSetSimulationDistance(newSimulationDistance: Int) {
 
-	val usedSimulationDistance = clampViewDistanceToAllowedPaperValues(simulationDistance)
+	val usedSimulationDistance = clampViewDistanceToAllowedPaperValues(newSimulationDistance)
 
 	if (usedSimulationDistance == simulationDistance) return
 

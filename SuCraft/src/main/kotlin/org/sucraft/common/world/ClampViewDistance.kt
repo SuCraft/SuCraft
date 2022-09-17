@@ -8,4 +8,4 @@ import kotlin.math.max
 import kotlin.math.min
 
 fun clampViewDistanceToAllowedPaperValues(viewDistance: Int) =
-	min(32, max(2, viewDistance))
+	viewDistance.coerceIn(2, 32)

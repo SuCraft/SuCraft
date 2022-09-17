@@ -2,9 +2,7 @@
  * Copyright (c) SuCraft 2022 sucraft.org
  */
 
-package org.sucraft.modules.performanceadaptation.model
-
-import org.sucraft.modules.performanceadaptation.configuration.PerformanceMode
+package org.sucraft.modules.performanceadaptation
 
 // Class
 

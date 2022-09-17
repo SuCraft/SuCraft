@@ -47,6 +47,14 @@ object BackupTaskExecutor : SuCraftComponent<ShortTermBackups>() {
 
 	// Data
 
+	/**
+	 * Live setting, can be changed at any time to temporarily don't make backups.
+	 * Backup tasks will simply not be begun and will be forgotten about; if this flag is set to true after
+	 * having been false, no backup tasks requested while the flag was false will be started as a consequence:
+	 * the respective files will only be backed up if a backup task for them is called for again.
+	 */
+	var areBackupsEnabled = true
+
 	private val backupTasksInProgressMutex = Mutex()
 	private val backupTasksInProgress: MutableSet<String> = HashSet(0)
 	private val oldFileRemovalTasksInProgressMutex = Mutex()
@@ -64,9 +72,11 @@ object BackupTaskExecutor : SuCraftComponent<ShortTermBackups>() {
 
 	/**
 	 * Starts a backup of the given file, if necessary.
+	 *
+	 * Does not start if [backups are not enabled][areBackupsEnabled].
 	 */
 	fun startFileBackupTask(originalFile: File, delay: TimeLength? = null) {
-		BackupTask(originalFile).start(delay)
+		if (areBackupsEnabled) BackupTask(originalFile).start(delay)
 	}
 
 	/**

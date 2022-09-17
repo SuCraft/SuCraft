@@ -30,8 +30,8 @@ object PingCommand : SuCraftModule<PingCommand>() {
 		) {
 			executesPlayerSync {
 				val tps = Bukkit.getTPS()
-				val tps1Minute = tps[0].coerceAtMost(20.0)
-				val tps15Minutes = tps[2].coerceAtMost(20.0)
+				val tps1Minute = tps[1].coerceAtMost(20.0)
+				val tps15Minutes = tps[3].coerceAtMost(20.0)
 				val ping = spigot().ping
 				sendMessage(
 					748390591859486011L, GRAY,

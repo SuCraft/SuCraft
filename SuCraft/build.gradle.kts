@@ -234,8 +234,8 @@ dependencies {
 	compileOnly("com.google.guava:guava:31.1-jre")
 	library("mysql:mysql-connector-java:8.0.30")
 	library("com.zaxxer:HikariCP:5.0.1")
-	compileOnly("org.geysermc:core:2.0.0-SNAPSHOT") { isTransitive = false }
-	compileOnly("org.geysermc:base-api:2.0.0-SNAPSHOT") { isTransitive = false }
+	compileOnly("org.geysermc.geyser:core:2.1.0-SNAPSHOT") { isTransitive = false }
+	compileOnly("org.geysermc.geyser:api:2.1.0-SNAPSHOT") { isTransitive = false }
 	downloadedLibraryJarPathsForImplementation.forEach {
 		implementation(files(it))
 	}

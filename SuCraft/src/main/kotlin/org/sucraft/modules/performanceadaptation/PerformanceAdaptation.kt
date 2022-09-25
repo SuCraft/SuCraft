@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import org.apache.commons.csv.CSVFormat
 import org.bukkit.Bukkit
+import org.bukkit.event.player.PlayerJoinEvent
+import org.sucraft.common.event.on
 import org.sucraft.common.function.runEach
 import org.sucraft.common.io.inside
 import org.sucraft.common.module.SuCraftModule
@@ -44,6 +46,19 @@ object PerformanceAdaptation : SuCraftModule<PerformanceAdaptation>() {
 	private val runningMSPTDecayHalftime = TimeInSeconds(4) + TimeInTicks(10)
 	private val runningMSPTMomentum = 0.5.pow(1.0 / runningMSPTDecayHalftime.ticksExact)
 	private val useMaxRunningMSPTOverTime = TimeInSeconds(2) + TimeInTicks(10)
+
+	/**
+	 * If this is 1.5, and 5 players were previously online, and a new player joins, then
+	 * the [running MSPT][runningMSPT] will be multiplied by the factor (5+1.5)/5 to estimate
+	 * what the MSPT would have been historically like if there had been another 1.5 players online.
+	 * This is so that we don't have to wait for the running MSPT to actually drop from a new player joining,
+	 * potentially leading to temporary lag.
+	 *
+	 * The best estimate would be to have this value be 1, but it seems good to take a slightly higher value
+	 * so that we account for the fact a new player joining will cost more processing than existing players
+	 * (due to world loading, plugins loading data, and so on).
+	 */
+	private const val numberOfExtraPeopleRetroactivelyAssumedForMSPTOnJoin = 1.5
 
 	private const val printSettingsAtModeChange = false
 
@@ -97,6 +112,18 @@ object PerformanceAdaptation : SuCraftModule<PerformanceAdaptation>() {
 		runTimer(TimeInTicks.ONE) {
 			updateMeasuredMSPT()
 			if (shouldGoDownAMode()) goDownAMode() else if (shouldGoUpAMode()) goUpAMode()
+		}
+	}
+
+	// Events
+
+	init {
+		// Listen for player joins to multiply the running MSPT to 'imagine' what the
+		// MSPT would have been like for the new number of players
+		on(PlayerJoinEvent::class) {
+			val numberOfPlayersOnline = Bukkit.getOnlinePlayers().size
+			runningMSPT *=
+				(numberOfPlayersOnline + numberOfExtraPeopleRetroactivelyAssumedForMSPTOnJoin) / numberOfPlayersOnline
 		}
 	}
 

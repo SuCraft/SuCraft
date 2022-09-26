@@ -123,7 +123,7 @@ fun downloadLibraryJar(
 val repoDomain = "https://screpo.000webhostapp.com"
 
 val sukiMinecraftVersion = "1.19.2"
-val sukiBuildGitVersion = "689fd38"
+val sukiBuildGitVersion = "b004c63"
 val sukiBuildVersion = "$sukiMinecraftVersion-$sukiBuildGitVersion"
 
 val sukiStubFilename =

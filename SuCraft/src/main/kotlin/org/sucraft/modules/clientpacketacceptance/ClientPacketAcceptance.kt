@@ -48,6 +48,13 @@ object ClientPacketAcceptance : SuCraftModule<ClientPacketAcceptance>() {
 			player.clientVersion >= minimumProtocolVersionThatCanCorrectlyDisplayServerResourcePack &&
 					!player.isConnectedViaGeyser
 		}
+		// Add the non-Minecraft recipes predicate as a disjunct
+		Bukkit.addCanAcceptNonMinecraftRecipesDisjunct {
+			// Currently we assume all clients can accept recipes with a different namespace than "minecraft:",
+			// but this is not certain: maybe some parts of Bedrock clients or Just Enough Items or similar mods
+			// cannot accept them
+			true
+		}
 	}
 
 }

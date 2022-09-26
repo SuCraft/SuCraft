@@ -4,11 +4,15 @@
 
 package org.sucraft.modules.homequotes
 
+import it.unimi.dsi.fastutil.objects.Object2LongMap
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
 import org.sucraft.common.event.on
 import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.text.by
 import org.sucraft.common.text.quoteArrayOf
+import org.sucraft.common.time.TimeInMinutes
 import org.sucraft.modules.homes.event.PlayerTeleportToHomeEvent
+import java.util.*
 
 /**
  * Displays a quote when a player teleports home.
@@ -16,6 +20,8 @@ import org.sucraft.modules.homes.event.PlayerTeleportToHomeEvent
 object HomeQuotes : SuCraftModule<HomeQuotes>() {
 
 	// Settings
+
+	private val minimumTimeSinceLastHomeTeleport = TimeInMinutes(10)
 
 	@Suppress("SpellCheckingInspection")
 	private val homeQuotes = quoteArrayOf(
@@ -145,11 +151,32 @@ object HomeQuotes : SuCraftModule<HomeQuotes>() {
 				by "Lin Yutang"
 	)
 
+	// Data
+
+	/**
+	 * In milliseconds since the Unix epoch.
+	 */
+	private val lastHomeTeleportTimes: Object2LongMap<UUID> = Object2LongOpenHashMap<UUID>(10).apply {
+		defaultReturnValue(-1L)
+	}
+
 	// Events
 
 	init {
+		// Listen to home teleports to send a quote
 		on(PlayerTeleportToHomeEvent::class) {
-			if (isOwnHome) player.sendMessage(homeQuotes.random().component)
+			// Don't send a quote if the home belongs to someone else
+			if (!isOwnHome) return@on
+			// Retrieve the last home teleport time before updating it
+			val lastHomeTeleportTime = lastHomeTeleportTimes.getLong(player.uniqueId)
+			// Update the last home teleport time
+			lastHomeTeleportTimes[player.uniqueId] = System.currentTimeMillis()
+			// Check if the last home teleport time was too recent
+			if (lastHomeTeleportTime != -1L)
+				if (lastHomeTeleportTime > System.currentTimeMillis() - minimumTimeSinceLastHomeTeleport.millis)
+					return@on
+			// Send the quote
+			player.sendMessage(homeQuotes.random().component)
 		}
 	}
 

@@ -19,7 +19,20 @@ object ClientPacketAcceptance : SuCraftModule<ClientPacketAcceptance>() {
 
 	// Settings
 
-	const val minimumProtocolVersionThatCanAcceptLargePackets = 755 // 1.17
+	/**
+	 * Current value: release 1.17.
+	 */
+	const val minimumProtocolVersionThatCanAcceptLargePackets = 755
+
+	/**
+	 * Current value: release 1.12.
+	 * This is not because of something in this version, but because the model overrides for items
+	 * used to display block entities are all overrides on items that exist in version 1.12 or earlier,
+	 * so any earlier version misses some of these items and therefore displays strange floating armor stand
+	 * entities (with a head item of the intended item replaced by an earlier version by ViaVersion)
+	 * instead of the intended block entities.
+	 */
+	const val minimumProtocolVersionThatCanCorrectlyDisplayServerResourcePack = 335
 
 	// Initialization
 
@@ -32,7 +45,8 @@ object ClientPacketAcceptance : SuCraftModule<ClientPacketAcceptance>() {
 		}
 		// Add the server resource pack predicate as a disjunct
 		Bukkit.addCanAcceptServerResourcePackDisjunct { player ->
-			!player.isConnectedViaGeyser
+			player.clientVersion >= minimumProtocolVersionThatCanCorrectlyDisplayServerResourcePack &&
+					!player.isConnectedViaGeyser
 		}
 	}
 

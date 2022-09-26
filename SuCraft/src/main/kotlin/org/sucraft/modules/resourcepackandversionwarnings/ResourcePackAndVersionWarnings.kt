@@ -19,6 +19,7 @@ import org.sucraft.common.time.TimeInTicks
 import org.sucraft.common.viaversion.clientVersion
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance.minimumProtocolVersionThatCanAcceptLargePackets
+import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance.minimumProtocolVersionThatCanCorrectlyDisplayServerResourcePack
 
 /**
  * Shows a warning to players if they have not accepted the resource pack,
@@ -162,8 +163,21 @@ object ResourcePackAndVersionWarnings : SuCraftModule<ResourcePackAndVersionWarn
 											"because they are connected via Geyser"
 								)
 							else {
-								info("Sending $name a message because their resource pack download failed")
-								sendMessage(failedDownloadMessage)
+								val playerVersion = try {
+									clientVersion
+								} catch (_: Exception) {
+									-1
+								}
+								if (playerVersion in 0..minimumProtocolVersionThatCanCorrectlyDisplayServerResourcePack)
+									info(
+										"Not sending $name a message about the resource pack, " +
+												"because their version (${getProtocol(playerVersion).name})" +
+												"is too old to display it correctly"
+									)
+								else {
+									info("Sending $name a message because their resource pack download failed")
+									sendMessage(failedDownloadMessage)
+								}
 							}
 						}
 

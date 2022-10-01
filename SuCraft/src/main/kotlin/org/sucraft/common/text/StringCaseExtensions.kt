@@ -7,7 +7,7 @@ package org.sucraft.common.text
 fun String.macroCaseToSpaceSeparatedCapitalized() =
 	replace('_', ' ')
 		.split(" ")
-		.map { lowercase().replaceFirstChar(Character::toUpperCase) }
+		.map { it.lowercase().replaceFirstChar(Character::toUpperCase) }
 		.joinToString(" ") { it }
 
 val <E : Enum<E>> E.nameSpaceSeparatedCapitalized

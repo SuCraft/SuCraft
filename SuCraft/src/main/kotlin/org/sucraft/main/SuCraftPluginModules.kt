@@ -55,6 +55,7 @@ import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
+import org.sucraft.modules.moremobheads.MoreMobHeads
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
 
 val modules by lazy {
@@ -89,6 +90,7 @@ val modules by lazy {
 		InvisibleItemFrames,
 		LightningCommand,
 		MonsterFreeAreas,
+		MoreMobHeads,
 		MysteryBoxes,
 		NetworkRateLimits,
 		NoJumpingMobFallDamage,

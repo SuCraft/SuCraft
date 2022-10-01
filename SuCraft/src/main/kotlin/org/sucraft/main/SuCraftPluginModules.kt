@@ -54,6 +54,7 @@ import org.sucraft.modules.tenyearselytra.TenYearsElytra
 import org.sucraft.modules.unsignbooks.UnsignBooks
 import org.sucraft.modules.uuidcommand.UUIDCommand
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
+import org.sucraft.modules.dispenserscanlightportals.DispensersCanLightPortals
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
 import org.sucraft.modules.moremobheads.MoreMobHeads
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
@@ -75,6 +76,7 @@ val modules by lazy {
 		DeathQuotes,
 		DiscordCommand,
 		DiscordInformation,
+		DispensersCanLightPortals,
 		Donators,
 		DropMinecartsOnLeave,
 		DynamicMOTD,

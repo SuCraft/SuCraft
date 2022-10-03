@@ -6,12 +6,14 @@ package org.sucraft.common.network
 
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import io.netty.handler.traffic.ChannelTrafficShapingHandler
+import org.apache.commons.lang3.ArrayUtils.addFirst
 import org.bukkit.entity.Player
 import org.sucraft.modules.uuidcommand.UUIDCommand.Commands.uuid
 import java.util.*
 import kotlin.collections.HashMap
 
-private val existingTrafficShapingHandlers: MutableMap<UUID, ChannelTrafficShapingHandler> = HashMap()
+private class PlayerRateLimitChannelTrafficShapingHandler(writeLimit: Long) :
+	ChannelTrafficShapingHandler(writeLimit, 0L)
 
 /**
  * Rate-limits the network connection of the player to the given maximum speed.
@@ -21,16 +23,12 @@ private val existingTrafficShapingHandlers: MutableMap<UUID, ChannelTrafficShapi
  * @param maxSpeed The maximum network send speed to apply, in bytes/second.
  */
 fun Player.rateLimitNetworkConnection(maxSpeed: Long) {
-	existingTrafficShapingHandlers.compute(uniqueId) { _, handler ->
-		if (handler != null) {
-			handler.writeLimit = maxSpeed
-			return@compute handler
-		}
-		val newHandler = ChannelTrafficShapingHandler(maxSpeed, 0L)
-		(player as CraftPlayer).handle._connection()
-			._connection()
-			._channel()
-			.pipeline().addFirst(newHandler)
-		return@compute newHandler
-	}
+	val pipeline = (this as CraftPlayer).handle._connection()
+		._connection()
+		._channel()
+		.pipeline()
+	pipeline
+		.firstOrNull { it.value is PlayerRateLimitChannelTrafficShapingHandler }
+		?.run { (value as PlayerRateLimitChannelTrafficShapingHandler).writeLimit = maxSpeed }
+		?: PlayerRateLimitChannelTrafficShapingHandler(maxSpeed).let { pipeline.addFirst(it) }
 }

@@ -44,12 +44,18 @@ repositories {
 	maven { url = uri("https://libraries.minecraft.net") }
 	maven { url = uri("https://repo.codemc.org/repository/maven-public/") }
 	maven { url = uri("https://repo.viaversion.com") }
-	maven {
-		url = uri("https://repo.opencollab.dev/maven-snapshots/")
-		mavenContent {
-			snapshotsOnly()
-		}
-	}
+//	maven {
+//		url = uri("https://repo.opencollab.dev/maven-snapshots/")
+//		mavenContent {
+//			snapshotsOnly()
+//		}
+//	}
+//		url = uri("https://repo.opencollab.dev/main/")
+//		mavenContent {
+//			snapshotsOnly()
+//		}
+//	}
+//	maven {
 }
 
 // Download library jars
@@ -172,6 +178,33 @@ downloadLibraryJar(
 	permissionsBukkitVersion
 )
 
+val geyserVersion = "2.1.0-SNAPSHOT"
+val geyserRepoURL = "https://repo.opencollab.dev/artifactory/maven-snapshots/org/geysermc/geyser"
+val geyserAPIFilename = "api-$geyserVersion.jar"
+val geyserAPIURL = "$geyserRepoURL/api/$geyserVersion/$geyserAPIFilename"
+val geyserCoreFilename = "core-$geyserVersion.jar"
+val geyserCoreURL = "$geyserRepoURL/core/$geyserVersion/$geyserCoreFilename"
+
+downloadLibraryJar(
+	"Geyser-API",
+	geyserAPIURL,
+	geyserAPIFilename,
+	false,
+	"org.geysermc.geyser",
+	"api",
+	geyserVersion
+)
+
+downloadLibraryJar(
+	"Geyser-Core",
+	geyserCoreURL,
+	geyserCoreFilename,
+	false,
+	"org.geysermc.geyser",
+	"core",
+	geyserVersion
+)
+
 // Compile and build tasks
 
 tasks.getByName<Task>("compileKotlin") {
@@ -234,8 +267,8 @@ dependencies {
 	compileOnly("com.google.guava:guava:31.1-jre")
 	library("mysql:mysql-connector-java:8.0.30")
 	library("com.zaxxer:HikariCP:5.0.1")
-	compileOnly("org.geysermc.geyser:core:2.1.0-SNAPSHOT") { isTransitive = false }
-	compileOnly("org.geysermc.geyser:api:2.1.0-SNAPSHOT") { isTransitive = false }
+//	compileOnly("org.geysermc.geyser:core:2.1.0-SNAPSHOT") { isTransitive = false }
+//	compileOnly("org.geysermc.geyser:api:2.1.0-SNAPSHOT") { isTransitive = false }
 	downloadedLibraryJarPathsForImplementation.forEach {
 		implementation(files(it))
 	}

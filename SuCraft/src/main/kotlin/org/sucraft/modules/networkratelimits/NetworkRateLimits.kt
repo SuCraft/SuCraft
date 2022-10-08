@@ -14,6 +14,7 @@ import org.sucraft.common.event.on
 import org.sucraft.common.module.SuCraftModule
 import org.sucraft.common.network.rateLimitNetworkConnection
 import org.sucraft.common.player.runEachPlayer
+import java.net.InetAddress
 import kotlin.math.min
 
 /**
@@ -40,14 +41,14 @@ object NetworkRateLimits : SuCraftModule<NetworkRateLimits>() {
 
 	// Data
 
-	private val numberOfConnectionsPerIP: Object2IntMap<ByteArray> = Object2IntOpenHashMap<ByteArray>(8)
+	private val numberOfConnectionsPerIP: Object2IntMap<InetAddress> = Object2IntOpenHashMap(8)
 
 	// Implementation
 
 	private fun getIntendedRateLimit(player: Player) = min(
 		playerNetworkSendRate,
 		min(
-			ipNetworkSendRate / numberOfConnectionsPerIP.getInt(player.address.address.address),
+			ipNetworkSendRate / numberOfConnectionsPerIP.getInt(player.address.address),
 			serverNetworkSendRate / Bukkit.getOnlinePlayers().size
 		)
 	)
@@ -58,14 +59,14 @@ object NetworkRateLimits : SuCraftModule<NetworkRateLimits>() {
 		// Increment the connections per IP for the player that joined,
 		// and update the rate limit for each player's network connection when a player joins
 		on(PlayerJoinEvent::class) {
-			numberOfConnectionsPerIP.compute(player.address.address.address) { _, count ->
+			numberOfConnectionsPerIP.compute(player.address.address) { _, count ->
 				if (count == null || count <= 0) 1 else count + 1
 			}
 			runEachPlayer { rateLimitNetworkConnection(getIntendedRateLimit(this)) }
 		}
 		// Decrement the connections per IP for the player that quit
 		on(PlayerQuitEvent::class) {
-			numberOfConnectionsPerIP.compute(player.address.address.address) { _, count ->
+			numberOfConnectionsPerIP.compute(player.address.address) { _, count ->
 				if (count == null || count <= 1) null else count - 1
 			}
 		}

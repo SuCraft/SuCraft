@@ -57,6 +57,7 @@ import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.dispenserscanlightportals.DispensersCanLightPortals
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
 import org.sucraft.modules.moremobheads.MoreMobHeads
+import org.sucraft.modules.rulescommand.RulesCommand
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
 
 val modules by lazy {
@@ -107,6 +108,7 @@ val modules by lazy {
 		ReplacePermissionMessages,
 		ResourcePackAndVersionWarnings,
 		RideMobs,
+		RulesCommand,
 		ShortcutCraftingRecipes,
 		ShortTermBackups,
 		TeleportFollowingMobsBeforeUnload,

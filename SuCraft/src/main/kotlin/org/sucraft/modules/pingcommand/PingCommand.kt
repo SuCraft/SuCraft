@@ -13,8 +13,8 @@ import org.sucraft.common.text.times
 import org.sucraft.common.tps.tpsFormat
 
 /**
- * Adds the /ping command that lets you check TPS and network ping,
- * and the Easter egg /pong command.
+ * Adds the `/ping` command that lets you check TPS and network ping,
+ * and the Easter egg `/pong` command.
  */
 object PingCommand : SuCraftModule<PingCommand>() {
 

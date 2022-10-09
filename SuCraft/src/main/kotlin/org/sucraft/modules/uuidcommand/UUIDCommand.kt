@@ -16,8 +16,8 @@ import org.sucraft.modules.offlineplayerinformation.OfflinePlayerInformation.get
 import org.sucraft.modules.offlineplayerinformation.OfflinePlayerInformation.getName
 
 /**
- * Adds the /uuid command that lets you find the UUID for a given (offline) player name,
- * and the /uuidname command that lets you find the last name a given UUID joined with.
+ * Adds the `/uuid` command that lets you find the UUID for a given (offline) player name,
+ * and the `/uuidname` command that lets you find the last name a given UUID joined with.
  */
 object UUIDCommand : SuCraftModule<UUIDCommand>() {
 

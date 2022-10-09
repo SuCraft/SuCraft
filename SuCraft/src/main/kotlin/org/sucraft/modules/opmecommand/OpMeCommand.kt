@@ -13,7 +13,7 @@ import org.sucraft.common.text.sendMessage
 import org.sucraft.common.text.times
 
 /**
- * Adds the Easter egg /opme command.
+ * Adds the Easter egg `/opme` command.
  */
 object OpMeCommand : SuCraftModule<OpMeCommand>() {
 

@@ -56,6 +56,7 @@ import org.sucraft.modules.uuidcommand.UUIDCommand
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.dispenserscanlightportals.DispensersCanLightPortals
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
+import org.sucraft.modules.inspectcommandalias.InspectCommandAlias
 import org.sucraft.modules.moremobheads.MoreMobHeads
 import org.sucraft.modules.rulescommand.RulesCommand
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
@@ -90,6 +91,7 @@ val modules by lazy {
 		Homes,
 		HomeQuotes,
 		IncludedCustomJockeys,
+		InspectCommandAlias,
 		InvisibleItemFrames,
 		LightningCommand,
 		MonsterFreeAreas,

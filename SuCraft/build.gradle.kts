@@ -320,6 +320,7 @@ bukkit {
 		"WorldGuard"
 	)
 	softDepend = listOf(
+		"AntiCheatReloaded",
 		"AsyncWorldEdit",
 		"AuthMe",
 		"BKCommonLib",

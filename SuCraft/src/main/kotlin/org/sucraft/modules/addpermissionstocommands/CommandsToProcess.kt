@@ -11,6 +11,8 @@ package org.sucraft.modules.addpermissionstocommands
  */
 @Suppress("SpellCheckingInspection")
 val pluginNamesToProcessAllCommandsOf = setOf(
+	"AntiCheat",
+	"AntiCheatReloaded",
 	"AsyncWorldEdit",
 	"AuthMe",
 	"BKCommonLib",

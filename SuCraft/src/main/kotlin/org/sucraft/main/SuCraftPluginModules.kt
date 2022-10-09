@@ -56,6 +56,7 @@ import org.sucraft.modules.uuidcommand.UUIDCommand
 import org.sucraft.modules.clientpacketacceptance.ClientPacketAcceptance
 import org.sucraft.modules.dispenserscanlightportals.DispensersCanLightPortals
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
+import org.sucraft.modules.icanhasbukkitcommandalias.ICanHasBukkitCommandAlias
 import org.sucraft.modules.inspectcommandalias.InspectCommandAlias
 import org.sucraft.modules.moremobheads.MoreMobHeads
 import org.sucraft.modules.rulescommand.RulesCommand
@@ -90,6 +91,7 @@ val modules by lazy {
 		HarmlessEntities,
 		Homes,
 		HomeQuotes,
+		ICanHasBukkitCommandAlias,
 		IncludedCustomJockeys,
 		InspectCommandAlias,
 		InvisibleItemFrames,

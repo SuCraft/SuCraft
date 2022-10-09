@@ -15,7 +15,7 @@ As this project has been developed for the Paper platform and knowledge of the d
 **Steps**
 * Open IntelliJ
 * *File* > *New* > *Project from Version Control...*
-* Paste the Git URL clone URL for this repository: https://github.com/SuCraft/SuCraft.git
+* Paste the Git URL clone URL for this repository: https://github.com/SuCraft/SuCraft.git (or, in case you would like to create pull requests, the clone URL for your GitHub fork of this repository)
 * Open *SuCraft/build.gradle.kts* > *Link gradle project* > *OK*
 
 ### Contact

@@ -61,9 +61,11 @@ object MonsterFreeAreas : SuCraftModule<MonsterFreeAreas>() {
 				WITCH,
 				ENDERMAN,
 				WITHER,
+				WITHER_SKELETON,
 				PILLAGER,
 				WOLF,
 				WARDEN -> false
+
 				else -> true
 			}
 
@@ -83,6 +85,7 @@ object MonsterFreeAreas : SuCraftModule<MonsterFreeAreas>() {
 			PATROL,
 			RAID,
 			VILLAGE_DEFENSE -> false
+
 			else -> true
 		}
 

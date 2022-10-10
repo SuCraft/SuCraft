@@ -111,7 +111,8 @@ private fun Entity.getLongDescriptionMapEntries(printSubEntitiesAsShort: Boolean
 						"isHarmless" to isHarmless,
 						"isTransitivelyHarmless" to isTransitivelyHarmless
 					)
-				} ?: emptyArray()
+				} ?: emptyArray(),
+				"despawns if far away" to removeWhenFarAway
 			)
 		} ?: emptyArray(),
 		"last damage cause" to lastDamageCause?.getDescription(printSubEntitiesAsShort)

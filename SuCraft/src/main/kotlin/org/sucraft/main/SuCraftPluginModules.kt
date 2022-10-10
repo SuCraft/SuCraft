@@ -58,6 +58,7 @@ import org.sucraft.modules.dispenserscanlightportals.DispensersCanLightPortals
 import org.sucraft.modules.geyserpermissions.GeyserPermissions
 import org.sucraft.modules.icanhasbukkitcommandalias.ICanHasBukkitCommandAlias
 import org.sucraft.modules.inspectcommandalias.InspectCommandAlias
+import org.sucraft.modules.loginvulnerableentitydamage.LogInvulnerableEntityDamage
 import org.sucraft.modules.moremobheads.MoreMobHeads
 import org.sucraft.modules.rulescommand.RulesCommand
 import org.sucraft.modules.zombiehorsejockeys.ZombieHorseJockeys
@@ -96,6 +97,7 @@ val modules by lazy {
 		InspectCommandAlias,
 		InvisibleItemFrames,
 		LightningCommand,
+		LogInvulnerableEntityDamage,
 		MonsterFreeAreas,
 		MoreMobHeads,
 		MysteryBoxes,

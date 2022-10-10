@@ -18,7 +18,7 @@ import org.sucraft.modules.harmlessentities.isTransitivelyHarmless
 
 private val Entity.shortDescriptionMapEntries
 	get() = listOfNotNull(
-		(this as? Player).run { "playerName" to name },
+		(this as? Player)?.run { "playerName" to name },
 		"entityType" to type,
 		"valid" to isValid,
 		"dead" to isDead,

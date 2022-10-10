@@ -113,7 +113,8 @@ private fun Entity.getLongDescriptionMapEntries(printSubEntitiesAsShort: Boolean
 					)
 				} ?: emptyArray()
 			)
-		} ?: emptyArray()
+		} ?: emptyArray(),
+		"last damage cause" to lastDamageCause?.getDescription(printSubEntitiesAsShort)
 	)
 
 fun Entity.getLongDescriptionMap(printSubEntitiesAsShort: Boolean): Map<String, Any?> =

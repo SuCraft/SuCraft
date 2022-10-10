@@ -5,6 +5,7 @@
 package org.sucraft.modules.monsterfreeareas
 
 import org.bukkit.Location
+import org.bukkit.World.Environment.NORMAL
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.EntityType.*
 import org.bukkit.event.EventPriority.HIGHEST
@@ -144,10 +145,11 @@ object MonsterFreeAreas : SuCraftModule<MonsterFreeAreas>() {
 			// Check that we want to prevent spawns that happened for this reason
 			if (spawnReason.canAlwaysSpawnInMonsterFreeAreas) return@on
 
-			// Only block spawns above a certain minimum y,
+			// In the overworld, only block spawns above a certain minimum y,
 			// except for those that spawn in the deep ocean: those will be blocked at all heights
 			if (
-				location.y < minimumYForBlockedSpawnsUnlessDeepOceanHostile
+				location.world.environment == NORMAL
+				&& location.y < minimumYForBlockedSpawnsUnlessDeepOceanHostile
 				&& !entityType.isDeepOceanHostile
 			) return@on
 

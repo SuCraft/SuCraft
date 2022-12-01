@@ -1,4 +1,4 @@
-package org.sucraft.modules.prefernces.event
+package org.sucraft.modules.preferences.event
 
 import org.bukkit.entity.Player
 import org.bukkit.event.Event

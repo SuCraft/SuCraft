@@ -2,7 +2,7 @@
  * Copyright (c) SuCraft 2021 sucraft.org
  */
 
-package org.sucraft.anticorruption.listener
+package org.sucraft.modules.shorttermbackups.listener
 
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent

@@ -1,0 +1,58 @@
+# Gradle
+.gradle/
+build/
+
+# JVM crash related
+core.*
+hs_err_pid*
+replay_*.log
+*.hprof
+*.jfr
+
+# Eclipse stuff
+.classpath
+.project
+.settings/
+*.launch
+
+# VSCode stuff
+.vscode/
+
+# netbeans
+nbproject/
+nbactions.xml
+
+# vim
+.*.sw[a-p]
+
+# Maven
+build.xml
+log/
+target/
+dependency-reduced-pom.xml
+
+# various other potential build files
+bin/
+classes/
+dist/
+manifest.mf
+__pycache__/
+
+# Mac filesystem dust
+.DS_Store/
+.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# JetBrains Fleet
+.fleet/
+
+# Linux temp files
+*~
+
+!gradle/wrapper/gradle-wrapper.jar

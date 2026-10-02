@@ -1,3 +1,3 @@
 rootProject.name = "sucraft-monorepo"
 
-// includeBuild("server-software") { name = "suki" }
+includeBuild("server-software") { name = "suki" }

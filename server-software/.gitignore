@@ -1,0 +1,13 @@
+/run*/
+
+/suki-server/build.gradle.kts
+/suki-server/src/minecraft
+/suki-server/map-color-cache.dat
+/suki-server/logs
+/paper-server
+/spout-server
+/suki-api/build.gradle.kts
+/paper-api
+/spout-api
+*.jar
+test-plugin.settings.gradle.kts

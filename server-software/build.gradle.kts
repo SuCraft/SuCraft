@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import kotlin.io.path.copyToRecursively
+import kotlin.io.path.deleteRecursively
 
 plugins {
     id("io.papermc.paperweight.patcher") version "2.0.0-beta.24"
@@ -101,12 +102,25 @@ subprojects {
     }
 }
 
+tasks.register("clean") {
+    group = "build"
+    doLast {
+        delete(project.file(".gradle/caches/repo"))
+    }
+}
+
 tasks.register("viewSpoutPaperFolder") {
+    group = "paperweight internal"
     doLast doLast@{
 
         val sub = providers.gradleProperty("spoutRepoSubdirectory").get()
         val apiCommonSourceFolders = listOf("common/src/main", "spout/paper/spout-api/src/not-api")
-        val serverCommonSourceFolders = listOf("common/minecraft/src/main", "spout/common/src/main", "spout/paper/spout-server/src/api", "spout/paper/spout-server/src/api-impl")
+        val serverCommonSourceFolders = listOf(
+            "common/minecraft/src/main",
+            "spout/common/src/main",
+            "spout/paper/spout-server/src/api",
+            "spout/paper/spout-server/src/api-impl"
+        )
         val repoDir = project.file(".gradle/caches/repo")
         val repoDirSub = project.file(".gradle/caches/repo/$sub")
         val repo = providers.gradleProperty("spoutRepo").get()
@@ -182,7 +196,15 @@ tasks.register("viewSpoutPaperFolder") {
 
         @OptIn(kotlin.io.path.ExperimentalPathApi::class)
         fun copyCommonSources(folders: List<String>, directory: String) {
-            folders.forEach { repoDir.resolve(it).toPath().copyToRecursively(repoDirSub.resolve(directory).resolve("src/main").toPath(), followLinks=false, overwrite=false) }
+            folders.forEach {
+                val source = repoDir.resolve(it).toPath()
+                source.copyToRecursively(
+                    repoDirSub.resolve(directory).resolve("src/main").toPath(),
+                    followLinks = false,
+                    overwrite = false
+                )
+                source.deleteRecursively()
+            }
         }
 
         // Copy common sources

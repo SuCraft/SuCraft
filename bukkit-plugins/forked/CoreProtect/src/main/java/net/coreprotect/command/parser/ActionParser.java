@@ -1,0 +1,302 @@
+package net.coreprotect.command.parser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import net.coreprotect.model.action.EntityActionFilter;
+import net.coreprotect.model.action.LookupActions;
+import net.coreprotect.model.action.SessionActions;
+import net.coreprotect.model.item.ItemTransactionActions;
+
+/**
+ * Parser for action-related command arguments
+ */
+public class ActionParser {
+
+    /**
+     * Parse page from command arguments
+     * 
+     * @param argumentArray
+     *            The command arguments
+     * @return The processed argument array
+     */
+    public static String[] parsePage(String[] argumentArray) {
+        if (argumentArray.length == 2) {
+            argumentArray[1] = argumentArray[1].replaceFirst("page:", "");
+        }
+
+        return argumentArray;
+    }
+
+    /**
+     * Parse action from command arguments
+     * 
+     * @param inputArguments
+     *            The command arguments
+     * @return A list of action integers
+     */
+    public static List<Integer> parseAction(String[] inputArguments) {
+        return parseAction(inputArguments, false);
+    }
+
+    public static List<Integer> parseAction(String[] inputArguments, boolean allowMultiple) {
+        return parseActions(inputArguments, allowMultiple).getActions();
+    }
+
+    public static ParseResult parseActions(String[] inputArguments, boolean allowMultiple) {
+        String[] argumentArray = inputArguments.clone();
+        List<Integer> result = new ArrayList<>();
+        EntityActionFilter entityActionFilter = EntityActionFilter.DEFAULT;
+        int count = 0;
+        int next = 0;
+        for (String argument : argumentArray) {
+            if (count > 0) {
+                argument = argument.trim().toLowerCase(Locale.ROOT);
+                argument = argument.replaceAll("\\\\", "");
+                argument = argument.replaceAll("'", "");
+
+                if (next == 1 && MessageFilterParser.isLookupTerminator(argument)) {
+                    next = 0;
+                }
+                if (argument.equals("a:") || argument.equals("action:")) {
+                    next = 1;
+                }
+                else if (next == 1 || argument.startsWith("a:") || argument.startsWith("action:")) {
+                    result.clear();
+                    entityActionFilter = EntityActionFilter.NONE;
+                    argument = argument.replaceAll("action:", "");
+                    argument = argument.replaceAll("a:", "");
+                    if (argument.startsWith("#")) {
+                        argument = argument.replaceFirst("#", "");
+                    }
+                    if (allowMultiple && argument.contains(",")) {
+                        for (String action : argument.split(",", -1)) {
+                            if (!action.isEmpty()) {
+                                ParseResult parsedAction = parseActions(new String[] { "lookup", "a:" + action }, false);
+                                result.addAll(parsedAction.getActions());
+                                entityActionFilter = entityActionFilter.merge(parsedAction.getEntityActionFilter());
+                            }
+                        }
+                        next = 0;
+                        continue;
+                    }
+                    if (argument.equals("broke") || argument.equals("break") || argument.equals("remove") || argument.equals("destroy") || argument.equals("block-break") || argument.equals("block-remove") || argument.equals("-block") || argument.equals("-blocks") || argument.equals("block-")) {
+                        result.add(LookupActions.BLOCK_BREAK);
+                        entityActionFilter = EntityActionFilter.ALIASED;
+                    }
+                    else if (argument.equals("placed") || argument.equals("place") || argument.equals("block-place") || argument.equals("+block") || argument.equals("+blocks") || argument.equals("block+")) {
+                        result.add(LookupActions.BLOCK_PLACE);
+                        entityActionFilter = EntityActionFilter.ALIASED;
+                    }
+                    else if (argument.equals("block") || argument.equals("blocks") || argument.equals("block-change") || argument.equals("change") || argument.equals("changes")) {
+                        result.add(LookupActions.BLOCK_BREAK);
+                        result.add(LookupActions.BLOCK_PLACE);
+                        entityActionFilter = EntityActionFilter.ALIASED;
+                    }
+                    else if (argument.equals("click") || argument.equals("clicks") || argument.equals("interact") || argument.equals("interaction") || argument.equals("player-interact") || argument.equals("player-interaction") || argument.equals("player-click")) {
+                        result.add(LookupActions.INTERACTION);
+                    }
+                    else if (argument.equals("death") || argument.equals("deaths") || argument.equals("entity-death") || argument.equals("entity-deaths") || argument.equals("kill") || argument.equals("kills") || argument.equals("entity-kill") || argument.equals("entity-kills")) {
+                        result.add(LookupActions.ENTITY_KILL);
+                    }
+                    else if (argument.equals("spawn") || argument.equals("spawns") || argument.equals("entity-spawn") || argument.equals("entity-spawns")) {
+                        result.add(LookupActions.ENTITY_SPAWN);
+                        entityActionFilter = EntityActionFilter.SPAWNED;
+                    }
+                    else if (argument.equals("container") || argument.equals("container-change") || argument.equals("containers") || argument.equals("chest") || argument.equals("transaction") || argument.equals("transactions")) {
+                        result.add(LookupActions.CONTAINER);
+                    }
+                    else if (argument.equals("-container") || argument.equals("container-") || argument.equals("remove-container")) {
+                        result.add(LookupActions.CONTAINER);
+                        result.add(ItemTransactionActions.REMOVE);
+                    }
+                    else if (argument.equals("+container") || argument.equals("container+") || argument.equals("container-add") || argument.equals("add-container")) {
+                        result.add(LookupActions.CONTAINER);
+                        result.add(ItemTransactionActions.ADD);
+                    }
+                    else if (argument.equals("chat") || argument.equals("chats") || argument.equals("message") || argument.equals("messages")) {
+                        result.add(LookupActions.CHAT);
+                    }
+                    else if (argument.equals("command") || argument.equals("commands")) {
+                        result.add(LookupActions.COMMAND);
+                    }
+                    else if (argument.equals("logins") || argument.equals("login") || argument.equals("+session") || argument.equals("+sessions") || argument.equals("session+") || argument.equals("+connection") || argument.equals("connection+")) {
+                        result.add(LookupActions.SESSION);
+                        result.add(SessionActions.LOGIN);
+                    }
+                    else if (argument.equals("logout") || argument.equals("logouts") || argument.equals("-session") || argument.equals("-sessions") || argument.equals("session-") || argument.equals("-connection") || argument.equals("connection-")) {
+                        result.add(LookupActions.SESSION);
+                        result.add(SessionActions.LOGOUT);
+                    }
+                    else if (argument.equals("session") || argument.equals("sessions") || argument.equals("connection") || argument.equals("connections")) {
+                        result.add(LookupActions.SESSION);
+                    }
+                    else if (argument.equals("username") || argument.equals("usernames") || argument.equals("user") || argument.equals("users") || argument.equals("name") || argument.equals("names") || argument.equals("uuid") || argument.equals("uuids") || argument.equals("username-change") || argument.equals("username-changes") || argument.equals("name-change") || argument.equals("name-changes")) {
+                        result.add(LookupActions.USERNAME);
+                    }
+                    else if (argument.equals("sign") || argument.equals("signs")) {
+                        result.add(LookupActions.SIGN);
+                    }
+                    else if (argument.equals("inv") || argument.equals("inventory") || argument.equals("inventories")) {
+                        result.add(LookupActions.CONTAINER);
+                        result.add(LookupActions.ITEM);
+                    }
+                    else if (argument.equals("-inv") || argument.equals("inv-") || argument.equals("-inventory") || argument.equals("inventory-") || argument.equals("-inventories")) {
+                        result.add(LookupActions.CONTAINER);
+                        result.add(LookupActions.ITEM);
+                        result.add(ItemTransactionActions.ADD);
+                    }
+                    else if (argument.equals("+inv") || argument.equals("inv+") || argument.equals("+inventory") || argument.equals("inventory+") || argument.equals("+inventories")) {
+                        result.add(LookupActions.CONTAINER);
+                        result.add(LookupActions.ITEM);
+                        result.add(ItemTransactionActions.REMOVE);
+                    }
+                    else if (argument.equals("item") || argument.equals("items")) {
+                        result.add(LookupActions.ITEM);
+                    }
+                    else if (argument.equals("-item") || argument.equals("item-") || argument.equals("-items") || argument.equals("items-") || argument.equals("drop") || argument.equals("drops") || argument.equals("deposit") || argument.equals("deposits") || argument.equals("deposited")) {
+                        result.add(LookupActions.ITEM);
+                        result.add(ItemTransactionActions.REMOVE);
+                    }
+                    else if (argument.equals("+item") || argument.equals("item+") || argument.equals("+items") || argument.equals("items+") || argument.equals("pickup") || argument.equals("pickups") || argument.equals("withdraw") || argument.equals("withdraws") || argument.equals("withdrew")) {
+                        result.add(LookupActions.ITEM);
+                        result.add(ItemTransactionActions.ADD);
+                    }
+                    else {
+                        result.add(-1);
+                    }
+                    next = 0;
+                }
+                else {
+                    next = 0;
+                }
+            }
+            count++;
+        }
+        return new ParseResult(result, entityActionFilter);
+    }
+
+    public static final class ParseResult {
+
+        private final List<Integer> actions;
+        private final EntityActionFilter entityActionFilter;
+
+        private ParseResult(List<Integer> actions, EntityActionFilter entityActionFilter) {
+            this.actions = actions;
+            this.entityActionFilter = entityActionFilter;
+        }
+
+        public List<Integer> getActions() {
+            return actions;
+        }
+
+        public EntityActionFilter getEntityActionFilter() {
+            return entityActionFilter;
+        }
+    }
+
+    /**
+     * Parse count flag from command arguments
+     * 
+     * @param inputArguments
+     *            The command arguments
+     * @return true if the count flag is present
+     */
+    public static boolean parseCount(String[] inputArguments) {
+        String[] argumentArray = inputArguments.clone();
+        boolean result = false;
+        int count = 0;
+        for (String argument : argumentArray) {
+            if (count > 0) {
+                argument = argument.trim().toLowerCase(Locale.ROOT);
+                argument = argument.replaceAll("\\\\", "");
+                argument = argument.replaceAll("'", "");
+                if (argument.equals("#count") || argument.equals("#sum") || 
+                    argument.equals("count") || argument.equals("sum")) {
+                    result = true;
+                }
+            }
+            count++;
+        }
+        return result;
+    }
+
+    /**
+     * Parse summary output flag from command arguments
+     *
+     * @param inputArguments
+     *            The command arguments
+     * @return true if the summary flag is present
+     */
+    public static boolean parseSummary(String[] inputArguments) {
+        for (int index = 1; index < inputArguments.length; index++) {
+            String argument = inputArguments[index].trim().toLowerCase(Locale.ROOT).replace("\\", "").replace("'", "");
+            if (argument.equals("#summary")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Parse noisy flag from command arguments
+     * 
+     * @param inputArguments
+     *            The command arguments
+     * @return 1 if noisy/verbose mode is enabled, 0 otherwise
+     */
+    public static int parseNoisy(String[] inputArguments) {
+        String[] argumentArray = inputArguments.clone();
+        int noisy = 0;
+        int count = 0;
+        if (net.coreprotect.config.Config.getGlobal().VERBOSE) {
+            noisy = 1;
+        }
+        for (String argument : argumentArray) {
+            if (count > 0) {
+                argument = argument.trim().toLowerCase(Locale.ROOT);
+                argument = argument.replaceAll("\\\\", "");
+                argument = argument.replaceAll("'", "");
+
+                if (argument.equals("n") || argument.equals("noisy") || argument.equals("v") || argument.equals("verbose") || argument.equals("#v") || argument.equals("#verbose")) {
+                    noisy = 1;
+                }
+                else if (argument.equals("#silent")) {
+                    noisy = 0;
+                }
+            }
+            count++;
+        }
+        return noisy;
+    }
+
+    /**
+     * Parse preview flag from command arguments
+     * 
+     * @param inputArguments
+     *            The command arguments
+     * @return 1 for preview, 2 for preview cancel, 0 otherwise
+     */
+    public static int parsePreview(String[] inputArguments) {
+        String[] argumentArray = inputArguments.clone();
+        int result = 0;
+        int count = 0;
+        for (String argument : argumentArray) {
+            if (count > 0) {
+                argument = argument.trim().toLowerCase(Locale.ROOT);
+                argument = argument.replaceAll("\\\\", "");
+                argument = argument.replaceAll("'", "");
+                if (argument.equals("#preview") || argument.equals("preview")) {
+                    result = 1;
+                }
+                else if (argument.equals("#preview_cancel") || argument.equals("#preview-cancel") || 
+                         argument.equals("preview_cancel") || argument.equals("preview-cancel")) {
+                    result = 2;
+                }
+            }
+            count++;
+        }
+        return result;
+    }
+}

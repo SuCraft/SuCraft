@@ -1,3 +1,5 @@
 rootProject.name = "sucraft-monorepo"
 
-includeBuild("server-software") { name = "suki" }
+// includeBuild("bukkit-plugins") { name = "plugins" }
+includeBuild("minecraft-server-software") { name = "suki" }
+includeBuild("scaffolding")

@@ -1,0 +1,11 @@
+--- a/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
++++ b/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
+@@ -101,7 +_,7 @@
+ 
+     public void startConfiguration() {
+         new io.papermc.paper.event.connection.configuration.PlayerConnectionInitialConfigureEvent(this.paperConnection).callEvent(); // Paper
+-        this.send(new ClientboundCustomPayloadPacket(new BrandPayload(this.server.getServerModName())));
++        this.send(new ClientboundCustomPayloadPacket(new BrandPayload("SuCraft"))); // Suki - Branding changes - Rename server brand - Send "SuCraft" instead of "Suki" because it's more presentable to players
+         // Spout start - Client view - Set - Send custom content - Send packet
+         if (this.connection.clientViewSetter.hasClientMod()) {
+             spout.clientview.clientmod.protocol.ClientModCustomContentSending.sendAllPackets(this.connection);

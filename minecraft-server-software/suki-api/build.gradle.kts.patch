@@ -1,0 +1,43 @@
+--- a/spout-api/build.gradle.kts
++++ b/spout-api/build.gradle.kts
+@@ -122,24 +_,24 @@
+             srcDir(generatedDir)
+             // Spout start - Project setup - Set project directory references
+             srcDir(file("../paper-api/src/main/java"))
+-            srcDir(file("../../../common/src/main/java"))
+-            srcDir(file("src/not-api/java"))
++            srcDir(file("../spout-api/src/main/java")) // Suki - Project setup - Set project directory references
+             // Spout end - Project setup - Set project directory references
+         }
+         resources {
+             // Spout start - Project setup - Set project directory references
+             srcDir(file("../paper-api/src/main/resources"))
+-            srcDir(file("../../../common/src/main/resources"))
+-            srcDir(file("src/not-api/resources"))
++            srcDir(file("../spout-api/src/main/resources")) // Suki - Project setup - Set project directory references
+             // Spout end - Project setup - Set project directory references
+         }
+     }
+     test {
+         java {
+             srcDir(file("../paper-api/src/test/java"))
++            srcDir(file("../spout-api/src/test/java")) // Suki - Project setup - Set project directory references
+         }
+         resources {
+             srcDir(file("../paper-api/src/test/resources"))
++            srcDir(file("../spout-api/src/test/resources")) // Suki - Project setup - Set project directory references
+         }
+     }
+ }
+@@ -164,6 +_,11 @@
+                 for (coordinates in arrayOf(
+                     "com.github.modernspout:spout-api",
+                     "com.github.ModernSpout:Spout"
++                    // Suki start - Project setup - Extend module capabilities
++                    ,
++                    "org.sucraft.suki:suki-api",
++                    "org.sucraft.suki:Suki"
++                    // Suki end - Project setup - Extend module capabilities
+                 )) {
+                     for (version in arrayOf(project.version, getGitHashProvider(null).get(), getGitHashProvider(7).get(), getGitHashProvider(8).get(), getGitHashProvider(10).get())) {
+                         val alternativeCapability = "$coordinates:$version"

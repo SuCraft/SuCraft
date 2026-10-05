@@ -1,0 +1,11 @@
+--- a/src/main/java/com/destroystokyo/paper/network/PaperServerListPingEventImpl.java
++++ b/src/main/java/com/destroystokyo/paper/network/PaperServerListPingEventImpl.java
+@@ -14,7 +_,7 @@
+ 
+     PaperServerListPingEventImpl(MinecraftServer server, StatusClient client, int protocolVersion, @Nullable CachedServerIcon icon) {
+         super(client, server.motd(), server.getPlayerCount(), server.getMaxPlayers(),
+-                server.getServerModName() + ' ' + server.getServerVersion(), protocolVersion, icon);
++                "SuCraft" + ' ' + server.getServerVersion(), protocolVersion, icon); // Suki - Branding changes - Rename server brand - Send "SuCraft" instead of "Suki" because it's more presentable to players
+         this.server = server;
+     }
+ 

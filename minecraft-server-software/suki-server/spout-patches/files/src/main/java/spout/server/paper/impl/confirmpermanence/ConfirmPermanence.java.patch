@@ -1,0 +1,15 @@
+--- a/src/main/java/spout/server/paper/impl/confirmpermanence/ConfirmPermanence.java
++++ b/src/main/java/spout/server/paper/impl/confirmpermanence/ConfirmPermanence.java
+@@ -14,6 +_,12 @@
+     }
+ 
+     public static boolean check(Logger logger) {
++        // Suki start - Always confirm Spout permanence
++        return true;
++    }
++
++    public static boolean suki$original_check(Logger logger) {
++        // Suki end - Always confirm Spout permanence
+         if (SpoutGlobalConfiguration.get()._enabled) {
+             return true;
+         }

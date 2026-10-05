@@ -104,14 +104,14 @@ subprojects {
 
 tasks.register("clean") {
     group = "build"
-    doLast {
+    doFirst {
         delete(project.file(".gradle/caches/repo"))
     }
 }
 
 tasks.register("viewSpoutPaperFolder") {
     group = "paperweight internal"
-    doLast doLast@{
+    doFirst doFirst@{
 
         val sub = providers.gradleProperty("spoutRepoSubdirectory").get()
         val apiCommonSourceFolders = listOf("common/src/main", "spout/paper/spout-api/src/not-api")
@@ -150,7 +150,7 @@ tasks.register("viewSpoutPaperFolder") {
             val currentRef = runGit("rev-parse", "HEAD")
             if (currentRef.trim() == ref.trim()) {
                 println("Up-to-date")
-                return@doLast
+                return@doFirst
             }
         }
 

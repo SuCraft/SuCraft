@@ -1,0 +1,96 @@
+--- a/spout-server/build.gradle.kts
++++ b/spout-server/build.gradle.kts
+@@ -36,6 +_,29 @@
+     }
+     activeFork = spout
+     // Spout end - Project setup - Set up Paperweight
++    // Suki start - Project setup - Set up Paperweight
++    val suki = forks.register("suki") {
++        forks = spout
++        upstream.patchRepo("paperServer") {
++            upstreamRepo = spout.patchedRepo("paperServer")
++            patchesDir = rootDirectory.dir("suki-server/paper-patches")
++            outputDir = rootDirectory.dir("paper-server")
++        }
++        upstream.patchDir("spoutServer") {
++            upstreamPath = "spout-server"
++            excludes = setOf(
++                "src/minecraft",
++                "paper-patches",
++                "minecraft-patches",
++                "build.gradle.kts",
++                "build.gradle.kts.patch"
++            )
++            patchesDir = rootDirectory.dir("suki-server/spout-patches")
++            outputDir = rootDirectory.dir("spout-server")
++        }
++    }
++    activeFork = suki
++    // Suki end - Project setup - Set up Paperweight
+ 
+     updatingMinecraft {
+         //oldPaperCommit = "e5fe71723e2ffde7cc9fafc085ac3bb73e63175e"
+@@ -103,26 +_,20 @@
+ 
+ // Spout start - Project setup - Set project directory references
+ sourceSets {
++    // Suki start - Project setup - Set project directory references
+     main {
+         java { srcDir("../paper-server/src/main/java") }
++        java { srcDir("../spout-server/src/main/java") }
+         resources { srcDir("../paper-server/src/main/resources") }
+-    }
+-    main {
+-        java.srcDir("../../../common/src/main/java")
+-        java.srcDir("../../../common/minecraft/src/main/java")
+-        java.srcDir("../../common/src/main/java")
+-        java.srcDir(file("src/api/java"))
+-        java.srcDir(file("src/api-impl/java"))
+-        resources.srcDir("../../../common/src/main/resources")
+-        resources.srcDir("../../../common/minecraft/src/main/resources")
+-        resources.srcDir("../../common/src/main/resources")
+-        resources.srcDir(file("src/api/resources"))
+-        resources.srcDir(file("src/api-impl/resources"))
++        resources { srcDir("../spout-server/src/main/resources") }
+     }
+     test {
+         java { srcDir("../paper-server/src/test/java") }
++        java { srcDir("../spout-server/src/test/java") }
+         resources { srcDir("../paper-server/src/test/resources") }
++        resources { srcDir("../spout-server/src/test/resources") }
+     }
++    // Suki end - Project setup - Set project directory references
+ }
+ val log4jPlugins = sourceSets.create("log4jPlugins", Action {
+     java { srcDir("../paper-server/src/log4jPlugins/java") }
+@@ -150,7 +_,7 @@
+ }
+ 
+ dependencies {
+-    implementation(project(":spout-api")) // Spout - Project setup - Set up Gradle project
++    implementation(project(":suki-api")) // Spout - Project setup - Set up Gradle project // Suki - Project setup - Set up Gradle project
+     implementation(platform("ca.spottedleaf.leafpile:bom:1.2.4"))
+     implementation("ca.spottedleaf.leafpile:common")
+     implementation("ca.spottedleaf.leafpile:concurrentutil")
+@@ -225,15 +_,15 @@
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+             "Add-Opens" to "java.base/java.lang", // Spout - Synchronize Bukkit enums - Add module opens to server JAR
+             "Enable-Final-Field-Mutation" to "ALL-UNNAMED", // Spout - Synchronize Bukkit enums - Add enable final field mutation to server JAR
+-            "Implementation-Title" to "Spout", // Spout - Branding changes - Rename server brand
++            "Implementation-Title" to "Suki", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
+             "Implementation-Version" to implementationVersion,
+             "Implementation-Build-Date" to date, // Spout - Project setup - Include Git date as "Implementation-Build-Date"
+-            "Implementation-Vendor" to "Spout authors & contributors", // Spout - Branding changes - Rename server brand
+-            "Specification-Title" to "Spout", // Spout - Branding changes - Rename server brand
++            "Implementation-Vendor" to "Martijn Muijsers", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
++            "Specification-Title" to "Suki", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
+             "Specification-Version" to project.version,
+-            "Specification-Vendor" to "Spout authors & contributors", // Spout - Branding changes - Rename server brand
+-            "Brand-Id" to "spout:spout-paper-server", // Spout - Branding changes - Rename server brand
+-            "Brand-Name" to "Spout", // Spout - Branding changes - Rename server brand
++            "Specification-Vendor" to "Martijn Muijsers", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
++            "Brand-Id" to "sucraft:suki-server", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
++            "Brand-Name" to "Suki", // Spout - Branding changes - Rename server brand // Suki - Branding changes - Rename server brand
+             "Build-Number" to (build ?: ""),
+             "Build-Time" to buildTime.toString(),
+             "Git-Branch" to gitBranch,

@@ -1,0 +1,33 @@
+--- a/net/minecraft/server/Main.java
++++ b/net/minecraft/server/Main.java
+@@ -170,17 +_,19 @@
+                 return;
+             }
+ 
+-            // Paper start - eula system property
+-            boolean eulaAgreed = Boolean.getBoolean("com.mojang.eula.agree");
+-            if (eulaAgreed) {
+-                LOGGER.warn("You have used the Paper command line EULA agreement flag.");
+-                LOGGER.warn("By using this setting you are indicating your agreement to Mojang's EULA (https://aka.ms/MinecraftEULA).");
+-                LOGGER.warn("If you do not agree to the above EULA please stop your server and remove this flag immediately.");
+-            } else if (!eula.hasAgreedToEULA()) {
+-                // Paper end - eula system property
+-                LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
+-                return;
+-            }
++            // Suki start - Always accept EULA
++            // // Paper start - eula system property
++            // boolean eulaAgreed = Boolean.getBoolean("com.mojang.eula.agree");
++            // if (eulaAgreed) {
++            //     LOGGER.warn("You have used the Paper command line EULA agreement flag.");
++            //     LOGGER.warn("By using this setting you are indicating your agreement to Mojang's EULA (https://aka.ms/MinecraftEULA).");
++            //     LOGGER.warn("If you do not agree to the above EULA please stop your server and remove this flag immediately.");
++            // } else if (!eula.hasAgreedToEULA()) {
++            //     // Paper end - eula system property
++            //     LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
++            //     return;
++            // }
++            // Suki end - Always accept EULA
+ 
+             // Paper start - Detect headless JRE
+             String awtException = io.papermc.paper.util.ServerEnvironment.awtDependencyCheck();

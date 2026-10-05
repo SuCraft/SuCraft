@@ -21,19 +21,23 @@ You can open this project in IntelliJ easily:
 * Choose a destination directory
 * Click *Clone*
 
-Before starting, you (probably) need to have Git and the Java 25 JDK installed,
-although installing IntelliJ will usually do that for you.
+Before starting, you need to have the following installed (although IntelliJ usually already installs this for you):
+* Java JDK 25 or 26
+* Git
 
 To set up the entire infrastructure for testing, simply run the command:
 ```bash
 ./gradlew :scaffolding:update
 ```
 
+This command may take 10+ minutes, because a lot of code needs to be compiled.
+
 This creates the entire directory structure and all binaries inside the `run` folder.\
 After making changes (to a plugin or something else), you can re-run `:scaffolding:update`
 to update the `run` folder with your new changes.
 
-Then, run this command to start everything:
-```bash
-./gradlew :scaffolding:run
-```
+Then, to start everything, run the script located at `run/start_all.sh`.
+
+By default, this script assumes you have Linux with a GNOME terminal, macOS, or Windows with Git Bash installed.
+
+

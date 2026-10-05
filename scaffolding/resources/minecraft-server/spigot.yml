@@ -1,0 +1,219 @@
+# This is the Spigot configuration file for Paper.
+# As you can see, there's tons to configure. Some options may impact gameplay, so use
+# with caution, and make sure you know what each option does before configuring.
+#
+# If you need help with the configuration or have any questions related to Paper,
+# join us in our Discord or check the docs page.
+#
+# File Reference: https://docs.papermc.io/paper/reference/spigot-configuration/
+# Docs: https://docs.papermc.io/
+# Discord: https://discord.gg/papermc
+# Website: https://papermc.io/
+
+settings:
+  save-user-cache-on-stop-only: false
+  moved-wrongly-threshold: 40.0
+  moved-too-quickly-multiplier: 200.0
+  bungeecord: false
+  timeout-time: 100000
+  restart-on-crash: true
+  restart-script: ./start.sh
+  sample-count: 12
+  player-shuffle: 0
+  user-cache-size: 1000
+  netty-threads: 4
+  attribute:
+    maxAbsorption:
+      max: 2048.0
+    maxHealth:
+      max: 2048.0
+    movementSpeed:
+      max: 2048.0
+    attackDamage:
+      max: 2048.0
+  log-villager-deaths: true
+  log-named-deaths: true
+  debug: false
+players:
+  disable-saving: false
+advancements:
+  disable-saving: false
+  disabled:
+  - minecraft:story/disabled
+world-settings:
+  default:
+    below-zero-generation-in-existing-chunks: true
+    zombie-aggressive-towards-villager: true
+    enable-zombie-pigmen-portal-spawns: true
+    wither-spawn-sound-radius: 0
+    end-portal-sound-radius: 0
+    hanging-tick-frequency: 200
+    dragon-death-sound-radius: 0
+    view-distance: default
+    simulation-distance: default
+    merge-radius:
+      item: 2.0
+      exp: 1.6
+    mob-spawn-range: 6
+    item-despawn-rate: 12000
+    arrow-despawn-rate: 1200
+    trident-despawn-rate: 24000
+    nerf-spawner-mobs: false
+    thunder-chance: 100000
+    max-entity-collisions: 8
+    unload-frozen-chunks: false
+    growth:
+      cactus-modifier: 150
+      cane-modifier: 150
+      melon-modifier: 150
+      mushroom-modifier: 120
+      pumpkin-modifier: 150
+      sapling-modifier: 120
+      beetroot-modifier: 150
+      carrot-modifier: 150
+      potato-modifier: 150
+      torchflower-modifier: 100
+      wheat-modifier: 150
+      netherwart-modifier: 150
+      vine-modifier: 100
+      cocoa-modifier: 150
+      bamboo-modifier: 100
+      sweetberry-modifier: 150
+      kelp-modifier: 100
+      twistingvines-modifier: 100
+      weepingvines-modifier: 100
+      cavevines-modifier: 100
+      glowberry-modifier: 100
+      pitcherplant-modifier: 100
+    entity-activation-range:
+      baby-immunity-for: 5
+      sheared-sheep-immunity: true
+      non-sitting-pet-immunity: true
+      mob-targeting-mob-immunity-for:
+        default: 20
+        wolf-target-sheep: 20
+        wolf-target-fox: 20
+        guardian-target-squid: 20
+        llama-target-wolf: 20
+        polar-bear-target-fox: 20
+        fox-target-chicken: 20
+        ocelot-target-chicken: 20
+        cat-target-rabbit: 20
+        enderman-target-endermite: 20
+        piglin-target-hoglin: 20
+        piglin-target-wither-skeleton: 20
+        wither-skeleton-target-piglin: 20
+        wither-skeleton-target-iron-golem: 20
+        wither-skeleton-target-snow-golem: 20
+        snow-golem-target-non-player: 20
+        zoglin-target-non-player: 20
+        axolotl-target-fish: 20
+        axolotl-target-squid: 20
+        witch-target-witch: 20
+        mob-target-turtle: 20
+      animals: 16
+      monsters: 24
+      raiders: 48
+      misc: 8
+      water: 16
+      villagers: 16
+      flying-monsters: 32
+      wake-up-inactive:
+        duration-standard-deviation-ratio: 0.2
+        animals-max-per-tick: 2
+        animals-every: 200
+        animals-for: 28
+        monsters-max-per-tick: 4
+        monsters-every: 130
+        monsters-for: 70
+        villagers-max-per-tick: 2
+        villagers-every: 130
+        villagers-for: 40
+        flying-monsters-max-per-tick: 16
+        flying-monsters-every: 200
+        flying-monsters-for: 100
+      villagers-work-immunity-after: 150
+      villagers-work-immunity-for: 20
+      villagers-active-for-panic: true
+      tick-inactive-villagers: false
+      ignore-spectators: true
+    entity-tracking-range:
+      players: 166
+      animals: 96
+      monsters: 64
+      misc: 80
+      display: 128
+      other: 64
+    ticks-per:
+      hopper-transfer: 8
+      hopper-check: 1
+    hopper-amount: 1
+    hopper-can-load-chunks: false
+    seed-village: 10387312
+    seed-desert: 14357617
+    seed-igloo: 14357618
+    seed-jungle: 14357619
+    seed-swamp: 14357620
+    seed-monument: 10387313
+    seed-shipwreck: 165745295
+    seed-ocean: 14357621
+    seed-outpost: 165745296
+    seed-endcity: 10387313
+    seed-nether: 30084232
+    seed-mansion: 10387319
+    seed-fossil: 14357921
+    seed-portal: 34222645
+    seed-ancientcity: 20083232
+    seed-trailruins: 83469867
+    seed-trialchambers: 94251327
+    seed-abandonedcamp: 91231127
+    seed-buriedtreasure: 10387320
+    seed-mineshaft: default
+    seed-stronghold: default
+    seed-slime: 987234911
+    hunger:
+      jump-walk-exhaustion: 0.035
+      jump-sprint-exhaustion: 0.12
+      combat-exhaustion: 0.07
+      regen-exhaustion: 4.6
+      swim-multiplier: 0.01
+      sprint-multiplier: 0.1
+      other-multiplier: 0.0
+    max-tnt-per-tick: 50
+    max-tick-time:
+      tile: 1000
+      entity: 1000
+    verbose: true
+  filmworld_the_end:
+    merge-radius:
+      exp: 0.2
+  worldeditregentempworld:
+    verbose: false
+  faweregentempworld:
+    verbose: false
+messages:
+  whitelist: You are not whitelisted on this server!
+  unknown-command: Unknown command. Type "/help" for help.
+  server-full: The server is full!
+  outdated-client: Outdated client! Please use {0}
+  outdated-server: Outdated server! I'm still on {0}
+  restart: Server is restarting
+config-version: 13
+stats:
+  disable-saving: false
+  forced-stats: {}
+commands:
+  silent-commandblock-console: false
+  log: true
+  tab-complete: 0
+  send-namespaced: true
+  spam-exclusions:
+  - /ping
+  - /tps
+  - /mspt
+  replace-commands:
+  - setblock
+  - summon
+  - testforblock
+  - tellraw
+  enable-spam-exclusions: true

@@ -1,10 +1,12 @@
 import org.gradle.internal.extensions.stdlib.capitalized
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.PosixFilePermission
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.getLastModifiedTime
+import kotlin.io.path.pathString
 
 val buildDependencyTasks = listOf(
     ":suki:suki-server:createBundlerJar"
@@ -66,9 +68,16 @@ fun projectFile(targetPath: String, sourcePath: String) = object : TargetFile(ta
 
 fun rootProjectFile(targetPath: String, sourcePath: String) = projectFile(targetPath, "../$sourcePath")
 
-val targetFiles = listOf(
+val targetFiles = arrayListOf(
     rootProjectFile("minecraft-server/server.jar", "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar")
 )
+for (resourcesFolderName in arrayOf("resources", "secret-resources")) {
+    val resourcesFolder = project.layout.projectDirectory.file(resourcesFolderName).asFile
+    resourcesFolder.walkTopDown().toList().filter { it.isFile }.map { resourceFile ->
+        val relativePath = resourceFile.relativeTo(resourcesFolder).path
+        projectFile(relativePath, "$resourcesFolderName/$relativePath")
+    }
+}
 
 tasks.register("update") {
     group = "scaffolding"
@@ -76,16 +85,20 @@ tasks.register("update") {
     doFirst {
         for (targetFile in targetFiles) {
             if (targetFile.needToCopy()) {
+                logger.lifecycle("Placing target file: ${targetFile.targetFile().pathString}")
                 targetFile.targetFile().createParentDirectories()
                 targetFile.copy()
+                if (targetFile.targetFile().pathString.endsWith(".sh") || targetFile.targetFile().pathString.endsWith(".jar")) {
+                    // Make executable
+                    logger.lifecycle("Making executable: ${targetFile.targetFile().pathString}")
+                    val permissions = Files.getPosixFilePermissions(targetFile.targetFile()).toMutableSet()
+                    permissions.add(PosixFilePermission.OWNER_EXECUTE)
+                    permissions.add(PosixFilePermission.OTHERS_EXECUTE)
+                    Files.setPosixFilePermissions(targetFile.targetFile(), permissions)
+                }
+            } else {
+                logger.lifecycle("Skipping (already up-to-date): ${targetFile.targetFile().pathString}")
             }
         }
-    }
-}
-
-tasks.register("run") {
-    group = "scaffolding"
-    doFirst {
-
     }
 }

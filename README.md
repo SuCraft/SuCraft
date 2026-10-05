@@ -21,9 +21,13 @@ You can open this project in IntelliJ easily:
 * Choose a destination directory
 * Click *Clone*
 
-Before starting, you need to have the following installed (although IntelliJ usually already installs this for you):
-* Java JDK 25 or 26
-* Git
+Before starting, you need to have the following installed:
+* Java JDK 25 (not higher)\
+  (with the `java` command available on the execution path)
+* Git\
+  (with the `git` command available on the execution path)
+* Maven\
+  (with the `mvn` command available on the execution path)
 
 To set up the entire infrastructure for testing, simply run the command:
 ```bash

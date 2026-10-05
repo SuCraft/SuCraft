@@ -4,6 +4,7 @@ main: com.platymuus.bukkit.permissions.PermissionsPlugin
 author: SpaceManiac
 website: http://dev.bukkit.org/server-mods/permbukkit/
 version: ${version}
+api-version: '26.3'
 
 # commands
 commands:
@@ -104,6 +105,3 @@ permissions:
     description: Allows use of /permissions player setperm.
   permissions.player.unsetperm:
     description: Allows use of /permissions player unsetperm.
-
-# for PhonicUK, a cool guy who doesn't afraid of anything
-MCMAPluginID: D6AF3772-E6F6-4467-8F3A-1E9DB74C7E50

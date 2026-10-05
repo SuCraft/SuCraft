@@ -9,7 +9,7 @@ import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.pathString
 
 val buildDependencyTasks = listOf(
-    ":suki:suki-server:createBundlerJar"
+    ":suki:suki-server:createBundlerJar",
 ).map { gradleTask ->
 
     fun String.toCamelCase(): String =
@@ -27,6 +27,18 @@ val buildDependencyTasks = listOf(
         group = "prepare dependencies"
         workingDir = file("..")
         commandLine("./gradlew", gradleTask)
+    }
+
+} + listOf(
+    "bukkit-plugins/forked/PermissionsBukkit"
+).map { mavenTask ->
+
+    val newTaskName =
+        "${mavenTask.split("/").last().replaceFirstChar(Char::lowercase)}Install"
+    tasks.register<Exec>(newTaskName) {
+        group = "prepare dependencies"
+        workingDir = file("../$mavenTask")
+        commandLine("mvn", "install")
     }
 
 }
@@ -69,13 +81,25 @@ fun projectFile(targetPath: String, sourcePath: String) = object : TargetFile(ta
 fun rootProjectFile(targetPath: String, sourcePath: String) = projectFile(targetPath, "../$sourcePath")
 
 val targetFiles = arrayListOf(
-    rootProjectFile("minecraft-server/server.jar", "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar")
+    rootProjectFile(
+        "minecraft-server/plugins/bukkit-permissions-2.5-SuCraft.jar",
+        "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar"
+    ),
+    rootProjectFile(
+        "minecraft-server/server.jar",
+        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar"
+    )
 )
-for (resourcesFolderName in arrayOf("resources", "secret-resources")) {
+val baseResourcesFolderName = "resources"
+val secretResourcesFolderName = "secret-resources"
+for (secret in arrayOf(false, true)) {
+    val resourcesFolderName = if (secret) secretResourcesFolderName else baseResourcesFolderName
     val resourcesFolder = project.layout.projectDirectory.file(resourcesFolderName).asFile
     resourcesFolder.walkTopDown().toList().filter { it.isFile }.map { resourceFile ->
         val relativePath = resourceFile.relativeTo(resourcesFolder).path
-        projectFile(relativePath, "$resourcesFolderName/$relativePath")
+        if (secret || !project.layout.projectDirectory.file("${secretResourcesFolderName}/${relativePath}").asFile.exists()) {
+            targetFiles += projectFile(relativePath, "$resourcesFolderName/$relativePath")
+        }
     }
 }
 

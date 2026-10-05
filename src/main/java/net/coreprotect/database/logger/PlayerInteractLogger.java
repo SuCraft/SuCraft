@@ -1,0 +1,72 @@
+package net.coreprotect.database.logger;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Location;
+
+import net.coreprotect.CoreProtect;
+import net.coreprotect.config.Config;
+import net.coreprotect.config.ConfigHandler;
+import net.coreprotect.database.Database;
+import net.coreprotect.database.ConsumerWriteBatch;
+import net.coreprotect.database.statement.BlockStatement;
+import net.coreprotect.database.statement.UserStatement;
+import net.coreprotect.event.CoreProtectPreLogEvent;
+import net.coreprotect.model.action.LookupActions;
+import net.coreprotect.utility.BlockTypeUtils;
+import net.coreprotect.utility.MaterialUtils;
+import net.coreprotect.utility.WorldUtils;
+
+public class PlayerInteractLogger {
+
+    private PlayerInteractLogger() {
+        throw new IllegalStateException("Database class");
+    }
+
+    public static void log(ConsumerWriteBatch preparedStmt, int batchCount, String user, Location location, Material blockType, String blockData) {
+        try {
+            String blockKey = BlockTypeUtils.getBlockDataKey(blockData);
+            if (blockType != null && blockKey.length() > 0) {
+                Material blockDataType = MaterialUtils.getType(blockKey);
+                if (BlockTypeUtils.isAir(blockKey) || (blockDataType != null && !blockDataType.equals(blockType))) {
+                    blockKey = blockType.getKey().toString();
+                    blockData = null;
+                }
+            }
+            if (blockKey.length() == 0 && blockType != null) {
+                blockKey = blockType.getKey().toString();
+            }
+            if (blockKey.length() == 0) {
+                return;
+            }
+
+            int type = MaterialUtils.getBlockId(blockKey, true);
+            if (ConfigHandler.isBlacklisted(user) || BlockTypeUtils.isAir(blockKey)) {
+                return;
+            }
+
+            CoreProtectPreLogEvent event = new CoreProtectPreLogEvent(user, location.clone(), CoreProtectPreLogEvent.Action.PLAYER_INTERACTION, LookupActions.INTERACTION, blockType, null, null);
+            if (Config.getGlobal().API_ENABLED && !Bukkit.isPrimaryThread()) {
+                CoreProtect.getInstance().getServer().getPluginManager().callEvent(event);
+            }
+
+            if (event.isCancelled()) {
+                return;
+            }
+
+            int userId = UserStatement.getId(preparedStmt, event.getUser(), true);
+            Location eventLocation = event.getLocation();
+            int wid = WorldUtils.getWorldId(eventLocation.getWorld().getName());
+            int time = (int) (System.currentTimeMillis() / 1000L);
+            int x = eventLocation.getBlockX();
+            int y = eventLocation.getBlockY();
+            int z = eventLocation.getBlockZ();
+            int data = 0;
+            BlockStatement.insert(preparedStmt, batchCount, time, userId, wid, x, y, z, type, data, null, blockData, LookupActions.INTERACTION, 0);
+        }
+        catch (Exception e) {
+            Database.handleWriteFailure(e);
+        }
+    }
+
+}

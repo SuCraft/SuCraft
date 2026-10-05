@@ -1,0 +1,989 @@
+package net.coreprotect.utility.entity;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Registry;
+import org.bukkit.World;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Bee;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.ChestedHorse;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fox;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Horse.Style;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Panda;
+import org.bukkit.entity.Panda.Gene;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Parrot.Variant;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Piglin;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Raider;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Spellcaster;
+import org.bukkit.entity.Spellcaster.Spell;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.TropicalFish;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zoglin;
+import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
+import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import net.coreprotect.CoreProtect;
+import net.coreprotect.bukkit.BukkitAdapter;
+import net.coreprotect.config.ConfigHandler;
+import net.coreprotect.database.rollback.Rollback;
+import net.coreprotect.paper.PaperAdapter;
+import net.coreprotect.spigot.SpigotAdapter;
+import net.coreprotect.thread.CacheHandler;
+import net.coreprotect.thread.Scheduler;
+import net.coreprotect.utility.AttributeUtils;
+import net.coreprotect.utility.EntitySpawnTracking;
+import net.coreprotect.utility.ErrorReporter;
+import net.coreprotect.utility.WorldUtils;
+
+public class EntityUtil {
+
+    private static final long ENTITY_RESTORE_TIMEOUT_SECONDS = 30L;
+
+    private EntityUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static void spawnEntity(final BlockState block, final EntityType type, final List<Object> list) {
+        if (type == null) {
+            return;
+        }
+        scheduleEntitySpawn(block.getLocation(), type, list, true);
+    }
+
+    public static CompletableFuture<Entity> restoreEntity(final Location blockLocation, final EntityType type, final List<Object> list) {
+        return scheduleEntitySpawn(blockLocation, type, list, false);
+    }
+
+    private static CompletableFuture<Entity> scheduleEntitySpawn(final Location blockLocation, final EntityType type, final List<Object> list, final boolean legacyTransition) {
+        CompletableFuture<Entity> completion = new CompletableFuture<>();
+        if (type == null) {
+            completion.complete(null);
+            return completion;
+        }
+        if (blockLocation == null || blockLocation.getWorld() == null) {
+            completion.complete(null);
+            return completion;
+        }
+        if (!legacyTransition) {
+            completion.orTimeout(ENTITY_RESTORE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        }
+
+        Location restoreLocation = EntitySpawnTracking.isPlacedEntityType(type) ? EntitySpawnTracking.getKillRestoreLocation(blockLocation.getWorld(), list) : null;
+        if (restoreLocation == null) {
+            restoreLocation = blockLocation.clone();
+            restoreLocation.setX(restoreLocation.getX() + 0.50);
+            restoreLocation.setZ(restoreLocation.getZ() + 0.50);
+        }
+        final Location entityLocation = restoreLocation;
+        Runnable task = () -> {
+            Entity entity = null;
+            try {
+                entity = entityLocation.getWorld().spawnEntity(entityLocation, type);
+
+                if (list.isEmpty()) {
+                    completeEntityRestore(completion, entity, legacyTransition);
+                    return;
+                }
+                if (legacyTransition && list.size() > 7 && list.get(7) instanceof String) {
+                    EntitySpawnTracking.trackRevivedEntity(entity, UUID.fromString((String) list.get(7)));
+                }
+
+                @SuppressWarnings("unchecked")
+                List<Object> age = (List<Object>) list.get(0);
+                @SuppressWarnings("unchecked")
+                List<Object> tame = (List<Object>) list.get(1);
+                @SuppressWarnings("unchecked")
+                List<Object> data = (List<Object>) list.get(2);
+
+                if (list.size() >= 5) {
+                    entity.setCustomNameVisible((Boolean) list.get(3));
+                    entity.setCustomName((String) list.get(4));
+                }
+
+                if (legacyTransition) {
+                    int unixtimestamp = (int) (System.currentTimeMillis() / 1000L);
+                    int wid = WorldUtils.getWorldId(blockLocation.getWorld().getName());
+                    String token = blockLocation.getBlockX() + "." + blockLocation.getBlockY() + "." + blockLocation.getBlockZ() + "." + wid + "." + type.name();
+                    CacheHandler.entityCache.put(token, new Object[] { unixtimestamp, entity.getEntityId(), entity.getUniqueId() });
+                }
+
+                if (entity instanceof Ageable) {
+                    int count = 0;
+                    Ageable ageable = (Ageable) entity;
+                    for (Object value : age) {
+                        if (count == 0) {
+                            int set = (Integer) value;
+                            ageable.setAge(set);
+                        }
+                        else if (count == 1) {
+                            boolean set = (Boolean) value;
+                            ageable.setAgeLock(set);
+                        }
+                        else if (count == 2) {
+                            boolean set = (Boolean) value;
+                            if (set) {
+                                ageable.setAdult();
+                            }
+                            else {
+                                ageable.setBaby();
+                            }
+                        }
+                        else if (count == 3) {
+                            boolean set = (Boolean) value;
+                            ageable.setBreed(set);
+                        }
+                        else if (count == 4 && value != null) {
+                            // deprecated
+                            double set = (Double) value;
+                            ageable.setMaxHealth(set);
+                        }
+                        count++;
+                    }
+                }
+                if (entity instanceof Tameable) {
+                    int count = 0;
+                    Tameable tameable = (Tameable) entity;
+                    for (Object value : tame) {
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            tameable.setTamed(set);
+                        }
+                        else if (count == 1) {
+                            String set = (String) value;
+                            // An owner whose name the server never learned was stored as null
+                            if (set != null && set.length() > 0) {
+                                Player owner = Bukkit.getServer().getPlayer(set);
+                                if (owner == null) {
+                                    OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(set);
+                                    if (offlinePlayer != null) {
+                                        tameable.setOwner(offlinePlayer);
+                                    }
+                                }
+                                else {
+                                    tameable.setOwner(owner);
+                                }
+                            }
+                        }
+                        count++;
+                    }
+                }
+                if (entity instanceof Attributable && list.size() >= 6) {
+                    Attributable attributable = (Attributable) entity;
+                    @SuppressWarnings("unchecked")
+                    List<Object> attributes = (List<Object>) list.get(5);
+                    restoreAttributes(attributable, attributes);
+                }
+
+                if (entity instanceof LivingEntity && list.size() >= 7) {
+                    LivingEntity livingEntity = (LivingEntity) entity;
+                    @SuppressWarnings("unchecked")
+                    List<Object> details = (List<Object>) list.get(6);
+                    LivingEntityDetails.restore(livingEntity, details);
+                }
+
+                boolean placedEntity = EntitySpawnTracking.isPlacedEntity(entity);
+                if (placedEntity) {
+                    EntitySpawnTracking.restoreKillState(entity, list);
+                }
+                int count = 0;
+                for (Object value : placedEntity ? Collections.emptyList() : data) {
+                    if (entity instanceof Creeper) {
+                        Creeper creeper = (Creeper) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            creeper.setPowered(set);
+                        }
+                    }
+                    else if (entity instanceof Enderman) {
+                        Enderman enderman = (Enderman) entity;
+                        if (count == 1) {
+                            String blockDataString = (String) value;
+                            BlockData blockData = Bukkit.getServer().createBlockData(blockDataString);
+                            enderman.setCarriedBlock(blockData);
+                        }
+                    }
+                    else if (entity instanceof IronGolem) {
+                        IronGolem irongolem = (IronGolem) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            irongolem.setPlayerCreated(set);
+                        }
+                    }
+                    else if (entity instanceof Cat) {
+                        Cat cat = (Cat) entity;
+                        if (count == 0) {
+                            if (value instanceof String) {
+                                Object registryValue = registryValue((String) value, Cat.Type.class);
+                                value = registryValue == null ? enumValue(Cat.Type.class, value) : registryValue;
+                            }
+                            if (value instanceof Cat.Type) {
+                                cat.setCatType((Cat.Type) value);
+                            }
+                        }
+                        else if (count == 1) {
+                            DyeColor set = enumValue(DyeColor.class, value);
+                            if (set != null) {
+                                cat.setCollarColor(set);
+                            }
+                        }
+                        else if (count == 2) {
+                            boolean set = (Boolean) value;
+                            cat.setSitting(set);
+                        }
+                    }
+                    else if (entity instanceof Fox) {
+                        Fox fox = (Fox) entity;
+                        if (count == 0) {
+                            Fox.Type set = enumValue(Fox.Type.class, value);
+                            if (set != null) {
+                                fox.setFoxType(set);
+                            }
+                        }
+                        else if (count == 1) {
+                            boolean set = (Boolean) value;
+                            fox.setSitting(set);
+                        }
+                    }
+                    else if (entity instanceof Panda) {
+                        Panda panda = (Panda) entity;
+                        if (count == 0) {
+                            Gene set = enumValue(Gene.class, value);
+                            if (set != null) {
+                                panda.setMainGene(set);
+                            }
+                        }
+                        else if (count == 1) {
+                            Gene set = enumValue(Gene.class, value);
+                            if (set != null) {
+                                panda.setHiddenGene(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Pig) {
+                        Pig pig = (Pig) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            pig.setSaddle(set);
+                        }
+                        else {
+                            BukkitAdapter.ADAPTER.setEntityMeta(entity, value, count);
+                            PaperAdapter.ADAPTER.setEntityMeta(entity, value, count);
+                        }
+                    }
+                    else if (entity instanceof Sheep) {
+                        Sheep sheep = (Sheep) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            sheep.setSheared(set);
+                        }
+                        else if (count == 1) {
+                            DyeColor set = enumValue(DyeColor.class, value);
+                            if (set != null) {
+                                sheep.setColor(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof MushroomCow) {
+                        MushroomCow mushroomCow = (MushroomCow) entity;
+                        if (count == 0) {
+                            MushroomCow.Variant set = enumValue(MushroomCow.Variant.class, value);
+                            if (set != null) {
+                                mushroomCow.setVariant(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Slime) {
+                        Slime slime = (Slime) entity;
+                        if (count == 0) {
+                            int set = (Integer) value;
+                            slime.setSize(set);
+                        }
+                    }
+                    else if (entity instanceof Parrot) {
+                        Parrot parrot = (Parrot) entity;
+                        if (count == 0) {
+                            Variant set = enumValue(Variant.class, value);
+                            if (set != null) {
+                                parrot.setVariant(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof TropicalFish) {
+                        TropicalFish tropicalFish = (TropicalFish) entity;
+                        if (count == 0) {
+                            DyeColor set = enumValue(DyeColor.class, value);
+                            if (set != null) {
+                                tropicalFish.setBodyColor(set);
+                            }
+                        }
+                        else if (count == 1) {
+                            TropicalFish.Pattern set = enumValue(TropicalFish.Pattern.class, value);
+                            if (set != null) {
+                                tropicalFish.setPattern(set);
+                            }
+                        }
+                        else if (count == 2) {
+                            DyeColor set = enumValue(DyeColor.class, value);
+                            if (set != null) {
+                                tropicalFish.setPatternColor(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Phantom) {
+                        Phantom phantom = (Phantom) entity;
+                        if (count == 0) {
+                            int set = (Integer) value;
+                            phantom.setSize(set);
+                        }
+                    }
+                    else if (entity instanceof AbstractVillager) {
+                        AbstractVillager abstractVillager = (AbstractVillager) entity;
+                        if (count == 0) {
+                            if (abstractVillager instanceof Villager) {
+                                Villager villager = (Villager) abstractVillager;
+                                if (value instanceof String) {
+                                    String key = (String) value;
+                                    value = registryValue(key, Profession.class);
+                                    if (value == null) {
+                                        NamespacedKey namespacedKey = namespacedKey(key);
+                                        value = namespacedKey == null ? null : Registry.VILLAGER_PROFESSION.get(namespacedKey);
+                                    }
+                                }
+                                if (value instanceof Profession) {
+                                    villager.setProfession((Profession) value);
+                                }
+                            }
+                        }
+                        else if (count == 1) {
+                            if (abstractVillager instanceof Villager && (value instanceof Villager.Type || value instanceof String)) {
+                                Villager villager = (Villager) abstractVillager;
+                                if (value instanceof String) {
+                                    String key = (String) value;
+                                    value = registryValue(key, Villager.Type.class);
+                                    if (value == null) {
+                                        NamespacedKey namespacedKey = namespacedKey(key);
+                                        value = namespacedKey == null ? null : Registry.VILLAGER_TYPE.get(namespacedKey);
+                                    }
+                                }
+                                if (value instanceof Villager.Type) {
+                                    villager.setVillagerType((Villager.Type) value);
+                                }
+                            }
+                        }
+                        else if (count == 2) {
+                            List<MerchantRecipe> merchantRecipes = new ArrayList<>();
+                            @SuppressWarnings("unchecked")
+                            List<Object> set = (List<Object>) value;
+                            for (Object recipes : set) {
+                                @SuppressWarnings("unchecked")
+                                List<Object> recipe = (List<Object>) recipes;
+                                @SuppressWarnings("unchecked")
+                                List<Object> itemMap = (List<Object>) recipe.get(0);
+                                @SuppressWarnings("unchecked")
+                                ItemStack result = ItemStack.deserialize((Map<String, Object>) itemMap.get(0));
+                                @SuppressWarnings("unchecked")
+                                List<List<Map<String, Object>>> metadata = (List<List<Map<String, Object>>>) itemMap.get(1);
+                                Object[] populatedStack = Rollback.populateItemStack(result, metadata);
+                                result = (ItemStack) populatedStack[2];
+                                int uses = (int) recipe.get(1);
+                                int maxUses = (int) recipe.get(2);
+                                boolean experienceReward = (boolean) recipe.get(3);
+                                List<ItemStack> merchantIngredients = new ArrayList<>();
+                                @SuppressWarnings("unchecked")
+                                List<Object> ingredients = (List<Object>) recipe.get(4);
+                                for (Object ingredient : ingredients) {
+                                    @SuppressWarnings("unchecked")
+                                    List<Object> ingredientMap = (List<Object>) ingredient;
+                                    @SuppressWarnings("unchecked")
+                                    ItemStack item = ItemStack.deserialize((Map<String, Object>) ingredientMap.get(0));
+                                    @SuppressWarnings("unchecked")
+                                    List<List<Map<String, Object>>> itemMetaData = (List<List<Map<String, Object>>>) ingredientMap.get(1);
+                                    populatedStack = Rollback.populateItemStack(item, itemMetaData);
+                                    item = (ItemStack) populatedStack[2];
+                                    merchantIngredients.add(item);
+                                }
+                                MerchantRecipe merchantRecipe = new MerchantRecipe(result, uses, maxUses, experienceReward);
+                                if (recipe.size() > 6) {
+                                    int villagerExperience = (int) recipe.get(5);
+                                    float priceMultiplier = ((Number) recipe.get(6)).floatValue();
+                                    merchantRecipe = new MerchantRecipe(result, uses, maxUses, experienceReward, villagerExperience, priceMultiplier);
+                                }
+                                merchantRecipe.setIngredients(merchantIngredients);
+                                BukkitAdapter.ADAPTER.setMerchantRecipeMeta(merchantRecipe, recipe);
+                                PaperAdapter.ADAPTER.setMerchantRecipeMeta(merchantRecipe, recipe);
+                                merchantRecipes.add(merchantRecipe);
+                            }
+                            if (!merchantRecipes.isEmpty()) {
+                                abstractVillager.setRecipes(merchantRecipes);
+                            }
+                        }
+                        else if (abstractVillager instanceof Villager) {
+                            Villager villager = (Villager) abstractVillager;
+
+                            if (count == 3) {
+                                int set = (int) value;
+                                villager.setVillagerLevel(Math.min(set, 5));
+                            }
+                            else if (count == 4) {
+                                int set = (int) value;
+                                villager.setVillagerExperience(set);
+                            }
+                            else if (count == 5 && value instanceof List<?>) {
+                                restoreVillagerMemories(villager, (List<?>) value);
+                            }
+                            else if (count == 6 && value instanceof List<?>) {
+                                if (!PaperAdapter.ADAPTER.setVillagerReputations(villager, (List<?>) value)) {
+                                    SpigotAdapter.ADAPTER.setVillagerReputations(villager, (List<?>) value);
+                                }
+                            }
+                            else if (count == 7) {
+                                PaperAdapter.ADAPTER.setVillagerRestocksToday(villager, value);
+                            }
+                            else if (count == 8) {
+                                SpigotAdapter.ADAPTER.setVillagerGossipDecayTime(villager, value);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Raider) {
+                        Raider raider = (Raider) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            raider.setPatrolLeader(set);
+                        }
+
+                        if (entity instanceof Spellcaster && count == 1) {
+                            Spellcaster spellcaster = (Spellcaster) entity;
+                            Spell set = enumValue(Spell.class, value);
+                            if (set != null) {
+                                spellcaster.setSpell(set);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Wolf) {
+                        Wolf wolf = (Wolf) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            wolf.setSitting(set);
+                        }
+                        else if (count == 1) {
+                            DyeColor set = enumValue(DyeColor.class, value);
+                            if (set != null) {
+                                wolf.setCollarColor(set);
+                            }
+                        }
+                        else if (count == 2) {
+                            BukkitAdapter.ADAPTER.setWolfVariant(wolf, value);
+                        }
+                    }
+                    else if (entity instanceof ZombieVillager) {
+                        ZombieVillager zombieVillager = (ZombieVillager) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            zombieVillager.setBaby(set);
+                        }
+                        else if (count == 1) {
+                            if (value instanceof String) {
+                                String key = (String) value;
+                                value = registryValue(key, Profession.class);
+                                if (value == null) {
+                                    NamespacedKey namespacedKey = namespacedKey(key);
+                                    value = namespacedKey == null ? null : Registry.VILLAGER_PROFESSION.get(namespacedKey);
+                                }
+                            }
+                            if (value instanceof Profession) {
+                                zombieVillager.setVillagerProfession((Profession) value);
+                            }
+                        }
+                    }
+                    else if (entity instanceof Zombie) {
+                        Zombie zombie = (Zombie) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            zombie.setBaby(set);
+                        }
+                    }
+                    else if (entity instanceof AbstractHorse) {
+                        AbstractHorse abstractHorse = (AbstractHorse) entity;
+                        if (count == 0 && value != null) {
+                            // deprecated
+                            boolean set = (Boolean) value;
+                            if (entity instanceof ChestedHorse) {
+                                ChestedHorse chestedHorse = (ChestedHorse) entity;
+                                chestedHorse.setCarryingChest(set);
+                            }
+                        }
+                        else if (count == 1 && value != null) {
+                            // deprecated
+                            org.bukkit.entity.Horse.Color set = enumValue(org.bukkit.entity.Horse.Color.class, value);
+                            if (entity instanceof Horse) {
+                                Horse horse = (Horse) entity;
+                                if (set != null) {
+                                    horse.setColor(set);
+                                }
+                            }
+                        }
+                        else if (count == 2) {
+                            int set = (Integer) value;
+                            abstractHorse.setDomestication(set);
+                        }
+                        else if (count == 3) {
+                            double set = (Double) value;
+                            abstractHorse.setJumpStrength(set);
+                        }
+                        else if (count == 4) {
+                            int set = (Integer) value;
+                            abstractHorse.setMaxDomestication(set);
+                        }
+                        else if (count == 5 && value != null) {
+                            // deprecated
+                            Style set = enumValue(Style.class, value);
+                            if (set != null) {
+                                Horse horse = (Horse) entity;
+                                horse.setStyle(set);
+                            }
+                        }
+                        if (entity instanceof Horse) {
+                            Horse horse = (Horse) entity;
+                            if (count == 8) {
+                                if (value != null) {
+                                    @SuppressWarnings("unchecked")
+                                    ItemStack set = ItemStack.deserialize((Map<String, Object>) value);
+                                    horse.getInventory().setSaddle(set);
+                                }
+                            }
+                            else if (count == 9) {
+                                org.bukkit.entity.Horse.Color set = enumValue(org.bukkit.entity.Horse.Color.class, value);
+                                if (set != null) {
+                                    horse.setColor(set);
+                                }
+                            }
+                            else if (count == 10) {
+                                Style set = enumValue(Style.class, value);
+                                if (set != null) {
+                                    horse.setStyle(set);
+                                }
+                            }
+                            else if (count == 11) {
+                                if (value != null) {
+                                    @SuppressWarnings("unchecked")
+                                    ItemStack set = ItemStack.deserialize((Map<String, Object>) value);
+                                    horse.getInventory().setArmor(set);
+                                }
+                            }
+                            else if (count == 12 && value != null) {
+                                @SuppressWarnings("unchecked")
+                                org.bukkit.Color set = org.bukkit.Color.deserialize((Map<String, Object>) value);
+                                ItemStack armor = horse.getInventory().getArmor();
+                                if (armor != null) {
+                                    ItemMeta itemMeta = armor.getItemMeta();
+                                    if (itemMeta instanceof LeatherArmorMeta) {
+                                        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemMeta;
+                                        leatherArmorMeta.setColor(set);
+                                        armor.setItemMeta(leatherArmorMeta);
+                                    }
+                                }
+                            }
+                        }
+                        else if (entity instanceof ChestedHorse) {
+                            if (count == 7) {
+                                ChestedHorse chestedHorse = (ChestedHorse) entity;
+                                boolean set = (Boolean) value;
+                                chestedHorse.setCarryingChest(set);
+                            }
+                            if (entity instanceof Llama) {
+                                Llama llama = (Llama) entity;
+                                if (count == 8) {
+                                    if (value != null) {
+                                        @SuppressWarnings("unchecked")
+                                        ItemStack set = ItemStack.deserialize((Map<String, Object>) value);
+                                        llama.getInventory().setDecor(set);
+                                    }
+                                }
+                                else if (count == 9) {
+                                    Llama.Color set = enumValue(Llama.Color.class, value);
+                                    if (set != null) {
+                                        llama.setColor(set);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (entity instanceof Bee) {
+                        Bee bee = (Bee) entity;
+                        if (count == 0) {
+                            int set = (int) value;
+                            bee.setAnger(set);
+                        }
+                        else if (count == 1) {
+                            boolean set = (Boolean) value;
+                            bee.setHasNectar(set);
+                        }
+                        else if (count == 2) {
+                            boolean set = (Boolean) value;
+                            bee.setHasStung(set);
+                        }
+                    }
+                    else if (entity instanceof Piglin) {
+                        Piglin piglin = (Piglin) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            piglin.setBaby(set);
+                        }
+                    }
+                    else if (entity instanceof Zoglin) {
+                        Zoglin zoglin = (Zoglin) entity;
+                        if (count == 0) {
+                            boolean set = (Boolean) value;
+                            zoglin.setBaby(set);
+                        }
+                    }
+                    else {
+                        BukkitAdapter.ADAPTER.setEntityMeta(entity, value, count);
+                        PaperAdapter.ADAPTER.setEntityMeta(entity, value, count);
+                    }
+                    count++;
+                }
+                if (entity instanceof Villager) {
+                    BukkitAdapter.ADAPTER.refreshVillagerBrain((Villager) entity);
+                }
+                completeEntityRestore(completion, entity, legacyTransition);
+            }
+            catch (Exception e) {
+                if (!legacyTransition && entity != null) {
+                    EntitySpawnTracking.removeWithoutRemovalLog(entity);
+                }
+                ErrorReporter.report(e);
+                completion.complete(null);
+            }
+        };
+        try {
+            boolean currentThreadOwnsLocation = !legacyTransition && (ConfigHandler.isFolia ?
+                PaperAdapter.ADAPTER.isOwnedByCurrentRegion(entityLocation.getWorld(), entityLocation.getBlockX() >> 4, entityLocation.getBlockZ() >> 4) : Bukkit.isPrimaryThread());
+            if (currentThreadOwnsLocation) {
+                task.run();
+            }
+            else {
+                Scheduler.runTask(CoreProtect.getInstance(), task, entityLocation);
+            }
+        }
+        catch (Exception e) {
+            ErrorReporter.report(e);
+            completion.complete(null);
+        }
+        return completion;
+    }
+
+    static void restoreAttributes(Attributable attributable, List<Object> attributes) {
+        for (Object value : attributes) {
+            @SuppressWarnings("unchecked")
+            List<Object> attributeData = (List<Object>) value;
+            Attribute attribute;
+            try {
+                attribute = AttributeUtils.resolve(attributeData.get(0));
+            }
+            catch (IllegalArgumentException exception) {
+                continue;
+            }
+
+            AttributeInstance entityAttribute = attributable.getAttribute(attribute);
+            if (entityAttribute == null) {
+                continue;
+            }
+
+            entityAttribute.setBaseValue((Double) attributeData.get(1));
+            for (AttributeModifier modifier : entityAttribute.getModifiers()) {
+                entityAttribute.removeModifier(modifier);
+            }
+            if (attributeData.size() > 2 && attributeData.get(2) instanceof List<?>) {
+                for (Object modifier : (List<?>) attributeData.get(2)) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> serializedModifier = (Map<String, Object>) modifier;
+                    entityAttribute.addModifier(AttributeModifier.deserialize(serializedModifier));
+                }
+            }
+        }
+    }
+
+    private static void completeEntityRestore(CompletableFuture<Entity> completion, Entity entity, boolean legacyTransition) {
+        if (!completion.complete(entity) && !legacyTransition) {
+            EntitySpawnTracking.removeWithoutRemovalLog(entity);
+        }
+    }
+
+    private static Object registryValue(String key, Class<?> type) {
+        Object value = registryValueExact(key, type);
+        if (value != null || key.indexOf(':') >= 0) {
+            return value;
+        }
+        return registryValueExact("minecraft:" + key.toLowerCase(Locale.ROOT), type);
+    }
+
+    private static Object registryValueExact(String key, Class<?> type) {
+        try {
+            return BukkitAdapter.ADAPTER.getRegistryValue(key, type);
+        }
+        catch (RuntimeException | LinkageError exception) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static <T> T enumValue(Class<T> type, Object value) {
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        if (!(value instanceof String) || !type.isEnum()) {
+            return null;
+        }
+        try {
+            String name = (String) value;
+            int separator = name.indexOf(':');
+            if (separator >= 0) {
+                name = name.substring(separator + 1).toUpperCase(Locale.ROOT).replace('.', '_').replace('-', '_');
+            }
+            return (T) Enum.valueOf((Class<? extends Enum>) type.asSubclass(Enum.class), name);
+        }
+        catch (IllegalArgumentException exception) {
+            return null;
+        }
+    }
+
+    private static void restoreVillagerMemories(Villager villager, List<?> memories) {
+        for (Object memoryObject : memories) {
+            if (!(memoryObject instanceof List<?>)) {
+                continue;
+            }
+
+            List<?> memory = (List<?>) memoryObject;
+            if (memory.size() < 2 || !(memory.get(0) instanceof String)) {
+                continue;
+            }
+
+            MemoryKey<?> memoryKey = getMemoryKey((String) memory.get(0));
+            if (memoryKey == null) {
+                continue;
+            }
+
+            Object value = deserializeMemoryValue(memoryKey, memory.get(1));
+            if (value == null) {
+                continue;
+            }
+
+            boolean invalidJobSite = isJobSiteMemory(memoryKey) && value instanceof Location && !isValidJobSiteMemory(villager, memoryKey, (Location) value);
+            if (invalidJobSite) {
+                setVillagerMemory(villager, memoryKey, null);
+                continue;
+            }
+
+            setVillagerMemory(villager, memoryKey, value);
+        }
+    }
+
+    private static MemoryKey<?> getMemoryKey(String value) {
+        try {
+            NamespacedKey key = namespacedKey(value);
+            return key == null ? null : MemoryKey.getByKey(key);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static NamespacedKey namespacedKey(String value) {
+        if (value == null) {
+            return null;
+        }
+        int separator = value.indexOf(':');
+        if (separator <= 0 || separator == value.length() - 1 || value.indexOf(':', separator + 1) >= 0) {
+            return null;
+        }
+        try {
+            return new NamespacedKey(value.substring(0, separator), value.substring(separator + 1));
+        }
+        catch (IllegalArgumentException exception) {
+            return null;
+        }
+    }
+
+    private static Object deserializeMemoryValue(MemoryKey<?> memoryKey, Object value) {
+        Class<?> memoryClass = memoryKey.getMemoryClass();
+        if (memoryClass == Location.class) {
+            return deserializeMemoryLocation(value);
+        }
+        else if (memoryClass == Long.class && value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        else if (memoryClass == Integer.class && value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        else if (memoryClass.isInstance(value)) {
+            return value;
+        }
+
+        return null;
+    }
+
+    private static Location deserializeMemoryLocation(Object value) {
+        if (!(value instanceof List<?>)) {
+            return null;
+        }
+
+        List<?> data = (List<?>) value;
+        boolean validLocation = data.size() >= 4 && data.get(0) instanceof String && data.get(1) instanceof Number && data.get(2) instanceof Number && data.get(3) instanceof Number;
+        if (!validLocation) {
+            return null;
+        }
+
+        World world = Bukkit.getServer().getWorld((String) data.get(0));
+        if (world == null) {
+            return null;
+        }
+
+        int x = ((Number) data.get(1)).intValue();
+        int y = ((Number) data.get(2)).intValue();
+        int z = ((Number) data.get(3)).intValue();
+        return new Location(world, x, y, z);
+    }
+
+    private static boolean isJobSiteMemory(MemoryKey<?> memoryKey) {
+        return memoryKey == MemoryKey.JOB_SITE || memoryKey == MemoryKey.POTENTIAL_JOB_SITE;
+    }
+
+    private static boolean isValidJobSiteMemory(Villager villager, MemoryKey<?> memoryKey, Location location) {
+        World world = location.getWorld();
+        if (world == null) {
+            return false;
+        }
+
+        Material blockType = location.getBlock().getType();
+        Material workstation = getWorkstation(villager.getProfession());
+        if (workstation != null) {
+            return isMatchingWorkstation(blockType, workstation);
+        }
+
+        return memoryKey == MemoryKey.POTENTIAL_JOB_SITE && isVillagerWorkstation(blockType);
+    }
+
+    private static boolean isMatchingWorkstation(Material blockType, Material workstation) {
+        return workstation == Material.CAULDRON ? isCauldron(blockType) : blockType == workstation;
+    }
+
+    private static boolean isVillagerWorkstation(Material blockType) {
+        return blockType == Material.BLAST_FURNACE || blockType == Material.SMOKER || blockType == Material.CARTOGRAPHY_TABLE || blockType == Material.BREWING_STAND || blockType == Material.COMPOSTER || blockType == Material.BARREL ||
+            blockType == Material.FLETCHING_TABLE || isCauldron(blockType) || blockType == Material.LECTERN || blockType == Material.STONECUTTER || blockType == Material.LOOM || blockType == Material.SMITHING_TABLE ||
+            blockType == Material.GRINDSTONE;
+    }
+
+    private static boolean isCauldron(Material blockType) {
+        return blockType == Material.CAULDRON || blockType.name().endsWith("_CAULDRON");
+    }
+
+    private static Material getWorkstation(Profession profession) {
+        if (profession == null) {
+            return null;
+        }
+
+        Object key = BukkitAdapter.ADAPTER.getRegistryKey(profession);
+        String professionName = key == null ? "" : key.toString().toLowerCase(Locale.ROOT);
+        return getWorkstation(professionName);
+    }
+
+    private static Material getWorkstation(String professionName) {
+        if (professionName.startsWith("minecraft:")) {
+            professionName = professionName.substring("minecraft:".length());
+        }
+
+        if (professionName.equals("armorer")) {
+            return Material.BLAST_FURNACE;
+        }
+        else if (professionName.equals("butcher")) {
+            return Material.SMOKER;
+        }
+        else if (professionName.equals("cartographer")) {
+            return Material.CARTOGRAPHY_TABLE;
+        }
+        else if (professionName.equals("cleric")) {
+            return Material.BREWING_STAND;
+        }
+        else if (professionName.equals("farmer")) {
+            return Material.COMPOSTER;
+        }
+        else if (professionName.equals("fisherman")) {
+            return Material.BARREL;
+        }
+        else if (professionName.equals("fletcher")) {
+            return Material.FLETCHING_TABLE;
+        }
+        else if (professionName.equals("leatherworker")) {
+            return Material.CAULDRON;
+        }
+        else if (professionName.equals("librarian")) {
+            return Material.LECTERN;
+        }
+        else if (professionName.equals("mason")) {
+            return Material.STONECUTTER;
+        }
+        else if (professionName.equals("shepherd")) {
+            return Material.LOOM;
+        }
+        else if (professionName.equals("toolsmith")) {
+            return Material.SMITHING_TABLE;
+        }
+        else if (professionName.equals("weaponsmith")) {
+            return Material.GRINDSTONE;
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private static void setVillagerMemory(Villager villager, MemoryKey<?> memoryKey, Object value) {
+        villager.setMemory((MemoryKey) memoryKey, value);
+    }
+
+}

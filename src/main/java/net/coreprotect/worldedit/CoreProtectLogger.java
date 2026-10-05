@@ -1,0 +1,135 @@
+package net.coreprotect.worldedit;
+
+import java.util.Objects;
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.extent.AbstractDelegateExtent;
+import com.sk89q.worldedit.extent.Extent;
+import com.sk89q.worldedit.function.RegionFunction;
+import com.sk89q.worldedit.function.block.BlockReplace;
+import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.function.visitor.RegionVisitor;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+
+import net.coreprotect.config.Config;
+import net.coreprotect.config.ConfigHandler;
+import net.coreprotect.model.BlockGroup;
+import net.coreprotect.utility.ItemUtils;
+
+public class CoreProtectLogger extends AbstractDelegateExtent {
+    private final Actor eventActor;
+    private final World eventWorld;
+
+    protected CoreProtectLogger(Actor actor, World world, Extent extent) {
+        super(extent);
+        this.eventActor = actor;
+        this.eventWorld = world;
+    }
+
+    @Override
+    public <T extends BlockStateHolder<T>> boolean setBlock(BlockVector3 position, T block) throws WorldEditException {
+        Extent eventExtent = getExtent();
+        org.bukkit.World world = BukkitAdapter.adapt(eventWorld);
+        Config config = Config.getConfig(world);
+        if (!ConfigHandler.serverRunning || !config.WORLDEDIT) {
+            return eventExtent.setBlock(position, block);
+        }
+
+        BlockState oldBlock = eventExtent.getBlock(position);
+        if (oldBlock == block.toImmutableState()) {
+            return eventExtent.setBlock(position, block);
+        }
+
+        Material oldType = BukkitAdapter.adapt(oldBlock.getBlockType());
+        BlockData oldBlockData = BukkitAdapter.adapt(oldBlock);
+        Location location = new Location(world, position.getBlockX(), position.getBlockY(), position.getBlockZ());
+        BaseBlock baseBlock = WorldEditLogger.needsBaseBlock(oldType, config) ? eventExtent.getFullBlock(position) : null;
+        // Reads below this stage reach the live world, so capture the other half before setBlock or its physics can change it
+        org.bukkit.block.BlockState otherHalf = WorldEditLogger.getOtherHalf(eventExtent, position, location, oldBlockData);
+
+        // No clear way to get container content data from within the WorldEdit API
+        // Data may be available by converting oldBlock.toBaseBlock().getNbtData()
+        // e.g. BaseBlock block = eventWorld.getBlock(position);
+        ItemStack[] containerData = !CoreProtectEditSessionEvent.isFAWE() && config.ITEM_TRANSACTIONS && BlockGroup.CONTAINERS.contains(oldType) ? ItemUtils.getContainerContents(oldType, null, location) : null;
+
+        if (eventExtent.setBlock(position, block)) {
+            WorldEditLogger.postProcess(eventExtent, eventActor, position, location, block, baseBlock, oldType, oldBlockData, containerData, otherHalf);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public <T extends BlockStateHolder<T>> boolean setBlock(int x, int y, int z, T block) throws WorldEditException {
+        return this.setBlock(BlockVector3.at(x, y, z), block);
+    }
+
+    @Override
+    public int replaceBlocks(final Region region, final Mask mask, final Pattern pattern) throws MaxChangedBlocksException {
+        Extent eventExtent = getExtent();
+        org.bukkit.World world = BukkitAdapter.adapt(eventWorld);
+        if (!ConfigHandler.serverRunning || !Config.getConfig(world).WORLDEDIT) {
+            return eventExtent.replaceBlocks(region, mask, pattern);
+        }
+
+        BlockReplace replace = new BlockReplace(this, pattern);
+        Objects.requireNonNull(mask, "mask");
+        return processBlocks(region, position -> mask.test(position) && replace.apply(position));
+    }
+
+    @Override
+    public <B extends BlockStateHolder<B>> int setBlocks(Region region, B block) throws MaxChangedBlocksException {
+        return this.setBlocks(region, (Pattern) block);
+    }
+
+    @Override
+    public int setBlocks(Region region, Pattern pattern) throws MaxChangedBlocksException {
+        Extent eventExtent = getExtent();
+        org.bukkit.World world = BukkitAdapter.adapt(eventWorld);
+        if (!ConfigHandler.serverRunning || !Config.getConfig(world).WORLDEDIT) {
+            return eventExtent.setBlocks(region, pattern);
+        }
+
+        return processBlocks(region, new BlockReplace(this, pattern));
+    }
+
+    @Override
+    public int setBlocks(Set<BlockVector3> vset, Pattern pattern) {
+        Extent eventExtent = getExtent();
+        org.bukkit.World world = BukkitAdapter.adapt(eventWorld);
+        if (!ConfigHandler.serverRunning || !Config.getConfig(world).WORLDEDIT) {
+            return eventExtent.setBlocks(vset, pattern);
+        }
+
+        int count = 0;
+        for (BlockVector3 position : vset) {
+            if (pattern.apply(this, position, position)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int processBlocks(Region region, RegionFunction function) {
+        RegionVisitor visitor = new RegionVisitor(region, function);
+        Operations.completeLegacy(visitor);
+        return visitor.getAffected();
+    }
+}

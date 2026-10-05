@@ -1,0 +1,447 @@
+package net.coreprotect.bukkit;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.bukkit.Art;
+import org.bukkit.Bukkit;
+import org.bukkit.ExplosionResult;
+import org.bukkit.Keyed;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.Tag;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockType;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Painting;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.InventoryType;
+
+
+import net.coreprotect.model.BlockGroup;
+import net.coreprotect.utility.BlockTypeUtils;
+
+/**
+ * Bukkit adapter implementation for Minecraft 1.21.
+ * Provides version-specific implementations for the BukkitInterface
+ * to handle features introduced in the 1.21 update, including:
+ * - New block types (crafter)
+ * - Registry handling for named objects
+ * - Updated interaction blocks
+ */
+public class Bukkit_v1_21 extends Bukkit_v1_20 {
+
+    public static Set<Material> COPPER_CHESTS = new HashSet<>(Arrays.asList());
+    public static Set<Material> SHELVES = new HashSet<>(Arrays.asList());
+    public static Set<Material> BUNDLES = new HashSet<>(Arrays.asList());
+
+    /**
+     * Initializes the Bukkit_v1_21 adapter with 1.21-specific block groups and mappings.
+     * Sets up collections of blocks with similar behavior for efficient handling.
+     */
+    public Bukkit_v1_21() {
+        initializeBlockGroups();
+        initializeTrapdoorBlocks();
+        initializeBundles();
+        BlockGroup.INTERACT_BLOCKS.addAll(copperChestMaterials());
+        BlockGroup.CONTAINERS.addAll(copperChestMaterials());
+        BlockGroup.UPDATE_STATE.addAll(copperChestMaterials());
+        BlockGroup.CONTAINERS.addAll(shelfMaterials());
+    }
+
+    /**
+     * Initializes the block groups specific to Minecraft 1.21.
+     * Updates container, interaction, and update state blocks with new 1.21 blocks.
+     */
+    private void initializeBlockGroups() {
+        addToBlockGroupIfMissing(Material.CRAFTER, BlockGroup.CONTAINERS);
+        addToBlockGroupIfMissing(Material.CRAFTER, BlockGroup.INTERACT_BLOCKS);
+        addToBlockGroupIfMissing(Material.CRAFTER, BlockGroup.UPDATE_STATE);
+    }
+
+    /**
+     * Initializes trapdoor blocks for interaction handling.
+     * Excludes iron trapdoors as they cannot be directly interacted with.
+     */
+    private void initializeTrapdoorBlocks() {
+        for (Material value : Tag.TRAPDOORS.getValues()) {
+            // Iron trapdoors are not directly interactable
+            if (value == Material.IRON_TRAPDOOR) {
+                continue;
+            }
+
+            // Add to interaction blocks if not already present
+            addToBlockGroupIfMissing(value, BlockGroup.INTERACT_BLOCKS);
+            addToBlockGroupIfMissing(value, BlockGroup.SAFE_INTERACT_BLOCKS);
+        }
+    }
+
+    /**
+     * Initializes the bundles group to enable the ability to roll back dyed bundles correctly.
+     * It needs to check whether dyed bundles exist because they were added in 1.21.2.
+     */
+    public void initializeBundles(){
+        if (BUNDLES.isEmpty()) {
+            Tag<Material> bundleTag = getMaterialTag(Tag.REGISTRY_ITEMS, "bundles");
+            if (bundleTag != null) {
+                BUNDLES.addAll(bundleTag.getValues());
+            }
+
+            if (BUNDLES.isEmpty()) {
+                addMaterialsEndingWith(BUNDLES, "_BUNDLE");
+            }
+            BUNDLES.add(Material.BUNDLE);
+        }
+    }
+
+    /**
+     * Helper method to add a block to a block group if it's not already present.
+     * 
+     * @param block
+     *            The block to add
+     * @param group
+     *            The group to add the block to
+     */
+    private void addToBlockGroupIfMissing(Material block, Set<Material> group) {
+        if (!group.contains(block)) {
+            group.add(block);
+        }
+    }
+
+    @Override
+    public boolean hasBlockType(String key) {
+        return getBlockType(key) != null;
+    }
+
+    @Override
+    public BlockData createBlockData(String key) {
+        try {
+            BlockType blockType = getBlockType(key);
+            return blockType == null ? null : blockType.createBlockData();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public BlockData createBlockDataFromString(String blockData) {
+        try {
+            BlockType blockType = getBlockType(BlockTypeUtils.getBlockDataKey(blockData));
+            if (blockType == null) {
+                return null;
+            }
+
+            String states = BlockTypeUtils.getBlockDataStates(blockData);
+            return states == null ? blockType.createBlockData() : blockType.createBlockData(states);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    private BlockType getBlockType(String key) {
+        NamespacedKey namespacedKey = NamespacedKey.fromString(BlockTypeUtils.normalizeKey(key));
+        return namespacedKey == null ? null : Registry.BLOCK.get(namespacedKey);
+    }
+
+    /**
+     * Gets the EntityType corresponding to a Material.
+     * Maps Material to its equivalent EntityType for entity handling.
+     * 
+     * @param material
+     *            The material to convert
+     * @return The corresponding EntityType, or UNKNOWN if not mappable
+     */
+    @Override
+    public EntityType getEntityType(Material material) {
+        switch (material) {
+            case END_CRYSTAL:
+                return EntityType.valueOf("END_CRYSTAL");
+            default:
+                return EntityType.UNKNOWN;
+        }
+    }
+
+    /**
+     * Gets a registry key string from a keyed object.
+     * Used for serializing objects that implement Keyed.
+     * 
+     * @param value
+     *            The keyed object
+     * @return The string representation of the registry key
+     */
+    @Override
+    public Object getRegistryKey(Object value) {
+        return ((Keyed) value).getKey().toString();
+    }
+
+
+    /**
+     * Gets a registry value from a key string and class.
+     * Used for deserializing registry objects.
+     * 
+     * @param key
+     *            The registry key as a string
+     * @param tClass
+     *            The class of the registry
+     * @return The registry value
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public Object getRegistryValue(String key, Object tClass) {
+        NamespacedKey namespacedKey = NamespacedKey.fromString(key);
+        // return RegistryAccess.registryAccess().getRegistry(RegistryKey.CAT_VARIANT).get((NamespacedKey)value);
+        return Bukkit.getRegistry((Class) tClass).get(namespacedKey);
+    }
+
+    @Override
+    public String getPaintingArtKey(Painting painting) {
+        try {
+            NamespacedKey key = Registry.ART.getKey(painting.getArt());
+            if (key != null) {
+                return normalizePaintingArtKey(key.toString());
+            }
+        }
+        catch (Exception e) {
+        }
+
+        return normalizePaintingArtKey(super.getPaintingArtKey(painting));
+    }
+
+    @Override
+    public Art getPaintingArt(String name) {
+        NamespacedKey key = NamespacedKey.fromString(normalizePaintingArtLookupKey(name));
+        if (key != null) {
+            Art art = Registry.ART.get(key);
+            if (art != null) {
+                return art;
+            }
+        }
+
+        return super.getPaintingArt(name);
+    }
+
+    private String normalizePaintingArtKey(String name) {
+        if (name == null) {
+            return "";
+        }
+
+        String normalized = name.toLowerCase(Locale.ROOT).trim();
+        if (normalized.startsWith("minecraft:")) {
+            return normalized.substring("minecraft:".length());
+        }
+
+        return normalized;
+    }
+
+    private String normalizePaintingArtLookupKey(String name) {
+        String normalized = normalizePaintingArtKey(name);
+        return normalized.contains(":") ? normalized : "minecraft:" + normalized;
+    }
+
+    /**
+     * Gets the wolf variant and adds it to the info list.
+     * This functionality is specific to Minecraft 1.21+.
+     * 
+     * @param wolf
+     *            The wolf entity
+     * @param info
+     *            The list to add the variant information to
+     */
+    @Override
+    public void getWolfVariant(org.bukkit.entity.Wolf wolf, List<Object> info) {
+        // Add the variant to the info list
+        info.add(getRegistryKey(wolf.getVariant()));
+    }
+
+    /**
+     * Sets the wolf variant from the provided value.
+     * This functionality is specific to Minecraft 1.21+.
+     * 
+     * @param wolf
+     *            The wolf entity
+     * @param value
+     *            The variant value to set
+     */
+    @Override
+    public void setWolfVariant(org.bukkit.entity.Wolf wolf, Object value) {
+        if (value instanceof String) {
+            value = getRegistryValue((String) value, org.bukkit.entity.Wolf.Variant.class);
+        }
+        org.bukkit.entity.Wolf.Variant variant = (org.bukkit.entity.Wolf.Variant) value;
+        wolf.setVariant(variant);
+
+    }
+
+    @Override
+    public boolean isCrafter(InventoryType type) {
+        return type == InventoryType.CRAFTER;
+    }
+
+    @Override
+    public boolean isCopperChest(Material material) {
+        if (COPPER_CHESTS.contains(material) && material != Material.CHEST) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isShelf(Material material) {
+        return SHELVES.contains(material);
+    }
+
+    @Override
+    public boolean isBundle(Material material) {
+        return BUNDLES.contains(material);
+    }
+
+
+    @Override
+    public Set<Material> copperChestMaterials() {
+        if (COPPER_CHESTS.isEmpty()) {
+            Material copperChest = Material.getMaterial("COPPER_CHEST");
+            if (copperChest == null) {
+                COPPER_CHESTS.add(Material.CHEST);
+            }
+            else {
+                COPPER_CHESTS.add(Material.getMaterial("COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("EXPOSED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("WEATHERED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("OXIDIZED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("WAXED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("WAXED_EXPOSED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("WAXED_WEATHERED_COPPER_CHEST"));
+                COPPER_CHESTS.add(Material.getMaterial("WAXED_OXIDIZED_COPPER_CHEST"));
+            }
+        }
+
+        return COPPER_CHESTS;
+    }
+
+    @Override
+    public Set<Material> shelfMaterials() {
+        if (SHELVES.isEmpty()) {
+            Tag<Material> shelfTag = getMaterialTag(Tag.REGISTRY_BLOCKS, "wooden_shelves");
+            if (shelfTag != null) {
+                SHELVES.addAll(shelfTag.getValues());
+            }
+
+            if (SHELVES.isEmpty()) {
+                addMaterialsEndingWith(SHELVES, "_SHELF");
+            }
+        }
+
+        return SHELVES;
+    }
+
+    @Override
+    public List<Location> getShelfInteractionLocations(Block block, BlockFace blockFace) {
+        List<Location> locations = new ArrayList<>();
+        BlockData blockData = block.getBlockData();
+        BlockFace facing = getShelfFacing(blockData);
+        if (facing == null) {
+            locations.add(block.getLocation());
+            return locations;
+        }
+
+        if (blockFace != facing) {
+            return locations;
+        }
+
+        String sideChain = getShelfSideChain(blockData);
+        if ("UNCONNECTED".equals(sideChain)) {
+            locations.add(block.getLocation());
+            return locations;
+        }
+
+        Block center = block;
+        int directionX = facing.getModX();
+        int directionZ = facing.getModZ();
+        if ("LEFT".equals(sideChain)) {
+            center = center.getRelative(directionZ, 0, -directionX);
+        }
+        else if ("RIGHT".equals(sideChain)) {
+            center = center.getRelative(-directionZ, 0, directionX);
+        }
+
+        String centerSideChain = getShelfSideChain(center.getBlockData());
+        if (centerSideChain == null) {
+            locations.add(block.getLocation());
+            return locations;
+        }
+
+        locations.add(center.getLocation());
+        if (!"CENTER".equals(centerSideChain)) {
+            locations.add(block.getLocation());
+            return locations;
+        }
+
+        locations.add(center.getRelative(-directionZ, 0, directionX).getLocation());
+        locations.add(center.getRelative(directionZ, 0, -directionX).getLocation());
+        return locations;
+    }
+
+    private static Tag<Material> getMaterialTag(String registry, String key) {
+        return Bukkit.getTag(registry, NamespacedKey.minecraft(key), Material.class);
+    }
+
+    private static void addMaterialsEndingWith(Set<Material> materials, String suffix) {
+        for (Material material : Material.values()) {
+            if (material.name().endsWith(suffix)) {
+                materials.add(material);
+            }
+        }
+    }
+
+    private static BlockFace getShelfFacing(BlockData blockData) {
+        Object facing = invokeNoArgumentMethod(blockData, "getFacing");
+        return facing instanceof BlockFace ? (BlockFace) facing : null;
+    }
+
+    private static String getShelfSideChain(BlockData blockData) {
+        Object sideChain = invokeNoArgumentMethod(blockData, "getSideChain");
+        return sideChain == null ? null : sideChain.toString();
+    }
+
+    private static Object invokeNoArgumentMethod(Object target, String methodName) {
+        if (target == null) {
+            return null;
+        }
+
+        try {
+            Method method = target.getClass().getMethod(methodName);
+            return method.invoke(target);
+        }
+        catch (ReflectiveOperationException | LinkageError e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean shouldLogExplosion(Event event){
+        ExplosionResult result = null;
+
+        if (event instanceof EntityExplodeEvent){
+            result = ((EntityExplodeEvent)event).getExplosionResult();
+        } else if (event instanceof BlockExplodeEvent){
+            result = ((BlockExplodeEvent)event).getExplosionResult();
+        }
+        return !(result == ExplosionResult.KEEP ||
+                 result == ExplosionResult.TRIGGER_BLOCK
+        );
+    }
+}

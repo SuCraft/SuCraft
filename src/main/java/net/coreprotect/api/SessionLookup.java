@@ -1,0 +1,210 @@
+package net.coreprotect.api;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.coreprotect.api.result.SessionResult;
+import net.coreprotect.config.Config;
+import net.coreprotect.config.ConfigHandler;
+import net.coreprotect.database.Database;
+import net.coreprotect.database.statement.UserStatement;
+import net.coreprotect.utility.WorldUtils;
+import net.coreprotect.utility.ErrorReporter;
+
+/**
+ * Provides API methods for looking up player session data in the CoreProtect database.
+ * Session data includes login/logout events and their associated timestamps and locations.
+ */
+public class SessionLookup {
+
+    /**
+     * The session type ID used for identifying session-related events.
+     */
+    public static final int ID = 0;
+
+    /**
+     * Private constructor to prevent instantiation.
+     * This is a utility class with static methods only.
+     */
+    private SessionLookup() {
+        throw new IllegalStateException("API class");
+    }
+
+    /**
+     * Performs a lookup of session-related actions for the specified user.
+     * This returns login and logout events within the specified time constraint.
+     * 
+     * @param user
+     *            The username to look up session data for
+     * @param offset
+     *            Time constraint in seconds (0 means no time constraint)
+     * @return List of results in a String array format, empty list if API is disabled or no results found
+     */
+    public static List<String[]> performLookup(String user, int offset) {
+        List<String[]> result = new ArrayList<>();
+
+        if (!Config.getGlobal().API_ENABLED) {
+            return result;
+        }
+
+        if (user == null) {
+            return result;
+        }
+
+        try (Connection connection = Database.getConnection(false, 1000)) {
+            if (connection == null) {
+                return result;
+            }
+
+            // Prepare lookup parameters
+            String type = String.valueOf(ID);
+            int time = (int) (System.currentTimeMillis() / 1000L);
+            int checkTime = calculateCheckTime(time, offset);
+
+            Integer userId = MessageAPI.getUserId(connection, user);
+            if (userId == null || userId < 0) {
+                return result;
+            }
+
+            // Query session data from database
+            try (Statement statement = connection.createStatement()) {
+                String query = buildSessionQuery(userId, checkTime);
+
+                try (ResultSet results = statement.executeQuery(query)) {
+                    while (results.next()) {
+                        String[] sessionData = extractSessionData(connection, results, type);
+                        result.add(sessionData);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            ErrorReporter.report(e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Performs a typed lookup of session-related actions.
+     *
+     * @param options
+     *            Lookup options
+     * @return List of typed session results, empty list if API is disabled or no results found
+     */
+    public static List<SessionResult> performLookup(LookupOptions options) {
+        List<SessionResult> result = new ArrayList<>();
+
+        if (!Config.getGlobal().API_ENABLED) {
+            return result;
+        }
+
+        if (options == null) {
+            options = LookupOptions.builder().build();
+        }
+
+        try (Connection connection = Database.getConnection(false, 1000)) {
+            if (connection == null) {
+                return result;
+            }
+
+            LookupFilter filter = LookupFilter.fromOptions(connection, options);
+            if (filter.hasInvalidUser() || filter.hasInvalidLocation()) {
+                return result;
+            }
+
+            StringBuilder query = new StringBuilder("SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",wid,x,y,z,action FROM ");
+            query.append(filter.table(connection, "session", "")).append(' ');
+            if (filter.hasLocation() && !ConfigHandler.databaseType.isDuckDB()) {
+                query.append(WorldUtils.getWidIndex("session"));
+            }
+            filter.appendWhere(query);
+            LookupFilter.appendActionWhere(query, "", options.getSessionActions().stream().mapToInt(SessionAction::id).toArray());
+            query.append(" ORDER BY ").append(ConfigHandler.getDescendingEventOrder());
+            filter.appendLimit(query);
+
+            try (PreparedStatement statement = connection.prepareStatement(query.toString())) {
+                filter.bind(statement);
+
+                try (ResultSet results = statement.executeQuery()) {
+                    while (results.next()) {
+                        result.add(parseSessionResult(connection, results));
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            ErrorReporter.report(e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculates the time threshold for the session lookup.
+     * 
+     * @param currentTime
+     *            The current time in seconds
+     * @param offset
+     *            The time offset in seconds
+     * @return The calculated time threshold
+     */
+    private static int calculateCheckTime(int currentTime, int offset) {
+        return (offset > 0) ? currentTime - offset : 0;
+    }
+
+    /**
+     * Builds the SQL query for retrieving session data.
+     * 
+     * @param userId
+     *            The user ID to query for
+     * @param checkTime
+     *            The time threshold for the query
+     * @return The SQL query string
+     */
+    private static String buildSessionQuery(int userId, int checkTime) {
+        return "SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",wid,x,y,z,action FROM " + ConfigHandler.prefix + "session WHERE " + ConfigHandler.databaseType.getUserColumn() + " = " + userId + " AND time > " + checkTime + " ORDER BY " + ConfigHandler.getDescendingEventOrder();
+    }
+
+    /**
+     * Extracts session data from a result set row.
+     * 
+     * @param connection
+     *            The database connection
+     * @param results
+     *            The result set to extract data from
+     * @param type
+     *            The session type ID
+     * @return An array of session data values
+     * @throws Exception
+     *             if an error occurs while extracting data
+     */
+    private static String[] extractSessionData(Connection connection, ResultSet results, String type) throws Exception {
+        String resultTime = results.getString("time");
+        int resultUserId = results.getInt("user");
+        String resultWorldId = results.getString("wid");
+        String resultX = results.getString("x");
+        String resultY = results.getString("y");
+        String resultZ = results.getString("z");
+        String resultAction = results.getString("action");
+
+        String resultUser = UserStatement.getName(connection, resultUserId);
+
+        // Create and return the session data array
+        return new String[] { resultTime, resultUser, resultX, resultY, resultZ, resultWorldId, type, resultAction };
+    }
+
+    private static SessionResult parseSessionResult(Connection connection, ResultSet results) throws Exception {
+        int userId = results.getInt("user");
+        String username = UserStatement.getName(connection, userId);
+
+        return new SessionResult(
+                results.getLong("time"), username, WorldUtils.getWorldName(results.getInt("wid")),
+                results.getInt("x"), results.getInt("y"), results.getInt("z"), results.getInt("action")
+        );
+    }
+}

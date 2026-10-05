@@ -3,10 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.platymuus</groupId>
     <artifactId>bukkit-permissions</artifactId>
-    <version>2.5-SuCraft</version>
+    <version>2.5-SuCraft</version><!-- SuCraft - Mark SuCraft version -->
     <name>PermissionsBukkit</name>
     <url>http://dev.bukkit.org/server-mods/permbukkit/</url>
 
+    <!-- SuCraft start - Update dependencies -->
     <repositories>
         <repository>
             <id>papermc</id>
@@ -22,22 +23,25 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <!-- SuCraft end - Update dependencies -->
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.16.0</version>
+                <version>3.16.0</version><!-- SuCraft - Update dependencies -->
                 <configuration>
+                    <!-- SuCraft start - Update dependencies -->
                     <source>25</source>
                     <target>25</target>
+                    <!-- SuCraft end - Update dependencies -->
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.2</version><!-- SuCraft - Update dependencies -->
                 <executions>
                     <execution>
                         <phase>package</phase>

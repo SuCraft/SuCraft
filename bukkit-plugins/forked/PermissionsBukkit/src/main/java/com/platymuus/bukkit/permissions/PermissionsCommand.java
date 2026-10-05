@@ -59,6 +59,23 @@ final class PermissionsCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + "By " + ChatColor.WHITE + auth);
             sender.sendMessage(ChatColor.GREEN + "Website: " + ChatColor.WHITE + desc.getWebsite());
 
+            // SuCraft start - Disable metrics
+            // // stats
+            // if (!plugin.getMetrics().enabled) {
+            //     sender.sendMessage(ChatColor.GOLD + "Metrics are disabled.");
+            //     return true;
+            // }
+            //
+            // sender.sendMessage(ChatColor.GOLD + "Features Used:");
+            // for (Map.Entry<String, String> entry : plugin.getMetrics().summarize(0).entrySet()) {
+            //     sender.sendMessage("  " + ChatColor.GREEN + entry.getKey() + ": " + ChatColor.WHITE + entry.getValue());
+            // }
+            // sender.sendMessage(ChatColor.GOLD + "Usage:");
+            // for (Map.Entry<String, String> entry : plugin.getMetrics().summarize(1).entrySet()) {
+            //     sender.sendMessage("  " + ChatColor.GREEN + entry.getKey() + ": " + ChatColor.WHITE + entry.getValue());
+            // }
+            // SuCraft end - Disable metrics
+
             return true;
         } else if (subcommand.equals("check")) {
             if (!checkPerm(sender, "check")) return true;

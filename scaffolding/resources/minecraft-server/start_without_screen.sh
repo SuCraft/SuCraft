@@ -48,7 +48,6 @@ java \
   -XX:+RewriteBytecodes \
   -XX:+RewriteFrequentPairs \
   -XX:+UseNUMA \
-  -XX:+UseFPUForSpilling \
   -XX:+UseVectorCmov \
   -XX:+UseXMMForArrayCopy \
   -XX:G1NewSizePercent=30 \

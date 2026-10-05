@@ -30,6 +30,7 @@ val buildDependencyTasks = listOf(
     }
 
 } + listOf(
+    "bukkit-plugins/forked/CoreProtect",
     "bukkit-plugins/forked/PermissionsBukkit"
 ).map { mavenTask ->
 
@@ -78,11 +79,19 @@ fun projectFile(targetPath: String, sourcePath: String) = object : TargetFile(ta
 
 }
 
-fun rootProjectFile(targetPath: String, sourcePath: String) = projectFile(targetPath, "../$sourcePath")
+fun rootProjectFile(targetPath: String, sourcePath: String) =
+    projectFile(targetPath, "../$sourcePath")
+
+fun rootProjectFile(filename: String, targetDirectory: String, sourceDirectory: String) =
+    rootProjectFile("$targetDirectory/$filename", "$sourceDirectory/$filename")
 
 val targetFiles = arrayListOf(
     rootProjectFile(
-        "minecraft-server/plugins/bukkit-permissions-2.5-SuCraft.jar",
+        "minecraft-server/plugins/CoreProtect.jar",
+        "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar"
+    ),
+    rootProjectFile(
+        "minecraft-server/plugins/PermissionsBukkit.jar",
         "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar"
     ),
     rootProjectFile(

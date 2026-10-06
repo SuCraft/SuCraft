@@ -1,0 +1,184 @@
+/******************************************************************************
+ * Multiverse 2 Copyright (c) the Multiverse Team 2011.                       *
+ * Multiverse 2 is licensed under the BSD License.                            *
+ * For more information please check the README.md file included              *
+ * with this project.                                                         *
+ ******************************************************************************/
+
+package org.mvplugins.multiverse.core.listeners;
+
+import com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent;
+import com.dumptruckman.minecraft.util.Logging;
+import jakarta.inject.Inject;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jvnet.hk2.annotations.Service;
+
+import org.mvplugins.multiverse.core.dynamiclistener.EventRunnable;
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventClass;
+import org.mvplugins.multiverse.core.dynamiclistener.annotations.EventMethod;
+import org.mvplugins.multiverse.core.utils.compatibility.EntityCompatibility;
+import org.mvplugins.multiverse.core.world.WorldManager;
+
+import java.util.Arrays;
+
+/**
+ * Multiverse's Entity {@link Listener}.
+ */
+@Service
+final class MVEntityListener implements CoreListener {
+    private final WorldManager worldManager;
+
+    @Inject
+    MVEntityListener(@NotNull WorldManager worldManager) {
+        this.worldManager = worldManager;
+    }
+
+    /**
+     * This method is called when an entity's food level goes higher or lower.
+     *
+     * @param event The Event that was fired.
+     */
+    @EventMethod
+    void foodLevelChange(FoodLevelChangeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        worldManager.getLoadedWorld(player.getWorld())
+                .peek(world -> {
+                    if (!world.isHunger() && event.getFoodLevel() < player.getFoodLevel()) {
+                        event.setCancelled(true);
+                    }
+                });
+    }
+
+    /**
+     * This method is called when an entity's health goes up or down.
+     *
+     * @param event The Event that was fired.
+     */
+    @EventMethod
+    void entityRegainHealth(EntityRegainHealthEvent event) {
+        if (event.isCancelled() || event.getRegainReason() != RegainReason.REGEN) {
+            return;
+        }
+
+        worldManager.getLoadedWorld(event.getEntity().getWorld())
+                .peek(world -> {
+                    if (!world.getAutoHeal()) {
+                        event.setCancelled(true);
+                    }
+                });
+    }
+
+    /**
+     * Fired before other spawn checks is done, helps in performance by cancelling early and preventing unnecessary
+     * checks for spawn reasons that are not allowed in the world.
+     *
+     * @return Event wrapper
+     */
+    @EventClass("com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent")
+    EventRunnable<?> preCreatureSpawn() {
+        return new EventRunnable<PreCreatureSpawnEvent>() {
+            @Override
+            public void onEvent(PreCreatureSpawnEvent event) {
+                // Always allow custom command and plugins to spawn creatures
+                if (isAlwaysAllowedSpawnReason(event.getReason())) {
+                    return;
+                }
+
+                worldManager.getLoadedWorld(event.getSpawnLocation().getWorld())
+                        .peek(world -> {
+                            if (!world.getEntitySpawnConfig().shouldAllowSpawn(event.getType())) {
+                                Logging.finest("Cancelling Pre Creature Spawn Event for: " + event.getType());
+                                event.setCancelled(true);
+                                event.setShouldAbortSpawn(true);
+                            }
+                        });
+            }
+        };
+    }
+
+    /**
+     * Handle Spawn Category settings.
+     *
+     * @param event The event.
+     */
+    @EventMethod
+    void creatureSpawn(CreatureSpawnEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        // Always allow custom command and plugins to spawn creatures
+        if (isAlwaysAllowedSpawnReason(event.getSpawnReason())) {
+            return;
+        }
+
+        worldManager.getLoadedWorld(event.getEntity().getWorld())
+                .peek(world -> {
+                    if (!world.getEntitySpawnConfig().shouldAllowSpawn(event.getEntityType())) {
+                        Logging.finest("Cancelling Creature Spawn Event for: " + event.getEntity());
+                        event.setCancelled(true);
+                    }
+                });
+    }
+
+    /**
+     * Handle Spawn Category settings for non-creature entities.
+     */
+    @EventMethod
+    void entitySpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            // Handled by CreatureSpawnEvent
+            return;
+        }
+
+        worldManager.getLoadedWorld(event.getEntity().getWorld())
+                .peek(world -> {
+                    if (!world.getEntitySpawnConfig().shouldAllowSpawn(event.getEntityType())) {
+                        Logging.finest("Cancelling Entity Spawn Event for: " + event.getEntity());
+                        event.setCancelled(true);
+                    }
+                });
+    }
+
+    @EventMethod
+    void chunkLoad(ChunkLoadEvent event) {
+        worldManager.getLoadedWorld(event.getWorld())
+                .peek(world -> {
+                    long count = Arrays.stream(event.getChunk().getEntities())
+                            .filter(entity -> !(entity instanceof Player))
+                            .filter(entity -> !isAlwaysAllowedSpawnReason(EntityCompatibility.getEntitySpawnReason(entity)))
+                            .filter(entity -> !world.getEntitySpawnConfig().shouldAllowSpawn(entity))
+                            .peek(Entity::remove)
+                            .count();
+                    if (count > 0) {
+                        Logging.finest("Removed %d entities from chunk %d, %d in world %s due to spawn category settings.",
+                                count, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
+                    }
+                });
+    }
+
+    private boolean isAlwaysAllowedSpawnReason(@Nullable SpawnReason reason) {
+        return reason == SpawnReason.CUSTOM
+                || reason == SpawnReason.COMMAND
+                || reason == SpawnReason.BREEDING
+                || reason == SpawnReason.SPAWNER_EGG;
+    }
+}

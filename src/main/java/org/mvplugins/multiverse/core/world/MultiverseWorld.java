@@ -1,0 +1,814 @@
+package org.mvplugins.multiverse.core.world;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.base.Strings;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import org.jetbrains.annotations.UnmodifiableView;
+import org.mvplugins.multiverse.core.config.CoreConfig;
+import org.mvplugins.multiverse.core.config.handle.StringPropertyHandle;
+import org.mvplugins.multiverse.core.utils.text.ChatTextFormatter;
+import org.mvplugins.multiverse.core.world.helpers.WorldFolderResolver;
+import org.mvplugins.multiverse.core.world.location.SpawnLocation;
+import org.mvplugins.multiverse.core.world.entity.EntitySpawnConfig;
+
+/**
+ * Represents a world handled by Multiverse which has all the custom properties provided by Multiverse.
+ */
+public sealed class MultiverseWorld permits LoadedMultiverseWorld {
+    /**
+     * This world's configuration.
+     */
+    WorldConfig worldConfig;
+
+    protected final CoreConfig config;
+    private String colourlessAlias = "";
+
+    MultiverseWorld(WorldConfig worldConfig, CoreConfig config) {
+        this.worldConfig = worldConfig;
+        this.config = config;
+        this.worldConfig.setMVWorld(this);
+        updateColourlessAlias();
+    }
+
+    /**
+     * The key that represents this world. This should now be used as the unique key for the world instead
+     * of the world name. Also note that the key cannot be modified.
+     *
+     * @return The world key
+     */
+    @ApiStatus.AvailableSince("5.7")
+    @NotNull
+    public NamespacedKey getKey() {
+        return worldConfig.getWorldKeyOrName().usableKey();
+    }
+
+    /**
+     * Gets the name of this world. Prefer to use {@link #getKey()} as unique id instead of this name.
+     * Also note that the name cannot be modified.
+     * <br/>
+     * Note for plugin developers: Usually {@link #getAliasOrName()}is what you want to use instead of this method.
+     *
+     * @return The name of the world as a String.
+     */
+    @NotNull
+    public String getName() {
+        return worldConfig.getLegacyWorldName();
+    }
+
+    /**
+     * Gets the folder where all the world contents are stored in. Generally, the location of the folder is at the server
+     * roots directory for pre-26.1 servers, and at "[level]/dimensions" folder under the world level directory for
+     * 26.1+ PaperMC servers.
+     * <br />
+     * Note this folder location is based on Multiverse's understanding of Paper and Spigot's folder structure. If the
+     * server software does something weird, this folder will not reflect the actual world folder location.
+     * <br />
+     * If the world is loaded, you should use {@link World#getWorldFolder()} instead as it is more accurate.
+     * This method is more of a fallback for when the world is not loaded.
+     *
+     * @return The world folder.
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public File getOfflineWorldFolder() {
+        return WorldFolderResolver.resolve(this);
+    }
+
+    /**
+     * Gets the tab complete name of this world. Use alias if `resolve-alias-name` config is true, else use world name.
+     *
+     * @return The tab complete name of the world as a String
+     */
+    public String getTabCompleteName() {
+        return config.getResolveAliasName() ? getColourlessAlias() : getName();
+    }
+
+    /**
+     * Gets whether this world is loaded. Note that this may return false even if this is a stored instance of
+     * {@link LoadedMultiverseWorld} as worlds can be unloaded anytime.
+     *
+     * @return True if the world is loaded, else false.
+     */
+    public boolean isLoaded() {
+        return worldConfig.isLoadedWorld();
+    }
+
+    /**
+     * Attempts to get loaded world instance. Only returns a value if the world is loaded at the time of calling, even
+     * if this is a stored instance of {@link LoadedMultiverseWorld}.
+     * <br/>
+     * You may use {@link #isLoaded()} to check if the world is loaded first.
+     *
+     * @return Loaded world instance wrapped in an Option, or None if the world is not loaded.
+     *
+     * @since 5.5
+     */
+    @ApiStatus.AvailableSince("5.5")
+    public Option<LoadedMultiverseWorld> asLoadedWorld() {
+        return Option.of(worldConfig.getMVWorld())
+                .filter(world -> world instanceof LoadedMultiverseWorld)
+                .map(world -> (LoadedMultiverseWorld) world);
+    }
+
+    /**
+     * Gets the properties handler of this world.
+     *
+     * @return The properties handler of this world.
+     */
+    public StringPropertyHandle getStringPropertyHandle() {
+        return worldConfig.getStringPropertyHandle();
+    }
+
+    /**
+     * Gets whether or not Multiverse should auto-adjust the spawn for this world.
+     *
+     * @return True if Multiverse should adjust the spawn, false if not.
+     */
+    public boolean getAdjustSpawn() {
+        return worldConfig.getAdjustSpawn();
+    }
+
+    /**
+     * Sets whether or not Multiverse should auto-adjust the spawn for this world.
+     *
+     * @param adjustSpawn True if multiverse should adjust the spawn, false if not.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAdjustSpawn(boolean adjustSpawn) {
+        return worldConfig.setAdjustSpawn(adjustSpawn);
+    }
+
+    public String getAlias() {
+        return worldConfig.getAlias();
+    }
+
+    /**
+     * Sets the alias of the world.
+     *
+     * @param alias A string that is the new alias.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAlias(String alias) {
+        return worldConfig.setAlias(alias);
+    }
+
+    /**
+     * Gets the alias of this world or defaults to world name if no alias is set.
+     * <br/>
+     * This alias allows users to have a world named "world" but show up in the list as "FernIsland"
+     *
+     * @return The alias of the world as a String.
+     */
+    public String getAliasOrName() {
+        return Strings.isNullOrEmpty(worldConfig.getAlias()) ? getName() : worldConfig.getAlias();
+    }
+
+    /**
+     * Gets the alias without any colour codes
+     *
+     * @return The colourless alias
+     */
+    public String getColourlessAlias() {
+        return colourlessAlias;
+    }
+
+    void updateColourlessAlias() {
+        colourlessAlias = ChatTextFormatter.removeColor(getAliasOrName());
+    }
+
+    /**
+     * Whether player's actions in this world will award them the relevant advancements.
+     *
+     * @return True if advancements should be granted, false if not
+     */
+    public boolean isAllowAdvancementGrant() {
+        return worldConfig.isAllowAdvancementGrant();
+    }
+
+    /**
+     * Sets whether player's actions in this world will award them the relevant advancements.
+     *
+     * @param allowAdvancementGrant True if advancements should be granted, false if not
+     * @return Result of setting property
+     */
+    public Try<Void> setAllowAdvancementGrant(boolean allowAdvancementGrant) {
+        return worldConfig.setAllowAdvancementGrant(allowAdvancementGrant);
+    }
+
+    /**
+     * Whether or not players are allowed to fly in this world.
+     *
+     * @return True if players allowed to fly in this world.
+     */
+    public boolean isAllowFlight() {
+        return worldConfig.isAllowFlight();
+    }
+
+    /**
+     * Sets whether or not players are allowed to fly in this world.
+     *
+     * @param allowFlight True to allow flight in this world.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAllowFlight(boolean allowFlight) {
+        return worldConfig.setAllowFlight(allowFlight);
+    }
+
+    /**
+     * Gets whether weather is enabled in this world.
+     *
+     * @return True if weather events will occur, false if not.
+     */
+    public boolean isAllowWeather() {
+        return worldConfig.isAllowWeather();
+    }
+
+    /**
+     * Sets whether or not there will be weather events in a given world.
+     * If set to false, Multiverse will disable the weather in the world immediately.
+     *
+     * @param allowWeather True if weather events should occur in a world, false if not.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAllowWeather(boolean allowWeather) {
+        return worldConfig.setAllowWeather(allowWeather);
+    }
+
+    /**
+     * Gets whether or not a player who dies in this world will respawn in their
+     * anchor or follow the normal respawn pattern.
+     *
+     * @return True if players dying in this world should respawn at their anchor.
+     */
+    public boolean getAnchorRespawn() {
+        return worldConfig.getAnchorRespawn();
+    }
+
+    /**
+     * Sets whether or not a player who dies in this world will respawn in their
+     * anchor or follow the normal respawn pattern.
+     * <br/>
+     * True is default.
+     *
+     * @param anchorSpawn True if players dying in this world respawn at their anchor.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAnchorSpawn(boolean anchorSpawn) {
+        return worldConfig.setAnchorSpawn(anchorSpawn);
+    }
+
+    /**
+     * Gets whether or not a world will auto-heal players if the difficulty is on peaceful.
+     *
+     * @return True if the world should heal (default), false if not.
+     */
+    public boolean getAutoHeal() {
+        return worldConfig.getAutoHeal();
+    }
+
+    /**
+     * Sets whether or not a world will auto-heal players if the difficulty is on peaceful.
+     *
+     * @param autoHeal True if the world will heal.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAutoHeal(boolean autoHeal) {
+        return worldConfig.setAutoHeal(autoHeal);
+    }
+
+    /**
+     * Gets whether or not Multiverse should auto-load this world on server start.
+     *
+     * @return True if Multiverse should auto-load this world on server start.
+     */
+    public boolean isAutoLoad() {
+        return worldConfig.isAutoLoad();
+    }
+
+    /**
+     * Sets whether or not Multiverse should auto-load this world.
+     * <br/>
+     * True is default.
+     *
+     * @param autoLoad True if multiverse should autoload this world the spawn, false if not.
+     * @return Result of setting property.
+     */
+    public Try<Void> setAutoLoad(boolean autoLoad) {
+        return worldConfig.setAutoLoad(autoLoad);
+    }
+
+    /**
+     * Gets whether or not a player who dies in this world will respawn in their
+     * bed or follow the normal respawn pattern.
+     *
+     * @return True if players dying in this world should respawn at their bed.
+     */
+    public boolean getBedRespawn() {
+        return worldConfig.getBedRespawn();
+    }
+
+    /**
+     * Sets whether or not a player who dies in this world will respawn in their
+     * bed or follow the normal respawn pattern.
+     * <br/>
+     * True is default.
+     *
+     * @param bedRespawn True if players dying in this world respawn at their bed.
+     * @return Result of setting property.
+     */
+    public Try<Void> setBedRespawn(boolean bedRespawn) {
+        return worldConfig.setBedRespawn(bedRespawn);
+    }
+
+    /**
+     * Gets the single biome used for this world. This may be null, in which case the biome from the generator will be used.
+     * If no generator is specified, the "natural" biome behaviour for this environment will be used.
+     *
+     * @return The biome used for this world
+     */
+    public @NotNull String getBiome() {
+        return worldConfig.getBiome();
+    }
+
+    /**
+     * Gets the type of currency that will be used when users enter this world. A value of null indicates a non-item
+     * based currency is used.
+     *
+     * @return The type of currency that will be used when users enter this world.
+     */
+    public Material getCurrency() {
+        return worldConfig.getEntryFeeCurrency();
+    }
+
+    /**
+     * Sets the type of item that will be required given the price is not 0.
+     * Use a value of null to specify a non-item based currency.
+     *
+     * @param currency The Type of currency that will be used when users enter this world.
+     * @return Result of setting property.
+     */
+    public Try<Void> setCurrency(Material currency) {
+        return worldConfig.setEntryFeeCurrency(currency);
+    }
+
+    /**
+     * Gets the difficulty of this world.
+     *
+     * @return The difficulty of this world.
+     */
+    public Difficulty getDifficulty() {
+        return worldConfig.getDifficulty();
+    }
+
+    /**
+     * Sets the difficulty of this world and returns {@code true} on success.
+     * Valid string values are either an integer of difficulty(0-3) or
+     * the name that resides in the Bukkit enum, ex. PEACEFUL
+     *
+     * @param difficulty The new difficulty.
+     * @return Result of setting property.
+     */
+    public Try<Void> setDifficulty(Difficulty difficulty) {
+        return worldConfig.setDifficulty(difficulty);
+    }
+
+    /**
+     * Gets the environment of this world. You cannot change this after world creation.
+     *
+     * @return A {@link World.Environment}.
+     */
+    public World.Environment getEnvironment() {
+        return worldConfig.getEnvironment();
+    }
+
+    /**
+     * Gets the GameMode of this world.
+     *
+     * @return The GameMode of this world.
+     */
+    public GameMode getGameMode() {
+        return worldConfig.getGameMode();
+    }
+
+    /**
+     * Sets the game mode of this world.
+     *
+     * @param gameMode The new {@link GameMode}.
+     * @return Result of setting property.
+     */
+    public Try<Void> setGameMode(GameMode gameMode) {
+        return worldConfig.setGameMode(gameMode);
+    }
+
+    /**
+     * Gets the generator string of this world. You cannot change this after world creation.
+     *
+     * @return The name of the generator.
+     */
+    public String getGenerator() {
+        return worldConfig.getGenerator();
+    }
+
+    /**
+     * Gets the generator settings used to create this world. You cannot change this after world creation.
+     * Changing this manually in config on existing world will have no effect on the world generation.
+     *
+     * @return The generator settings string.
+     *
+     * @since 5.7
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public String getGeneratorSettings() {
+        return worldConfig.getGeneratorSettings();
+    }
+
+    /**
+     * Gets whether or not this world will display in chat, mvw and mvl regardless if a user has the
+     * access permissions to go to this world.
+     *
+     * @return True if the world will be hidden, false if not.
+     */
+    public boolean isHidden() {
+        return worldConfig.isHidden();
+    }
+
+    /**
+     * Sets whether or not this world will display in chat, mvw and mvl regardless if a user has the
+     * access permissions to go to this world.
+     *
+     * @param hidden True if the world should be hidden, false if not.
+     * @return Result of setting property.
+     */
+    public Try<Void> setHidden(boolean hidden) {
+        return worldConfig.setHidden(hidden);
+    }
+
+    /**
+     * Gets whether or not the hunger level of players will go down in a world.
+     *
+     * @return True if it will go down, false if it will remain steady.
+     */
+    public boolean isHunger() {
+        return worldConfig.isHunger();
+    }
+
+    /**
+     * Sets whether or not the hunger level of players will go down in a world.
+     *
+     * @param hunger True if hunger will go down, false to keep it at the level they entered a world with.
+     * @return Result of setting property.
+     */
+    public Try<Void> setHunger(boolean hunger) {
+        return worldConfig.setHunger(hunger);
+    }
+
+    /**
+     * Gets whether or not CraftBukkit is keeping the chunks for this world in memory.
+     *
+     * @return True if CraftBukkit is keeping spawn chunks in memory.
+     */
+    public boolean isKeepSpawnInMemory() {
+        return worldConfig.isKeepSpawnInMemory();
+    }
+
+    /**
+     * If true, tells Craftbukkit to keep a worlds spawn chunks loaded in memory (default: true)
+     * If not, CraftBukkit will attempt to free memory when players have not used that world.
+     * This will not happen immediately.
+     *
+     * @param keepSpawnInMemory If true, CraftBukkit will keep the spawn chunks loaded in memory.
+     * @return Result of setting property.
+     */
+    public Try<Void> setKeepSpawnInMemory(boolean keepSpawnInMemory) {
+        return worldConfig.setKeepSpawnInMemory(keepSpawnInMemory);
+    }
+
+    /**
+     * Get all meta key-value pairs for this world. This is an unmodifiable view of the internal map, so changes to
+     * the world meta will be reflected in this map, but attempts to modify this map will throw an exception.
+     *
+     * @return An unmodifiable view of all meta key-value pairs for this world.
+     *
+     * @since 5.7
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public @UnmodifiableView Map<String, String> getAllMeta() {
+        return Collections.unmodifiableMap(worldConfig.getMeta());
+    }
+
+    /**
+     * Gets the meta value for the given key if it exists.
+     *
+     * @param key The meta key to look up, may be {@code null} in which case an empty result is returned.
+     * @return An {@link Option} containing the meta value if present, otherwise an empty {@link Option}.
+     *
+     * @since 5.7
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public @NotNull Option<String> getMeta(@Nullable String key) {
+        return Option.of(worldConfig.getMeta().get(key));
+    }
+
+    /**
+     * Sets a meta key-value pair for this world. Existing value for the key will be replaced.
+     *
+     * @param key The meta key to set, must not be {@code null}.
+     * @param value The meta value to set.
+     * @return Result of setting the property.
+     *
+     * @since 5.7
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public @NotNull Try<Void> setMeta(@NotNull String key, @Nullable String value) {
+        return worldConfig.setMeta(key, value);
+    }
+
+    /**
+     * Removes the meta entry associated with the given key.
+     *
+     * @param key The meta key to remove.
+     * @return Result of removing the property.
+     *
+     * @since 5.7
+     */
+    @ApiStatus.AvailableSince("5.7")
+    public @NotNull Try<Void> removeMeta(@NotNull String key) {
+        return worldConfig.removeMeta(key);
+    }
+
+    /**
+     * Gets the player limit for this world after which players without an override
+     * permission node will not be allowed in. A value of -1 or less signifies no limit
+     *
+     * @return The player limit
+     */
+    public int getPlayerLimit() {
+        return worldConfig.getPlayerLimit();
+    }
+
+    /**
+     * Sets the player limit for this world after which players without an override
+     * permission node will not be allowed in. A value of -1 or less signifies no limit
+     *
+     * @param playerLimit The new limit
+     * @return Result of setting property.
+     */
+    public Try<Void> setPlayerLimit(int playerLimit) {
+        return worldConfig.setPlayerLimit(playerLimit);
+    }
+
+    /**
+     * Gets which type(s) of portals are allowed to be constructed in this world.
+     *
+     * @return The type of portals that are allowed.
+     */
+    public AllowedPortalType getPortalForm() {
+        return worldConfig.getPortalForm();
+    }
+
+    /**
+     * Sets The types of portals that are allowed in this world.
+     *
+     * @param portalForm The type of portals allowed in this world.
+     * @return Result of setting property.
+     */
+    public Try<Void> setPortalForm(AllowedPortalType portalForm) {
+        return worldConfig.setPortalForm(portalForm);
+    }
+
+    /**
+     * Gets if entry fee is needed when entering this world
+     *
+     * @return True if entry fee is needed
+     */
+    public boolean isEntryFeeEnabled() {
+        return worldConfig.isEntryFeeEnabled();
+    }
+
+    /**
+     * Sets if entry fee is needed when entering this world
+     *
+     * @param entryFeeEnabled True to enable use of entry fee
+     * @return Result of setting property.
+     */
+    public Try<Void> setEntryFeeEnabled(boolean entryFeeEnabled) {
+        return worldConfig.setEntryFeeEnabled(entryFeeEnabled);
+    }
+
+    /**
+     * Gets the amount of currency it requires to enter this world.
+     *
+     * @return The amount it costs to enter this world.
+     */
+    public double getPrice() {
+        return worldConfig.getEntryFeeAmount();
+    }
+
+    /**
+         * Sets the price for entry to this world.
+     * You can think of this like an amount.
+     * The type can be set with {@link #setCurrency(Material)}
+     *
+     * @param price The Amount of money/item to enter the world.
+     * @return Result of setting property.
+     */
+    public Try<Void> setPrice(double price) {
+        return worldConfig.setEntryFeeAmount(price);
+    }
+
+    /**
+     * Gets whether or not PVP is enabled in this world in some form (fake or not).
+     *
+     * @return True if players can take damage from other players.
+     */
+    public boolean getPvp() {
+        return worldConfig.getPvp();
+    }
+
+    /**
+         * Turn pvp on or off. This setting is used to set the world's PVP mode.
+         *
+         * @param pvp True to enable PVP damage, false to disable it.
+         * @return Result of setting property.
+             */
+    public Try<Void> setPvp(boolean pvp) {
+        return worldConfig.setPvp(pvp);
+    }
+
+    /**
+     * Gets the world name players will respawn in if they die in this one.
+     *
+     * @return A world name that exists on the server.
+     */
+    public String getRespawnWorldName() {
+        return worldConfig.getRespawnWorld();
+    }
+
+    /**
+     * Gets the world players will respawn in if they die in this one.
+     *
+     * @return A world that exists on the server.
+     */
+    public @Nullable World getRespawnWorld() {
+        return Bukkit.getWorld(worldConfig.getRespawnWorld());
+    }
+
+    /**
+     * Sets the world players will respawn in if they die in this one.
+     * Returns true upon success, false upon failure.
+     *
+     * @param respawnWorld The name of a world that exists on the server.
+     * @return Result of setting property.
+     */
+    public Try<Void> setRespawnWorld(World respawnWorld) {
+        return worldConfig.setRespawnWorld(respawnWorld.getName());
+    }
+
+    /**
+     * Sets the world players will respawn in if they die in this one.
+     * Returns true upon success, false upon failure.
+     *
+     * @param respawnWorld The name of a world that exists on the server.
+     * @return Result of setting property.
+     */
+    public Try<Void> setRespawnWorld(MultiverseWorld respawnWorld) {
+        return worldConfig.setRespawnWorld(respawnWorld.getName());
+    }
+
+    /**
+     * Sets the world players will respawn in if they die in this one.
+     * Returns true upon success, false upon failure.
+     *
+     * @param respawnWorld The name of a world that exists on the server.
+     * @return Result of setting property.
+     */
+    public Try<Void> setRespawnWorld(String respawnWorld) {
+        return worldConfig.setRespawnWorld(respawnWorld);
+    }
+
+    /**
+     * Gets the scaling value of this world.Really only has an effect if you use
+     * Multiverse-NetherPortals.
+     *
+     * @return This world's non-negative, non-zero scale.
+     */
+    public double getScale() {
+    return worldConfig.getScale();
+    }
+
+    /**
+     * Sets the scale of this world. Really only has an effect if you use
+     * Multiverse-NetherPortals.
+     *
+     * @param scale A scaling value, cannot be negative or 0.
+     * @return Result of setting property.
+     */
+    public Try<Void> setScale(double scale) {
+        return worldConfig.setScale(scale);
+    }
+
+    /**
+     * Gets the world seed of this world. This cannot be changed after world creation.
+     *
+     * @return The Long version of the seed.
+     */
+    public long getSeed() {
+        return worldConfig.getSeed();
+    }
+
+    /**
+     * Gets a copy of the spawn location of this world. {@link Location#getWorld()} will be null when
+     * the world is unloaded. I.e. {@link MultiverseWorld#isLoaded()} is false.
+     *
+     * @return The spawn location of this world.
+     */
+    public Location getSpawnLocation() {
+        return worldConfig.getSpawnLocation().toBukkitLocation();
+    }
+
+    /**
+     * Sets the spawn location for a world.
+     *
+     * @param spawnLocation The spawn location for a world.
+     * @return Result of setting property.
+     */
+    public Try<Void> setSpawnLocation(Location spawnLocation) {
+        return worldConfig.setSpawnLocation(spawnLocation instanceof SpawnLocation
+                ? (SpawnLocation) spawnLocation.clone()
+                : new SpawnLocation(spawnLocation));
+    }
+
+    public EntitySpawnConfig getEntitySpawnConfig() {
+        return worldConfig.getEntitySpawnConfig();
+    }
+
+    public Try<Void> setEntitySpawnConfig(EntitySpawnConfig entitySpawnConfig) {
+        return worldConfig.setEntitySpawnConfig(entitySpawnConfig);
+    }
+
+    /**
+     * Gets a list of all the worlds that players CANNOT travel to from this world,regardless of their access
+     * permissions.
+     *
+     * @return A List of world names.
+     */
+    public List<String> getWorldBlacklist() {
+        return worldConfig.getWorldBlacklist();
+    }
+
+    /**
+     * Sets the list of worlds that players CANNOT travel to from this world, regardless of their access permissions.
+     *
+     * @param worldBlacklist A List of world names.
+     * @return Result of setting property.
+     */
+    public Try<Void> setWorldBlacklist(List<String> worldBlacklist) {
+        return worldConfig.setWorldBlacklist(worldBlacklist);
+    }
+
+    /**
+     * Gets the world config. Only for internal use.
+     *
+     * @return The world config.
+     */
+    @NotNull WorldConfig getWorldConfig() {
+        return worldConfig;
+    }
+
+    /**
+     * Sets the world config. Only for internal use.
+     *
+     * @param worldConfig   The world config.
+     */
+    void setWorldConfig(@NotNull WorldConfig worldConfig) {
+        this.worldConfig = worldConfig;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "MultiverseWorld{"
+                + "key='" + getKey() + "', "
+                + "name='" + getName() + "', "
+                + "env='" + getEnvironment() + "', "
+                + "gen='" + getGenerator() + "'"
+                + '}';
+    }
+}

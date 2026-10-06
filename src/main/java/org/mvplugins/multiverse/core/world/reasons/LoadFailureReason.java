@@ -1,0 +1,75 @@
+package org.mvplugins.multiverse.core.world.reasons;
+
+import co.aikar.locales.MessageKey;
+import co.aikar.locales.MessageKeyProvider;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.mvplugins.multiverse.core.locale.MVCorei18n;
+import org.mvplugins.multiverse.core.utils.result.FailureReason;
+
+/**
+ * Result of a world loading operation.
+ */
+public enum LoadFailureReason implements FailureReason {
+    /**
+     * Loading operation is underway.
+     */
+    WORLD_ALREADY_LOADING(MVCorei18n.LOADWORLD_WORLDALREADYLOADING),
+
+    /**
+     * The world does not exist.
+     */
+    WORLD_NON_EXISTENT(MVCorei18n.LOADWORLD_WORLDNONEXISTENT),
+
+    /**
+     * The world folder exists but is not known to Multiverse.
+     */
+    WORLD_EXIST_FOLDER(MVCorei18n.LOADWORLD_WORLDEXISTFOLDER),
+
+    /**
+     * The world folder is invalid.
+     *
+     * @since 5.2
+     */
+    @ApiStatus.AvailableSince("5.2")
+    WORLD_FOLDER_INVALID(MVCorei18n.IMPORTWORLD_WORLDFOLDERINVALID),
+
+    /**
+     * The world is already loaded.
+     */
+    WORLD_EXIST_LOADED(MVCorei18n.LOADWORLD_WORLDEXISTLOADED),
+
+    /**
+     * The mv world's environment does not match the loaded Bukkit world's environment.
+     *
+     * @since 5.2
+     */
+    @ApiStatus.AvailableSince("5.2")
+    BUKKIT_ENVIRONMENT_MISMATCH(MVCorei18n.LOADWORLD_BUKKITENVIRONMENTMISMATCH),
+
+    /**
+     * The mv world's namespace key does not match the loaded Bukkit world's key.
+     */
+    @ApiStatus.AvailableSince("5.7")
+    BUKKIT_NAMESPACED_KEY_MISMATCH(MVCorei18n.LOADWORLD_BUKKITNAMESPACEDKEYMISMATCH),
+
+    /**
+     * Bukkit API failed to create the world.
+     */
+    WORLD_CREATOR_FAILED(MVCorei18n.GENERIC_FAILURE),
+    ;
+
+    private final MessageKeyProvider message;
+
+    LoadFailureReason(MessageKeyProvider message) {
+        this.message = message;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MessageKey getMessageKey() {
+        return message.getMessageKey();
+    }
+}

@@ -1,0 +1,303 @@
+####################################################################################################
+#                                                                                                  #
+#                    █▀▄▀█ █░█ █░░ ▀█▀ █ █░█ █▀▀ █▀█ █▀ █▀▀   █▀▀ █▀█ █▀█ █▀▀                      #
+#                    █░▀░█ █▄█ █▄▄ ░█░ █ ▀▄▀ ██▄ █▀▄ ▄█ ██▄   █▄▄ █▄█ █▀▄ ██▄                      #
+#                                                                                                  #
+#                                                                                                  #
+#    WIKI:        https://mvplugins.org/core/                                                      #
+#    DISCORD:     https://discord.gg/NZtfKky                                                       #
+#    BUG REPORTS: https://github.com/Multiverse/Multiverse-Core/issues                             #
+#    DONATE:      https://github.com/sponsors/Multiverse                                           #
+#                                                                                                  #
+#                                                                                                  #
+#    New options are added to this file automatically. If you manually made changes                #
+#    to this file while your server is running, please run `/mv reload` command.                   #
+#                                                                                                  #
+####################################################################################################
+
+
+world:
+  # When enabled, Multiverse will automatically import default worlds defined in the server.properties
+  # `level-name` property when the Multiverse is enabled or reloaded. This will include the nether and
+  # end if the server created them.
+  auto-import-default-worlds: true
+
+  # When enabled, Multiverse will import all other worlds created by other plugins when Multiverse starts
+  # or when Multiverse is reloaded.
+  auto-import-3rd-party-worlds: true
+
+  # This setting will prevent players from entering worlds they don't have access to.
+  # If this is set to false, players will be able to enter any world they want.
+  # If this is set to true, players will only be able to enter worlds they have
+  # the `mv.access.<worldname>` permission.
+  enforce-access: true
+
+  # Sets whether Multiverse will should enforce gamemode on world change.
+  # If enabled, players will be forced into the gamemode of the world they are entering, unless they have
+  # the `mv.bypass.gamemode.<worldname>` permission.
+  enforce-gamemode: false
+
+  # Sets whether Multiverse will should globally enforce flight ability on worlds.
+  # Disable this if you want another plugin to handle player's flight ability.
+  # Disabling this will make the world property `allow-flight` have no effect.
+  enforce-flight: false
+
+  # Sets the delay in ticks before Multiverse enforces gamemode and flight ability on world change.
+  # Increase this value if you are experiencing issues with other plugins overriding gamemode or flight ability.
+  # Or set to 0 to enforce immediately during world change event.
+  gamemode-and-flight-enforce-delay: 1
+
+  # Sets whether Multiverse will apply the world's entity `tick-rate` config in worlds.yml.
+  # If disabled, the `tick-rate` config in worlds.yml will be ignored.
+  # Disable this if you want paper-world.yml or another plugin to handle entity spawn rate per world.
+  # !!!NOTE: This will only apply after a server restart!
+  apply-entity-spawn-rate: false
+
+  # Sets whether Multiverse will apply the world's entity `spawn-limit` config when a world is loaded.
+  # If disabled, the `spawn-limit` config in worlds.yml will be ignored.
+  # Disable this if you want paper-world.yml or another plugin to handle entity limits per world.
+  # !!!NOTE: This will only apply after a server restart!
+  apply-entity-spawn-limit: false
+
+  # Sets whether Multiverse will purge entities on world load based world's entity spawn config.
+  auto-purge-entities: false
+
+  # Format for world names for multiverse to automatically detect a world group consist of overworld, nether and end.
+  # This is used default-respawn-in-overworld and potentially other features.
+  world-name-format:
+    nether: '%overworld%_nether'
+    end: '%overworld%_the_end'
+
+  # Sets whether Multiverse will warn about alias duplicates when adding worlds or modifying aliases.
+  # Although not enforced, it is highly recommended to not have multiple worlds with the same alias or
+  # alias matching another world's name as it can cause confusion during world listing and selection in commands.
+  warn-alias-conflicts: true
+
+
+teleport:
+  # Sets whether Multiverse will use more fine-grained teleport permissions.
+  # ----
+  # New finer teleport permissions for /mvtp and /mvspawn commands:
+  #   - For specific teleport types: `multiverse.teleport.<self|other>.<type>.<target>`
+  #   - For specific world spawn: `multiverse.core.spawn.<self|other>.<worldname>`
+  # For example, if `multiverse.teleport.self.w.world2` is set, Multiverse will only allow the player to teleport to the world2.
+  # ----
+  # Legacy permissions will be used if this is set to false:
+  #   - For teleport destinations: `multiverse.teleport.<self|other>.<type>`
+  #   - For spawn: `multiverse.core.spawn.<self|other>`
+  use-finer-teleport-permissions: true
+
+  # Configures how passengers and vehicles are handled when an entity is teleported. This config is
+  # only applied to /mvtp, join-destination and first-spawn-override. It will not touch any other
+  # teleport by other plugins or commands.
+  # ========= Available options: =========
+  #   default: Server will handle passengers and vehicles. On papermc 1.21.10+, all will be retained by default.
+  #                                                        On older versions, all will be dismounted if world changes.
+  #   dismount_passengers: Passengers will be removed from the parent entity before the teleport.
+  #   dismount_vehicle: Vehicle will be removed and from the parent entity before the teleport.
+  #   dismount_all: All passengers and vehicles will be removed from the parent entity before the teleport.
+  #   retain_passengers: Passengers will teleport together with the parent entity.
+  #   retain_vehicle: Vehicles will teleport together with the parent entity.
+  #   retain_all: All passengers and vehicles will teleport together with the parent entity.
+  passenger-mode: default
+
+  # Sets the maximum number of players allowed to be teleported at once with `/mv teleport` command
+  concurrent-teleport-limit: 50
+
+  # If this is set to true, Multiverse will enforce access permissions for all teleportation,
+  # including teleportation from other plugins. You should not disable this unless you are facing
+  # conflict with another plugin handling teleportation.
+  teleport-intercept: true
+
+  # Sets the horizontal (x and z-axis) search radius for finding a safe location to teleport to.
+  # Increasing this value will widen the search area at the cost of performance.
+  # To disable, set to 0.
+  safe-location-horizontal-search-radius: 3
+
+  # Sets the vertical (y-axis) search radius for finding a safe location to teleport to.
+  # Increasing this value will widen the search area at the cost of performance.
+  # To disable, set to 0.
+  safe-location-vertical-search-radius: 3
+
+
+spawn:
+  # Sets whether Multiverse will override the location where the player spawns when they join the server
+  # for the first time. For fixed spawn location on every login, see the `join-destination` option below.
+  # If disabled, it will default to server.properties settings.
+  first-spawn-override: true
+
+  # Sets the world that Multiverse will use as the location for players that join the server for the first time.
+  # This only applies if first-spawn-override is set to true.
+  first-spawn-location: 'filmworld'
+
+  # Enables setting of a fixed location for players to spawn in when they join the server every time.
+  # See `join-destination` option below as well.
+  enable-join-destination: false
+
+  # Sets the destination that Multiverse will use to spawn players on every login.
+  # Set the above enable-join-destination to false to disable
+  join-destination: ''
+
+  # This only applies if the `respawn-world` property is not set for the world that the player died in,
+  # and the player does not have bed or anchor set.
+  # ----
+  # When this option is enabled, players will respawn in the overworld when dying in nether or end, mimicking the vanilla behavior.
+  # The automatic selection of overworld is determined by the `world-name-format` config section above.
+  # This option takes precedence over the `default-respawn-within-same-world` option.
+  # ----
+  # Set this to false if you want another plugin to handle respawning or do not want this vanilla behavior.
+  default-respawn-in-overworld: true
+
+  # This only applies if the `respawn-world` property is not set for the world that the player died in,
+  # and the player does not have bed or anchor set.
+  # ----
+  # When this option is enabled, players will respawn in the same world's that they died in.
+  # If the /spawnpoint is already within that world and `enforce-respawn-at-world-spawn` is disabled,
+  # Multiverse will use that spawn location, else it will use the world's spawn where the player died in.
+  # ----
+  # You can set `respawn-world` property with the command: `/mv modify <worldname> set respawn-world <worldname>`
+  # You can reset `respawn-world` property with the command: `/mv modify <worldname> reset respawn-world`
+  # ----
+  # Set this to false if you want another plugin to handle respawning.
+  default-respawn-within-same-world: true
+
+  # When this option is enabled, players will always respawn at the world's spawn location of calculated respawn world,
+  # unless bed or anchor is set and `bed-respawn` or `anchor-spawn` is enabled respectively.
+  # ----
+  # Set this to false if you want to use a custom spawn location such as /spawnpoint instead of the world's spawn location.
+  enforce-respawn-at-world-spawn: true
+
+
+portal:
+  # This config option defines whether or not Multiverse should interfere with's Bukkit's default portal search radius.
+  # Setting it to false would mean you want to simply let Bukkit decides the search radius itself.
+  use-custom-portal-search: false
+
+  # This config option defines the search radius Multiverse should use when searching for a portal.
+  # This only applies if use-custom-portal-search is set to true.
+  custom-portal-search-radius: 128
+
+
+messaging:
+  # This config option defines whether or not Multiverse should prefix the chat with the world name.
+  # Ensure this is false if you want another plugin to handle chat formatting.
+  enable-chat-prefix: false
+
+  # This config option defines the format Multiverse should use when prefixing the chat with the world name.
+  # This only applies if enable-chat-prefix is set to true.
+  chat-prefix-format: '[%world%]%chat%'
+
+  # This config option defines whether or not Multiverse should register the PlaceholderAPI hook.
+  # This only applies if PlaceholderAPI is installed.
+  register-papi-hook: true
+
+  # This config option defines whether or not Multiverse should warn about invalid PlaceholderAPI formats.
+  # Only applies if PlaceholderAPI is installed, and only to multiverse placeholders.
+  warn-invalid-papi-format: true
+
+  # By default, invalid formats will return the original placeholder string.
+  # This config option defines whether or not Multiverse should show invalid PlaceholderAPI formats as blank.
+  # Only applies if PlaceholderAPI is installed, and only to multiverse placeholders.
+  invalid-papi-format-returns-blank: false
+
+  # This config option defines the default language Multiverse should use.
+  default-locale: en
+
+  # This config option defines if Multiverse should use the player's language based on their client's language.
+  # If the player's language does not have a translation, it will use the default language set above instead.
+  per-player-locale: true
+
+
+command:
+  # If this is set to true, Multiverse will resolve world based on their alias names for commands and destinations.
+  # Normal world names will still be accepted.
+  # In the event you have multiple worlds with the same alias name, the first world found will be used.
+  resolve-alias-name: true
+
+  # If this is set to true, Multiverse will only suggest simple destination formats in tab completion.
+  # This means only world names will be suggested without other destination type such as `e:worldname:x,y,z` or `p:playername`.
+  # Note: This DOES NOT prevent players from using the destinations, as that is controlled by permissions.
+  simplified-destination-tab-completion: false
+
+  # This config option defines whether `/mv confirm` is needed before running a DANGEROUS action.
+  #   enable: `/mv confirm` is required.
+  #   player_only: `/mv confirm` only required when running command as a player.
+  #   disable_command_blocks: `/mv confirm` not required for command blocks.
+  #   disable_console: `/mv confirm` not required for the console.
+  #   disable: `/mv confirm` is not required.
+  confirm-mode: enable
+
+  # If this is set to true, `/mv confirm` will include a 3 digit random number that must be entered to confirm the command.
+  # For example: `/mv confirm 726`
+  use-confirm-otp: true
+
+  # The amount of time in seconds before `/mv confirm` times out
+  confirm-timeout: 30
+
+  # If this is set to true, legacy aliases will be shown in tab completion.
+  # These are old mv4 aliases such as `/mvclone` in addition to `/mv clone` which crowds the tab completion.
+  # !!!NOTE: This will only apply after a server restart!
+  show-legacy-aliases: false
+
+
+event-priority:
+  # The follow configuration changes the bukkit's EventPriority for certain events.
+  # Only ever change this if you need multiverse's events outcomes to override another plugin, or if
+  # you want another plugin's outcome to override multiverse's.
+  # ----
+  # !!!NOTE: This will only apply after a server restart!
+
+  # This config option defines the priority for the PlayerPortalEvent.
+  player-portal: high
+
+  # This config option defines the priority for the PlayerRespawnEvent.
+  player-respawn: low
+
+  # This config option defines the priority for the PlayerSpawnLocationEvent.
+  player-spawn-location: normal
+
+  # This config option defines the priority for the PlayerTeleportEvent.
+  player-teleport: highest
+
+  # This config option defines the priority for the PlayerChangedWorldEvent.
+  player-changed-world: normal
+
+
+misc:
+  # Change this if you use a custom path for the bukkit.yml file with `--bukkit-settings` startup flag.
+  # Note: this config option needs a server restart to take effect.
+  bukkit-yml-path: bukkit.yml
+
+  # Change this if you use a custom path for the server.properties file with `--config` startup flag.
+  # Note: this config option needs a server restart to take effect.
+  server-properties-path: server.properties
+
+  # When enabled, Multiverse will attempt to automatically detect world generator plugins installed on your server.
+  # This option only affects tab-completion within `/mv create` command and output of `/mv generators` command.
+  # Disabling this will not have any affect on the usages of world generator plugins itself.
+  auto-detect-generator-plugins: true
+
+  # This is our debug flag to help identify issues with Multiverse.
+  # If you are having issues with Multiverse, please set this to 3 and then post your log to pastebin.com
+  # Otherwise, there's no need to touch this. If not instructed by a wiki page or developer.
+  #   0 = Off, No debug messages
+  #   1 = fine
+  #   2 = finer
+  #   3 = finest
+  global-debug: 0
+
+  # Sets whether console will log every permission check done by all multiverse plugins.
+  # This will only work if the above 'global-debug' is set to 1 or more.
+  debug-permissions: false
+
+  # If true, the startup console messages will no longer show.
+  silent-start: false
+
+  # If you don't want to donate, you can set this to false and Multiverse will stop nagging you.
+  # But if you want to donate, here is our Github Sponsors page: https://github.com/sponsors/Multiverse
+  show-donation-message: false
+
+
+# This just signifies the version number so we can see what version of config you have.
+# NEVER TOUCH THIS VALUE
+version: 5.2

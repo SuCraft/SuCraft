@@ -1,74 +1,73 @@
-import org.gradle.internal.extensions.stdlib.capitalized
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.PosixFilePermission
+import java.security.MessageDigest
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.getLastModifiedTime
+import kotlin.io.path.inputStream
 import kotlin.io.path.pathString
+import kotlin.io.path.relativeTo
+import kotlin.io.path.writeBytes
 
-val buildDependencyTasks = listOf(
-    ":suki:suki-server:createBundlerJar",
-).map { gradleTask ->
+fun sha256(data: ByteArray): String {
+    val digest = MessageDigest.getInstance("SHA-256")
+    digest.update(data)
+    return digest.digest().joinToString("") { "%02x".format(it) }
+}
 
-    fun String.toCamelCase(): String =
-        split("-")
-            .mapIndexed { index, part ->
-                if (index == 0) part
-                else part.replaceFirstChar { it.uppercase() }
-            }
-            .joinToString("")
+fun sha256(file: java.nio.file.Path) = sha256(file.inputStream().readAllBytes())
 
-    val gradleTaskSplit = gradleTask.split(":")
-    val newTaskName =
-        "${gradleTaskSplit[gradleTaskSplit.size - 2].toCamelCase()}${gradleTaskSplit.last().capitalized()}"
-    tasks.register<Exec>(newTaskName) {
-        group = "prepare dependencies"
-        workingDir = file("..")
-        commandLine("./gradlew", gradleTask)
-    }
+val lastUpdateGitRefFile: File = layout.projectDirectory.file(".gradle/caches/scaffolding/last_git_ref.txt").asFile
 
-} + listOf(
-    "bukkit-plugins/forked/CoreProtect",
-    "bukkit-plugins/forked/PermissionsBukkit"
-).map { mavenTask ->
+fun getCurrentGitRef(): String {
+    val process = ProcessBuilder(
+        "git", "rev-parse", "--short", "HEAD"
+    ).directory(layout.projectDirectory.asFile.parentFile).start()
+    val output = process.inputStream.bufferedReader().readText().trim()
+    val exitCode = process.waitFor()
+    if (exitCode == 0) return output.trim()
+    throw IllegalStateException("Could not determine current git ref")
+}
 
-    val newTaskName =
-        "${mavenTask.split("/").last().replaceFirstChar(Char::lowercase)}Install"
-    tasks.register<Exec>(newTaskName) {
-        group = "prepare dependencies"
-        workingDir = file("../$mavenTask")
-        commandLine("mvn", "install")
-    }
+fun needsNewUpdateDueToGitRefChange() =
+    !lastUpdateGitRefFile.exists() || lastUpdateGitRefFile.readText().trim() != getCurrentGitRef()
+
+fun replaceLastUpdateGitRef() {
+    lastUpdateGitRefFile.parentFile.mkdirs()
+    lastUpdateGitRefFile.writeText(getCurrentGitRef())
+}
+
+val runDirectory: File = project.layout.projectDirectory.file("../run").asFile
+
+abstract class FileToUpdate(
+    val targetPath: String,
+    val alwaysUpdate: Boolean = false
+) {
+
+    fun targetFile(): java.nio.file.Path = runDirectory.resolve(targetPath).toPath()
+
+    open fun needToUpdate() =
+        alwaysUpdate || !targetFile().exists()
+
+    abstract fun update()
 
 }
 
-abstract class TargetFile(val targetPath: String) {
+open class FileToUpdateFromSourceFile(
+    targetPath: String,
+    val sourcePath: String,
+    alwaysUpdate: Boolean = false
+) : FileToUpdate(targetPath, alwaysUpdate) {
 
-    fun targetFile() = project.layout.projectDirectory.file("../run/$targetPath").asFile.toPath()
+    fun sourceFile(): java.nio.file.Path = project.layout.projectDirectory.file(sourcePath).asFile.toPath()
 
-    open fun needToCopy() =
-        !targetFile().exists()
+    open fun createSourceFile() {}
 
-    abstract fun copy()
-
-}
-
-fun projectFile(targetPath: String, sourcePath: String) = object : TargetFile(targetPath) {
-
-    fun sourceFile() = project.layout.projectDirectory.file(sourcePath).asFile.toPath()
-
-    override fun needToCopy(): Boolean {
-        if (super.needToCopy()) return true
-        val targetFile = targetFile()
-        val sourceFile = sourceFile()
-        if (sourceFile.fileSize() != targetFile.fileSize()) return true;
-        if (sourceFile.getLastModifiedTime() != targetFile.getLastModifiedTime()) return true;
-        return false;
-    }
-
-    override fun copy() {
+    override fun update() {
+        createSourceFile()
         Files.copy(
             sourceFile(),
             targetFile(),
@@ -79,49 +78,166 @@ fun projectFile(targetPath: String, sourcePath: String) = object : TargetFile(ta
 
 }
 
-fun rootProjectFile(targetPath: String, sourcePath: String) =
-    projectFile(targetPath, "../$sourcePath")
+class FileToUpdateFromIncludedSourceFile(
+    targetPath: String,
+    sourcePath: String,
+    alwaysCopy: Boolean = false
+) : FileToUpdateFromSourceFile(targetPath, sourcePath, alwaysCopy) {
 
-fun rootProjectFile(filename: String, targetDirectory: String, sourceDirectory: String) =
-    rootProjectFile("$targetDirectory/$filename", "$sourceDirectory/$filename")
+    override fun needToUpdate(): Boolean {
+        if (super.needToUpdate()) return true
+        val targetFile = targetFile()
+        val sourceFile = sourceFile()
+        if (sourceFile.fileSize() != targetFile.fileSize()) return true
+        if (sourceFile.getLastModifiedTime() != targetFile.getLastModifiedTime()) return true
+        return needsNewUpdateDueToGitRefChange()
+    }
+
+}
+
+abstract class FileToUpdateByExecuting(
+    targetPath: String,
+    sourcePathFromProjectRoot: String,
+    alwaysExecute: Boolean = false
+) : FileToUpdateFromSourceFile(targetPath, "../$sourcePathFromProjectRoot", alwaysExecute)
+
+class FileToUpdateByGradleTask(
+    targetPath: String,
+    sourcePathFromProjectRoot: String,
+    val gradleTask: String,
+    alwaysUpdate: Boolean = false
+) : FileToUpdateByExecuting(targetPath, sourcePathFromProjectRoot, alwaysUpdate) {
+
+    override fun createSourceFile() {
+        logger.lifecycle("Performing Gradle task: $gradleTask")
+        ProcessBuilder("./gradlew", gradleTask)
+            .directory(project.layout.projectDirectory.asFile.parentFile)
+            .inheritIO()
+            .start()
+            .waitFor()
+            .let { if (it != 0) throw IllegalStateException("Gradle task \"$gradleTask\" was not successful") }
+    }
+
+}
+
+class FileToUpdateByMavenPackage(
+    targetPath: String,
+    sourcePathFromProjectRoot: String,
+    val mavenDirectory: String,
+    alwaysUpdate: Boolean = false
+) : FileToUpdateByExecuting(targetPath, sourcePathFromProjectRoot, alwaysUpdate) {
+
+    override fun createSourceFile() {
+        logger.lifecycle("Performing Maven package: $mavenDirectory")
+        ProcessBuilder("mvn", "package")
+            .directory(project.layout.projectDirectory.asFile.parentFile.resolve(mavenDirectory))
+            .inheritIO()
+            .start()
+            .waitFor()
+            .let { if (it != 0) throw IllegalStateException("Maven package task \"$mavenDirectory\" was not successful") }
+    }
+
+}
+
+class FileToUpdateByDownloading(
+    targetPath: String,
+    val sourceURL: String,
+    val sha256Hash: String? = null,
+    alwaysUpdate: Boolean = false
+) : FileToUpdate(targetPath, alwaysUpdate) {
+
+    override fun needToUpdate(): Boolean {
+        if (super.needToUpdate()) return true
+        if (sha256(targetFile()) != sha256Hash) return true
+        return false
+    }
+
+    override fun update() {
+        logger.lifecycle("Downloading: $sourceURL")
+        val contents = URI.create(sourceURL).toURL().openStream().readAllBytes()
+        if (sha256Hash != null && sha256(contents) != sha256Hash) {
+            throw IllegalStateException("Downloaded file hash does not match expected for target file: $targetPath")
+        }
+        targetFile().writeBytes(contents)
+    }
+
+}
 
 val targetFiles = arrayListOf(
-    rootProjectFile(
+    FileToUpdateByMavenPackage(
         "minecraft-server/plugins/CoreProtect.jar",
-        "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar"
+        "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar",
+        "bukkit-plugins/forked/CoreProtect"
     ),
-    rootProjectFile(
+    FileToUpdateByMavenPackage(
         "minecraft-server/plugins/PermissionsBukkit.jar",
-        "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar"
+        "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar",
+        "bukkit-plugins/forked/PermissionsBukkit"
     ),
-    rootProjectFile(
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/CrazyAdvancementsAPI.jar",
+        "https://github.com/ZockerAxel/CrazyAdvancementsAPI/releases/download/v2.1.21/CrazyAdvancementsAPI-2.1.21.jar",
+        "cb0e596d01160f5e2b840d2a2c329732431a348689c180873713c599190307b2"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/Multiverse-Core.jar",
+        "https://github.com/Multiverse/Multiverse-Core/releases/download/5.8.1/multiverse-core-5.8.1.jar",
+        "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/OldGenerator.jar",
+        "https://hangarcdn.papermc.io/plugins/Spottedleaf/OldGenerator/versions/1.2.0/PAPER/oldgenerator-1.2.0.jar",
+        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/WorldEdit.jar",
+        "https://mediafilez.forgecdn.net/files/8962/666/worldedit-bukkit-7.4.6-beta-02.jar",
+        "166365c44bad4cd916200b288cf391d3770e3197d1eca84ff74f3914d933e289"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/WorldGuard.jar",
+        "https://mediafilez.forgecdn.net/files/8911/284/worldguard-bukkit-7.0.19.jar",
+        "396df065f1cf38bab9878a0f53a776d5a085ebbf3c41813938b73f95d4eaca03"
+    ),
+    FileToUpdateByGradleTask(
         "minecraft-server/server.jar",
-        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar"
+        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar",
+        ":suki:suki-server:createBundlerJar"
     )
 )
-val baseResourcesFolderName = "resources"
-val secretResourcesFolderName = "secret-resources"
+val baseFilesFolderName = "files"
+val secretFilesFolderName = "secret-files"
 for (secret in arrayOf(false, true)) {
-    val resourcesFolderName = if (secret) secretResourcesFolderName else baseResourcesFolderName
-    val resourcesFolder = project.layout.projectDirectory.file(resourcesFolderName).asFile
-    resourcesFolder.walkTopDown().toList().filter { it.isFile }.map { resourceFile ->
-        val relativePath = resourceFile.relativeTo(resourcesFolder).path
-        if (secret || !project.layout.projectDirectory.file("${secretResourcesFolderName}/${relativePath}").asFile.exists()) {
-            targetFiles += projectFile(relativePath, "$resourcesFolderName/$relativePath")
+    val filesFolderName = if (secret) secretFilesFolderName else baseFilesFolderName
+    val filesFolder = project.layout.projectDirectory.file(filesFolderName).asFile
+    filesFolder.walkTopDown().toList().filter { it.isFile }.forEach { file ->
+        val relativePath = file.relativeTo(filesFolder).path
+        if (secret || !project.layout.projectDirectory.file("${secretFilesFolderName}/${relativePath}").asFile.exists()) {
+            targetFiles += FileToUpdateFromIncludedSourceFile(relativePath, "$filesFolderName/$relativePath")
+        }
+    }
+}
+
+tasks.register("printFileHashes") {
+    group = "scaffolding"
+    doFirst {
+        for (targetFile in targetFiles) {
+            if (targetFile !is FileToUpdateFromIncludedSourceFile) {
+                logger.lifecycle("${targetFile.targetFile().relativeTo(runDirectory.toPath()).pathString} -> ${sha256(targetFile.targetFile())}")
+            }
         }
     }
 }
 
 tasks.register("update") {
     group = "scaffolding"
-    dependsOn(buildDependencyTasks)
     doFirst {
-        for (targetFile in targetFiles) {
-            if (targetFile.needToCopy()) {
-                logger.lifecycle("Placing target file: ${targetFile.targetFile().pathString}")
+        targetFiles.stream().parallel().forEach { targetFile ->
+            if (targetFile.needToUpdate()) {
+                logger.lifecycle("Updating file: ${targetFile.targetFile().pathString}")
                 targetFile.targetFile().createParentDirectories()
-                targetFile.copy()
-                if (targetFile.targetFile().pathString.endsWith(".sh") || targetFile.targetFile().pathString.endsWith(".jar")) {
+                targetFile.update()
+                if (targetFile.targetFile().pathString.endsWith(".sh") || targetFile.targetFile().fileName.equals("server.jar")) {
                     // Make executable
                     logger.lifecycle("Making executable: ${targetFile.targetFile().pathString}")
                     val permissions = Files.getPosixFilePermissions(targetFile.targetFile()).toMutableSet()
@@ -133,5 +249,13 @@ tasks.register("update") {
                 logger.lifecycle("Skipping (already up-to-date): ${targetFile.targetFile().pathString}")
             }
         }
+        replaceLastUpdateGitRef()
+    }
+}
+
+tasks.register("clean") {
+    group = "build"
+    doFirst {
+        lastUpdateGitRefFile.delete()
     }
 }

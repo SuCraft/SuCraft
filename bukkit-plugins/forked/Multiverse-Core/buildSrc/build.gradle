@@ -1,0 +1,18 @@
+// SuCraft start - Workaround for Gradle 9+
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'maven-publish'
+}
+
+group = 'org.mvplugins.gradle'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation 'com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.6.1'
+    implementation 'org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:2.5.0-Beta1'
+}
+// SuCraft end - Workaround for Gradle 9+

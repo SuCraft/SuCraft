@@ -169,6 +169,12 @@ val targetFiles = arrayListOf(
         "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar",
         "bukkit-plugins/forked/CoreProtect"
     ),
+    FileToUpdateByGradleTask(
+        "minecraft-server/plugins/Multiverse-Core.jar",
+        "bukkit-plugins/forked/Multiverse-Core/build/libs/multiverse-core-local.jar",
+        ":plugins:Multiverse-Core:shadowJar",
+        alwaysUpdate = true
+    ),
     FileToUpdateByMavenPackage(
         "minecraft-server/plugins/PermissionsBukkit.jar",
         "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar",
@@ -179,15 +185,15 @@ val targetFiles = arrayListOf(
         "https://github.com/ZockerAxel/CrazyAdvancementsAPI/releases/download/v2.1.21/CrazyAdvancementsAPI-2.1.21.jar",
         "cb0e596d01160f5e2b840d2a2c329732431a348689c180873713c599190307b2"
     ),
-    FileToUpdateByDownloading(
-        "minecraft-server/plugins/Multiverse-Core.jar",
-        "https://github.com/Multiverse/Multiverse-Core/releases/download/5.8.1/multiverse-core-5.8.1.jar",
-        "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
-    ),
+    // FileToUpdateByDownloading(
+    //     "minecraft-server/plugins/Multiverse-Core.jar",
+    //     "https://github.com/Multiverse/Multiverse-Core/releases/download/5.8.1/multiverse-core-5.8.1.jar",
+    //     "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+    // ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/OldGenerator.jar",
         "https://hangarcdn.papermc.io/plugins/Spottedleaf/OldGenerator/versions/1.2.0/PAPER/oldgenerator-1.2.0.jar",
-        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+        "2ec8936c4e8ae515be3a193fe55db654f3c6f4bc40f434df515bd499e069365a"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/WorldEdit.jar",

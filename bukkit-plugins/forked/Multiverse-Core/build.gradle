@@ -1,13 +1,14 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'org.mvplugins.multiverse-plugin' version '1.2.2'
+    id 'org.mvplugins.multiverse-plugin'// version '1.2.2' // SuCraft - Workaround for Gradle 9+
 }
 
 group = 'org.mvplugins.multiverse.core'
 description = 'Multiverse-Core'
 
 repositories {
+    maven { url = uri('https://repo.phoenix616.dev') } // SuCraft - Workaround for Gradle 9+
     maven {
         name = 'jitpack repo'
         url = uri('https://jitpack.io')
@@ -103,15 +104,17 @@ shadowJar {
     relocate 'io.papermc.lib', 'org.mvplugins.multiverse.external.paperlib'
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/Multiverse/Multiverse-Core"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-}
+// SuCraft start - Workaround for Gradle 9+
+// publishing {
+//     repositories {
+//         maven {
+//             name = "GitHubPackages"
+//             url = "https://maven.pkg.github.com/Multiverse/Multiverse-Core"
+//             credentials {
+//                 username = System.getenv("GITHUB_ACTOR")
+//                 password = System.getenv("GITHUB_TOKEN")
+//             }
+//         }
+//     }
+// }
+// SuCraft end - Workaround for Gradle 9+

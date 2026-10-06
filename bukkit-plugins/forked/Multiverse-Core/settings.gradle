@@ -11,4 +11,75 @@ pluginManagement {
     }
 }
 
+// SuCraft start - Workaround for Gradle 9+
+gradle.beforeProject { Project project ->
+
+    project.pluginManager.withPlugin('java-library') {
+
+        def api = project.configurations.getByName('api')
+
+        def findField = { Class type, String name ->
+            def current = type
+
+            while (current != null) {
+                try {
+                    return current.getDeclaredField(name)
+                } catch (NoSuchFieldException ignored) {
+                    current = current.getSuperclass()
+                }
+            }
+
+            return null
+        }
+
+        def roleField = findField(api.getClass(), 'roleAtCreation')
+
+        if (roleField == null) {
+            throw new GradleException(
+                "Gradle compatibility hack failed: " +
+                    "DefaultConfiguration.roleAtCreation was not found"
+            )
+        }
+
+        def rolesClass = Class.forName(
+            'org.gradle.api.internal.artifacts.configurations.ConfigurationRoles'
+        )
+
+        def allField = rolesClass.getDeclaredField('ALL')
+        allField.setAccessible(true)
+
+        roleField.setAccessible(true)
+        roleField.set(api, allField.get(null))
+    }
+}
+
+gradle.beforeProject { Project project ->
+
+    project.pluginManager.withPlugin('java-library') {
+
+        def api = project.configurations.getByName('api')
+
+        def clazz = api.getClass()
+        def field = null
+
+        while (clazz != null && field == null) {
+            try {
+                field = clazz.getDeclaredField('usageCanBeMutated')
+            } catch (NoSuchFieldException ignored) {
+                clazz = clazz.getSuperclass()
+            }
+        }
+
+        if (field == null) {
+            throw new GradleException(
+                'Could not find Gradle 9.8 DefaultConfiguration.usageCanBeMutated'
+            )
+        }
+
+        field.setAccessible(true)
+        field.setBoolean(api, true)
+    }
+}
+// SuCraft end - Workaround for Gradle 9+
+
 rootProject.name = 'multiverse-core'

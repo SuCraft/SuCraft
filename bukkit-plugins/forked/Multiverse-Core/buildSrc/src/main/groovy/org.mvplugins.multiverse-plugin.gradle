@@ -1,0 +1,141 @@
+// SuCraft start - Workaround for Gradle 9+
+plugins {
+    id 'java-library'
+    id 'com.gradleup.shadow'
+}
+
+version = System.getenv('GITHUB_VERSION') ?: 'local'
+
+java {
+    disableAutoTargetJvm()
+}
+
+// SuCraft start - Target Java 25
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+// SuCraft end - Target Java 25
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    def props = [version: "${project.version}"]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+
+    // This task should never be skipped. The tests depend on this having been run but we want the new version number
+    // that is created after tests are run and before we run again to publish.
+    outputs.upToDateWhen { false }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compileClasspath
+}
+
+configurations {
+    // Add configuration for server API
+    compileOnly.extendsFrom serverApi
+    runtimeClasspath.extendsFrom serverApi
+    testImplementation.extendsFrom serverApi
+
+    // Add configuration for external plugins
+    implementation.extendsFrom externalPlugin
+
+    // Add configuration for dependencies that will be included in fat jar
+    compileClasspath.extendsFrom shadowed
+    testCompileClasspath.extendsFrom shadowed
+    testRuntimeClasspath.extendsFrom shadowed
+
+    [apiElements, runtimeElements].each {
+        it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+        it.outgoing.artifact(shadowJar)
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowed]
+
+    archiveClassifier.set('')
+}
+
+build.dependsOn shadowJar
+jar.enabled = false
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+repositories {
+    maven {
+        url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
+    }
+
+    maven {
+        url = uri('https://hub.spigotmc.org/nexus/content/groups/public/')
+    }
+
+    maven {
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+interface ApiDependenciesExtension {
+    Property<String> getServerApiVersion()
+    Property<String> getMockBukkitServerApiVersion()
+    Property<String> getMockBukkitVersion()
+}
+
+def apiDependenciesExtension = project.extensions.create('apiDependencies', ApiDependenciesExtension)
+
+apiDependenciesExtension.mockBukkitVersion.convention('4.30.0')
+
+afterEvaluate {
+    dependencies {
+        serverApi "io.papermc.paper:paper-api:${apiDependenciesExtension.serverApiVersion.get()}"
+
+        testImplementation "org.mockbukkit.mockbukkit:mockbukkit-v${apiDependenciesExtension.mockBukkitServerApiVersion.get()}:${apiDependenciesExtension.mockBukkitVersion.get()}"
+    }
+
+    project.configurations.api.canBeResolved = true // SuCraft - Workaround for Gradle 9+
+}
+// SuCraft end - Workaround for Gradle 9+
+
+// SuCraft start - Workaround for Gradle 9+
+tasks.withType(JavaCompile).configureEach {
+    doFirst {
+        configure(options) {
+            options.compilerArgs << "-Aorg.glassfish.hk2.metadata.location=META-INF/hk2-locator/${project.description}".toString()
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor 'org.glassfish.hk2:hk2-metadata-generator:3.0.3'
+    testAnnotationProcessor 'org.glassfish.hk2:hk2-metadata-generator:3.0.3'
+}
+// SuCraft end - Workaround for Gradle 9+

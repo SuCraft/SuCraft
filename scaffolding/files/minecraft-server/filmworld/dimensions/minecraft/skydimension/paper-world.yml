@@ -1,0 +1,34 @@
+# This is a world configuration file for Paper.
+# This file may start empty but can be filled with settings to override ones in the config/paper-world-defaults.yml
+#
+# For more information, see https://docs.papermc.io/paper/reference/configuration/#per-world-configuration
+#
+# World: minecraft:skydimension
+
+_version: 31
+anticheat:
+  anti-xray:
+    chunk-edge-mode: 2
+    enabled: true
+    engine-mode: 2
+    hidden-blocks:
+      - gold_ore
+      - iron_ore
+      - coal_ore
+      - lapis_ore
+      - mossy_cobblestone
+      - obsidian
+      - chest
+      - diamond_ore
+      - redstone_ore
+      - clay
+    lava-obscures: false
+    max-block-height: 128
+    max-chunk-section-index: 3
+    replacement-blocks:
+      - dirt
+      - gravel
+      - oak_planks
+      - stone
+    update-radius: 2
+    use-permission: false

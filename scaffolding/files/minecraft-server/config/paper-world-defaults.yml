@@ -1,0 +1,611 @@
+# This is the world defaults configuration file for Paper.
+# As you can see, there's a lot to configure. Some options may impact gameplay, so use
+# with caution, and make sure you know what each option does before configuring.
+#
+# If you need help with the configuration or have any questions related to Paper,
+# join us in our Discord or check the docs page.
+#
+# Configuration options here apply to all worlds, unless you specify overrides inside
+# the world-specific config file inside each world folder.
+#
+# File Reference: https://docs.papermc.io/paper/reference/world-configuration/
+# Docs: https://docs.papermc.io/
+# Discord: https://discord.gg/papermc
+# Website: https://papermc.io/
+
+_version: 31
+anticheat:
+  anti-xray:
+    chunk-edge-mode: 2
+    enabled: true
+    engine-mode: 2
+    hidden-blocks:
+    - copper_ore
+    - deepslate_copper_ore
+    - raw_copper_block
+    - gold_ore
+    - deepslate_gold_ore
+    - iron_ore
+    - deepslate_iron_ore
+    - raw_iron_block
+    - coal_ore
+    - deepslate_coal_ore
+    - lapis_ore
+    - deepslate_lapis_ore
+    - mossy_cobblestone
+    - obsidian
+    - chest
+    - diamond_ore
+    - deepslate_diamond_ore
+    - redstone_ore
+    - deepslate_redstone_ore
+    - clay
+    - emerald_ore
+    - deepslate_emerald_ore
+    - ender_chest
+    - diorite
+    - andesite
+    - granite
+    - tuff
+    lava-obscures: false
+    max-block-height: 256
+    max-chunk-section-index: 3
+    replacement-blocks:
+    - andesite
+    - diorite
+    - dirt
+    - granite
+    - gravel
+    - oak_planks
+    - dark_oak_planks
+    - stone
+    - deepslate
+    - amethyst_block
+    - budding_amethyst
+    - calcite
+    - smooth_basalt
+    - tuff
+    update-radius: 2
+    use-permission: false
+chunks:
+  auto-save-interval: 1800
+  delay-chunk-unloads-by: 18s
+  entity-per-chunk-save-limit:
+    arrow: -1
+    ender_pearl: -1
+    experience_orb: -1
+    fireball: -1
+    small_fireball: -1
+    snowball: -1
+  fixed-chunk-inhabited-time: -1
+  flush-regions-on-save: false
+  max-auto-save-chunks-per-tick: 24
+  min-chunk-unload-count: 50
+  min-chunk-unload-fraction: 0.05
+  prevent-moving-into-unloaded-chunks: true
+collisions:
+  allow-player-cramming-damage: false
+  allow-vehicle-collisions: true
+  fix-climbing-bypassing-cramming-rule: false
+  max-entity-collisions: 8
+  only-players-collide: false
+command-blocks:
+  force-follow-perm-level: true
+  permissions-level: 2
+entities:
+  armor-stands:
+    do-collision-entity-lookups: true
+    tick: true
+  behavior:
+    allow-spider-world-border-climbing: true
+    baby-zombie-movement-modifier: 0.5
+    cooldown-failed-beehive-releases: true
+    disable-chest-cat-detection: true
+    disable-creeper-lingering-effect: false
+    disable-player-crits: false
+    door-breaking-difficulty:
+      husk:
+      - HARD
+      vindicator:
+      - NORMAL
+      - HARD
+      zombie:
+      - HARD
+      zombie_villager:
+      - HARD
+      zombified_piglin:
+      - HARD
+    ender-dragons-death-always-places-dragon-egg: true
+    experience-merge-max-value: -1
+    mobs-can-always-pick-up-loot:
+      skeletons: false
+      zombies: false
+    nerf-pigmen-from-nether-portals: false
+    only-merge-items-horizontally: false
+    parrots-are-unaffected-by-player-movement: false
+    phantoms-do-not-spawn-on-creative-players: true
+    phantoms-only-attack-insomniacs: false
+    phantoms-spawn-attempt-max-seconds: 119
+    phantoms-spawn-attempt-min-seconds: 60
+    piglins-guard-chests: true
+    pillager-patrols:
+      disable: false
+      spawn-chance: 0.3
+      spawn-delay:
+        per-player: false
+        ticks: 12000
+      start:
+        day: 1
+        per-player: false
+    player-insomnia-start-ticks: 72000
+    should-remove-dragon: false
+    spawner-nerfed-mobs-should-jump: false
+    stuck-entity-poi-retry-delay: 200
+    zombie-villager-infection-chance: 75.0
+    zombies-target-turtle-eggs: true
+  markers:
+    tick: true
+  mob-effects:
+    immune-to-wither-effect:
+      wither: true
+      wither-skeleton: true
+    spiders-immune-to-poison-effect: true
+  sniffer:
+    boosted-hatch-time: default
+    hatch-time: default
+  spawning:
+    all-chunks-are-slime-chunks: false
+    alt-item-despawn-rate:
+      enabled: true
+      items:
+        ancient_debris: 2147483647
+        andesite: 4000
+        anvil: 2147483647
+        armor_stand: 18000
+        beacon: 2147483647
+        bee_nest: 18000
+        beehive: 18000
+        bell: 18000
+        blackstone: 4000
+        blast_furnace: 18000
+        blaze_powder: 18000
+        blaze_rod: 18000
+        book: 18000
+        bookshelf: 18000
+        brewing_stand: 18000
+        cake: 18000
+        carrot_on_a_stick: 18000
+        carved_pumpkin: 18000
+        cauldron: 18000
+        chainmail_boots: 18000
+        chainmail_chestplate: 18000
+        chainmail_helmet: 18000
+        chainmail_leggings: 18000
+        chest_minecart: 18000
+        chipped_anvil: 2147483647
+        cobbled_deepslate: 3000
+        cobblestone: 3000
+        conduit: 2147483647
+        copper_axe: 18000
+        copper_bars: 18000
+        copper_block: 18000
+        copper_boots: 18000
+        copper_chestplate: 18000
+        copper_door: 18000
+        copper_helmet: 18000
+        copper_hoe: 18000
+        copper_horse_armor: 18000
+        copper_ingot: 18000
+        copper_leggings: 18000
+        copper_pickaxe: 18000
+        copper_shovel: 18000
+        copper_sword: 18000
+        copper_nugget: 18000
+        copper_trapdoor: 18000
+        crying_obsidian: 18000
+        damaged_anvil: 18000
+        diamond: 2147483647
+        diamond_axe: 2147483647
+        diamond_block: 2147483647
+        diamond_boots: 2147483647
+        diamond_chestplate: 2147483647
+        diamond_helmet: 2147483647
+        diamond_hoe: 2147483647
+        diamond_horse_armor: 2147483647
+        diamond_leggings: 2147483647
+        diamond_ore: 2147483647
+        diamond_pickaxe: 2147483647
+        diamond_shovel: 2147483647
+        diamond_sword: 2147483647
+        diorite: 4000
+        dirt: 3000
+        dragon_breath: 18000
+        dragon_egg: 2147483647
+        elytra: 2147483647
+        emerald: 18000
+        emerald_block: 18000
+        emerald_ore: 18000
+        enchanted_book: 18000
+        enchanted_golden_apple: 2147483647
+        enchanting_table: 18000
+        end_crystal: 18000
+        end_stone: 4000
+        ender_chest: 18000
+        ender_eye: 18000
+        experience_bottle: 18000
+        filled_map: 72000
+        firework_rocket: 18000
+        firework_star: 18000
+        ghast_tear: 18000
+        gilded_blackstone: 18000
+        gold_block: 2147483647
+        gold_ingot: 72000
+        golden_apple: 18000
+        golden_axe: 18000
+        golden_boots: 18000
+        golden_carrot: 18000
+        golden_chestplate: 18000
+        golden_helmet: 18000
+        golden_hoe: 18000
+        golden_horse_armor: 18000
+        golden_leggings: 18000
+        golden_pickaxe: 18000
+        golden_shovel: 18000
+        golden_sword: 18000
+        gold_nugget: 18000
+        granite: 4000
+        gravel: 4000
+        gunpowder: 18000
+        heart_of_the_sea: 72000
+        honey_block: 18000
+        honeycomb_block: 18000
+        hopper: 18000
+        hopper_minecart: 18000
+        iron_axe: 18000
+        iron_bars: 18000
+        iron_block: 18000
+        iron_boots: 18000
+        iron_chestplate: 18000
+        iron_door: 18000
+        iron_helmet: 18000
+        iron_hoe: 18000
+        iron_horse_armor: 18000
+        iron_ingot: 18000
+        iron_leggings: 18000
+        iron_pickaxe: 18000
+        iron_shovel: 18000
+        iron_sword: 18000
+        iron_trapdoor: 18000
+        iron_nugget: 18000
+        item_frame: 18000
+        jukebox: 2147483647
+        lapis_block: 72000
+        lapis_lazuli: 72000
+        lava_bucket: 18000
+        lead: 18000
+        lingering_potion: 18000
+        lodestone: 72000
+        music_disc_5: 2147483647
+        music_disc_11: 2147483647
+        music_disc_13: 2147483647
+        music_disc_blocks: 2147483647
+        music_disc_bounce: 2147483647
+        music_disc_cat: 2147483647
+        music_disc_chirp: 2147483647
+        music_disc_creator: 2147483647
+        music_disc_creator_music_box: 2147483647
+        music_disc_far: 2147483647
+        music_disc_lava_chicken: 2147483647
+        music_disc_mall: 2147483647
+        music_disc_mellohi: 2147483647
+        music_disc_otherside: 2147483647
+        music_disc_pigstep: 2147483647
+        music_disc_precipice: 2147483647
+        music_disc_relic: 2147483647
+        music_disc_stal: 2147483647
+        music_disc_strad: 2147483647
+        music_disc_tears: 2147483647
+        music_disc_wait: 2147483647
+        music_disc_ward: 2147483647
+        name_tag: 18000
+        nether_star: 2147483647
+        netherite_axe: 2147483647
+        netherite_block: 2147483647
+        netherite_boots: 2147483647
+        netherite_chestplate: 2147483647
+        netherite_helmet: 2147483647
+        netherite_hoe: 2147483647
+        netherite_ingot: 2147483647
+        netherite_leggings: 2147483647
+        netherite_pickaxe: 2147483647
+        netherite_scrap: 2147483647
+        netherite_shovel: 2147483647
+        netherite_sword: 2147483647
+        netherrack: 3000
+        obsidian: 18000
+        phantom_membrane: 18000
+        potion: 18000
+        prismarine_crystals: 18000
+        rabbit_foot: 18000
+        raw_copper_block: 18000
+        raw_gold_block: 18000
+        raw_iron_block: 18000
+        red_sand: 4000
+        redstone_block: 18000
+        redstone_ore: 18000
+        respawn_anchor: 18000
+        saddle: 18000
+        sand: 4000
+        turtle_scute: 18000
+        armadillo_scute: 18000
+        shulker_shell: 18000
+        slime_block: 18000
+        splash_potion: 18000
+        sponge: 18000
+        sticky_piston: 18000
+        suspicious_stew: 18000
+        tipped_arrow: 18000
+        tnt_minecart: 18000
+        totem_of_undying: 72000
+        trident: 2147483647
+        turtle_egg: 18000
+        turtle_helmet: 18000
+        warped_fungus_on_a_stick: 18000
+        wet_sponge: 18000
+        wither_rose: 18000
+        shulker_box: 2147483647
+        black_shulker_box: 2147483647
+        blue_shulker_box: 2147483647
+        brown_shulker_box: 2147483647
+        cyan_shulker_box: 2147483647
+        gray_shulker_box: 2147483647
+        green_shulker_box: 2147483647
+        light_gray_shulker_box: 2147483647
+        light_blue_shulker_box: 2147483647
+        lime_shulker_box: 2147483647
+        magenta_shulker_box: 2147483647
+        orange_shulker_box: 2147483647
+        pink_shulker_box: 2147483647
+        purple_shulker_box: 2147483647
+        red_shulker_box: 2147483647
+        white_shulker_box: 2147483647
+        yellow_shulker_box: 2147483647
+        bundle: 2147483647
+        black_bundle: 2147483647
+        blue_bundle: 2147483647
+        brown_bundle: 2147483647
+        cyan_bundle: 2147483647
+        gray_bundle: 2147483647
+        green_bundle: 2147483647
+        light_gray_bundle: 2147483647
+        light_blue_bundle: 2147483647
+        lime_bundle: 2147483647
+        magenta_bundle: 2147483647
+        orange_bundle: 2147483647
+        pink_bundle: 2147483647
+        purple_bundle: 2147483647
+        red_bundle: 2147483647
+        white_bundle: 2147483647
+        yellow_bundle: 2147483647
+        netherite_upgrade_smithing_template: 2147483647
+        coast_armor_trim_smithing_template: 2147483647
+        dune_armor_trim_smithing_template: 2147483647
+        eye_armor_trim_smithing_template: 2147483647
+        rib_armor_trim_smithing_template: 2147483647
+        sentry_armor_trim_smithing_template: 2147483647
+        silence_armor_trim_smithing_template: 2147483647
+        snout_armor_trim_smithing_template: 2147483647
+        spire_armor_trim_smithing_template: 2147483647
+        tide_armor_trim_smithing_template: 2147483647
+        vex_armor_trim_smithing_template: 2147483647
+        ward_armor_trim_smithing_template: 2147483647
+        wild_armor_trim_smithing_template: 2147483647
+        host_armor_trim_smithing_template: 2147483647
+        raiser_armor_trim_smithing_template: 2147483647
+        shaper_armor_trim_smithing_template: 2147483647
+        wayfinder_armor_trim_smithing_template: 2147483647
+        flow_armor_trim_smithing_template: 2147483647
+        bolt_armor_trim_smithing_template: 2147483647
+        torchflower_seeds: 72000
+        pitcher_pod: 72000
+        sniffer_egg: 72000
+        trial_key: 2147483647
+        ominous_trial_key: 2147483647
+        breeze_rod: 72000
+        heavy_core: 2147483647
+        mace: 2147483647
+        creaking_heart: 72000
+        dried_ghast: 2147483647
+        copper_nautilus_armor: 72000
+        iron_nautilus_armor: 72000
+        golden_nautilus_armor: 72000
+        diamond_nautilus_armor: 2147483647
+        netherite_nautilus_armor: 2147483647
+        copper_spear: 72000
+        iron_spear: 72000
+        golden_spear: 72000
+        diamond_spear: 2147483647
+        netherite_spear: 2147483647
+    count-all-mobs-for-spawning: false
+    creative-arrow-despawn-rate: default
+    despawn-range-shape: ELLIPSOID
+    despawn-ranges:
+      ambient:
+        hard: 128
+        soft: 32
+      axolotls:
+        hard: 128
+        soft: 32
+      creature:
+        hard: 128
+        soft: 32
+      misc:
+        hard: 128
+        soft: 32
+      monster:
+        hard: 128
+        soft: 32
+      underground_water_creature:
+        hard: 128
+        soft: 32
+      water_ambient:
+        hard: 64
+        soft: 32
+      water_creature:
+        hard: 128
+        soft: 32
+    despawn-time:
+      llama_spit: disabled
+      snowball: disabled
+    disable-mob-spawner-spawn-egg-transformation: false
+    duplicate-uuid:
+      mode: SAFE_REGEN
+      safe-regen-delete-range: 32
+    filter-bad-tile-entity-nbt-from-falling-blocks: true
+    filtered-entity-tag-nbt-paths:
+    - Pos
+    - Motion
+    - sleeping_pos
+    iron-golems-can-spawn-in-air: false
+    max-arrow-despawn-invulnerability: 200
+    monster-spawn-max-light-level: default
+    non-player-arrow-despawn-rate: default
+    per-player-mob-spawns: true
+    scan-for-legacy-ender-dragon: false
+    skeleton-horse-thunder-spawn-chance: 0.01
+    slime-spawn-height:
+      slime-chunk:
+        maximum: 40.0
+      surface-biome:
+        maximum: 70.0
+        minimum: 50.0
+    spawn-limits:
+      ambient: -1
+      axolotls: -1
+      creature: -1
+      monster: -1
+      underground_water_creature: -1
+      water_ambient: -1
+      water_creature: -1
+    ticks-per-spawn:
+      ambient: -1
+      axolotls: -1
+      creature: -1
+      monster: -1
+      underground_water_creature: -1
+      water_ambient: -1
+      water_creature: -1
+    wandering-trader:
+      spawn-chance-failure-increment: 25
+      spawn-chance-max: 75
+      spawn-chance-min: 25
+      spawn-day-length: 24000
+      spawn-minute-length: 1200
+    wateranimal-spawn-height:
+      maximum: default
+      minimum: default
+  tracking-range-y:
+    animal: default
+    display: default
+    enabled: false
+    misc: default
+    monster: default
+    other: default
+    player: default
+environment:
+  disable-explosion-knockback: false
+  disable-ice-and-snow: true
+  disable-thunder: false
+  fire-tick-delay: 30
+  frosted-ice:
+    delay:
+      max: 40
+      min: 20
+    enabled: true
+  generate-flat-bedrock: false
+  locate-structures-outside-world-border: false
+  max-block-ticks: 65536
+  max-fluid-ticks: 65536
+  nether-ceiling-void-damage-height: disabled
+  optimize-explosions: true
+  portal-create-radius: 16
+  portal-search-radius: 128
+  portal-search-vanilla-dimension-scaling: true
+  treasure-maps:
+    enabled: true
+    find-already-discovered:
+      loot-tables: false
+      villager-trade: false
+  void-damage-amount: 4.0
+  void-damage-min-build-height-offset: -64.0
+  water-over-lava-flow-speed: 5
+feature-seeds:
+  generate-random-seeds-for-all: false
+fishing-time-range:
+  maximum: 600
+  minimum: 100
+fixes:
+  disable-unloaded-chunk-enderpearl-exploit: true
+  falling-block-height-nerf: 0
+  fix-items-merging-through-walls: true
+  prevent-tnt-from-moving-in-water: false
+  split-overstacked-loot: true
+  tnt-entity-height-nerf: 0
+hopper:
+  cooldown-when-full: true
+  disable-move-event: false
+  ignore-occluding-blocks: true
+lootables:
+  auto-replenish: false
+  max-refills: -1
+  refresh-max: 2d
+  refresh-min: 12h
+  reset-seed-on-fill: true
+  restrict-player-reloot: true
+  restrict-player-reloot-time: disabled
+  retain-unlooted-shulker-box-loot-table-on-non-player-break: true
+maps:
+  item-frame-cursor-limit: 32
+  item-frame-cursor-update-interval: 20
+max-growth-height:
+  bamboo:
+    max: 16
+    min: 11
+  cactus: 3
+  reeds: 3
+misc:
+  allow-remote-ender-dragon-respawning: false
+  alternate-current-update-order: HORIZONTAL_FIRST_OUTWARD
+  disable-end-credits: false
+  disable-relative-projectile-velocity: false
+  disable-sprint-interruption-on-attack: false
+  legacy-ender-pearl-behavior: false
+  max-leash-distance: 14.0
+  redstone-implementation: EIGENCRAFT
+  show-sign-click-command-failure-msgs-to-player: false
+  update-pathfinding-on-block-update: true
+scoreboards:
+  allow-non-player-entities-on-scoreboards: false
+  use-vanilla-world-scoreboard-name-coloring: false
+spawn:
+  allow-using-signs-inside-spawn-protection: false
+tick-rates:
+  behavior:
+    villager:
+      acquirepoi: 85
+      poicompetitorscan: 30
+      validatenearbypoi: -1
+  container-update: 1
+  dry-farmland: 1
+  grass-spread: 1
+  mob-spawner: 1
+  sensor:
+    villager:
+      secondarypoisensor: 90
+  wet-farmland: 1
+unsupported-settings:
+  disable-world-ticking-when-empty: false
+  fix-invulnerable-end-crystal-exploit: true
+  ticking:
+    block-entities: true
+    chunks: true

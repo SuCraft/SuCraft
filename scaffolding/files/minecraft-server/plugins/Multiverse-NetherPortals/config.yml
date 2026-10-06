@@ -1,0 +1,51 @@
+####################################################################################################
+#                                                                                                  #
+#                         MULTIVERSE-NETHERPORTALS CONFIGURATION                                   #
+#                                                                                                  #
+#    WIKI:        https://mvplugins.org/netherportals/                                             #
+#    DISCORD:     https://discord.gg/NZtfKky                                                       #
+#    BUG REPORTS: https://github.com/Multiverse/Multiverse-NetherPortals/issues                    #
+#    DONATE:      https://github.com/sponsors/Multiverse                                           #
+#                                                                                                  #
+#    New options are added to this file automatically. If you manually made changes                #
+#    while your server is running, use Multiverse-Core's reload command.                           #
+#                                                                                                  #
+####################################################################################################
+  
+# Controls the prefix and suffix used to automatically find linked dimension worlds.
+# For example, by default the world 'cat_nether' nether portal will be linked to world 'cat'.
+portal-auto-link-when:
+  nether:
+    prefix: ''
+    suffix: _nether
+  end:
+    prefix: ''
+    suffix: _the_end
+  
+# When enabled, end portal exits from end world will override default behaviour and respawn players
+# to the linked world's spawn. This is to handle the special case where player exiting end portal
+# in end are treated as respawns instead of portal teleports in Minecraft.
+# ** This feature is only supported on Paper servers.
+handle-end-exit-respawn: true
+  
+# When enabled, players are pushed out of a portal when its destination is unavailable.
+bounceback: true
+  
+# When enabled, non-player entities can travel through Nether and End portals.
+teleport-entities: true
+  
+# When enabled, players are told when portals are disabled in the current world.
+send-disabled-portal-message: true
+  
+# When enabled, players are told when a portal has no valid destination.
+send-no-destination-message: true
+  
+# When enabled, blocks replaced while creating an End platform drop as items on non-default worlds to
+# mimic vanilla Minecraft behaviour.
+# Note: The default end is handled by the server and loaded even without Multiverse installed, thus
+#       multiverse will have no control over it's drop items behaviour.
+end-platform-drop-blocks: true
+  
+  
+# The configuration version. Do not edit this value.
+version: 5.1

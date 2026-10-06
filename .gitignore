@@ -1,5 +1,5 @@
 # Runs
-/run/
+/run*/
 
 # Gradle
 .gradle/

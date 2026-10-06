@@ -185,9 +185,19 @@ val targetFiles = arrayListOf(
         "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
     ),
     FileToUpdateByDownloading(
+        "minecraft-server/plugins/Multiverse-NetherPortals.jar",
+        "https://github.com/Multiverse/Multiverse-NetherPortals/releases/download/5.1.0/multiverse-netherportals-5.1.0.jar",
+        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/Multiverse-Portals.jar",
+        "https://github.com/Multiverse/Multiverse-Portals/releases/download/5.3.0/multiverse-portals-5.3.0.jar",
+        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+    ),
+    FileToUpdateByDownloading(
         "minecraft-server/plugins/OldGenerator.jar",
         "https://hangarcdn.papermc.io/plugins/Spottedleaf/OldGenerator/versions/1.2.0/PAPER/oldgenerator-1.2.0.jar",
-        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+        "2ec8936c4e8ae515be3a193fe55db654f3c6f4bc40f434df515bd499e069365a"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/WorldEdit.jar",

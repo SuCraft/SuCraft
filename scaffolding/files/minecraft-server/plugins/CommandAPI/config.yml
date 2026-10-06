@@ -1,0 +1,66 @@
+# Verbose outputs (default: false)
+# If "true", outputs command registration and unregistration logs in the console
+verbose-outputs: false
+
+# Silent logs (default: false)
+# If "true", turns off all logging from the CommandAPI, except for errors.
+silent-logs: false
+
+# Messages
+# Controls messages that the CommandAPI displays to players
+messages:
+  
+  # Missing executor implementation (default: "This command has no implementations for %s")
+  # The message to display to senders when a command has no executor. Available
+  # parameters are:
+  #   %s - the executor class (lowercase)
+  #   %S - the executor class (normal case)
+  missing-executor-implementation: This command has no implementations for %s
+
+# Create dispatcher JSON (default: false)
+# If "true", the CommandAPI creates a command_registration.json file showing the
+# mapping of registered commands. This is designed to be used by developers -
+# setting this to "false" will improve command registration performance.
+create-dispatcher-json: false
+
+# Fallback to latest version (default: true)
+# If "true", the CommandAPI will fall back to the latest available NMS
+# implementation when the CommandAPI is used and no implementation for the
+# current Minecraft version was found.
+fallback-to-latest-nms: true
+
+# Skips the initial datapack reload when the server loads (default: true)
+# If "true", the CommandAPI will not reload datapacks when the server has finished
+# loading. Datapacks will still be reloaded if performed manually when "hook-paper-reload"
+# is set to "true" and /minecraft:reload is run.
+skip-initial-datapack-reload: true
+
+# Turn on the CommandAPI's plugin messaging functionality (default: false)
+# If "false", the CommandAPI will not listen to incoming plugin messages
+# and attempts to send plugin messages will fail. Enabling networking by
+# setting this to "true" is currently only useful for allowing command
+# requirements on Velocity.
+enable-networking: false
+
+# Turn exceptions while sending and receiving packets into warnings (default: false)
+# If "false", the CommandAPI will throw an exception when receiving malformed packets
+# or if it tries to send a packet but cannot. If "true", these problems will be logged
+# as a warning, which does not include the stacktrace. Additionally, warnings can be hidden
+# by setting silent logs to "true".
+make-networking-exceptions-warnings: false
+
+# Plugins to convert (default: [])
+# Controls the list of plugins to process for command conversion.
+plugins-to-convert: []
+
+# Other commands to convert (default: [])
+# A list of other commands to convert. This should be used for commands which
+# are not declared in a plugin.yml file.
+other-commands-to-convert: []
+
+# Skip sender proxy (default: [])
+# Determines whether the proxy sender should be skipped when converting a
+# command. If you are having issues with plugin command conversion, add the
+# plugin to this list.
+skip-sender-proxy: []
+

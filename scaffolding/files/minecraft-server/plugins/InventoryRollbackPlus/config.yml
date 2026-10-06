@@ -1,0 +1,89 @@
+## Disable if you do not wish the plugin to run at all.
+enabled: true
+
+## Maximum saves a backup will hold per type per user.
+max-saves:
+  join: 200
+  quit: 200
+  death: 200
+  world-change: 200
+  force: 10
+
+## Number of lines shown with backups on (Max: 5)
+backup-lines-visible: 4
+
+## Set folder path where the data is saved to. Set as "DEFAULT" to keep it in the plugin folder.
+folder-location: 'DEFAULT'
+
+## If enabled, this will disable YAML file backups in favour of MySQL storage.
+## Requires a MySQL server.
+mysql:
+  enabled: false
+  details:
+    host: 'localhost'
+    port: 3306
+    database: 'inventory_rollback'
+    table-prefix: 'backup_'
+    username: 'username'
+    password: 'password'
+    use-SSL: true
+    verifyCertificate: true
+    allowPubKeyRetrieval: false
+  pool:
+    ## Maximum number of connections in the pool
+    maximum-pool-size: 10
+    ## Minimum number of idle connections to maintain
+    minimum-idle: 2
+    ## Connection timeout in milliseconds (30000 = 30 seconds)
+    connection-timeout: 30000
+    ## Enable prepared statement caching for better performance
+    cache-prep-stmts: true
+    ## Number of prepared statements to cache per connection
+    prep-stmt-cache-size: 250
+    ## Maximum length of SQL to cache (in characters)
+    prep-stmt-cache-sql-limit: 2048
+
+## Sounds will play to the player when parts of their player is restored.
+sounds:
+  teleport:
+    enabled: true
+  inventory:
+    enabled: true
+  food:
+    enabled: true
+  hunger:
+    enabled: true
+  xp:
+    enabled: true
+
+## Set how the time is displayed on the backups.
+## Your time zone (EST, PST, GMT, ...) or a UTC offset (UTC+1, UTC-5, ...) can be used.
+time-zone: 'GMT'
+## For more information on how to format the time, see: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+time-format: 'dd/MM/yyyy hh:mm:ss a z'
+
+## Choose if we should wait until other plugins handle the player's death.
+## If set to false, the plugin will handle the death event immediately. (before most plugins)
+## If set to true, the plugin will wait for other plugins to handle the death event first. (after most plugins)
+## --
+## NOTE #1: There are some plugins who also attempt to be the first to handle a player death.
+##          If so, these plugins may still overwrite the player's inventory before this plugin can save it.
+## NOTE #2: If you rely on the ability to edit a player's inventory on death, you should set this to true.
+allow-other-plugins-edit-death-inventory: false
+
+## Enabling this option will show a button to restore a player's backup fully to their character when online.
+## This will overwrite their current inventory completely and wipe what they currently have without backing it up first.
+restore-to-player-button: true
+
+## Change this to 'false' to ignore saving if the player's inventory is empty
+save-empty-inventories: true
+
+## Check for updates on Spigot when the server is started.
+update-checker: false
+
+## Allow bStats to collect anonymous server data.
+## Please leave enabled as it helps us improve the plugin and provide better features.
+bStats: false
+
+# Debug mode - Prints extra information to the console.
+debug: false

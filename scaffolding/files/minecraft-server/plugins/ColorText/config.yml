@@ -1,0 +1,7 @@
+# Plugin create by Dimianas
+ColorText:
+  enable: true
+# Use /colort reload, for reloaded your config
+Reload-Config:
+  reload-message: '&f[ColorText] &7- reloaded config!'
+  not-permission: "&cYou don't have permission to use this command."

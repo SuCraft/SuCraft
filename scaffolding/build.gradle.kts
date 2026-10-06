@@ -99,7 +99,19 @@ abstract class FileToUpdateByExecuting(
     targetPath: String,
     sourcePathFromProjectRoot: String,
     alwaysExecute: Boolean = false
-) : FileToUpdateFromSourceFile(targetPath, "../$sourcePathFromProjectRoot", alwaysExecute)
+) : FileToUpdateFromSourceFile(targetPath, "../$sourcePathFromProjectRoot", alwaysExecute) {
+
+    override fun needToUpdate(): Boolean {
+        if (super.needToUpdate()) return true
+        val sourceFile = sourceFile()
+        if (!sourceFile.exists()) return true
+        val targetFile = targetFile()
+        if (sourceFile.fileSize() != targetFile.fileSize()) return true
+        if (sourceFile.getLastModifiedTime() != targetFile.getLastModifiedTime()) return true
+        return needsNewUpdateDueToGitRefChange()
+    }
+
+}
 
 class FileToUpdateByGradleTask(
     targetPath: String,
@@ -175,9 +187,24 @@ val targetFiles = arrayListOf(
         "bukkit-plugins/forked/PermissionsBukkit"
     ),
     FileToUpdateByDownloading(
+        "minecraft-server/plugins/ColorText.jar",
+        "https://github.com/Dimianas/ColorText/releases/download/1.0/ColorText-1.0.jar",
+        "0aeaebc97e798e36a77b79b9528cf459fa1b6c0b65820e97439ca3d8402cec32"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/CommandAPI.jar",
+        "https://github.com/CommandAPI/CommandAPI/releases/download/12.1.0/CommandAPI-12.1.0-Paper.jar",
+        "ab48e55fd06264dd239cf015b501936cb50eb6c38d967fbffca6c91a48064049"
+    ),
+    FileToUpdateByDownloading(
         "minecraft-server/plugins/CrazyAdvancementsAPI.jar",
         "https://github.com/ZockerAxel/CrazyAdvancementsAPI/releases/download/v2.1.21/CrazyAdvancementsAPI-2.1.21.jar",
         "cb0e596d01160f5e2b840d2a2c329732431a348689c180873713c599190307b2"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/InventoryRollbackPlus.jar",
+        "https://cdn.modrinth.com/data/XWKWAzd8/versions/eDsOfX6z/InventoryRollbackPlus-1.8.5.jar?mr_download_reason=standalone&mr_game_version=26.3&mr_loader=paper",
+        "864825fa34fc2aeb10189f87afb767f418a6c0a32786f257730c5785ca9cf205"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/Multiverse-Core.jar",
@@ -187,17 +214,27 @@ val targetFiles = arrayListOf(
     FileToUpdateByDownloading(
         "minecraft-server/plugins/Multiverse-NetherPortals.jar",
         "https://github.com/Multiverse/Multiverse-NetherPortals/releases/download/5.1.0/multiverse-netherportals-5.1.0.jar",
-        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+        "a4b3750970b5b710aa942baaff07a8fcef56802cf286b9dcda7e69dd904492cc"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/Multiverse-Portals.jar",
         "https://github.com/Multiverse/Multiverse-Portals/releases/download/5.3.0/multiverse-portals-5.3.0.jar",
-        // "bc3f34e2d747fdf024f44868747bb016b08fa11d98ccb4ffcac958f083151a83"
+        "345f0f296bb54e1fd98494260f93fb1ab97ba92f8ad7f6bfba129ea90021ea8d"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/nuvotifier.jar",
+        "https://github.com/NuVotifier/NuVotifier/releases/download/v2.7.3/nuvotifier.jar",
+        "5fe5457e9ba7989dc9446f522a690e4e877236ba2fc5e90ed66fad33d3c69f39"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/OldGenerator.jar",
         "https://hangarcdn.papermc.io/plugins/Spottedleaf/OldGenerator/versions/1.2.0/PAPER/oldgenerator-1.2.0.jar",
         "2ec8936c4e8ae515be3a193fe55db654f3c6f4bc40f434df515bd499e069365a"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/PlaceholderAPI.jar",
+        "https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.12.3/PlaceholderAPI-2.12.3.jar",
+        "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/WorldEdit.jar",

@@ -240,6 +240,7 @@ groups:
       geyser.command.shutdown: false
       geyser.command.statistics: false
       geyser.command.version: false
+      imageframe.refresh: false
   trusted:
     permissions:
       moreprotect.exemptfromtimeout: true
@@ -252,6 +253,14 @@ groups:
       minecraft.debugstick.survivallike: true
       suki.debugstick.survival: true
       sucraft.craftabledebugstick.craft.debugstick: true
+      imageframe.create: true
+      imageframe.create.animated: true
+      imageframe.overlay: true
+      imageframe.clone: true
+      imageframe.playback: true
+      imageframe.select: true
+      imageframe.marker: true
+      imageframe.rename: true
     inheritance:
       - default
   wontcheat:
@@ -306,7 +315,7 @@ groups:
       - wontcheat
   medmod:
     permissions:
-      medmod_has_no_extra_perms: true
+      imageframe.createlimit.unlimited: true
     inheritance:
       - lowmod
   himod:
@@ -444,5 +453,14 @@ groups:
       geyser.command.statistics: true
       geyser.command.version: true
       sucraft.addpermissionstocommands.override.geyserspigot.geyser: true
+      imageframe.create.others: true
+      imageframe.marker.unlimited: true
+      imageframe.list.others: true
+      imageframe.delete: true
+      imageframe.get: true
+      imageframe.adminbypass: true
+      imageframe.adminsetcreator: true
+      imageframe.admindelete: true
+      imageframe.adminmigrate: true
     inheritance:
       - veryhimod

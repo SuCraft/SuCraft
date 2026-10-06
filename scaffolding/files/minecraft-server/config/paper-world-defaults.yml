@@ -565,7 +565,7 @@ lootables:
   restrict-player-reloot-time: disabled
   retain-unlooted-shulker-box-loot-table-on-non-player-break: true
 maps:
-  item-frame-cursor-limit: 32
+  item-frame-cursor-limit: 100
   item-frame-cursor-update-interval: 20
 max-growth-height:
   bamboo:

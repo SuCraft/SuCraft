@@ -1,0 +1,118 @@
+Settings:
+  # Default language
+  # Translations are crowdsourced from the community!
+  # For supported languages, see https://loohpjames.com/imageframe/languages/
+  # To contribute your language, visit https://crowdin.com/project/imageframe/
+  Language: en_us
+  # Date format used where a time based variable is displayed
+  DateFormat: dd/MM/yyyy HH:mm:ss zzz
+  MapItemFormat: '&f{Name} &7({X}, {Y})'
+  # Whether empty maps are required to create image maps when not in creative
+  RequireEmptyMaps: true
+  # Max size of an image map
+  MaxSize: 256
+  # When enabled, Only websites from the list below is allowed to be shown through in-game maps
+  RestrictImageUrl:
+    Enabled: false
+    Whitelist:
+      - https://i.imgur.com
+      - http://i.imgur.com
+      - https://storage.googleapis.com
+      - http://storage.googleapis.com
+      - https://cdn.discordapp.com
+      - http://cdn.discordapp.com
+      - https://media.discordapp.net
+      - http://media.discordapp.net
+      - https://textures.minecraft.net
+      - http://textures.minecraft.net
+  # If the image is larger than the defined size, it won't be downloaded for preview
+  # (In Bytes)
+  MaxImageFileSize: 52428800
+  # If an image takes more than this time to load, it will be rejected
+  # (In Seconds)
+  MaxProcessingTime: 60
+  # How many images should be processed in parallel
+  # Updating this option requires a server restart
+  ParallelProcessingLimit: 2
+  # Max amount of image maps a player in the following groups can create
+  # Setting -1 means unlimited
+  # To add a player to a group, give the permission "imageframe.createlimit.<group>"
+  # For example "imageframe.createlimit.vip"
+  # Players with no groups will be treated as "default" unless they have "imageframe.createlimit.unlimited"
+  PlayerCreationLimit:
+    default: 1000
+  # Max amount of markers on an individual map
+  MapMarkerLimit: 500
+  # How many map packets can be sent to a player in 1/20 of a second
+  # You can turn this down if you are facing network issues
+  # However maps might take longer to show to a player
+  # To disable the rate limit, set to -1
+  MapPacketSendingRateLimit: -1
+  # Exempt certain map ids from deletion if their ImageFrame map is deleted
+  # Values can be map ids (For example: "13") or ranges (inclusive) of map ids (For example: "10-13")
+  ExemptMapIdsFromDeletion:
+    - '-1'
+  # This option should only be useful to developers and people who knew what they are doing
+  MapRenderersContextual: false
+  # Changing this option requires a restart
+  HandleAnimatedMapsOnMainThread: false
+  SendAnimatedMapsOnMainThread: false
+  # Valid modes are "DYNAMIC" and "MANUAL_PERSISTENT"
+  # DYNAMIC: load and unload image cache depending on whether a player is viewing
+  # May use more CPU and image might appear with a slight delay
+  # MANUAL_PERSISTENT: image cache stay loaded from server start
+  # May use more memory
+  # Changing this setting requires a restart
+  CacheControlMode: MANUAL_PERSISTENT
+  # Set this to true if you have corrupted 0 size map data in the world folder (not the ImageFrame plugin folder)
+  # Set this to false if your system's file IO is slow
+  TryDeleteBlankMapFiles: false
+  CombinedByDefault: false
+# ImageFrame's convenient upload system where you can upload directly through an embedded web server
+UploadService:
+  # Changing this value requires a restart
+  Enabled: true
+  # This is only used for displaying to the end user
+  DisplayURL: http://sucraft.org
+  WebServer:
+    # Address in which the webserver binds to, defaults to 0.0.0.0
+    # Use 127.0.0.1 to limit to local access
+    # Changing this value requires a restart
+    Host: 0.0.0.0
+    # Port in which the webserver is hosted, make sure it is not blocked by your firewall
+    # Changing this value requires a restart
+    Port: 8517
+# ImageFrame's complimentary mod where you can see images in its native resolution in full color
+ImageFrameClient:
+  # Changing this value requires a restart
+  Enabled: true
+# ImageFrame's built in survival friendly way of making invisible item frames
+InvisibleFrame:
+  # Survival friendly way to get invisible item frames by splashing dropped items with invisibility potions
+  # Set to -1 for unlimited
+  # Set to 0 to disable
+  MaxConversionsPerSplash: 0
+  # Should empty invisible item frames glow
+  # Existing frames are not updated until they are interacted with
+  GlowEmptyFrames: false
+# Which storage system should ImageFrame use
+# Changing this section requires a restart
+Storage:
+  # Supported storage systems: file (Default), jdbc (Currently only supports MYSQL dialect)
+  Type: file
+  # Options are only used if the storage system type requires it, such as jdbc
+  Options:
+    JdbcUrl: jdbc:mysql://localhost:3306/imageframe
+    Username: imageframe
+    Password: imageframe
+    # In Seconds
+    ActivePollInterval: 5
+
+Hooks:
+  ViaVersion:
+    # Enable this if your players below 1.13 is having network issues
+    DisableSmoothAnimationForLegacyPlayers: false
+
+DebugLogging: false
+# Enable update notifications for admins
+Updater: false

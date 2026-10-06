@@ -197,9 +197,9 @@ val targetFiles = arrayListOf(
         "ab48e55fd06264dd239cf015b501936cb50eb6c38d967fbffca6c91a48064049"
     ),
     FileToUpdateByDownloading(
-        "minecraft-server/plugins/CrazyAdvancementsAPI.jar",
-        "https://github.com/ZockerAxel/CrazyAdvancementsAPI/releases/download/v2.1.21/CrazyAdvancementsAPI-2.1.21.jar",
-        "cb0e596d01160f5e2b840d2a2c329732431a348689c180873713c599190307b2"
+        "minecraft-server/plugins/ImageFrame.jar",
+        "https://hangarcdn.papermc.io/plugins/LOOHP/ImageFrame/versions/2026.1.5/PAPER/ImageFrame-2026.1.5.0.jar",
+        "65b5c14eb6bd847f1cc0f4985efa95ab43d2f3e2f67dbaec2ecf3ea327fde9b1"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/InventoryRollbackPlus.jar",
@@ -235,6 +235,16 @@ val targetFiles = arrayListOf(
         "minecraft-server/plugins/PlaceholderAPI.jar",
         "https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.12.3/PlaceholderAPI-2.12.3.jar",
         "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/SkinsRestorer.jar",
+        "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.6/SkinsRestorer.jar",
+        "a85b4a370f988741c9a38f4d0498262edacbf3220314790ac1c127461996359c"
+    ),
+    FileToUpdateByDownloading(
+        "minecraft-server/plugins/UltimateAdvancementAPI.jar",
+        "https://hangarcdn.papermc.io/plugins/DevHeim/UltimateAdvancementAPI/versions/3.0.0-beta-4/PAPER/UltimateAdvancementAPI-Plugin-3.0.0-beta-4.jar",
+        "8be40e20c41a057d3d71f037474e6d829a4935d422756d63d9f16a584b5cd2fe"
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/WorldEdit.jar",

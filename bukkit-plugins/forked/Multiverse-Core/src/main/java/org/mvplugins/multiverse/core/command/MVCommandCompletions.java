@@ -1,0 +1,377 @@
+package org.mvplugins.multiverse.core.command;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import co.aikar.commands.BukkitCommandCompletionContext;
+import co.aikar.commands.CommandCompletionFilter;
+import co.aikar.commands.CommandIssuer;
+import co.aikar.commands.PaperCommandCompletions;
+import co.aikar.commands.RegisteredCommand;
+import co.aikar.commands.RootCommand;
+import com.dumptruckman.minecraft.util.Logging;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
+import jakarta.inject.Inject;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
+import org.bukkit.GameRule;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.SpawnCategory;
+import org.jetbrains.annotations.NotNull;
+import org.jvnet.hk2.annotations.Service;
+
+import org.mvplugins.multiverse.core.anchor.AnchorManager;
+import org.mvplugins.multiverse.core.anchor.MultiverseAnchor;
+import org.mvplugins.multiverse.core.command.context.issueraware.IssuerAwareValue;
+import org.mvplugins.multiverse.core.command.context.issueraware.MultiverseWorldValue;
+import org.mvplugins.multiverse.core.command.context.issueraware.PlayerArrayValue;
+import org.mvplugins.multiverse.core.config.CoreConfig;
+import org.mvplugins.multiverse.core.config.node.functions.DefaultSuggesterProvider;
+import org.mvplugins.multiverse.core.config.handle.PropertyModifyAction;
+import org.mvplugins.multiverse.core.destination.DestinationInstance;
+import org.mvplugins.multiverse.core.destination.DestinationSuggestionPacket;
+import org.mvplugins.multiverse.core.destination.DestinationsProvider;
+import org.mvplugins.multiverse.core.destination.core.WorldDestination;
+import org.mvplugins.multiverse.core.permissions.CorePermissionsChecker;
+import org.mvplugins.multiverse.core.utils.REPatterns;
+import org.mvplugins.multiverse.core.world.LoadedMultiverseWorld;
+import org.mvplugins.multiverse.core.world.MultiverseWorld;
+import org.mvplugins.multiverse.core.world.WorldManager;
+import org.mvplugins.multiverse.core.world.generators.GeneratorPlugin;
+import org.mvplugins.multiverse.core.world.generators.GeneratorProvider;
+import org.mvplugins.multiverse.core.world.helpers.PotentialWorldFinder;
+
+import static org.mvplugins.multiverse.core.utils.StringFormatter.addOnToCommaSeparated;
+
+@Service
+public class MVCommandCompletions extends PaperCommandCompletions {
+
+    private final MVCommandManager commandManager;
+    private final WorldManager worldManager;
+    private final DestinationsProvider destinationsProvider;
+    private final CoreConfig config;
+    private final CorePermissionsChecker corePermissionsChecker;
+    private final AnchorManager anchorManager;
+    private final GeneratorProvider generatorProvider;
+    private final PotentialWorldFinder potentialWorldFinder;
+
+    @Inject
+    MVCommandCompletions(
+            @NotNull MVCommandManager mvCommandManager,
+            @NotNull WorldManager worldManager,
+            @NotNull DestinationsProvider destinationsProvider,
+            @NotNull CoreConfig config,
+            @NotNull CorePermissionsChecker corePermissionsChecker,
+            @NotNull AnchorManager anchorManager,
+            @NotNull GeneratorProvider generatorProvider,
+            @NotNull PotentialWorldFinder potentialWorldFinder
+    ) {
+        super(mvCommandManager);
+        this.commandManager = mvCommandManager;
+        this.worldManager = worldManager;
+        this.destinationsProvider = destinationsProvider;
+        this.config = config;
+        this.corePermissionsChecker = corePermissionsChecker;
+        this.anchorManager = anchorManager;
+        this.generatorProvider = generatorProvider;
+        this.potentialWorldFinder = potentialWorldFinder;
+
+        registerAsyncCompletion("anchornames", this::suggestAnchorNames, CommandCompletionFilter.contains());
+        registerAsyncCompletion("commands", this::suggestCommands);
+        registerAsyncCompletion("destinations", this::suggestDestinations);
+        registerStaticCompletion("difficulties", suggestEnums(Difficulty.class));
+        registerStaticCompletion("environments", List.of("normal", "nether", "the_end")); // Don't tab complete the "custom" environment
+        registerAsyncCompletion("flags", this::suggestFlags);
+        registerStaticCompletion("gamemodes", suggestEnums(GameMode.class));
+        registerStaticCompletion("gamerules", this::suggestGamerules, MVCommandCompletionFilters.namespacedKey());
+        registerAsyncCompletion("gamerulesvalues", this::suggestGamerulesValues);
+        registerAsyncCompletion("generatorplugins", this::suggestGeneratorPlugins, CommandCompletionFilter.contains());
+        registerStaticCompletion("materials", suggestEnums(Material.class), CommandCompletionFilter.contains());
+        registerStaticCompletion("mvconfigs", config.getStringPropertyHandle().getAllPropertyNames(), CommandCompletionFilter.contains());
+        registerAsyncCompletion("mvconfigvalues", this::suggestMVConfigValues);
+        registerAsyncCompletion("mvworlds", this::suggestMVWorlds, MVCommandCompletionFilters.namespacedKey());
+        registerAsyncCompletion("mvworldmetakey", this::suggestMVWorldMetaKey, CommandCompletionFilter.contains());
+        registerAsyncCompletion("mvworldpropsname", this::suggestMVWorldPropsName, CommandCompletionFilter.contains());
+        registerAsyncCompletion("mvworldpropsvalue", this::suggestMVWorldPropsValue);
+        registerCompletion("playersarray", this::suggestPlayersArray, CommandCompletionFilter.contains()); // getting online players cannot be async
+        registerStaticCompletion("propsmodifyaction", suggestEnums(PropertyModifyAction.class));
+        registerStaticCompletion("spawncategories", suggestEnums(SpawnCategory.class));
+        registerAsyncCompletion("spawncategorypropsname", this::suggestSpawnCategoryPropsName, CommandCompletionFilter.contains());
+        registerAsyncCompletion("spawncategorypropsvalue", this::suggestSpawnCategoryPropsValue);
+
+        setDefaultCompletion("destinations", DestinationInstance.class);
+        setDefaultCompletion("difficulties", Difficulty.class);
+        setDefaultCompletion("environments", World.Environment.class);
+        setDefaultCompletion("flags", String[].class);
+        setDefaultCompletion("gamemodes", GameMode.class);
+        setDefaultCompletion("gamerules", GameRule.class);
+        setDefaultCompletion("mvworlds", LoadedMultiverseWorld.class);
+    }
+
+    @Override
+    public CommandCompletionHandler registerCompletion(String id, CommandCompletionHandler<BukkitCommandCompletionContext> handler) {
+        return super.registerCompletion(id, context ->
+                completeWithPreconditions(context, handler));
+    }
+
+    @Override
+    public CommandCompletionHandler registerAsyncCompletion(String id, AsyncCommandCompletionHandler<BukkitCommandCompletionContext> handler) {
+        return super.registerAsyncCompletion(id, context ->
+                completeWithPreconditions(context, handler));
+    }
+
+    private Collection<String> completeWithPreconditions(
+            BukkitCommandCompletionContext context,
+            CommandCompletionHandler<BukkitCommandCompletionContext> handler) {
+        if (context.hasConfig("playerOnly") && !context.getIssuer().isPlayer()) {
+            return Collections.emptyList();
+        }
+        if (context.hasConfig("byIssuerForArg")) {
+            Boolean byIssuerForArg = Try.of(() -> context.getContextValueByName(IssuerAwareValue.class, context.getConfig("byIssuerForArg")))
+                    .map(IssuerAwareValue::isByIssuer)
+                    .getOrElse(false);
+            if (!byIssuerForArg) {
+                return Collections.emptyList();
+            }
+        }
+        if (context.hasConfig("notByIssuerForArg")) {
+            Boolean byIssuerForArg = Try.of(() -> context.getContextValueByName(IssuerAwareValue.class, context.getConfig("notByIssuerForArg")))
+                    .map(IssuerAwareValue::isByIssuer)
+                    .getOrElse(false);
+            if (byIssuerForArg) {
+                return Collections.emptyList();
+            }
+        }
+        if (context.hasConfig("resolveUntil")) {
+            if (!Try.run(() -> context.getContextValueByName(Object.class, context.getConfig("resolveUntil"))).isSuccess()) {
+                return Collections.emptyList();
+            }
+        }
+        if (context.hasConfig("checkPermissions")) {
+            for (String permission : REPatterns.SEMICOLON.split(context.getConfig("checkPermissions"))) {
+                if (!commandManager.getCommandPermissions().hasPermission(context.getIssuer(), permission)) {
+                    return Collections.emptyList();
+                }
+            }
+        }
+        if (context.hasConfig("multiple")) {
+            return addOnToCommaSeparated(context.getInput(), handler.getCompletions(context));
+        }
+        return handler.getCompletions(context);
+    }
+
+    /**
+     * Shortcut to suggest enums values
+     *
+     * @param enumClass The enum class with values
+     * @return A collection of possible string values
+     * @param <T> The enum type
+     */
+    public <T extends Enum<T>> Collection<String> suggestEnums(Class<T> enumClass) {
+        return EnumSet.allOf(enumClass).stream()
+                .map(Enum::name)
+                .map(name -> name.toLowerCase(Locale.ENGLISH))
+                .toList();
+    }
+
+    private Collection<String> suggestAnchorNames(BukkitCommandCompletionContext context) {
+        return anchorManager.getAnchors(context.getPlayer()).stream()
+                .map(MultiverseAnchor::getName)
+                .toList();
+    }
+
+    private Collection<String> suggestCommands(BukkitCommandCompletionContext context) {
+        String rootCmdName = context.getConfig();
+        if (rootCmdName == null) {
+            return Collections.emptyList();
+        }
+
+        RootCommand rootCommand = this.commandManager.getRegisteredRootCommands().stream()
+                .unordered()
+                .filter(c -> c.getCommandName().equals(rootCmdName))
+                .findFirst()
+                .orElse(null);
+
+        if (rootCommand == null) {
+            return Collections.emptyList();
+        }
+
+        return rootCommand.getSubCommands().entries().stream()
+                .filter(entry -> checkPerms(context.getIssuer(), entry.getValue()))
+                .map(Map.Entry::getKey)
+                .filter(cmdName -> !cmdName.startsWith("__"))
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkPerms(CommandIssuer issuer, RegisteredCommand<?> command) {
+        return this.commandManager.hasPermission(issuer, command.getRequiredPermissions());
+    }
+
+    private Collection<String> suggestDestinations(BukkitCommandCompletionContext context) {
+        return Try.of(() -> context.getContextValue(PlayerArrayValue.class))
+                .map(PlayerArrayValue::value)
+                .recover(IllegalStateException.class, e -> context.getContextValue(Player[].class))
+                .recover(IllegalStateException.class, e -> new Player[]{context.getContextValue(Player.class)})
+                .map(players -> {
+                    if (players.length == 0) {
+                        // Most likely console did not specify a player
+                        return Collections.<String>emptyList();
+                    }
+                    CommandSender sender = context.getIssuer().getIssuer();
+                    if (context.hasConfig("othersOnly") && (players.length == 1 && players[0].equals(sender))) {
+                        return Collections.<String>emptyList();
+                    }
+                    return suggestDestinationsWithPerms(sender, Arrays.asList(players), context.getInput());
+                })
+                .getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestDestinationsWithPerms(CommandSender teleporter, List<Entity> teleportees, String deststring) {
+        return destinationsProvider.suggestDestinations(teleporter, deststring).stream()
+                .filter(packet -> !config.getSimplifiedDestinationTabCompletion()
+                        || packet.destination() instanceof WorldDestination
+                        || deststring.startsWith(packet.destination().getIdentifier() + ":"))
+                .filter(packet -> corePermissionsChecker
+                        .checkDestinationPacketPermission(teleporter, teleportees, packet))
+                .map(DestinationSuggestionPacket::parsableString)
+                .toList();
+    }
+
+    private Collection<String> suggestFlags(@NotNull BukkitCommandCompletionContext context) {
+        String groupName = context.getConfig("groupName", "");
+
+        return Try.of(() -> context.getContextValue(String[].class))
+                .map(flags -> commandManager.getFlagsManager().suggest(groupName, flags))
+                .getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestGamerules() {
+        return Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.toList());
+    }
+
+    private Collection<String> suggestGamerulesValues(BukkitCommandCompletionContext context) {
+       return Try.of(() -> context.getContextValue(GameRule.class))
+               // Just use our suggester from configuration lib since gamerules are only boolean or int
+               .mapTry(gamerule -> Option.of(DefaultSuggesterProvider.getDefaultSuggester(gamerule.getType()))
+                       .map(s -> s.suggest(context.getInput())).getOrElse(Collections.emptyList()))
+               .getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestGeneratorPlugins(BukkitCommandCompletionContext context) {
+        return generatorProvider.getRegisteredGeneratorPlugins().stream()
+                .map(GeneratorPlugin::getPluginName)
+                .toList();
+    }
+
+    private Collection<String> suggestMVConfigValues(BukkitCommandCompletionContext context) {
+        return Try.of(() -> context.getContextValue(String.class))
+                .map(propertyName -> config.getStringPropertyHandle()
+                        .getSuggestedPropertyValue(propertyName, context.getInput(), PropertyModifyAction.SET, context.getSender()))
+                .getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestMVWorlds(BukkitCommandCompletionContext context) {
+        String scope = context.getConfig("scope", "loaded");
+        switch (scope) {
+            case "both" -> {
+                return worldManager.getWorlds().stream()
+                        .map(MultiverseWorld::getTabCompleteName)
+                        .toList();
+            }
+            case "loaded" -> {
+                return worldManager.getLoadedWorlds().stream()
+                        .map(MultiverseWorld::getTabCompleteName)
+                        .toList();
+            }
+            case "unloaded" -> {
+                return worldManager.getUnloadedWorlds().stream()
+                        .map(MultiverseWorld::getTabCompleteName)
+                        .toList();
+            }
+            case "potential" -> {
+                return potentialWorldFinder.findPotentialWorlds();
+            }
+        }
+        Logging.severe("Invalid MVWorld scope: " + scope);
+        return Collections.emptyList();
+    }
+
+    private Collection<String> suggestMVWorldMetaKey(BukkitCommandCompletionContext context) {
+        return Try.of(() -> context.getContextValue(MultiverseWorld.class))
+                .map(MultiverseWorld::getAllMeta)
+                .map(Map::keySet)
+                .getOrElse(Collections.emptySet());
+    }
+
+    private Collection<String> suggestMVWorldPropsName(BukkitCommandCompletionContext context) {
+        return Try.of(() -> {
+            MultiverseWorld world = context.getContextValue(MultiverseWorldValue.class).value();
+            PropertyModifyAction action = context.getContextValue(PropertyModifyAction.class);
+            return world.getStringPropertyHandle().getModifiablePropertyNames(action);
+        }).getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestMVWorldPropsValue(BukkitCommandCompletionContext context) {
+        return Try.of(() -> {
+            MultiverseWorld world = context.getContextValue(MultiverseWorldValue.class).value();
+            PropertyModifyAction action = context.getContextValue(PropertyModifyAction.class);
+            String propertyName = context.getContextValue(String.class);
+            return world.getStringPropertyHandle().getSuggestedPropertyValue(propertyName, context.getInput(), action, context.getSender());
+        }).getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestPlayersArray(BukkitCommandCompletionContext context) {
+        CommandSender sender = context.getSender();
+        Validate.notNull(sender, "Sender cannot be null");
+        Player senderPlayer = sender instanceof Player ? (Player)sender : null;
+        List<String> matchedPlayers = new ArrayList<>();
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            String name = player.getName();
+            if ((senderPlayer == null || senderPlayer.canSee(player))
+                    && (!context.hasConfig("excludeSelf") || !player.equals(senderPlayer))) {
+                matchedPlayers.add(name);
+            }
+        }
+        return addOnToCommaSeparated(context.getInput(), matchedPlayers);
+    }
+
+    private Collection<String> suggestSpawnCategoryPropsName(BukkitCommandCompletionContext context) {
+        return Try.of(() -> {
+            MultiverseWorld world = context.getContextValue(MultiverseWorld.class);
+            SpawnCategory spawnCategory = context.getContextValue(SpawnCategory.class);
+            PropertyModifyAction action = context.getContextValue(PropertyModifyAction.class);
+            return world.getEntitySpawnConfig()
+                    .getSpawnCategoryConfig(spawnCategory)
+                    .getStringPropertyHandle()
+                    .getModifiablePropertyNames(action);
+        }).getOrElse(Collections.emptyList());
+    }
+
+    private Collection<String> suggestSpawnCategoryPropsValue(BukkitCommandCompletionContext context) {
+        return Try.of(() -> {
+            MultiverseWorld world = context.getContextValue(MultiverseWorld.class);
+            SpawnCategory spawnCategory = context.getContextValue(SpawnCategory.class);
+            PropertyModifyAction action = context.getContextValue(PropertyModifyAction.class);
+            String propertyName = context.getContextValue(String.class);
+            return world.getEntitySpawnConfig()
+                    .getSpawnCategoryConfig(spawnCategory)
+                    .getStringPropertyHandle()
+                    .getSuggestedPropertyValue(propertyName, context.getInput(), action, context.getSender());
+        }).getOrElse(Collections.emptyList());
+    }
+}

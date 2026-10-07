@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "The data pack for the Sushi plugin",
+    "min_format": [121, 1],
+    "max_format": [121, 1]
+  }
+}

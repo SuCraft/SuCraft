@@ -49,3 +49,9 @@ ij_java_doc_enable_leading_asterisks = true
 ij_java_doc_indent_on_continuation = true
 ij_java_doc_param_description_on_new_line = false
 ij_java_doc_use_throws_not_exception_tag = true
+
+[*.json]
+indent_size = 2
+
+[*.mcmeta]
+indent_size = 2

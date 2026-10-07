@@ -186,6 +186,11 @@ val targetFiles = arrayListOf(
         "bukkit-plugins/forked/PermissionsBukkit/target/bukkit-permissions-2.5-SuCraft.jar",
         "bukkit-plugins/forked/PermissionsBukkit"
     ),
+    FileToUpdateByGradleTask(
+        "minecraft-server/plugins/Sushi.jar",
+        "bukkit-plugins/generation-5/Sushi/build/libs/Sushi-0.1-SNAPSHOT-all.jar",
+        ":plugins:Sushi:shadowJar"
+    ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/ColorText.jar",
         "https://github.com/Dimianas/ColorText/releases/download/1.0/ColorText-1.0.jar",
@@ -258,8 +263,8 @@ val targetFiles = arrayListOf(
     ),
     FileToUpdateByGradleTask(
         "minecraft-server/server.jar",
-        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1.jar",
-        ":suki:suki-server:createBundlerJar"
+        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1-SNAPSHOT.jar",
+        ":Suki:suki-server:createBundlerJar"
     )
 )
 val baseFilesFolderName = "files"

@@ -1,0 +1,14 @@
+name: Sushi
+description: '$description'
+version: '$version'
+
+main: org.sucraft.sushi.main.SushiPlugin
+bootstrapper: org.sucraft.sushi.main.SushiPluginBootstrap
+api-version: '26.3'
+load: POSTWORLD
+
+# Add yourself below
+authors:
+  - Martijn Muijsers
+# Replace with your own website
+website: https://discord.gg/egH7dGX

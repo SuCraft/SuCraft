@@ -1,0 +1,17 @@
+package org.sucraft.sushi.main;
+
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+
+public final class CheckSpout {
+
+    public static boolean checkSpout() {
+        try {
+            Class.forName("spout.SpoutMarker");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            ComponentLogger.logger().warn("This plugin requires Spout: https://github.com/ModernSpout/Spout");
+            return false;
+        }
+    }
+
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "minecraft_dungeons:block/snowy_stone_bricks",
+    "top": "minecraft_dungeons:block/snowy_stone_bricks",
+    "side": "minecraft_dungeons:block/snowy_stone_bricks"
+  }
+}

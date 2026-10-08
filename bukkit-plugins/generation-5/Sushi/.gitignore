@@ -1,2 +1,5 @@
 # Runs
 /run*/
+
+# Generated
+/src/main/generated/

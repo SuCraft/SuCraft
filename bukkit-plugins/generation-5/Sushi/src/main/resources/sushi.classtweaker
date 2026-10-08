@@ -1,0 +1,8 @@
+classTweaker v1 official
+
+accessible field net/minecraft/data/recipes/ShapedRecipeBuilder key Ljava/util/Map;
+accessible field net/minecraft/data/recipes/ShapedRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder ingredients Ljava/util/List;
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
+accessible field net/minecraft/data/recipes/SingleItemRecipeBuilder ingredient Lnet/minecraft/world/item/crafting/Ingredient;
+accessible field net/minecraft/data/recipes/SingleItemRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;

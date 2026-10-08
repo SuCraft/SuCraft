@@ -189,7 +189,8 @@ val targetFiles = arrayListOf(
     FileToUpdateByGradleTask(
         "minecraft-server/plugins/Sushi.jar",
         "bukkit-plugins/generation-5/Sushi/build/libs/Sushi-0.1-SNAPSHOT-all.jar",
-        ":plugins:Sushi:shadowJar"
+        ":plugins:Sushi:shadowJar",
+        alwaysUpdate = true
     ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/ColorText.jar",

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "sushi",
+  "version": "0.1",
+  "name": "Sushi",
+  "authors": [
+    "Martijn Muijsers"
+  ],
+  "contact": {
+    "sources": "https://github.com/SuCraft/SuCraft",
+    "discord": "https://discord.gg/egH7dGX"
+  },
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.sucraft.sushi.datageneration.main.SushiMod"
+    ],
+    "fabric-datagen": [
+      "org.sucraft.sushi.datageneration.main.SushiDataGenerator"
+    ]
+  },
+  "accessWidener": "sushi.classtweaker",
+  "depends": {
+    "fabric-api": "*",
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "properties": {
+    "map_color": "minecraft:snow",
+    "explosion_resistance": 6.0,
+    "destroy_time": 2.0,
+    "instrument": "minecraft:basedrum"
+  },
+  "mappings": [
+    {
+      "type": "full_block",
+      "fallback": "minecraft:stone_bricks"
+    }
+  ]
+}

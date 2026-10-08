@@ -10,7 +10,7 @@ plugins {
 }
 
 // Suki start - Set up Gradle project
-rootProject.name = "suki"
+rootProject.name = "Suki"
 
 include("suki-api")
 include("suki-server")

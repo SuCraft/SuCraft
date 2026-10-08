@@ -1,0 +1,107 @@
+/*
+ * WorldGuard, a suite of tools for Minecraft
+ * Copyright (C) sk89q <http://www.sk89q.com>
+ * Copyright (C) WorldGuard team and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.sk89q.worldguard.bukkit.listener;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.config.WorldConfiguration;
+import com.sk89q.worldguard.protection.association.RegionAssociable;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import org.bukkit.World;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
+import org.bukkit.projectiles.ProjectileSource;
+
+/**
+ * Listener for painting related events.
+ */
+public class WorldGuardHangingListener extends AbstractListener {
+
+    public WorldGuardHangingListener(WorldGuardPlugin plugin) {
+        super(plugin);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onHangingBreak(HangingBreakEvent event) {
+        Hanging hanging = event.getEntity();
+        World world = hanging.getWorld();
+        WorldConfiguration wcfg = getWorldConfig(world);
+
+        if (event instanceof HangingBreakByEntityEvent) {
+            HangingBreakByEntityEvent entityEvent = (HangingBreakByEntityEvent) event;
+            Entity removerEntity = entityEvent.getRemover();
+            if (removerEntity instanceof Projectile) {
+                Projectile projectile = (Projectile) removerEntity;
+                ProjectileSource remover = projectile.getShooter(); 
+                removerEntity = (remover instanceof LivingEntity ? (LivingEntity) remover : null);
+            }
+
+            if (!(removerEntity instanceof Player)) {
+                if (removerEntity instanceof Creeper) {
+                    if (wcfg.blockCreeperBlockDamage || wcfg.blockCreeperExplosions) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (wcfg.useRegions && !StateFlag.test(WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().queryState(BukkitAdapter.adapt(hanging.getLocation()), (RegionAssociable) null, Flags.CREEPER_EXPLOSION))) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+
+                // this now covers dispensers as well, if removerEntity is null above,
+                // due to a non-LivingEntity ProjectileSource
+                if (hanging instanceof Painting
+                        && (wcfg.blockEntityPaintingDestroy
+                        || (wcfg.useRegions
+                        && !StateFlag.test(WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().queryState(BukkitAdapter.adapt(hanging.getLocation()), (RegionAssociable) null, Flags.ENTITY_PAINTING_DESTROY))))) {
+                    event.setCancelled(true);
+                } else if (hanging instanceof ItemFrame
+                        && (wcfg.blockEntityItemFrameDestroy
+                        || (wcfg.useRegions
+                        && !StateFlag.test(WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().queryState(BukkitAdapter.adapt(hanging.getLocation()), (RegionAssociable) null, Flags.ENTITY_ITEM_FRAME_DESTROY))))) {
+                    event.setCancelled(true);
+                }
+            }
+        } else {
+            // Explosions from mobs are not covered by HangingBreakByEntity
+            if (hanging instanceof Painting && wcfg.blockEntityPaintingDestroy
+                    && event.getCause() == RemoveCause.EXPLOSION) {
+                event.setCancelled(true);
+            } else if (hanging instanceof ItemFrame && wcfg.blockEntityItemFrameDestroy
+                    && event.getCause() == RemoveCause.EXPLOSION) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+}

@@ -1,0 +1,65 @@
+[versions]
+worldedit = "7.4.4"
+crankcase = "0.1.0"
+
+# Minimum versions we apply to make dependencies support newer Java
+minimumAsm = "9.7"
+minimumJdependency = "2.10"
+minimumTinyRemapper = "0.8.11"
+
+# lang-version = ""
+
+[libraries]
+
+crankcase-java = { module = "org.enginehub.crankcase:java", version.ref = "crankcase" }
+crankcase-javaLibrary = { module = "org.enginehub.crankcase:java-library", version.ref = "crankcase" }
+crankcase-common = { module = "org.enginehub.crankcase:common", version.ref = "crankcase" }
+crankcase-licensing = { module = "org.enginehub.crankcase:licensing", version.ref = "crankcase" }
+crankcase-git = { module = "org.enginehub.crankcase:git", version.ref = "crankcase" }
+crankcase-publishing = { module = "org.enginehub.crankcase:publishing", version.ref = "crankcase" }
+
+shadow = "com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.3.2"
+
+squirrelid = "org.enginehub:squirrelid:0.3.2"
+
+autoService = "com.google.auto.service:auto-service:1.1.1"
+
+jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
+jetbrains-annotations = "org.jetbrains:annotations:24.1.0"
+
+paperApi = "io.papermc.paper:paper-api:26.2.build.+"
+paperLib = "io.papermc:paperlib:1.0.8"
+
+dummypermscompat = "com.sk89q:dummypermscompat:1.10"
+bstats-bukkit = "org.bstats:bstats-bukkit:3.2.1"
+
+prtree = "org.khelekore:prtree:1.5.0"
+
+flyway-core = "org.flywaydb:flyway-core:3.0"
+
+commandbook = "com.sk89q:commandbook:2.3"
+
+hamcrest-library = "org.hamcrest:hamcrest-library:2.2"
+
+# Mojang-provided libraries, CHECK AGAINST MINECRAFT for versions
+guava = "com.google.guava:guava:33.6.0-jre"
+log4j-bom = "org.apache.logging.log4j:log4j-bom:2.25.2"
+gson = "com.google.code.gson:gson:2.14.0"
+fastutil = "it.unimi.dsi:fastutil:8.5.18"
+
+# Bukkit-provided libraries, CHECK AGAINST SPIGOT for versions
+# Note that we need to balance support for older MC versus working at all on newer ones, so the exact versions here
+# may not be the same as the ones in the latest Bukkit API.
+snakeyaml = "org.yaml:snakeyaml:2.0"
+
+[libraries.worldedit-core]
+module = "com.sk89q.worldedit:worldedit-core"
+version.ref = "worldedit"
+
+[libraries.worldedit-bukkit]
+module = "com.sk89q.worldedit:worldedit-bukkit"
+version.ref = "worldedit"
+
+[libraries.worldedit-libs-ap]
+module = "com.sk89q.worldedit.worldedit-libs:ap"
+version.ref = "worldedit"

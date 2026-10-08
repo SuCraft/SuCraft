@@ -1,0 +1,38 @@
+<!DOCTYPE import-control PUBLIC
+    "-//Puppy Crawl//DTD Import Control 1.1//EN"
+    "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
+
+<import-control pkg="com.sk89q">
+  <allow pkg="java"/>
+  <allow pkg="javax"/>
+  <allow pkg="org.junit"/>
+  <allow pkg="org.hamcrest"/>
+  <allow pkg="junit.framework"/>
+  <allow pkg="com.sk89q"/>
+  <allow pkg="com.google.common"/>
+
+  <subpackage name="worldguard">
+    <allow pkg="org.khelekore"/>
+    <allow pkg="org.flywaydb"/>
+    <allow pkg="org.yaml"/>
+    <allow pkg="org.enginehub.piston"/>
+
+    <subpackage name="util.profile.resolver">
+      <allow pkg="org.bukkit"/>
+      <allow pkg="io.papermc.lib"/>
+      <allow pkg="com.destroystokyo.paper"/>
+    </subpackage>
+
+    <subpackage name="bukkit">
+      <allow pkg="org.bukkit"/>
+      <allow pkg="org.bstats.bukkit"/>
+      <allow pkg="org.bstats.charts"/>
+      <allow pkg="io.papermc.lib"/>
+      <allow pkg="com.destroystokyo.paper"/>
+      <allow pkg="io.papermc.paper"/>
+      <allow pkg="org.spigotmc" />
+    </subpackage>
+
+  </subpackage>
+
+</import-control>

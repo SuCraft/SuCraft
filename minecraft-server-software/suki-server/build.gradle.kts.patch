@@ -1,6 +1,6 @@
 --- a/spout-server/build.gradle.kts
 +++ b/spout-server/build.gradle.kts
-@@ -36,6 +_,29 @@
+@@ -40,6 +_,29 @@
      }
      activeFork = spout
      // Spout end - Project setup - Set up Paperweight
@@ -30,7 +30,7 @@
  
      updatingMinecraft {
          //oldPaperCommit = "e5fe71723e2ffde7cc9fafc085ac3bb73e63175e"
-@@ -103,26 +_,20 @@
+@@ -107,26 +_,20 @@
  
  // Spout start - Project setup - Set project directory references
  sourceSets {
@@ -63,7 +63,7 @@
  }
  val log4jPlugins = sourceSets.create("log4jPlugins", Action {
      java { srcDir("../paper-server/src/log4jPlugins/java") }
-@@ -150,7 +_,7 @@
+@@ -154,7 +_,7 @@
  }
  
  dependencies {
@@ -72,7 +72,7 @@
      implementation(platform("ca.spottedleaf.leafpile:bom:1.2.4"))
      implementation("ca.spottedleaf.leafpile:common")
      implementation("ca.spottedleaf.leafpile:concurrentutil")
-@@ -225,15 +_,15 @@
+@@ -229,15 +_,15 @@
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Add-Opens" to "java.base/java.lang", // Spout - Synchronize Bukkit enums - Add module opens to server JAR
              "Enable-Final-Field-Mutation" to "ALL-UNNAMED", // Spout - Synchronize Bukkit enums - Add enable final field mutation to server JAR

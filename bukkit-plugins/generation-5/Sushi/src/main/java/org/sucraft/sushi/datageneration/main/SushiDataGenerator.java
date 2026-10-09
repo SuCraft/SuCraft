@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sucraft.sushi.datageneration.common.BlockLootTables;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
+import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import org.sucraft.sushi.datageneration.stonebricks.snowy.SnowyStoneBricks;
 
@@ -18,10 +19,12 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         LOGGER.info("Initializing Sushi data generator...");
         FabricDataGenerator.Pack pack = generator.createPack();
         CollectedFactories factories = new CollectedFactories(
+            new Models.CollectedFactory(),
             new BlockLootTables.CollectedFactory(),
             new Recipes.CollectedFactory()
         );
         SnowyStoneBricks.add(factories);
+        pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());
         pack.addProvider(factories.recipes());
     }

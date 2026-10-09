@@ -44,6 +44,7 @@ val runDirectory: File = project.layout.projectDirectory.file("../run").asFile
 
 abstract class FileToUpdate(
     val targetPath: String,
+    val intendedSha256Hash: String? = null,
     val alwaysUpdate: Boolean = false
 ) {
 
@@ -59,8 +60,9 @@ abstract class FileToUpdate(
 open class FileToUpdateFromSourceFile(
     targetPath: String,
     val sourcePath: String,
+    intendedSha256Hash: String? = null,
     alwaysUpdate: Boolean = false
-) : FileToUpdate(targetPath, alwaysUpdate) {
+) : FileToUpdate(targetPath, intendedSha256Hash, alwaysUpdate) {
 
     fun sourceFile(): java.nio.file.Path = project.layout.projectDirectory.file(sourcePath).asFile.toPath()
 
@@ -82,7 +84,7 @@ class FileToUpdateFromIncludedSourceFile(
     targetPath: String,
     sourcePath: String,
     alwaysCopy: Boolean = false
-) : FileToUpdateFromSourceFile(targetPath, sourcePath, alwaysCopy) {
+) : FileToUpdateFromSourceFile(targetPath, sourcePath, null, alwaysCopy) {
 
     override fun needToUpdate(): Boolean {
         if (super.needToUpdate()) return true
@@ -99,7 +101,7 @@ abstract class FileToUpdateByExecuting(
     targetPath: String,
     sourcePathFromProjectRoot: String,
     alwaysExecute: Boolean = false
-) : FileToUpdateFromSourceFile(targetPath, "../$sourcePathFromProjectRoot", alwaysExecute) {
+) : FileToUpdateFromSourceFile(targetPath, "../$sourcePathFromProjectRoot", null, alwaysExecute) {
 
     override fun needToUpdate(): Boolean {
         if (super.needToUpdate()) return true
@@ -154,20 +156,20 @@ class FileToUpdateByMavenPackage(
 class FileToUpdateByDownloading(
     targetPath: String,
     val sourceURL: String,
-    val sha256Hash: String? = null,
+    intendedSha256Hash: String? = null,
     alwaysUpdate: Boolean = false
-) : FileToUpdate(targetPath, alwaysUpdate) {
+) : FileToUpdate(targetPath, intendedSha256Hash, alwaysUpdate) {
 
     override fun needToUpdate(): Boolean {
         if (super.needToUpdate()) return true
-        if (sha256(targetFile()) != sha256Hash) return true
+        if (sha256(targetFile()) != intendedSha256Hash) return true
         return false
     }
 
     override fun update() {
         logger.lifecycle("Downloading: $sourceURL")
         val contents = URI.create(sourceURL).toURL().openStream().readAllBytes()
-        if (sha256Hash != null && sha256(contents) != sha256Hash) {
+        if (intendedSha256Hash != null && sha256(contents) != intendedSha256Hash) {
             throw IllegalStateException("Downloaded file hash does not match expected for target file: $targetPath")
         }
         targetFile().writeBytes(contents)
@@ -286,7 +288,13 @@ tasks.register("printFileHashes") {
     doFirst {
         for (targetFile in targetFiles) {
             if (targetFile !is FileToUpdateFromIncludedSourceFile) {
-                logger.lifecycle("${targetFile.targetFile().relativeTo(runDirectory.toPath()).pathString} -> ${sha256(targetFile.targetFile())}")
+                val actualHash = sha256(targetFile.targetFile())
+                val intendedHash = targetFile.intendedSha256Hash
+                if (actualHash != intendedHash) {
+                    logger.lifecycle(
+                        "${targetFile::class.simpleName} / ${targetFile.targetFile().relativeTo(runDirectory.toPath()).pathString} -> $actualHash"
+                    )
+                }
             }
         }
     }
@@ -321,4 +329,12 @@ tasks.register("clean") {
     doFirst {
         lastUpdateGitRefFile.delete()
     }
+}
+
+tasks.register<Exec>("updateAndRun") {
+    group = "scaffolding"
+    dependsOn("update")
+    workingDir = project.layout.projectDirectory.dir("../run/minecraft-server").asFile
+    commandLine("./start_without_screen.sh")
+    standardInput = System.`in`
 }

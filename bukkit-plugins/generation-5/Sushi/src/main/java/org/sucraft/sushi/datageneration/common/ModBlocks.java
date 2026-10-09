@@ -1,7 +1,9 @@
 package org.sucraft.sushi.datageneration.common;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,13 +11,18 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 public class ModBlocks {
 
     public static Block SNOWY_STONE_BRICKS;
-    public static Block SNOWY_STONE_BRICK_SLAB;
-    public static Block SNOWY_STONE_BRICK_STAIRS;
+    public static SlabBlock SNOWY_STONE_BRICK_SLAB;
+    public static StairBlock SNOWY_STONE_BRICK_STAIRS;
 
     public static Block initialize() {
         return Arrays.stream(ModBlocks.class.getDeclaredFields())
@@ -31,7 +38,7 @@ public class ModBlocks {
                     var value = Registry.register(
                         BuiltInRegistries.BLOCK,
                         key,
-                        new Block(properties)
+                        construct(field, properties)
                     );
                     field.set(null, value);
                     return value;
@@ -39,6 +46,33 @@ public class ModBlocks {
                     throw new RuntimeException(e);
                 }
             }).reduce((_, value) -> value).orElseThrow();
+    }
+
+    private static @Nullable Block getAlreadyRegisteredBlock(String path) throws Exception {
+        for (Class<?> owner : List.of(ModBlocks.class, Blocks.class)) {
+            try {
+                Field field = owner.getDeclaredField(path.toUpperCase(Locale.ROOT));
+                if (Modifier.isStatic(field.getModifiers()) && Block.class.isAssignableFrom(field.getType())) {
+                    return (Block) field.get(null);
+                }
+                field.trySetAccessible();
+            } catch (Exception _) {
+            }
+        }
+        return null;
+    }
+
+    private static Block construct(Field field, BlockBehaviour.Properties properties) throws Exception {
+        Class<? extends Block> type = (Class) field.getType();
+        if (StairBlock.class.isAssignableFrom(type)) {
+            String withoutStairsName = field.getName().substring(0, field.getName().length() - "_STAIRS".length());
+            Block base = getAlreadyRegisteredBlock(withoutStairsName);
+            if (base == null) {
+                base = getAlreadyRegisteredBlock(withoutStairsName + "S");
+            }
+            return type.getDeclaredConstructor(BlockState.class, BlockBehaviour.Properties.class).newInstance(base.defaultBlockState(), properties);
+        }
+        return type.getDeclaredConstructor(BlockBehaviour.Properties.class).newInstance(properties);
     }
 
 }

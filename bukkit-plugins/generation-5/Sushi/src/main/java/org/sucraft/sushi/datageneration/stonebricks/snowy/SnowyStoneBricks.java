@@ -1,10 +1,13 @@
 package org.sucraft.sushi.datageneration.stonebricks.snowy;
 
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.ModBlocks;
 import org.sucraft.sushi.datageneration.common.ModItems;
+import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
 
 public final class SnowyStoneBricks {
@@ -14,7 +17,14 @@ public final class SnowyStoneBricks {
     }
 
     public static void add(CollectedFactories factories) {
+        // Block model family
+        factories.models().addBlock(
+            generators -> generators.family(ModBlocks.SNOWY_STONE_BRICKS)
+                .slab(ModBlocks.SNOWY_STONE_BRICK_SLAB)
+                .stairs(ModBlocks.SNOWY_STONE_BRICK_STAIRS)
+        );
         // Full block
+        factories.models().addItem(Models.blockModelForItem(ModItems.SNOWY_STONE_BRICKS));
         factories.blockLootTables().add(provider -> provider.dropSelf(ModBlocks.SNOWY_STONE_BRICKS));
         factories.recipes().add(Recipes.start().addRecipeSupplier(function -> () -> function.provider
             .shapeless(RecipeCategory.BUILDING_BLOCKS, ModItems.SNOWY_STONE_BRICKS)

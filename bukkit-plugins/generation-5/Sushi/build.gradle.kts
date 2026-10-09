@@ -131,7 +131,11 @@ tasks {
         // Include generated resources
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from("src/main/generated") {
+            exclude("assets/**")
             exclude("data/**")
+        }
+        from("src/main/generated/assets") {
+            into("resource_pack/assets")
         }
         from("src/main/generated/data") {
             into("data_pack/data")
@@ -142,6 +146,7 @@ tasks {
         exclude("org/sucraft/sushi/datageneration/**")
         exclude("fabric.mod.json")
         if (name == "shadowJar") {
+            exclude("assets/**")
             exclude("data/**")
         }
     }
@@ -152,11 +157,6 @@ tasks {
     }
 
     processResources {
-
-        // Include generated resources
-        // filesMatching("data/**") {
-        //     path = path.replaceFirst("data/", "data_pack/data/")
-        // }
 
         // Duplicate lang files
         for ((from, to) in sequenceOf(

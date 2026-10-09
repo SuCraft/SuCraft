@@ -15,9 +15,9 @@ import net.minecraft.world.level.block.Block;
 
 public class ModItems {
 
-    public static Item SNOWY_STONE_BRICKS;
-    public static Item SNOWY_STONE_BRICK_SLAB;
-    public static Item SNOWY_STONE_BRICK_STAIRS;
+    public static BlockItem SNOWY_STONE_BRICKS;
+    public static BlockItem SNOWY_STONE_BRICK_SLAB;
+    public static BlockItem SNOWY_STONE_BRICK_STAIRS;
 
     public static Item initialize() {
         return Arrays.stream(ModItems.class.getDeclaredFields())

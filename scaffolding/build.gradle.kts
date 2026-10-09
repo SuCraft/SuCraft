@@ -176,6 +176,7 @@ class FileToUpdateByDownloading(
 }
 
 val targetFiles = arrayListOf(
+    // Plugins to build
     FileToUpdateByMavenPackage(
         "minecraft-server/plugins/CoreProtect.jar",
         "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar",
@@ -187,11 +188,17 @@ val targetFiles = arrayListOf(
         "bukkit-plugins/forked/PermissionsBukkit"
     ),
     FileToUpdateByGradleTask(
+        "minecraft-server/plugins/WorldGuard.jar",
+        "bukkit-plugins/forked/WorldGuard/worldguard-bukkit/build/libs/worldguard-bukkit-7.0.20-SuCraft-SNAPSHOT-dist.jar",
+        ":plugins:WorldGuard:worldguard-bukkit:shadowJar"
+    ),
+    FileToUpdateByGradleTask(
         "minecraft-server/plugins/Sushi.jar",
         "bukkit-plugins/generation-5/Sushi/build/libs/Sushi-0.1-SNAPSHOT-all.jar",
         ":plugins:Sushi:shadowJar",
-        alwaysUpdate = true
+        // alwaysUpdate = true
     ),
+    // Plugins to download
     FileToUpdateByDownloading(
         "minecraft-server/plugins/ColorText.jar",
         "https://github.com/Dimianas/ColorText/releases/download/1.0/ColorText-1.0.jar",
@@ -257,11 +264,7 @@ val targetFiles = arrayListOf(
         "https://mediafilez.forgecdn.net/files/8962/666/worldedit-bukkit-7.4.6-beta-02.jar",
         "166365c44bad4cd916200b288cf391d3770e3197d1eca84ff74f3914d933e289"
     ),
-    FileToUpdateByDownloading(
-        "minecraft-server/plugins/WorldGuard.jar",
-        "https://mediafilez.forgecdn.net/files/8911/284/worldguard-bukkit-7.0.19.jar",
-        "396df065f1cf38bab9878a0f53a776d5a085ebbf3c41813938b73f95d4eaca03"
-    ),
+    // Server software
     FileToUpdateByGradleTask(
         "minecraft-server/server.jar",
         "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1-SNAPSHOT.jar",

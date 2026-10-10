@@ -164,6 +164,7 @@ public final class Recipes {
         // Inputs
 
         public ItemLike result;
+        public @Nullable Integer resultCount = null;
         public boolean unlockedByResult = true;
         public List<Ingredient> ingredients;
         public Predicate<Ingredient> unlockedByIngredientPredicate = _ -> true;
@@ -195,6 +196,10 @@ public final class Recipes {
 
         // Getters
 
+        public int getResultCountOrElse(int fallback) {
+            return this.resultCount != null ? this.resultCount : fallback;
+        }
+
         public Ingredient getFirstIngredient() {
             return this.ingredients.getFirst();
         }
@@ -220,6 +225,11 @@ public final class Recipes {
 
         public ProviderFunction setResult(ItemLike result) {
             this.result = result;
+            return this;
+        }
+
+        public ProviderFunction setResultCount(int resultCount) {
+            this.resultCount = resultCount;
             return this;
         }
 
@@ -333,6 +343,21 @@ public final class Recipes {
             return this.addAllSlabs();
         }
 
+        public ProviderFunction addStonecutting() {
+            return this.addRecipeSupplier(this.createStonecutting());
+        }
+
+        public ProviderFunction addStonecutting(Item result, Item ingredient) {
+            this.setIngredientFromItem(ingredient);
+            this.setResult(result);
+            return this.addStonecutting();
+        }
+
+        public ProviderFunction addStonecutting(Item result, Item ingredient, int count) {
+            this.setResultCount(count);
+            return this.addStonecutting(result, ingredient);
+        }
+
         // Default implementations
 
         public void buildSuppliedRecipes() {
@@ -412,11 +437,11 @@ public final class Recipes {
         }
 
         public RecipeSupplier createStairs() {
-            return () -> this.provider.shaped(RecipeCategory.BUILDING_BLOCKS, this.result, 6).define('#', this.getFirstIngredient()).pattern("#  ").pattern("## ").pattern("###");
+            return () -> this.provider.shaped(RecipeCategory.BUILDING_BLOCKS, this.result, this.getResultCountOrElse(6)).define('#', this.getFirstIngredient()).pattern("#  ").pattern("## ").pattern("###");
         }
 
         public RecipeSupplier createStairsStonecutting() {
-            return RecipeSupplier.withPath(() -> SingleItemRecipeBuilder.stonecutting(this.getFirstIngredient(), this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.result, 1), () -> RecipeProvider.getConversionRecipeName(this.result, this.getFirstIngredientItem()) + "_stonecutting");
+            return this.createStonecutting();
         }
 
         public RecipeSupplier createStairsReverse() {
@@ -428,7 +453,7 @@ public final class Recipes {
         }
 
         public RecipeSupplier createStairsStonecuttingReverse() {
-            return RecipeSupplier.withId(() -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(this.result), this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.getFirstIngredientItem(), 1), builder -> this.createStairsStonecutting().id().withSuffix("_reverse"));
+            return RecipeSupplier.withId(() -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(this.result), this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.getFirstIngredientItem(), this.getResultCountOrElse(1)), builder -> this.createStairsStonecutting().id().withSuffix("_reverse"));
         }
 
         public RecipeSupplier createStairsStonecuttingReverseConditional() {
@@ -440,15 +465,23 @@ public final class Recipes {
         }
 
         public RecipeSupplier createSlabStonecutting() {
-            return RecipeSupplier.withPath(() -> SingleItemRecipeBuilder.stonecutting(this.getFirstIngredient(), this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.result, 2), () -> RecipeProvider.getConversionRecipeName(this.result, this.getFirstIngredientItem()) + "_stonecutting");
+            return this.createStonecutting(2);
         }
 
         public RecipeSupplier createSlabReverse() {
-            return RecipeSupplier.withId(() -> this.provider.shapeless(this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.getFirstIngredientItem()).requires(this.result, 2), _ -> this.createSlab().id().withSuffix("_reverse"));
+            return RecipeSupplier.withId(() -> this.provider.shapeless(this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.getFirstIngredientItem()).requires(this.result, this.getResultCountOrElse(2)), _ -> this.createSlab().id().withSuffix("_reverse"));
         }
 
         public RecipeSupplier createSlabReverseConditional() {
             return this.createReverseConditional(this.createSlabReverse());
+        }
+
+        public RecipeSupplier createStonecutting(int defaultCount) {
+            return RecipeSupplier.withPath(() -> SingleItemRecipeBuilder.stonecutting(this.getFirstIngredient(), this.getCategoryOrElse(RecipeCategory.BUILDING_BLOCKS), this.result, this.getResultCountOrElse(defaultCount)), () -> RecipeProvider.getConversionRecipeName(this.result, this.getFirstIngredientItem()) + "_stonecutting");
+        }
+
+        public RecipeSupplier createStonecutting() {
+            return this.createStonecutting(1);
         }
 
         // Implementation of RegistryDependentFactory

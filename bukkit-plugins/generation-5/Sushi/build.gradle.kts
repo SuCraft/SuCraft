@@ -31,7 +31,12 @@ java {
 
 loom {
     mods {
-        register("sushi") {
+        // The name has to be "sucraft" (including in fabric.mod.json),
+        // otherwise data generation refuses to generate some files
+        // because some parts of the inner Fabric API implementation
+        // are automatically limited to generating files with the same namespace
+        // as the mod id
+        register("sucraft") {
             sourceSet(sourceSets.main.get())
         }
     }

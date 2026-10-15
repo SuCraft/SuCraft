@@ -14,6 +14,7 @@ public final class SuCraftItemTypes {
 
     public static Supplier<ItemType> SNOWY_STONE_BRICK_SLAB = itemType("snowy_stone_brick_slab");
     public static Supplier<ItemType> SNOWY_STONE_BRICK_STAIRS = itemType("snowy_stone_brick_stairs");
+    public static Supplier<ItemType> SNOWY_STONE_BRICK_WALL = itemType("snowy_stone_brick_wall");
     public static Supplier<ItemType> SNOWY_STONE_BRICKS = itemType("snowy_stone_bricks");
 
     private static Supplier<ItemType> itemType(String path) {

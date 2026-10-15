@@ -14,15 +14,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class ModBlocks {
 
+    // Snowy stone bricks
     public static Block SNOWY_STONE_BRICKS;
     public static SlabBlock SNOWY_STONE_BRICK_SLAB;
     public static StairBlock SNOWY_STONE_BRICK_STAIRS;
+    public static WallBlock SNOWY_STONE_BRICK_WALL;
 
     public static Block initialize() {
         return Arrays.stream(ModBlocks.class.getDeclaredFields())

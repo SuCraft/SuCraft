@@ -1,6 +1,5 @@
 package org.sucraft.sushi.datageneration.common;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Locale;
@@ -18,6 +17,7 @@ public class ModItems {
     public static BlockItem SNOWY_STONE_BRICKS;
     public static BlockItem SNOWY_STONE_BRICK_SLAB;
     public static BlockItem SNOWY_STONE_BRICK_STAIRS;
+    public static BlockItem SNOWY_STONE_BRICK_WALL;
 
     public static Item initialize() {
         return Arrays.stream(ModItems.class.getDeclaredFields())

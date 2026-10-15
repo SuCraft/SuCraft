@@ -1,0 +1,20 @@
+--- a/ca/spottedleaf/dataconverter/minecraft/MCVersionRegistry.java
++++ b/ca/spottedleaf/dataconverter/minecraft/MCVersionRegistry.java
+@@ -311,7 +_,9 @@
+             5012,
+             5013,
+             5014,
++            5015,
+             5016,
++            org.sucraft.suki.gamecontent.common.dataconverter.SuCraftConversionVersions.VERSION_1, // Suki - Register converters
+             // All up to 26.3
+         };
+         Arrays.sort(converterVersions);
+@@ -378,6 +_,7 @@
+         registerBreakpointAfter(MCVersions.V26_1_2, Integer.MAX_VALUE);
+         // V4996 creates item stacks from item names. Finish converting the old item data first.
+         registerBreakpointAfter(MCVersions.V26_2, Integer.MAX_VALUE);
++        registerBreakpointAfter(org.sucraft.suki.gamecontent.common.dataconverter.SuCraftConversionVersions.VERSION_1, Integer.MAX_VALUE);
+     }
+ 
+     static {

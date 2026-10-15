@@ -30,6 +30,15 @@
  
      updatingMinecraft {
          //oldPaperCommit = "e5fe71723e2ffde7cc9fafc085ac3bb73e63175e"
+@@ -59,7 +_,7 @@
+ }
+ val services = objects.newInstance<Services>()
+ 
+-if (project.providers.gradleProperty("publishDevBundle").isPresent) {
++if (true) { // Suki - Project setup - Expose dev bundle configurations so that the dev bundle can be used with includeBuild (such as in Sushi)
+     val devBundleComponent = publishing.softwareComponentFactory.adhoc("devBundle")
+     components.add(devBundleComponent)
+ 
 @@ -107,26 +_,20 @@
  
  // Spout start - Project setup - Set project directory references

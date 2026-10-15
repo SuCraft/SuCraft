@@ -1,17 +1,30 @@
-import java.net.URI
+import com.github.houbb.opencc4j.util.ZhConverterUtil
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.zip.ZipFile
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.github.houbb:opencc4j:1.14.0")
+    }
+}
 
 plugins {
     id("java-library")
     id("com.gradleup.shadow") version "9.4.1"
-    id("net.fabricmc.fabric-loom")
 }
 
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://libraries.minecraft.net")
 }
 
 configurations {
@@ -19,36 +32,13 @@ configurations {
 }
 
 dependencies {
-    compileOnly("com.github.ModernSpout:Spout:${project.providers.gradleProperty("spoutVersion").get()}")
-    minecraft("com.mojang:minecraft:${providers.gradleProperty("apiVersion").get()}")
-    implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("fabricLoaderVersion").get()}")
-    implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabricApiVersion").get()}")
+    compileOnly("org.sucraft.suki:suki-api:26.3-R0.1-SNAPSHOT")
+    compileOnly("org.sucraft.suki:suki-server:26.3-R0.1-SNAPSHOT")
+    compileOnly("com.mojang:datafixerupper:10.0.21")
 }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(25)
-}
-
-loom {
-    mods {
-        // The name has to be "sucraft" (including in fabric.mod.json),
-        // otherwise data generation refuses to generate some files
-        // because some parts of the inner Fabric API implementation
-        // are automatically limited to generating files with the same namespace
-        // as the mod id
-        register("sucraft") {
-            sourceSet(sourceSets.main.get())
-        }
-    }
-
-    accessWidenerPath = file("src/main/resources/sushi.classtweaker")
-}
-
-fabricApi {
-    configureDataGeneration {
-        addToResources = true
-        client = true
-    }
 }
 
 val serverDir: File = projectDir.resolve("run")
@@ -120,36 +110,34 @@ val generateResources by tasks.registering {
     }
 }
 
+val runDatagen = tasks.register<Exec>("runDatagen") {
+    group = "data generation"
+    workingDir = file("../../..")
+    commandLine("./gradlew", ":plugins:Sushi:datagen:runDatagen") // Windows
+}
+
 tasks {
 
     build {
         dependsOn(shadowJar)
     }
 
-    getByName("runDatagen") {
-        doFirst {
-            project.layout.projectDirectory.dir("src/main/generated/data").asFile.deleteRecursively()
-        }
-    }
-
     withType<Jar> {
+        dependsOn(runDatagen)
         // Include generated resources
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        from("src/main/generated") {
+        from("datagen/src/main/generated") {
             exclude("assets/**")
             exclude("data/**")
         }
-        from("src/main/generated/assets") {
+        from("datagen/src/main/generated/assets") {
             into("resource_pack/assets")
         }
-        from("src/main/generated/data") {
+        from("datagen/src/main/generated/data") {
             into("data_pack/data")
         }
-        dependsOn("runDatagen")
         includeEmptyDirs = false
         // Don't include data generation sources
-        exclude("org/sucraft/sushi/datageneration/**")
-        exclude("fabric.mod.json")
         if (name == "shadowJar") {
             exclude("assets/**")
             exclude("data/**")
@@ -161,7 +149,74 @@ tasks {
         configurations = listOf(project.configurations.getByName("shadowInclude"))
     }
 
+    abstract class GenerateAdditionalLangFileTask : DefaultTask() {
+
+        init {
+            group = "data generation"
+        }
+
+        @get:InputFile
+        val inputFile = project.objects.fileProperty()
+
+        @get:OutputFile
+        val outputFile = project.objects.fileProperty()
+
+        @get:Input
+        abstract val transformer: Property<(String, String) -> String>
+
+        @TaskAction
+        fun generate() {
+            val inputAsString = inputFile.get().asFile.readText()
+            val inputAsMap = JsonSlurper().parseText(inputAsString) as Map<String, String>
+            val transformation = transformer.get()
+            val outputAsMap = inputAsMap.mapValues { (key, value) ->
+                transformation(key, value)
+            }
+            val outputAsString = JsonOutput.toJson(outputAsMap)
+            outputFile.get().asFile.apply {
+                parentFile.mkdirs()
+                writeText(outputAsString)
+            }
+        }
+
+    }
+
+    fun langInputFile(locale: String) =
+        layout.projectDirectory.file("src/main/resources/resource_pack/assets/minecraft/lang/$locale.json")
+
+    fun langOutputFile(locale: String) = layout.buildDirectory.file("generated/langfiles/resource_pack/assets/minecraft/lang/$locale.json")
+
+    val generateUpsidedownEnglishLangFile =
+        register<GenerateAdditionalLangFileTask>("generateUpsidedownEnglishLangFile") {
+            inputFile = langInputFile("en_us")
+            outputFile = langOutputFile("en_ud")
+            transformer = { _, value ->
+                val regularText =
+                    "abcdefghijklmnpqrtuvwyABCDEFGJKLMPQRTUVWY12345679.,'\"?!([{<&;"
+                val upsidedownText =
+                    "ɐqɔpǝɟᵷɥᴉɾʞꞁɯudbɹʇnʌʍʎⱯᗺƆᗡƎℲ⅁ՐꞰꞀWԀꝹᴚ⟘∩ɅM⅄⥝ᘔƐ߈ϛ9ㄥ6˙',„¿¡)]}>⅋⸵"
+                value.map {
+                    regularText.indexOf(it).takeIf { it != -1 }?.let { upsidedownText[it] }
+                        ?: upsidedownText.indexOf(it).takeIf { it != -1 }?.let { regularText[it] }
+                        ?: it
+                }.joinToString("").reversed()
+            }
+        }
+
+    val generateSimplifiedChineseLangFile =
+        register<GenerateAdditionalLangFileTask>("generateSimplifiedChineseLangFile") {
+            inputFile = langInputFile("zh_tw")
+            outputFile = langOutputFile("zh_cn")
+            transformer = { _, value -> ZhConverterUtil.toSimple(value) }
+        }
+
     processResources {
+
+        // Generated additional lang files
+        dependsOn(
+            generateUpsidedownEnglishLangFile,
+            generateSimplifiedChineseLangFile
+        )
 
         // Duplicate lang files
         for ((from, to) in sequenceOf(
@@ -181,35 +236,6 @@ tasks {
 
     }
 
-    // Task to download the Spout server JAR for the runTask
-    register("downloadSpoutServer") {
-        group = "spout"; notCompatibleWithConfigurationCache(""); doFirst {
-        serverDir.mkdirs(); pluginDir.mkdirs(); URI(
-        "https://github.com/ModernSpout/Spout/releases/download/${
-            project.providers.gradleProperty("spoutVersion").get()
-                .let { "$it/spout-${project.providers.gradleProperty("apiVersion").get()}-R$it" }
-        }.jar").toURL().openStream().use {
-        Files.copy(it, serverDir.resolve("server.jar").toPath(), StandardCopyOption.REPLACE_EXISTING)
-    }
-    }
-    }
-    // Task to spin up a Spout server with the plugin
-    register("runSpoutServer", JavaExec::class) {
-        group = "spout"; notCompatibleWithConfigurationCache("")
-        dependsOn("shadowJar")
-        if (!serverDir.resolve("server.jar").exists()) dependsOn("downloadSpoutServer")
-        doFirst {
-            pluginDir.resolve("${project.name}.jar").delete()
-            Files.copy(
-                layout.buildDirectory.file("libs/${project.name}-${version}.jar").get().asFile.toPath(),
-                pluginDir.resolve("${project.name}.jar").toPath()
-            )
-        }
-        classpath = files(serverDir.resolve("server.jar")); minHeapSize = "2G"; maxHeapSize = "2G"
-        workingDir = serverDir; jvmArgs = listOf("-Dcom.mojang.eula.agree=true", "-Dspout.server.paper.enabled=true")
-        args = listOf("--nogui"); standardInput = System.`in`
-    }
-
     processResources {
         val props = mapOf(
             "version" to version,
@@ -221,4 +247,107 @@ tasks {
         }
     }
 
+}
+
+// Include some vanilla client assets
+val vanillaClientURL = providers.gradleProperty("vanillaClientURL").get()
+val vanillaClientDownloadFolder = layout.buildDirectory.dir("vanilla-client/downloads").get()
+val vanillaClientDownloadFile = vanillaClientDownloadFolder.file("${providers.gradleProperty("apiVersion").get()}.jar")
+val vanillaClientExtractsFolder = layout.buildDirectory.dir("resources/main/resource_pack/assets").get()
+
+val downloadMinecraftClient: TaskProvider<Task> = tasks.register("downloadMinecraftClient") {
+    group = "vanilla client assets"
+
+    outputs.dir(vanillaClientDownloadFolder)
+    doLast {
+        val url = vanillaClientURL
+            ?: throw IllegalArgumentException("No vanillaClientURL configured; skipping direct download.")
+        vanillaClientDownloadFolder.asFile.mkdirs()
+        val target = vanillaClientDownloadFile.asFile
+        if (!target.exists()) {
+            logger.lifecycle("Downloading Minecraft client from $url -> $target")
+            URL(url).openStream().use { input ->
+                Files.copy(input, target.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources.srcDir(layout.buildDirectory.dir("generated/langfiles"))
+    }
+}
+
+val includedVanillaAssets =
+    (listOf(
+        "black",
+        "blue",
+        "brown",
+        "cyan",
+        "gray",
+        "green",
+        "light_blue",
+        "light_gray",
+        "lime",
+        "magenta",
+        "orange",
+        "pink",
+        "purple",
+        "red",
+        "white",
+        "yellow"
+    ).flatMap { listOf("${it}_concrete", "${it}_wool") } + listOf(
+        "tuff",
+        "polished_tuff"
+    )).flatMap { listOf("${it}_slab", "${it}_stairs") }
+        .flatMap {
+            listOf(
+                "minecraft/blockstates/$it.json" to "sucraft/blockstates/$it.json",
+                "minecraft/items/$it.json" to "sucraft/items/$it.json"
+            )
+        }.toMap()
+
+val extractVanillaAssets: TaskProvider<Task> = tasks.register("extractVanillaAssets") {
+    group = "vanilla client assets"
+
+    dependsOn(downloadMinecraftClient, "processResources")
+    outputs.dir(vanillaClientExtractsFolder)
+
+    doLast {
+        val folder = vanillaClientExtractsFolder.asFile
+        folder.mkdirs()
+        val sourceJar: File = vanillaClientDownloadFile.asFile
+
+        logger.lifecycle("Extracting assets from ${sourceJar.absolutePath}")
+
+        ZipFile(sourceJar).use { zip ->
+            val entries = zip.entries()
+            while (entries.hasMoreElements()) {
+                val entry = entries.nextElement()
+
+                // We only want specific entries
+                if (!entry.name.startsWith("assets/")) continue
+                val outName = includedVanillaAssets.get(entry.name.removePrefix("assets/"))
+                if (outName == null) continue
+
+                val outFile = folder.resolve(outName)
+                if (entry.isDirectory) {
+                    outFile.mkdirs()
+                } else {
+                    outFile.parentFile?.mkdirs()
+                    zip.getInputStream(entry).use { input ->
+                        Files.copy(input, outFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named("jar") {
+    dependsOn(extractVanillaAssets)
+}
+tasks.named("shadowJar") {
+    dependsOn(extractVanillaAssets)
 }

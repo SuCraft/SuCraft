@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:stair",
+  "base_state": "minecraft:pink_wool",
+  "properties": {
+    "destroy_time": 0.8,
+    "explosion_resistance": 0.8,
+    "ignited_by_lava": true,
+    "instrument": "minecraft:guitar",
+    "map_color": "minecraft:color_pink",
+    "sound_type": "minecraft:wool"
+  }
+}

@@ -139,6 +139,10 @@ groups:
       purpur.sign.edit: true
       lwc.removeall: false
       coreprotect.co: false
+      coreprotect.lookup: false
+      coreprotect.lookup.command: false
+      coreprotect.lookup.chat: false
+      coreprotect.lookup.session: false
       martijns_permissions.only_op.region: true
       sucraft.addpermissionstocommands.override.worldguard.region: true
       sucraft.addpermissionstocommands.override.worldedit.region: true
@@ -320,7 +324,6 @@ groups:
       - lowmod
   himod:
     permissions:
-      coreprotect.lookup: true
       martijnsshops.link_others: true
       idealgamemode.viewgamemodeother: true
       martijnsteleport.tplast: true
@@ -453,6 +456,10 @@ groups:
       geyser.command.statistics: true
       geyser.command.version: true
       sucraft.addpermissionstocommands.override.geyserspigot.geyser: true
+      coreprotect.lookup: true
+      coreprotect.lookup.command: true
+      coreprotect.lookup.chat: true
+      coreprotect.lookup.session: true
       imageframe.create.others: true
       imageframe.marker.unlimited: true
       imageframe.list.others: true

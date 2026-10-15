@@ -1,6 +1,9 @@
 package org.sucraft.sushi.main;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.sucraft.sushi.gamecontent.items.ReplaceOldItemsInInventories;
+import org.sucraft.sushi.gamecontent.recipe.AutomaticRecipeAdder;
 
 public final class SushiPlugin extends JavaPlugin {
 
@@ -8,6 +11,12 @@ public final class SushiPlugin extends JavaPlugin {
     public void onEnable() {
         // Don't do anything else if the server doesn't support Spout
         if (!CheckSpout.checkSpout()) return;
+
+        // Register events
+        Bukkit.getPluginManager().registerEvents(new ReplaceOldItemsInInventories(), this);
+
+        // Run initializers
+        AutomaticRecipeAdder.run();
 
         // Log to console
         getLogger().info(getName() + " is enabled!");

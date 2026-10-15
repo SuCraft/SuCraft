@@ -1,0 +1,10 @@
+--- a/ca/spottedleaf/dataconverter/minecraft/datatypes/MCTypeRegistry.java
++++ b/ca/spottedleaf/dataconverter/minecraft/datatypes/MCTypeRegistry.java
+@@ -412,6 +_,7 @@
+         V5013.register();
+         V5014.register();
+         V5016.register();
++        org.sucraft.suki.gamecontent.common.dataconverter.SuCraftConversions1.register(); // Suki - Register converters
+     }
+ 
+     private MCTypeRegistry() {}

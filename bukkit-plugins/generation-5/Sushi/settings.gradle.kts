@@ -1,16 +1,23 @@
 pluginManagement {
     repositories {
         maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
+            name = "Paper"
+            url = uri("https://repo.papermc.io/repository/maven-public/")
         }
         mavenCentral()
         gradlePluginPortal()
     }
+}
 
-    plugins {
-        id("net.fabricmc.fabric-loom") version providers.gradleProperty("loomVersion")
+includeBuild("../../..") {
+    dependencySubstitution {
+        substitute(module("org.sucraft.suki:suki-api"))
+            .using(project(":Suki:suki-api"))
+        substitute(module("org.sucraft.suki:suki-server"))
+            .using(project(":Suki:suki-server"))
     }
 }
 
 rootProject.name = "Sushi"
+
+includeBuild("datagen")

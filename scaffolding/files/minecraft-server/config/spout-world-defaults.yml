@@ -1,0 +1,12 @@
+# This is the world defaults configuration file for Spout.
+# 
+# If you need help with the configuration or have any questions related to Spout,
+# join us in our Discord, or check the GitHub Wiki pages.
+# 
+# Configuration options here apply to all worlds, unless you specify overrides inside
+# the world-specific config file inside each world folder.
+# 
+# Wiki: https://github.com/ModernSpout/Spout/wiki
+# Discord: https://discord.gg/EduvcVmKS7
+
+_version: 1

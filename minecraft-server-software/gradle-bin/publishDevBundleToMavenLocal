@@ -3,5 +3,5 @@
 # Publishes the dev bundle to Maven local (in IntelliJ, right-click -> Run 'publishDevBundleToMavenLocal')
 
 cd ../..
-./gradlew -PpublishDevBundle publishDevBundlePublicationToMavenLocal
+./gradlew -PpublishDevBundle :Suki:suki-server:publishDevBundlePublicationToMavenLocal
 cd minecraft-server-software/gradle-bin

@@ -1,5 +1,21 @@
 {
   "values": [
-    "sucraft:snowy_stone_brick_slab"
+    "sucraft:black_wool_slab",
+    "sucraft:blue_wool_slab",
+    "sucraft:brown_wool_slab",
+    "sucraft:cyan_wool_slab",
+    "sucraft:gray_wool_slab",
+    "sucraft:green_wool_slab",
+    "sucraft:light_blue_wool_slab",
+    "sucraft:light_gray_wool_slab",
+    "sucraft:lime_wool_slab",
+    "sucraft:magenta_wool_slab",
+    "sucraft:orange_wool_slab",
+    "sucraft:pink_wool_slab",
+    "sucraft:purple_wool_slab",
+    "sucraft:red_wool_slab",
+    "sucraft:snowy_stone_brick_slab",
+    "sucraft:white_wool_slab",
+    "sucraft:yellow_wool_slab"
   ]
 }

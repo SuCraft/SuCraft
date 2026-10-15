@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/item/crafting/SingleItemRecipe.java
++++ b/net/minecraft/world/item/crafting/SingleItemRecipe.java
+@@ -12,7 +_,7 @@
+ public abstract class SingleItemRecipe implements Recipe<SingleRecipeInput> {
+     protected final Recipe.CommonInfo commonInfo;
+     private final Ingredient input;
+-    private final ItemStackTemplate result;
++    public final ItemStackTemplate result; // Suki - Make accessible
+     private @Nullable PlacementInfo placementInfo;
+ 
+     public SingleItemRecipe(final Recipe.CommonInfo commonInfo, final Ingredient input, final ItemStackTemplate result) {

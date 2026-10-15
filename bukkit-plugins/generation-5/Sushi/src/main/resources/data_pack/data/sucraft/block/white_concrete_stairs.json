@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stair",
+  "base_state": "minecraft:white_concrete",
+  "properties": {
+    "destroy_time": 1.8,
+    "explosion_resistance": 1.8,
+    "instrument": "minecraft:basedrum",
+    "map_color": "minecraft:snow",
+    "requires_correct_tool_for_drops": true
+  }
+}

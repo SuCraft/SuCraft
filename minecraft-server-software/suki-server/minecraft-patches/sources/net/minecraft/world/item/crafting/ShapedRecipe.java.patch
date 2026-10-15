@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/item/crafting/ShapedRecipe.java
++++ b/net/minecraft/world/item/crafting/ShapedRecipe.java
+@@ -38,7 +_,7 @@
+     );
+     public static final RecipeSerializer<ShapedRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+     private final ShapedRecipePattern pattern;
+-    private final ItemStackTemplate result;
++    public final ItemStackTemplate result; // Suki - Make accessible
+ 
+     public ShapedRecipe(
+         final Recipe.CommonInfo commonInfo, final CraftingRecipe.CraftingBookInfo bookInfo, final ShapedRecipePattern pattern, final ItemStackTemplate result

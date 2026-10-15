@@ -29,14 +29,15 @@
          }
      }
  }
-@@ -164,6 +_,11 @@
+@@ -164,6 +_,12 @@
                  for (coordinates in arrayOf(
                      "com.github.modernspout:spout-api",
                      "com.github.ModernSpout:Spout"
 +                    // Suki start - Project setup - Extend module capabilities
 +                    ,
 +                    "org.sucraft.suki:suki-api",
-+                    "org.sucraft.suki:Suki"
++                    "org.sucraft.suki:Suki",
++                    "org.sucraft.suki:minecraft-server-software"
 +                    // Suki end - Project setup - Extend module capabilities
                  )) {
                      for (version in arrayOf(project.version, getGitHashProvider(null).get(), getGitHashProvider(7).get(), getGitHashProvider(8).get(), getGitHashProvider(10).get())) {

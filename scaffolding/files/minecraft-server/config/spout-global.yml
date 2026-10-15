@@ -1,0 +1,37 @@
+# This is the global configuration file for Spout.
+#
+# If you need help with the configuration or have any questions related to Spout,
+# join us in our Discord, or check the GitHub Wiki pages.
+#
+# The world configuration options are inside
+# their respective world folder. The files are named spout-world.yml
+#
+# Wiki: https://github.com/ModernSpout/Spout/wiki
+# Discord: https://discord.gg/EduvcVmKS7
+
+_enabled: false
+_version: 1
+generated-resource-pack:
+  output:
+    serve-over-http:
+      enabled: true
+      external-port: default
+      ip: localhost
+      port: default
+logging:
+  on-startup:
+    block-count: true
+    block-state-count: true
+    block-states: false
+    blocks: true
+    item-count: true
+    items: true
+recipes:
+  stonecutting:
+    add-missing-transitive-recipes: true
+server-side-translations:
+  preferred-locales-in-order:
+  - en_us
+tooltips:
+  items:
+    namespace: false

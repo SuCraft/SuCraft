@@ -178,6 +178,12 @@ class FileToUpdateByDownloading(
 }
 
 val targetFiles = arrayListOf(
+    FileToUpdateByGradleTask(
+        "minecraft-server/server.jar",
+        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1-SNAPSHOT.jar",
+        ":Suki:suki-server:createBundlerJar",
+        alwaysUpdate = true
+    ),
     FileToUpdateByMavenPackage(
         "minecraft-server/plugins/CoreProtect.jar",
         "bukkit-plugins/forked/CoreProtect/target/CoreProtect-24.1-SuCraft.jar",
@@ -263,12 +269,6 @@ val targetFiles = arrayListOf(
         "minecraft-server/plugins/WorldGuard.jar",
         "https://mediafilez.forgecdn.net/files/8911/284/worldguard-bukkit-7.0.19.jar",
         "396df065f1cf38bab9878a0f53a776d5a085ebbf3c41813938b73f95d4eaca03"
-    ),
-    FileToUpdateByGradleTask(
-        "minecraft-server/server.jar",
-        "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1-SNAPSHOT.jar",
-        ":Suki:suki-server:createBundlerJar",
-        alwaysUpdate = true
     )
 )
 val baseFilesFolderName = "files"
@@ -304,7 +304,7 @@ tasks.register("printFileHashes") {
 tasks.register("update") {
     group = "scaffolding"
     doFirst {
-        targetFiles.stream().parallel().forEach { targetFile ->
+        targetFiles.stream()/*.parallel()*/.forEach { targetFile ->
             if (targetFile.needToUpdate()) {
                 logger.lifecycle("Updating file: ${targetFile.targetFile().pathString}")
                 targetFile.targetFile().createParentDirectories()

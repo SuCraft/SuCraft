@@ -1,0 +1,35 @@
+--- a/ca/spottedleaf/dataconverter/minecraft/converters/blockname/ConverterAbstractBlockRename.java
++++ b/ca/spottedleaf/dataconverter/minecraft/converters/blockname/ConverterAbstractBlockRename.java
+@@ -19,16 +_,32 @@
+         MCTypeRegistry.BLOCK_STATE.addStructureConverter(new DataConverter<>(version, subVersion) {
+             @Override
+             public Object convert(final Object input, final long sourceVersion, final long toVersion) {
++                // Suki start - support the new BLOCK_STATE format
++                if (input instanceof String string) {
++                    return renamer.apply(string);
++                }
++                // Suki end - support the new BLOCK_STATE format
++
+                 if (!(input instanceof MapType data)) {
+                     return null;
+                 }
+ 
++                // Suki start - support the new BLOCK_STATE format
++                final String id = data.getString("id");
++                if (id != null) {
++                    final String converted = renamer.apply(id);
++                    if (converted != null) {
++                        data.setString("id", converted);
++                    }
++                } else {
++                // Suki end - support the new BLOCK_STATE format
+                 final String name = data.getString("Name");
+                 if (name != null) {
+                     final String converted = renamer.apply(name);
+                     if (converted != null) {
+                         data.setString("Name", converted);
+                     }
++                } // Suki - support the new BLOCK_STATE format
+                 }
+                 return null;
+             }

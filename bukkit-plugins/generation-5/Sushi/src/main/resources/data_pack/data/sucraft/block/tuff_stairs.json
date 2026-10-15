@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:stair",
+  "base_state": "minecraft:tuff",
+  "properties": {
+    "destroy_time": 1.5,
+    "explosion_resistance": 6.0,
+    "instrument": "minecraft:basedrum",
+    "map_color": "minecraft:terracotta_gray",
+    "requires_correct_tool_for_drops": true,
+    "sound_type": "minecraft:tuff"
+  }
+}

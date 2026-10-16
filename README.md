@@ -26,11 +26,11 @@ It consists of multiple modules in their own directory, with different purposes:
    To verify Java 25 is installed, run\
    `java -version`\
    It should show something a bit like this:
-   ```
-   openjdk 25 2025-09-16
-   OpenJDK Runtime Environment (build 25+36-3489)
-   OpenJDK 64-Bit Server VM (build 25+36-3489, mixed mode, sharing)
-   ```
+     ```
+     openjdk 25 2025-09-16
+     OpenJDK Runtime Environment (build 25+36-3489)
+     OpenJDK 64-Bit Server VM (build 25+36-3489, mixed mode, sharing)
+     ```
 1. Install Git
    * Windows: [Download](https://gitforwindows.org/)\
      _Note_: you should also have Git Bash. The download link above includes it.
@@ -39,32 +39,38 @@ It consists of multiple modules in their own directory, with different purposes:
    * macOS:\
      `brew install git`\
      \
-     To verify Git is installed, run\
-     `git -v`\
-     It should show something a bit like this:
-   ```
-   git version 2.54.0
-   ```
+   To verify Git is installed, run\
+   `git -v`\
+   It should show something a bit like this:
+     ```
+     git version 2.54.0
+     ```
 1. Install Maven
-    * Windows: in Windows Terminal or PowerShell run\
-      `winget install Apache.Maven`
-    * Linux:\
-      `sudo apt install maven`
-    * macOS:\
-      `brew install maven`\
-      \
-      To verify Maven is installed, run\
-      `mvn -v`\
-      It should show something a bit like this:
-   ```
-   Apache Maven 3.10.0 (c43a36b8d67be7e0805a411bc0898af1a51f5472)
-   Maven home: C:\Program Files\Apache\Maven\apache-maven-3.10.0
-   Java version: 25.0.4.1, vendor: Oracle Corporation
-   Default locale: en_US, platform encoding: UTF-8
-   OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
-   ```
+   * Windows: in Windows Terminal or PowerShell run:
+     ```powershell
+     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser irm get.scoop.sh | iex
+     ```
+     and then
+     ```powershell
+     scoop install main/maven
+     ```
+   * Linux:\
+     `sudo apt install maven`
+   * macOS:\
+     `brew install maven`\
+\
+   To verify Maven is installed, run\
+   `mvn -v`\
+   It should show something a bit like this:
+     ```
+     Apache Maven 3.10.0 (c43a36b8d67be7e0805a411bc0898af1a51f5472)
+     Maven home: C:\Program Files\Apache\Maven\apache-maven-3.10.0
+     Java version: 25.0.4.1, vendor: Oracle Corporation
+     Default locale: en_US, platform encoding: UTF-8
+     OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+     ```
 1. Install **[IntelliJ IDEA](https://www.jetbrains.com/idea/download)**
-1. Clone the source code:\
+1. Clone the source code:
    * In IntelliJ, click **File** > **New** > **Project from Version Control...**
    * In the **URL**, enter `https://github.com/SuCraft/Sucraft.git`
    * In the **Directory**, choose a folder to clone the code to\
@@ -73,27 +79,41 @@ It consists of multiple modules in their own directory, with different purposes:
    * When a popup appears, click **Trust Project**
 1. Wait for the project to be imported.\
    Importing is indicated by a loading bar in the bottom-right of the screen
-   that says *Importing ...*
+   that says *Importing ...*\
+   If you get an error about a missing `JAVA_HOME` variable,
+   you can usually safely ignore it.
+1. The project should now be imported.\
+   Java setting are normally automatically applied,
+   but if you've worked with IntelliJ before, they might be wrong.\
+   To make sure everything is correct, check the following:
+   * Go to **File** (or **IntelliJ IDEA** on macOS) > **Settings** > **Build, Execution, Deployment** > **Build Tools**
+   * In **Build Tools**, navigate to **Maven** > **Runner** and make sure that **JRE** is set to a Java 25 installation
+   * In **Build Tools**, navigate to **Gradle** and make sure that **Gradle JVM** is set to a Java 25 installation
+   * Go to **File** > **Project Structure...** > **SDKs** and confirm that there is at least a Java 25 installation
+     (there may also be other Java installations, which is okay)
 1. Open the Gradle window by clicking the Gradle icon on the right side.\
    It is the icon of the small elephant.
 1. Press the 🔄 button in the Gradle window (**Sync All Gradle Projects**)
    and wait for the process to complete
 1. In the Gradle window, open **Suki** > **Tasks** > **patching**
-   and double-click **applyAllPatches**
-1. A terminal window opens in the bottom.\
-   Wait until it completes (this may take 5 minutes).
+   and double-click **applyAllPatches**\
+   A terminal window will open in the bottom.\
+   Wait until it completes (this may take 5+ minutes).
 1. In the Gradle window, open **scaffolding** > **Tasks** > **scaffolding**
-   and double-click **updateAndRun**
-1. Wait for the server to start (this may take 3 minutes).\
-   The server is read when you see one of the last lines saying something like
+   and double-click **updateAndRun**\
+   Wait for the server to start (this may take 3+ minutes).\
+   The server is ready when you see one of the last lines saying something like
    ```
    Done (59.437s)! For help, type "help"
    ```
 1. You can now connect to the server with any Minecraft client!\
-   The ip is: `localhost`
+   The ip is: `localhost`\
+   Joining with the [Spoutcraft](https://modrinth.com/mod/spout-client) client mod installed
+   lets you use all custom blocks and items.
 1. To stop the server, type `stop` into the terminal window
    (the same window that shows the server logs) and press &lt;Enter&gt; on your keyboard.
-   After a few seconds and more lines appearing, press &lt;Enter&gt; on your keyboard again.\
+   When you see `Awaiting termination of I/O pool for up to 60s...`, wait a few seconds
+   and press &lt;Enter&gt; on your keyboard again.\
    *Alternatively*, to terminate the server unsafely,
    click the red square button in the top-left of the terminal window.
 

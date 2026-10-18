@@ -3,8 +3,11 @@ package org.sucraft.sushi.main;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import org.sucraft.sushi.clientview.packetmapping.blockstate.CustomBlockStateMappingMacroAdder;
 import org.sucraft.sushi.clientview.packetmapping.blockstate.OldReplacedBlockMappings;
 import org.sucraft.sushi.clientview.packetmapping.itemstack.OldReplacedItemMappings;
+import org.sucraft.sushi.gamecontent.block.CustomBlockAdder;
+import org.sucraft.sushi.gamecontent.item.CustomItemAdder;
 import org.sucraft.sushi.gamecontent.material.MaterialNameRewriting;
 import org.sucraft.sushi.clientview.packetmapping.component.TranslationKeyMapping;
 import spout.server.paper.api.SpoutEvents;
@@ -19,6 +22,9 @@ class SushiPluginBootstrap implements PluginBootstrap {
         // Don't do anything else if the server doesn't support Spout
         if (!CheckSpout.checkSpout()) return;
 
+        CustomBlockAdder.register(context);
+        CustomItemAdder.register(context);
+        CustomBlockStateMappingMacroAdder.register(context);
         MaterialNameRewriting.register(context);
         TranslationKeyMapping.register(context);
         OldReplacedBlockMappings.register(context);

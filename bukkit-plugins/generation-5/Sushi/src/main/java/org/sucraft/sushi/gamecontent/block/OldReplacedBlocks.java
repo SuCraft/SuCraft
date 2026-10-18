@@ -22,7 +22,6 @@ public final class OldReplacedBlocks {
             sameBlockSlabStairsBases.add(color + "_wool");
         }
         sameBlockSlabStairsBases.add("tuff");
-        sameBlockSlabStairsBases.add("polished_tuff");
         for (var base : sameBlockSlabStairsBases) {
             sameBlockPaths.add(base + "_slab");
             sameBlockPaths.add(base + "_stairs");

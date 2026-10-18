@@ -399,7 +399,7 @@ public final class AutomaticRecipeAdder {
                         }
                         this.removeRecipeFromServer(existingRecipe);
                     }
-                    this.addStonecuttingRecipeToServer(output.keyInItemRegistry, reason, output, outputCount, input);
+                    this.addStonecuttingRecipeToServer(Identifier.fromNamespaceAndPath("sucraft", input.keyInItemRegistry.getNamespace() + "_" + input.keyInItemRegistry.getPath() + "_to_" + output.keyInItemRegistry.getNamespace() + "_" + output.keyInItemRegistry.getPath()), reason, output, outputCount, input);
                 };
             }
 
@@ -416,7 +416,7 @@ public final class AutomaticRecipeAdder {
                         }
                         this.removeRecipeFromServer(existingRecipe);
                     }
-                    this.addSmeltingRecipeToServer(output.keyInItemRegistry, reason, input, output, CookingBookCategory.BLOCKS, null, experience, cookingTime);
+                    this.addSmeltingRecipeToServer(Identifier.fromNamespaceAndPath("sucraft", input.keyInItemRegistry.getNamespace() + "_" + input.keyInItemRegistry.getPath() + "_to_" + output.keyInItemRegistry.getNamespace() + "_" + output.keyInItemRegistry.getPath()), reason, input, output, CookingBookCategory.BLOCKS, null, experience, cookingTime);
                 };
             }
 

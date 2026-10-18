@@ -2,7 +2,7 @@ package org.sucraft.sushi.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.sucraft.sushi.gamecontent.items.ReplaceOldItemsInInventories;
+import org.sucraft.sushi.gamecontent.item.ReplaceOldItemsInInventories;
 import org.sucraft.sushi.gamecontent.recipe.AutomaticRecipeAdder;
 
 public final class SushiPlugin extends JavaPlugin {

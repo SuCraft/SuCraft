@@ -1,5 +1,8 @@
 {
   "values": [
-    "sucraft:snowy_stone_brick_slab"
+    "sucraft:dirty_stone_brick_slab",
+    "sucraft:polished_tuff_slab",
+    "sucraft:snowy_stone_brick_slab",
+    "sucraft:tuff_brick_slab"
   ]
 }

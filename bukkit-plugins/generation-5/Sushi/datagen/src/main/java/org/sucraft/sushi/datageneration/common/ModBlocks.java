@@ -21,11 +21,29 @@ import org.jspecify.annotations.Nullable;
 
 public class ModBlocks {
 
-    // Snowy stone bricks
+    // Stone / Regular / Bricks / Dirty
+    public static Block DIRTY_STONE_BRICKS;
+    public static SlabBlock DIRTY_STONE_BRICK_SLAB;
+    public static StairBlock DIRTY_STONE_BRICK_STAIRS;
+    public static WallBlock DIRTY_STONE_BRICK_WALL;
+
+    // Stone / Regular / Bricks / Snowy
     public static Block SNOWY_STONE_BRICKS;
     public static SlabBlock SNOWY_STONE_BRICK_SLAB;
     public static StairBlock SNOWY_STONE_BRICK_STAIRS;
     public static WallBlock SNOWY_STONE_BRICK_WALL;
+
+    // Stone / Tuff / Polished
+    public static Block POLISHED_TUFF;
+    public static SlabBlock POLISHED_TUFF_SLAB;
+    public static StairBlock POLISHED_TUFF_STAIRS;
+    public static WallBlock POLISHED_TUFF_WALL;
+
+    // Stone / Tuff / Bricks
+    public static Block TUFF_BRICKS;
+    public static SlabBlock TUFF_BRICK_SLAB;
+    public static StairBlock TUFF_BRICK_STAIRS;
+    public static WallBlock TUFF_BRICK_WALL;
 
     public static Block initialize() {
         return Arrays.stream(ModBlocks.class.getDeclaredFields())

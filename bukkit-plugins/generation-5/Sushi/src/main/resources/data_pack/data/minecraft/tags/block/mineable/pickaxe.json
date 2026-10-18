@@ -1,8 +1,20 @@
 {
   "values": [
+    "sucraft:dirty_stone_bricks",
+    "sucraft:dirty_stone_brick_slab",
+    "sucraft:dirty_stone_brick_stairs",
+    "sucraft:dirty_stone_brick_wall",
+    "sucraft:polished_tuff",
+    "sucraft:polished_tuff_slab",
+    "sucraft:polished_tuff_stairs",
+    "sucraft:polished_tuff_wall",
+    "sucraft:snowy_stone_bricks",
     "sucraft:snowy_stone_brick_slab",
     "sucraft:snowy_stone_brick_stairs",
     "sucraft:snowy_stone_brick_wall",
-    "sucraft:snowy_stone_bricks"
+    "sucraft:tuff_bricks",
+    "sucraft:tuff_brick_slab",
+    "sucraft:tuff_brick_stairs",
+    "sucraft:tuff_brick_wall"
   ]
 }

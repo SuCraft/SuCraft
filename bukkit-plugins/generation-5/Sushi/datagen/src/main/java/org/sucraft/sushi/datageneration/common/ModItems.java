@@ -14,10 +14,29 @@ import net.minecraft.world.level.block.Block;
 
 public class ModItems {
 
+    // Stone / Regular / Bricks / Dirty
+    public static BlockItem DIRTY_STONE_BRICKS;
+    public static BlockItem DIRTY_STONE_BRICK_SLAB;
+    public static BlockItem DIRTY_STONE_BRICK_STAIRS;
+    public static BlockItem DIRTY_STONE_BRICK_WALL;
+
+    // Stone / Regular / Bricks / Snowy
     public static BlockItem SNOWY_STONE_BRICKS;
     public static BlockItem SNOWY_STONE_BRICK_SLAB;
     public static BlockItem SNOWY_STONE_BRICK_STAIRS;
     public static BlockItem SNOWY_STONE_BRICK_WALL;
+
+    // Stone / Tuff / Polished
+    public static BlockItem POLISHED_TUFF;
+    public static BlockItem POLISHED_TUFF_SLAB;
+    public static BlockItem POLISHED_TUFF_STAIRS;
+    public static BlockItem POLISHED_TUFF_WALL;
+
+    // Stone / Tuff / Bricks
+    public static BlockItem TUFF_BRICKS;
+    public static BlockItem TUFF_BRICK_SLAB;
+    public static BlockItem TUFF_BRICK_STAIRS;
+    public static BlockItem TUFF_BRICK_WALL;
 
     public static Item initialize() {
         return Arrays.stream(ModItems.class.getDeclaredFields())

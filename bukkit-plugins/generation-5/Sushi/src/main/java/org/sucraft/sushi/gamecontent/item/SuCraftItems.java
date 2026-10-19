@@ -56,13 +56,13 @@ public final class SuCraftItems {
         .blockFactory();
 
     // Stone / Tuff / Bricks
-    public static final Type TUFF_BOULDER_BRICKS = itemType("tuff_bricks")
+    public static final Type ROUGH_TUFF_BRICKS = itemType("tuff_bricks")
         .blockFactory();
-    public static final Type TUFF_BOULDER_BRICK_SLAB = itemType("tuff_brick_slab")
+    public static final Type ROUGH_TUFF_BRICK_SLAB = itemType("tuff_brick_slab")
         .blockFactory();
-    public static final Type TUFF_BOULDER_BRICK_STAIRS = itemType("tuff_brick_stairs")
+    public static final Type ROUGH_TUFF_BRICK_STAIRS = itemType("tuff_brick_stairs")
         .blockFactory();
-    public static final Type TUFF_BOULDER_BRICK_WALL = itemType("tuff_brick_wall")
+    public static final Type ROUGH_TUFF_BRICK_WALL = itemType("tuff_brick_wall")
         .blockFactory();
 
     private static Type itemType(String path) {

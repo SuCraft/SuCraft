@@ -14,7 +14,6 @@ rootProject.name = "Suki"
 
 include("suki-api")
 include("suki-server")
-include("suki-server-filtered")
 // Suki end - Set up Gradle project
 
 optionalInclude("test-plugin")

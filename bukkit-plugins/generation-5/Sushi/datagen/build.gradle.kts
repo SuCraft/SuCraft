@@ -7,12 +7,10 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public")
     maven("https://jitpack.io")
-    mavenLocal()
 }
 
 dependencies {
-    compileOnly("org.sucraft.suki:suki-api:26.3-R0.1-SNAPSHOT")
-    compileOnly("org.sucraft.suki:suki-server-filtered:26.3-R0.1-SNAPSHOT")
+    implementation("org.sucraft.suki:suki-api:26.3-R0.1-SNAPSHOT")
     minecraft("com.mojang:minecraft:${providers.gradleProperty("mcVersion").get()}")
     implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("fabricLoaderVersion").get()}")
     implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabricApiVersion").get()}")
@@ -48,6 +46,8 @@ sourceSets {
     main {
         java.srcDir(layout.projectDirectory.dir("../common-with-datagen/src/main/java"))
         resources.srcDir(layout.projectDirectory.dir("../common-with-datagen/src/main/resources"))
+        java.srcDir(layout.projectDirectory.dir("src/fake-paper-stubs/java"))
+        resources.srcDir(layout.projectDirectory.dir("src/fake-paper-stubs/resources"))
     }
 }
 

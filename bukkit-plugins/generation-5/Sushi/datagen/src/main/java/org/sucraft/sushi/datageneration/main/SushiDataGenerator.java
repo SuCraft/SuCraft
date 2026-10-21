@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sucraft.sushi.datageneration.common.BlockLootTables;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
+import org.sucraft.sushi.datageneration.common.CommonBlockAdder;
+import org.sucraft.sushi.datageneration.common.CommonItemAdder;
 import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
-import org.sucraft.sushi.datageneration.stone.tuff.PolishedTuff;
-import org.sucraft.sushi.datageneration.stone.tuff.TuffBricks;
 
 public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
@@ -28,12 +28,12 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
             new Recipes.CollectedFactory()
         );
 
+        CommonBlockAdder.add(factories);
+        CommonItemAdder.add(factories);
+
         // Stone / Regular
         DirtyStoneBricks.add(factories);
         SnowyStoneBricks.add(factories);
-        // Stone / Tuff
-        PolishedTuff.add(factories);
-        TuffBricks.add(factories);
 
         pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());

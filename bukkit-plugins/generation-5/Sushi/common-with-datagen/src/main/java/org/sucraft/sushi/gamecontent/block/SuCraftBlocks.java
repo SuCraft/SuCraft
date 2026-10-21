@@ -2,16 +2,19 @@ package org.sucraft.sushi.gamecontent.block;
 
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
-import net.kyori.adventure.key.Key;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
@@ -19,7 +22,6 @@ import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.item.SuCraftItems;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
-import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntry;
 import spout.clientview.packetmapping.blockstate.macro.BlockStateMappingMacro;
 import spout.api.clientview.packetmapping.blockstate.macro.registry.BlockStateMappingMacroRegistryEntryBuilderNMS;
 import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -68,37 +71,39 @@ public final class SuCraftBlocks {
 
     public static final class Type {
 
-        public final Key key;
+        public final NamespacedKey key;
         public final Identifier identifier;
         private SuCraftItems.@Nullable Type item;
         private @Nullable BlockType value;
         private @Nullable Block valueNMS;
+        private @Nullable Block valueForDataGeneration;
 
         private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
         private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
+        private @Nullable Function<BlockBehaviour.Properties, Block> constructorForDataGeneration = Block::new;
 
         public Type(String path, boolean item) {
-            this(Key.key("sucraft", path), item);
+            this(Identifier.fromNamespaceAndPath("sucraft", path), item);
         }
 
-        public Type(Key key, boolean item) {
-            this.key = key;
-            this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
-            if (item) {
-                this.item = new SuCraftItems.Type(key);
-                this.item.blockFactory();
-            }
+        public Type(NamespacedKey key, boolean item) {
+            this(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()), item);
         }
 
         public Type(Identifier identifier, boolean item) {
-            this(Key.key(identifier.getNamespace(), identifier.getPath()), item);
+            this.key = new NamespacedKey(identifier.getNamespace(), identifier.getPath());
+            this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
+            if (item) {
+                this.item = new SuCraftItems.Type(key);
+                this.item.block(this::getForDataGeneration);
+            }
         }
 
         public Type(String path) {
             this(path, true);
         }
 
-        public Type(Key key) {
+        public Type(NamespacedKey key) {
             this(key, true);
         }
 
@@ -136,12 +141,31 @@ public final class SuCraftBlocks {
             return value;
         }
 
+        public Block getForDataGeneration() {
+            Block value = this.valueForDataGeneration;
+            if (value == null) {
+                var key = ResourceKey.create(Registries.BLOCK, this.identifier);
+                var properties = BlockBehaviour.Properties.of().setId(key);
+                value = net.minecraft.core.Registry.register(
+                    BuiltInRegistries.BLOCK,
+                    key,
+                    this.constructorForDataGeneration.apply(properties)
+                );
+                this.valueForDataGeneration = value;
+            }
+            return value;
+        }
+
         public @Nullable ItemType item() {
             return this.item != null ? this.item.get() : null;
         }
 
         public @Nullable Item itemNMS() {
             return this.item != null ? this.item.getNMS() : null;
+        }
+
+        public @Nullable Item itemForDataGeneration() {
+            return this.item != null ? this.item.getForDataGeneration() : null;
         }
 
         public SuCraftItems.@Nullable Type itemType() {
@@ -159,7 +183,7 @@ public final class SuCraftBlocks {
         }
 
         public Type slabFactory() {
-            return this.blockBuild(BlockTypeRegistryEntry.Builder::inheritsFromSlab);
+            return this.blockBuild(BlockTypeRegistryEntryBuilderNMS::inheritsFromSlab);
         }
 
         public Type stairsFactory(Supplier<BlockState> baseState) {
@@ -233,9 +257,31 @@ public final class SuCraftBlocks {
             ));
         }
 
+        public Type constructorForDataGeneration(Function<BlockBehaviour.Properties, Block> constructor) {
+            this.constructorForDataGeneration = constructor;
+            return this;
+        }
+
+        public Type blockConstructorForDataGeneration() {
+            return this.constructorForDataGeneration(Block::new);
+        }
+
+        public Type slabConstructorForDataGeneration() {
+            return this.constructorForDataGeneration(SlabBlock::new);
+        }
+
+        public Type stairsConstructorForDataGeneration(Supplier<BlockState> base) {
+            return this.constructorForDataGeneration(properties -> new StairBlock(base.get(), properties));
+        }
+
+        public Type wallConstructorForDataGeneration() {
+            return this.constructorForDataGeneration(WallBlock::new);
+        }
+
         public Type fullBlock(Block propertiesFrom, Block fallback) {
             this.propertiesFull(propertiesFrom);
-            return this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
+            this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
+            return this.blockConstructorForDataGeneration();
         }
 
         public Type fullBlock(Block propertiesFromAndFallback) {
@@ -245,7 +291,8 @@ public final class SuCraftBlocks {
         public Type slab(Block propertiesFrom, Block fallback, @Nullable BlockState fallbackBlockState) {
             this.slabFactory();
             this.propertiesFull(propertiesFrom);
-            return this.slabMacro(BlockStateMappingMacroTypes.SLAB, fallback, fallbackBlockState);
+            this.slabMacro(BlockStateMappingMacroTypes.SLAB, fallback, fallbackBlockState);
+            return this.slabConstructorForDataGeneration();
         }
 
         public Type slab(Block propertiesFromAndFallback, @Nullable BlockState fallbackBlockState) {
@@ -263,7 +310,8 @@ public final class SuCraftBlocks {
         public Type stairs(Supplier<BlockState> base, Block propertiesFrom, Block fallback) {
             this.stairsFactory(base);
             this.propertiesFull(propertiesFrom);
-            return this.fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, fallback);
+            this.fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, fallback);
+            return this.stairsConstructorForDataGeneration(base);
         }
 
         public Type stairs(Supplier<Block> base, Block propertiesFromAndFallback) {
@@ -273,7 +321,8 @@ public final class SuCraftBlocks {
         public Type wall(Block propertiesFrom, Block fallback) {
             this.wallFactory();
             this.propertiesFull(propertiesFrom);
-            return this.fromToBlockMacro(BlockStateMappingMacroTypes.WALL, fallback);
+            this.fromToBlockMacro(BlockStateMappingMacroTypes.WALL, fallback);
+            return this.wallConstructorForDataGeneration();
         }
 
         public Type wall(Block propertiesFromAndFallback) {
@@ -284,6 +333,8 @@ public final class SuCraftBlocks {
 
     private static BlockType[] values;
     private static Block[] valuesNMS;
+    private static Block[] valuesForDataGeneration;
+    private static BlockSet[] blockSets;
     private static Type[] types;
 
     public static BlockType[] values() {
@@ -302,27 +353,54 @@ public final class SuCraftBlocks {
         return valuesNMS;
     }
 
-    public static Type[] types() {
-        if (types == null) {
-            types = Arrays.stream(SuCraftBlocks.class.getDeclaredFields())
+    public static Block[] valuesForDataGeneration() {
+        if (valuesForDataGeneration == null) {
+            valuesForDataGeneration = Arrays.stream(types())
+                .map(SuCraftBlocks.Type::getForDataGeneration).toArray(Block[]::new);
+        }
+        return valuesForDataGeneration;
+    }
+
+    public static BlockSet[] blockSets() {
+        if (blockSets == null) {
+            blockSets = Arrays.stream(SuCraftBlocks.class.getDeclaredFields())
                 .filter(field ->
                     Modifier.isPublic(field.getModifiers()) &&
                         Modifier.isStatic(field.getModifiers()) &&
                         Modifier.isFinal(field.getModifiers()) &&
-                        (Type.class.isAssignableFrom(field.getType()) || BlockSet.class.isAssignableFrom(field.getType())))
-                .flatMap(field -> {
+                        BlockSet.class.isAssignableFrom(field.getType()))
+                .map(field -> {
                     field.trySetAccessible();
                     try {
-                        var value = field.get(null);
-                        if (value instanceof Type type) {
-                            return Stream.of(type);
-                        }
-                        return Arrays.stream(((BlockSet) value).types());
+                        return (BlockSet) field.get(null);
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
                 })
-                .toArray(Type[]::new);
+                .toArray(BlockSet[]::new);
+        }
+        return blockSets;
+    }
+
+    public static Type[] types() {
+        if (types == null) {
+            Stream<Type> declared = Arrays.stream(SuCraftBlocks.class.getDeclaredFields())
+                .filter(field ->
+                    Modifier.isPublic(field.getModifiers()) &&
+                        Modifier.isStatic(field.getModifiers()) &&
+                        Modifier.isFinal(field.getModifiers()) &&
+                        Type.class.isAssignableFrom(field.getType()))
+                .map(field -> {
+                    field.trySetAccessible();
+                    try {
+                        return (Type) field.get(null);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            Stream<Type> fromBlockSets = Arrays.stream(blockSets())
+                .map(BlockSet::types).flatMap(Arrays::stream);
+            types = Stream.concat(declared, fromBlockSets).toArray(Type[]::new);
         }
         return types;
     }

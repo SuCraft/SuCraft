@@ -24,6 +24,8 @@ public interface BlockSet {
 
     Block[] valuesNMS();
 
+    Block[] valuesForDataGeneration();
+
     SuCraftBlocks.Type[] types();
 
     ItemType[] items();
@@ -32,11 +34,21 @@ public interface BlockSet {
 
     SuCraftItems.Type[] itemTypes();
 
+    boolean hasFullBlock();
+
+    boolean hasSlab();
+
+    boolean hasStairs();
+
+    boolean hasWall();
+
     interface WithFullBlock extends BlockSet {
 
         BlockType fullBlock();
 
         Block fullBlockNMS();
+
+        Block fullBlockForDataGeneration();
 
         SuCraftBlocks.Type fullBlockType();
 
@@ -44,15 +56,19 @@ public interface BlockSet {
 
         Item fullBlockItemNMS();
 
+        Item fullBlockItemForDataGeneration();
+
         SuCraftItems.Type fullBlockItemType();
 
     }
 
-    interface WithStairs extends BlockSet {
+    interface WithSlab extends BlockSet {
 
         BlockType slab();
 
         Block slabNMS();
+
+        Block slabForDataGeneration();
 
         SuCraftBlocks.Type slabType();
 
@@ -60,21 +76,27 @@ public interface BlockSet {
 
         Item slabItemNMS();
 
+        Item slabItemForDataGeneration();
+
         SuCraftItems.Type slabItemType();
 
     }
 
-    interface WithSlab extends BlockSet {
+    interface WithStairs extends BlockSet {
 
         BlockType stairs();
 
         Block stairsNMS();
+
+        Block stairsForDataGeneration();
 
         SuCraftBlocks.Type stairsType();
 
         ItemType stairsItem();
 
         Item stairsItemNMS();
+
+        Item stairsItemForDataGeneration();
 
         SuCraftItems.Type stairsItemType();
 
@@ -88,18 +110,22 @@ public interface BlockSet {
 
         SuCraftBlocks.Type wallType();
 
+        Block wallForDataGeneration();
+
         ItemType wallItem();
 
         Item wallItemNMS();
 
         SuCraftItems.Type wallItemType();
 
+        Item wallItemForDataGeneration();
+
     }
 
-    interface WithFullBlockAndSlab extends WithFullBlock, WithStairs {
+    interface WithFullBlockAndSlab extends WithFullBlock, WithSlab {
     }
 
-    interface WithFullBlockAndSlabAndStairs extends WithFullBlockAndSlab, WithSlab {
+    interface WithFullBlockAndSlabAndStairs extends WithFullBlockAndSlab, WithStairs {
     }
 
     interface WithFullBlockAndSlabAndStairsAndWall extends WithFullBlockAndSlabAndStairs, WithWall {
@@ -114,9 +140,11 @@ public interface BlockSet {
 
         private BlockType @Nullable [] values;
         private Block @Nullable [] valuesNMS;
+        private Block @Nullable [] valuesForDataGeneration;
         private SuCraftBlocks.Type @Nullable [] types;
         private ItemType @Nullable [] items;
         private Item @Nullable [] itemsNMS;
+        private Item @Nullable [] itemsForDataGeneration;
         private SuCraftItems.Type @Nullable [] itemTypes;
 
         Impl(
@@ -147,6 +175,15 @@ public interface BlockSet {
                     .map(SuCraftBlocks.Type::getNMS).toArray(Block[]::new);
             }
             return this.valuesNMS;
+        }
+
+        @Override
+        public Block[] valuesForDataGeneration() {
+            if (this.valuesForDataGeneration == null) {
+                this.valuesForDataGeneration = Arrays.stream(this.types())
+                    .map(SuCraftBlocks.Type::getForDataGeneration).toArray(Block[]::new);
+            }
+            return this.valuesForDataGeneration;
         }
 
         @Override
@@ -186,6 +223,26 @@ public interface BlockSet {
         }
 
         @Override
+        public boolean hasFullBlock() {
+            return this.fullBlock != null;
+        }
+
+        @Override
+        public boolean hasSlab() {
+            return this.slab != null;
+        }
+
+        @Override
+        public boolean hasStairs() {
+            return this.stairs != null;
+        }
+
+        @Override
+        public boolean hasWall() {
+            return this.wall != null;
+        }
+
+        @Override
         public BlockType fullBlock() {
             return this.fullBlock.get();
         }
@@ -193,6 +250,11 @@ public interface BlockSet {
         @Override
         public Block fullBlockNMS() {
             return this.fullBlock.getNMS();
+        }
+
+        @Override
+        public Block fullBlockForDataGeneration() {
+            return this.fullBlock.getForDataGeneration();
         }
 
         @Override
@@ -211,6 +273,11 @@ public interface BlockSet {
         }
 
         @Override
+        public Item fullBlockItemForDataGeneration() {
+            return this.fullBlock.itemForDataGeneration();
+        }
+
+        @Override
         public SuCraftItems.Type fullBlockItemType() {
             return this.fullBlock.itemType();
         }
@@ -223,6 +290,11 @@ public interface BlockSet {
         @Override
         public Block slabNMS() {
             return this.slab.getNMS();
+        }
+
+        @Override
+        public Block slabForDataGeneration() {
+            return this.slab.getForDataGeneration();
         }
 
         @Override
@@ -241,6 +313,11 @@ public interface BlockSet {
         }
 
         @Override
+        public Item slabItemForDataGeneration() {
+            return this.slab.itemForDataGeneration();
+        }
+
+        @Override
         public SuCraftItems.Type slabItemType() {
             return this.slab.itemType();
         }
@@ -253,6 +330,11 @@ public interface BlockSet {
         @Override
         public Block stairsNMS() {
             return this.stairs.getNMS();
+        }
+
+        @Override
+        public Block stairsForDataGeneration() {
+            return this.stairs.getForDataGeneration();
         }
 
         @Override
@@ -271,6 +353,11 @@ public interface BlockSet {
         }
 
         @Override
+        public Item stairsItemForDataGeneration() {
+            return this.stairs.itemForDataGeneration();
+        }
+
+        @Override
         public SuCraftItems.Type stairsItemType() {
             return this.stairs.itemType();
         }
@@ -286,6 +373,11 @@ public interface BlockSet {
         }
 
         @Override
+        public Block wallForDataGeneration() {
+            return this.wall.getForDataGeneration();
+        }
+
+        @Override
         public SuCraftBlocks.Type wallType() {
             return this.wall;
         }
@@ -298,6 +390,11 @@ public interface BlockSet {
         @Override
         public Item wallItemNMS() {
             return this.wall.itemNMS();
+        }
+
+        @Override
+        public Item wallItemForDataGeneration() {
+            return this.wall.itemForDataGeneration();
         }
 
         @Override
@@ -491,7 +588,7 @@ public interface BlockSet {
         private BlockBehaviour.Properties getFullBlockProperties() {
             BlockBehaviour.Properties unfinalizedProperties;
             if (this.properties != null) {
-                unfinalizedProperties = PlatformDependentOperations.ofFullCopy(this.properties);
+                unfinalizedProperties = PlatformDependent.BlockBehaviourProperties.ofFullCopy(this.properties);
             } else {
                 unfinalizedProperties = BlockBehaviour.Properties.ofFullCopy(Objects.requireNonNull(this.propertiesFrom));
             }
@@ -518,7 +615,7 @@ public interface BlockSet {
 
         private BlockBehaviour.Properties getSlabProperties() {
             return this.getShapeProperties(
-                properties -> PlatformDependentOperations.ofLegacyCopy(properties).isViewBlocking(PlatformDependentOperations.NEAR_PLANE_INTERSECTS_OUTLINE),
+                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(PlatformDependent.Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
                 () -> {
                     if (this.slabPropertiesFrom != null) {
                         return this.slabPropertiesFrom;
@@ -530,7 +627,7 @@ public interface BlockSet {
 
         private BlockBehaviour.Properties getStairsProperties() {
             return this.getShapeProperties(
-                properties -> PlatformDependentOperations.ofLegacyCopy(properties).isViewBlocking(PlatformDependentOperations.NEAR_PLANE_INTERSECTS_OUTLINE),
+                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(PlatformDependent.Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
                 () -> {
                     if (this.stairsPropertiesFrom != null) {
                         return this.stairsPropertiesFrom;
@@ -542,7 +639,7 @@ public interface BlockSet {
 
         private BlockBehaviour.Properties getWallProperties() {
             return this.getShapeProperties(
-                properties -> PlatformDependentOperations.ofLegacyCopy(properties).forceSolidOn(),
+                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).forceSolidOn(),
                 () -> {
                     if (this.wallPropertiesFrom != null) {
                         return this.wallPropertiesFrom;
@@ -604,21 +701,25 @@ public interface BlockSet {
                 this.fullBlock ? new SuCraftBlocks.Type(this.getFullBlockIdentifier())
                     .properties(this.getFullBlockProperties())
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
+                    .blockConstructorForDataGeneration()
                     : null,
                 this.slab ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_slab"))
                     .slabFactory()
                     .properties(this.getSlabProperties())
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
+                    .slabConstructorForDataGeneration()
                     : null,
                 this.stairs ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_stairs"))
                     .stairsFactory(this.getStairsBaseState())
                     .properties(this.getStairsProperties())
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
+                    .stairsConstructorForDataGeneration(this.getStairsBaseState())
                     : null,
                 this.wall ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_wall"))
                     .wallFactory()
                     .properties(this.getWallProperties())
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
+                    .wallConstructorForDataGeneration()
                     : null
             );
         }

@@ -3,9 +3,7 @@ package org.sucraft.sushi.datageneration.stone.regular;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
-import org.sucraft.sushi.datageneration.common.CommonMacros;
-import org.sucraft.sushi.datageneration.common.ModBlocks;
-import org.sucraft.sushi.datageneration.common.ModItems;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 
 public final class SnowyStoneBricks {
 
@@ -20,17 +18,10 @@ public final class SnowyStoneBricks {
     }
 
     public static void add(CollectedFactories factories) {
-        CommonMacros.addFamily(
-            factories,
-            ModBlocks.SNOWY_STONE_BRICKS,
-            ModBlocks.SNOWY_STONE_BRICK_SLAB,
-            ModBlocks.SNOWY_STONE_BRICK_STAIRS,
-            ModBlocks.SNOWY_STONE_BRICK_WALL
-        );
-        addAddRemoveSnowRecipes(factories, ModItems.SNOWY_STONE_BRICKS, Items.STONE_BRICKS, 1);
-        addAddRemoveSnowRecipes(factories, ModItems.SNOWY_STONE_BRICK_SLAB, Items.STONE_BRICK_SLAB, 2);
-        addAddRemoveSnowRecipes(factories, ModItems.SNOWY_STONE_BRICK_STAIRS, Items.STONE_BRICK_STAIRS, 1);
-        addAddRemoveSnowRecipes(factories, ModItems.SNOWY_STONE_BRICK_WALL, Items.STONE_BRICK_WALL, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.fullBlockItemForDataGeneration(), Items.STONE_BRICKS, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.slabItemForDataGeneration(), Items.STONE_BRICK_SLAB, 2);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.stairsItemForDataGeneration(), Items.STONE_BRICK_STAIRS, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.wallItemForDataGeneration(), Items.STONE_BRICK_WALL, 1);
     }
 
 }

@@ -3,7 +3,9 @@ package org.sucraft.sushi.gamecontent.block;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import net.kyori.adventure.key.Key;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StairBlock;
@@ -12,8 +14,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
-import org.bukkit.craftbukkit.block.CraftBlockType;
+import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.gamecontent.item.SuCraftItems;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
 import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntry;
@@ -30,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public final class SuCraftBlocks {
 
@@ -37,45 +41,26 @@ public final class SuCraftBlocks {
         throw new UnsupportedOperationException();
     }
 
-    // Stone / Regular / Bricks / Dirty
-    public static final Type DIRTY_STONE_BRICKS = blockType("dirty_stone_bricks")
-        .fullBlock(Blocks.STONE_BRICKS);
-    public static final Type DIRTY_STONE_BRICK_SLAB = blockType("dirty_stone_brick_slab")
-        .slab(Blocks.STONE_BRICK_SLAB, Blocks.STONE_BRICKS);
-    public static final Type DIRTY_STONE_BRICK_STAIRS = blockType("dirty_stone_brick_stairs")
-        .stairs(DIRTY_STONE_BRICKS::getNMS, Blocks.STONE_BRICK_STAIRS);
-    public static final Type DIRTY_STONE_BRICK_WALL = blockType("dirty_stone_brick_wall")
-        .wall(Blocks.STONE_BRICK_WALL);
-
-    // Stone / Regular / Bricks / Snowy
-    public static final Type SNOWY_STONE_BRICKS = blockType("snowy_stone_bricks")
-        .fullBlock(Blocks.STONE_BRICKS, Blocks.STONE_BRICKS);
-    public static final Type SNOWY_STONE_BRICK_SLAB = blockType("snowy_stone_brick_slab")
-        .slab(Blocks.STONE_BRICK_SLAB);
-    public static final Type SNOWY_STONE_BRICK_STAIRS = blockType("snowy_stone_brick_stairs")
-        .stairs(SNOWY_STONE_BRICKS::getNMS, Blocks.STONE_BRICK_STAIRS);
-    public static final Type SNOWY_STONE_BRICK_WALL = blockType("snowy_stone_brick_wall")
-        .wall(Blocks.STONE_BRICK_WALL);
-
-    // Stone / Tuff / Polished
-    public static final Type ROUGH_POLISHED_TUFF = blockType("polished_tuff")
-        .fullBlock(Blocks.POLISHED_TUFF);
-    public static final Type ROUGH_POLISHED_TUFF_SLAB = blockType("polished_tuff_slab")
-        .slab(Blocks.POLISHED_TUFF_SLAB, Blocks.POLISHED_TUFF);
-    public static final Type ROUGH_POLISHED_TUFF_STAIRS = blockType("polished_tuff_stairs")
-        .stairs(ROUGH_POLISHED_TUFF::getNMS, Blocks.POLISHED_TUFF_STAIRS);
-    public static final Type ROUGH_POLISHED_TUFF_WALL = blockType("polished_tuff_wall")
-        .wall(Blocks.POLISHED_TUFF_WALL);
-
-    // Stone / Tuff / Bricks
-    public static final Type ROUGH_TUFF_BRICKS = blockType("tuff_bricks")
-        .fullBlock(Blocks.TUFF_BRICKS);
-    public static final Type ROUGH_TUFF_BRICK_SLAB = blockType("tuff_brick_slab")
-        .slab(Blocks.TUFF_BRICK_SLAB, Blocks.TUFF_BRICKS);
-    public static final Type ROUGH_TUFF_BRICK_STAIRS = blockType("tuff_brick_stairs")
-        .stairs(ROUGH_TUFF_BRICKS::getNMS, Blocks.TUFF_BRICK_STAIRS);
-    public static final Type ROUGH_TUFF_BRICK_WALL = blockType("tuff_brick_wall")
-        .wall(Blocks.TUFF_BRICK_WALL);
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall DIRTY_STONE_BRICKS =
+        BlockSet.builder("dirty_stone_bricks")
+            .vanilla(Blocks.STONE_BRICKS)
+            .fullBlock().slab().stairs().wall()
+            .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall SNOWY_STONE_BRICKS =
+        BlockSet.builder("snowy_stone_bricks")
+            .vanilla(Blocks.STONE_BRICKS)
+            .fullBlock().slab().stairs().wall()
+            .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall ROUGH_POLISHED_TUFF =
+        BlockSet.builder("polished_tuff")
+            .vanilla(Blocks.POLISHED_TUFF)
+            .fullBlock().slab().stairs().wall()
+            .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall ROUGH_TUFF_BRICKS =
+        BlockSet.builder("tuff_bricks")
+            .vanilla(Blocks.TUFF_BRICKS)
+            .fullBlock().slab().stairs().wall()
+            .build();
 
     private static Type blockType(String path) {
         return new Type(path);
@@ -85,19 +70,40 @@ public final class SuCraftBlocks {
 
         public final Key key;
         public final Identifier identifier;
+        private SuCraftItems.@Nullable Type item;
         private @Nullable BlockType value;
         private @Nullable Block valueNMS;
 
         private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
         private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
 
-        private Type(String path) {
-            this(Key.key("sucraft", path));
+        public Type(String path, boolean item) {
+            this(Key.key("sucraft", path), item);
         }
 
-        private Type(Key key) {
+        public Type(Key key, boolean item) {
             this.key = key;
             this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
+            if (item) {
+                this.item = new SuCraftItems.Type(key);
+                this.item.blockFactory();
+            }
+        }
+
+        public Type(Identifier identifier, boolean item) {
+            this(Key.key(identifier.getNamespace(), identifier.getPath()), item);
+        }
+
+        public Type(String path) {
+            this(path, true);
+        }
+
+        public Type(Key key) {
+            this(key, true);
+        }
+
+        public Type(Identifier identifier) {
+            this(identifier, true);
         }
 
         public TypedKey<BlockType> registryKey() {
@@ -124,10 +130,22 @@ public final class SuCraftBlocks {
         public Block getNMS() {
             Block value = this.valueNMS;
             if (value == null) {
-                value = CraftBlockType.bukkitToMinecraftNew(this.get());
+                value = BuiltInRegistries.BLOCK.getValue(this.identifier);
                 this.valueNMS = value;
             }
             return value;
+        }
+
+        public @Nullable ItemType item() {
+            return this.item != null ? this.item.get() : null;
+        }
+
+        public @Nullable Item itemNMS() {
+            return this.item != null ? this.item.getNMS() : null;
+        }
+
+        public SuCraftItems.@Nullable Type itemType() {
+            return this.item;
         }
 
         public void applyToBlockBuilder(BlockTypeRegistryEntryBuilderNMS builder) {
@@ -198,7 +216,7 @@ public final class SuCraftBlocks {
             ));
         }
 
-        public Type slabMacro(BlockStateMappingMacroType type, Block fallback, @Nullable BlockState fallbackBlockState) {
+        public Type slabMacro(BlockStateMappingMacroType type, Block fallback, @Nullable BlockState fullBlockFallbackBlockState) {
             return this.macro(() -> new SlabMacro(
                 type,
                 true,
@@ -211,7 +229,7 @@ public final class SuCraftBlocks {
                 null,
                 Type.this.getNMS(),
                 fallback,
-                fallbackBlockState
+                fullBlockFallbackBlockState
             ));
         }
 
@@ -264,27 +282,49 @@ public final class SuCraftBlocks {
 
     }
 
-    private static Type[] values;
+    private static BlockType[] values;
+    private static Block[] valuesNMS;
+    private static Type[] types;
 
-    public static Type[] values() {
+    public static BlockType[] values() {
         if (values == null) {
-            values = Arrays.stream(SuCraftBlocks.class.getDeclaredFields())
+            values = Arrays.stream(types())
+                .map(SuCraftBlocks.Type::get).toArray(BlockType[]::new);
+        }
+        return values;
+    }
+
+    public static Block[] valuesNMS() {
+        if (valuesNMS == null) {
+            valuesNMS = Arrays.stream(types())
+                .map(SuCraftBlocks.Type::getNMS).toArray(Block[]::new);
+        }
+        return valuesNMS;
+    }
+
+    public static Type[] types() {
+        if (types == null) {
+            types = Arrays.stream(SuCraftBlocks.class.getDeclaredFields())
                 .filter(field ->
                     Modifier.isPublic(field.getModifiers()) &&
                         Modifier.isStatic(field.getModifiers()) &&
                         Modifier.isFinal(field.getModifiers()) &&
-                        field.getType() == Type.class)
-                .map(field -> {
+                        (Type.class.isAssignableFrom(field.getType()) || BlockSet.class.isAssignableFrom(field.getType())))
+                .flatMap(field -> {
                     field.trySetAccessible();
                     try {
-                        return (Type) field.get(null);
+                        var value = field.get(null);
+                        if (value instanceof Type type) {
+                            return Stream.of(type);
+                        }
+                        return Arrays.stream(((BlockSet) value).types());
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
                 })
                 .toArray(Type[]::new);
         }
-        return values;
+        return types;
     }
 
 }

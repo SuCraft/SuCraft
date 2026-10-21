@@ -3,12 +3,13 @@ package org.sucraft.sushi.gamecontent.item;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import net.kyori.adventure.key.Key;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import org.bukkit.Registry;
-import org.bukkit.craftbukkit.inventory.CraftItemType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.itemstack.ItemStackMapping;
 import spout.api.gamecontent.datadriven.item.registry.ItemTypeRegistryEntry;
@@ -17,53 +18,15 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public final class SuCraftItems {
 
     private SuCraftItems() {
         throw new UnsupportedOperationException();
     }
-
-    // Stone / Regular / Bricks / Dirty
-    public static final Type DIRTY_STONE_BRICKS = itemType("dirty_stone_bricks")
-        .blockFactory();
-    public static final Type DIRTY_STONE_BRICK_SLAB = itemType("dirty_stone_brick_slab")
-        .blockFactory();
-    public static final Type DIRTY_STONE_BRICK_STAIRS = itemType("dirty_stone_brick_stairs")
-        .blockFactory();
-    public static final Type DIRTY_STONE_BRICK_WALL = itemType("dirty_stone_brick_wall")
-        .blockFactory();
-
-    // Stone / Regular / Bricks / Snowy
-    public static final Type SNOWY_STONE_BRICKS = itemType("snowy_stone_bricks")
-        .blockFactory();
-    public static final Type SNOWY_STONE_BRICK_SLAB = itemType("snowy_stone_brick_slab")
-        .blockFactory();
-    public static final Type SNOWY_STONE_BRICK_STAIRS = itemType("snowy_stone_brick_stairs")
-        .blockFactory();
-    public static final Type SNOWY_STONE_BRICK_WALL = itemType("snowy_stone_brick_wall")
-        .blockFactory();
-
-    // Stone / Tuff / Polished
-    public static final Type ROUGH_POLISHED_TUFF = itemType("polished_tuff")
-        .blockFactory();
-    public static final Type ROUGH_POLISHED_TUFF_SLAB = itemType("polished_tuff_slab")
-        .blockFactory();
-    public static final Type ROUGH_POLISHED_TUFF_STAIRS = itemType("polished_tuff_stairs")
-        .blockFactory();
-    public static final Type ROUGH_POLISHED_TUFF_WALL = itemType("polished_tuff_wall")
-        .blockFactory();
-
-    // Stone / Tuff / Bricks
-    public static final Type ROUGH_TUFF_BRICKS = itemType("tuff_bricks")
-        .blockFactory();
-    public static final Type ROUGH_TUFF_BRICK_SLAB = itemType("tuff_brick_slab")
-        .blockFactory();
-    public static final Type ROUGH_TUFF_BRICK_STAIRS = itemType("tuff_brick_stairs")
-        .blockFactory();
-    public static final Type ROUGH_TUFF_BRICK_WALL = itemType("tuff_brick_wall")
-        .blockFactory();
 
     private static Type itemType(String path) {
         return new Type(path);
@@ -78,11 +41,11 @@ public final class SuCraftItems {
 
         private List<Consumer<ItemTypeRegistryEntryBuilderNMS>> itemBuilding = new ArrayList<>();
 
-        private Type(String path) {
+        public Type(String path) {
             this(Key.key("sucraft", path));
         }
 
-        private Type(Key key) {
+        public Type(Key key) {
             this.key = key;
             this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
         }
@@ -107,7 +70,7 @@ public final class SuCraftItems {
         public Item getNMS() {
             Item value = this.valueNMS;
             if (value == null) {
-                value = CraftItemType.bukkitToMinecraftNew(this.get());
+                value = BuiltInRegistries.ITEM.getValue(this.identifier);
                 this.valueNMS = value;
             }
             return value;
@@ -133,7 +96,7 @@ public final class SuCraftItems {
 
     public static Type[] values() {
         if (values == null) {
-            values = Arrays.stream(SuCraftItems.class.getDeclaredFields())
+            Stream<Type> declared = Arrays.stream(SuCraftItems.class.getDeclaredFields())
                 .filter(field ->
                     Modifier.isPublic(field.getModifiers()) &&
                         Modifier.isStatic(field.getModifiers()) &&
@@ -146,8 +109,10 @@ public final class SuCraftItems {
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-                })
-                .toArray(Type[]::new);
+                });
+            Stream<Type> forBlocks = Arrays.stream(SuCraftBlocks.types())
+                .map(SuCraftBlocks.Type::itemType).filter(Objects::nonNull);
+            values = Stream.concat(declared, forBlocks).toArray(Type[]::new);
         }
         return values;
     }

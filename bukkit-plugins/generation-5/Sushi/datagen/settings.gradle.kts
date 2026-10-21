@@ -13,4 +13,13 @@ pluginManagement {
     }
 }
 
+includeBuild("../../../../minecraft-server-software") {
+    dependencySubstitution {
+        substitute(module("org.sucraft.suki:suki-api"))
+            .using(project(":suki-api"))
+        substitute(module("org.sucraft.suki:suki-server-filtered"))
+            .using(project(":suki-server-filtered"))
+    }
+}
+
 rootProject.name = "Sushi-datagen"

@@ -14,7 +14,7 @@ public final class CustomBlockStateMappingMacroAdder {
 
     public static void register(BootstrapContext context) {
         context.getLifecycleManager().registerEventHandler(SpoutRegistryEvents.BLOCK_STATE_MAPPING_MACRO.compose(), event -> {
-            Arrays.stream(SuCraftBlocks.values()).forEach(block -> {
+            Arrays.stream(SuCraftBlocks.types()).forEach(block -> {
                 event.registry().register(block.mappingMacroRegistryKey(), builder -> {
                     block.applyToBlockStateMappingMacroBuilder((BlockStateMappingMacroRegistryEntryBuilderNMS) builder);
                 });

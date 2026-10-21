@@ -1,9 +1,3 @@
-import java.net.URI
-import java.net.URL
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-import java.util.zip.ZipFile
-
 plugins {
     id("java-library")
     id("net.fabricmc.fabric-loom")
@@ -11,10 +5,14 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://repo.papermc.io/repository/maven-public")
     maven("https://jitpack.io")
+    mavenLocal()
 }
 
 dependencies {
+    compileOnly("org.sucraft.suki:suki-api:26.3-R0.1-SNAPSHOT")
+    compileOnly("org.sucraft.suki:suki-server-filtered:26.3-R0.1-SNAPSHOT")
     minecraft("com.mojang:minecraft:${providers.gradleProperty("mcVersion").get()}")
     implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("fabricLoaderVersion").get()}")
     implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabricApiVersion").get()}")
@@ -43,6 +41,13 @@ fabricApi {
     configureDataGeneration {
         addToResources = true
         client = true
+    }
+}
+
+sourceSets {
+    main {
+        java.srcDir(layout.projectDirectory.dir("../common-with-datagen/src/main/java"))
+        resources.srcDir(layout.projectDirectory.dir("../common-with-datagen/src/main/resources"))
     }
 }
 

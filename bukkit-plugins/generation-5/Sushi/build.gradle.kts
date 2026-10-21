@@ -478,6 +478,8 @@ val downloadMinecraftClient: TaskProvider<Task> = tasks.register("downloadMinecr
 
 sourceSets {
     main {
+        java.srcDir(layout.projectDirectory.dir("common-with-datagen/src/main/java"))
+        resources.srcDir(layout.projectDirectory.dir("common-with-datagen/src/main/resources"))
         resources.srcDir(layout.buildDirectory.dir("generated/langfiles"))
     }
 }

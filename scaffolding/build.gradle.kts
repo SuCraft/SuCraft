@@ -181,8 +181,7 @@ val targetFiles = arrayListOf(
     FileToUpdateByGradleTask(
         "minecraft-server/server.jar",
         "minecraft-server-software/suki-server/build/libs/suki-bundler-26.3-R0.1-SNAPSHOT.jar",
-        ":Suki:suki-server:createBundlerJar",
-        alwaysUpdate = true
+        ":Suki:suki-server:createBundlerJar"
     ),
     FileToUpdateByMavenPackage(
         "minecraft-server/plugins/CoreProtect.jar",

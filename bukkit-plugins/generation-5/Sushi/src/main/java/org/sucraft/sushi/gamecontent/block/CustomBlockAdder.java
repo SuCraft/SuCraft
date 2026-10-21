@@ -13,7 +13,7 @@ public final class CustomBlockAdder {
 
     public static void register(BootstrapContext context) {
         context.getLifecycleManager().registerEventHandler(RegistryEvents.BLOCK_TYPE.compose(), event -> {
-            Arrays.stream(SuCraftBlocks.values()).forEach(block ->
+            Arrays.stream(SuCraftBlocks.types()).forEach(block ->
                 event.registry().register(block.registryKey(), builder ->
                     block.applyToBlockBuilder((BlockTypeRegistryEntryBuilderNMS) builder)
                 )

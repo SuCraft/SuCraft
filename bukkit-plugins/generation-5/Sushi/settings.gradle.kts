@@ -9,12 +9,12 @@ pluginManagement {
     }
 }
 
-includeBuild("../../..") {
+includeBuild("../../../minecraft-server-software") {
     dependencySubstitution {
         substitute(module("org.sucraft.suki:suki-api"))
-            .using(project(":Suki:suki-api"))
+            .using(project(":suki-api"))
         substitute(module("org.sucraft.suki:suki-server"))
-            .using(project(":Suki:suki-server"))
+            .using(project(":suki-server"))
     }
 }
 

@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
@@ -49,6 +50,8 @@ public interface BlockSet {
     boolean hasWall();
 
     boolean hasFence();
+
+    boolean hasFenceGate();
 
     boolean hasButton();
 
@@ -158,6 +161,26 @@ public interface BlockSet {
 
     }
 
+    interface WithFenceGate extends BlockSet {
+
+        BlockType fenceGate();
+
+        Block fenceGateNMS();
+
+        SuCraftBlockType fenceGateType();
+
+        Block fenceGateForDataGeneration();
+
+        ItemType fenceGateItem();
+
+        Item fenceGateItemNMS();
+
+        SuCraftItemType fenceGateItemType();
+
+        Item fenceGateItemForDataGeneration();
+
+    }
+
     interface WithButton extends BlockSet {
 
         BlockType button();
@@ -210,19 +233,29 @@ public interface BlockSet {
     interface WithFullBlockAndSlabAndStairsAndWallAndFence extends WithFullBlockAndSlabAndStairsAndWall, WithFence {
     }
 
+    interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGate extends WithFullBlockAndSlabAndStairsAndWallAndFence, WithFenceGate {
+    }
+
+    interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButton extends WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGate, WithButton {
+    }
+
+    interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate extends WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButton, WithPressurePlate {
+    }
+
     interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndButton extends WithFullBlockAndSlabAndStairsAndWallAndFence, WithButton {
     }
 
     interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate extends WithFullBlockAndSlabAndStairsAndWallAndFenceAndButton, WithPressurePlate {
     }
 
-    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate {
+    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate, WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate {
 
         private @Nullable SuCraftBlockType fullBlock;
         private @Nullable SuCraftBlockType slab;
         private @Nullable SuCraftBlockType stairs;
         private @Nullable SuCraftBlockType wall;
         private @Nullable SuCraftBlockType fence;
+        private @Nullable SuCraftBlockType fenceGate;
         private @Nullable SuCraftBlockType button;
         private @Nullable SuCraftBlockType pressurePlate;
 
@@ -241,6 +274,7 @@ public interface BlockSet {
             @Nullable SuCraftBlockType stairs,
             @Nullable SuCraftBlockType wall,
             @Nullable SuCraftBlockType fence,
+            @Nullable SuCraftBlockType fenceGate,
             @Nullable SuCraftBlockType button,
             @Nullable SuCraftBlockType pressurePlate
         ) {
@@ -249,6 +283,7 @@ public interface BlockSet {
             this.stairs = stairs;
             this.wall = wall;
             this.fence = fence;
+            this.fenceGate = fenceGate;
             this.button = button;
             this.pressurePlate = pressurePlate;
         }
@@ -289,6 +324,7 @@ public interface BlockSet {
                     this.stairs,
                     this.wall,
                     this.fence,
+                    this.fenceGate,
                     this.button,
                     this.pressurePlate
                 ).filter(Objects::nonNull).toArray(SuCraftBlockType[]::new);
@@ -346,6 +382,11 @@ public interface BlockSet {
         @Override
         public boolean hasFence() {
             return this.fence != null;
+        }
+
+        @Override
+        public boolean hasFenceGate() {
+            return this.fenceGate != null;
         }
 
         @Override
@@ -559,6 +600,46 @@ public interface BlockSet {
         }
 
         @Override
+        public BlockType fenceGate() {
+            return this.fenceGate.get();
+        }
+
+        @Override
+        public Block fenceGateNMS() {
+            return this.fenceGate.getNMS();
+        }
+
+        @Override
+        public Block fenceGateForDataGeneration() {
+            return this.fenceGate.getForDataGeneration();
+        }
+
+        @Override
+        public SuCraftBlockType fenceGateType() {
+            return this.fenceGate;
+        }
+
+        @Override
+        public ItemType fenceGateItem() {
+            return this.fenceGate.item();
+        }
+
+        @Override
+        public Item fenceGateItemNMS() {
+            return this.fenceGate.itemNMS();
+        }
+
+        @Override
+        public Item fenceGateItemForDataGeneration() {
+            return this.fenceGate.itemForDataGeneration();
+        }
+
+        @Override
+        public SuCraftItemType fenceGateItemType() {
+            return this.fenceGate.itemType();
+        }
+
+        @Override
         public BlockType button() {
             return this.button.get();
         }
@@ -649,8 +730,10 @@ public interface BlockSet {
         private boolean slab;
         private boolean wall;
         private boolean fence;
+        private boolean fenceGate;
         private boolean button;
         private boolean pressurePlate;
+        private Function<String, String> shapeIdentifierSuffixFunction = Function.identity();
         private @Nullable Consumer<BlockBehaviour.Properties> propertiesFinalizer;
         private BlockBehaviour.@Nullable Properties properties;
         private @Nullable Block propertiesFrom;
@@ -658,6 +741,7 @@ public interface BlockSet {
         private @Nullable Block stairsPropertiesFrom;
         private @Nullable Block wallPropertiesFrom;
         private @Nullable Block fencePropertiesFrom;
+        private @Nullable Block fenceGatePropertiesFrom;
         private @Nullable Block buttonPropertiesFrom;
         private @Nullable Block pressurePlatePropertiesFrom;
         private @Nullable Block fallback;
@@ -665,10 +749,12 @@ public interface BlockSet {
         private @Nullable Block slabFallback;
         private @Nullable Block wallFallback;
         private @Nullable Block fenceFallback;
+        private @Nullable Block fenceGateFallback;
         private @Nullable Block buttonFallback;
         private @Nullable Block pressurePlateFallback;
         private @Nullable BlockState slabFullBlockFallback;
         private @Nullable Supplier<BlockState> stairsBaseState;
+        private @Nullable Supplier<WoodType> woodType;
         private @Nullable Supplier<BlockSetType> blockSetType;
         private @Nullable IntSupplier buttonTicksToStayPressed;
 
@@ -714,6 +800,11 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder fenceGate() {
+            this.fenceGate = true;
+            return this;
+        }
+
         public Builder button() {
             this.button = true;
             return this;
@@ -721,6 +812,11 @@ public interface BlockSet {
 
         public Builder pressurePlate() {
             this.pressurePlate = true;
+            return this;
+        }
+
+        public Builder shapeIdentifierSuffixFunction(Function<String, String> function) {
+            this.shapeIdentifierSuffixFunction = function;
             return this;
         }
 
@@ -817,6 +913,22 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder fenceGatePropertiesFrom(Block propertiesFrom) {
+            this.fenceGatePropertiesFrom = propertiesFrom;
+            return this;
+        }
+
+        public Builder fenceGateFallback(Block fallback) {
+            this.fenceGateFallback = fallback;
+            return this;
+        }
+
+        public Builder fenceGateVanilla(Block propertiesFromAndFallback) {
+            this.fenceGatePropertiesFrom = propertiesFromAndFallback;
+            this.fenceGateFallback = propertiesFromAndFallback;
+            return this;
+        }
+
         public Builder buttonPropertiesFrom(Block propertiesFrom) {
             this.buttonPropertiesFrom = propertiesFrom;
             return this;
@@ -871,6 +983,15 @@ public interface BlockSet {
             return this.stairsBaseState(baseState::defaultBlockState);
         }
 
+        public Builder woodType(Supplier<WoodType> woodType) {
+            this.woodType = woodType;
+            return this;
+        }
+
+        public Builder woodType(WoodType woodType) {
+            return this.woodType(() -> woodType);
+        }
+
         public Builder blockSetType(Supplier<BlockSetType> blockSetType) {
             this.blockSetType = blockSetType;
             return this;
@@ -903,6 +1024,10 @@ public interface BlockSet {
 
         private Identifier getSuffixedIdentifier(String suffix) {
             return this.getBaseIdentifier().withSuffix(suffix);
+        }
+
+        private Identifier getShapeIdentifier(String suffix) {
+            return this.getBaseIdentifier().withSuffix(this.shapeIdentifierSuffixFunction.apply(suffix));
         }
 
         private BlockBehaviour.Properties finalizeProperties(BlockBehaviour.Properties properties) {
@@ -1000,6 +1125,28 @@ public interface BlockSet {
             );
         }
 
+        private BlockBehaviour.Properties getFenceGateProperties() {
+            return this.getShapeProperties(
+                properties -> {
+                    var newProperties = BlockBehaviour.Properties.of()
+                        .mapColor(properties.mapColor)
+                        .forceSolidOn()
+                        .instrument(properties.instrument)
+                        .strength(properties.destroyTime, properties.explosionResistance);
+                    if (properties.ignitedByLava) {
+                        newProperties.ignitedByLava();
+                    }
+                    return newProperties;
+                },
+                () -> {
+                    if (this.fenceGatePropertiesFrom != null) {
+                        return this.fenceGatePropertiesFrom;
+                    }
+                    return getShapeIfExists(this.propertiesFrom, "_fence_gate");
+                }
+            );
+        }
+
         private BlockBehaviour.Properties getButtonProperties() {
             return this.getShapeProperties(
                 _ -> Blocks.buttonProperties(),
@@ -1068,6 +1215,13 @@ public interface BlockSet {
             return Objects.requireNonNull(getShapeIfExists(this.fallback, "_fence"));
         }
 
+        private Block getFenceGateFallback() {
+            if (this.fenceGateFallback != null) {
+                return this.fenceGateFallback;
+            }
+            return Objects.requireNonNull(getShapeIfExists(this.fallback, "_fence_gate"));
+        }
+
         private Block getButtonFallback() {
             if (this.buttonFallback != null) {
                 return this.buttonFallback;
@@ -1104,6 +1258,28 @@ public interface BlockSet {
             };
         }
 
+        public Supplier<WoodType> getWoodType() {
+            if (this.woodType != null) {
+                return this.woodType;
+            }
+            return () -> {
+                if (this.fullBlock) {
+                    WoodType fromFullBlock = SuCraftBlockType.deriveWoodType(BuiltInRegistries.BLOCK.getValue(this.getFullBlockIdentifier()));
+                    if (fromFullBlock != null) {
+                        return fromFullBlock;
+                    }
+                }
+                if (this.fenceGate) {
+                    Block fenceGateFallback = this.getFenceGateFallback();
+                    WoodType fromFenceGateFallback = SuCraftBlockType.deriveWoodType(fenceGateFallback);
+                    if (fromFenceGateFallback != null) {
+                        return fromFenceGateFallback;
+                    }
+                }
+                throw new NullPointerException("No wood type given");
+            };
+        }
+
         public Supplier<BlockSetType> getBlockSetType() {
             if (this.blockSetType != null) {
                 return this.blockSetType;
@@ -1120,6 +1296,13 @@ public interface BlockSet {
                     BlockSetType fromButtonFallback = SuCraftBlockType.deriveBlockSetType(buttonFallback);
                     if (fromButtonFallback != null) {
                         return fromButtonFallback;
+                    }
+                }
+                if (this.pressurePlate) {
+                    Block pressurePlateFallback = this.getButtonFallback();
+                    BlockSetType fromPressurePlateFallback = SuCraftBlockType.deriveBlockSetType(pressurePlateFallback);
+                    if (fromPressurePlateFallback != null) {
+                        return fromPressurePlateFallback;
                     }
                 }
                 throw new NullPointerException("No block set type given");
@@ -1146,47 +1329,55 @@ public interface BlockSet {
                         () -> built[0].hasStairs() ? built[0].stairsType().getForDataGeneration() : null,
                         () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null,
                         () -> built[0].hasFence() ? built[0].fenceType().getForDataGeneration() : null,
+                        () -> built[0].hasFenceGate() ? built[0].fenceGateType().getForDataGeneration() : null,
                         () -> built[0].hasButton() ? built[0].buttonType().getForDataGeneration() : null,
                         () -> built[0].hasPressurePlate() ? built[0].pressurePlateType().getForDataGeneration() : null
                     ))
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.slab ? new SuCraftBlockType(this.getSuffixedIdentifier("_slab"))
+                this.slab ? new SuCraftBlockType(this.getShapeIdentifier("_slab"))
                     .slabFactory()
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelfSlab()
                     : null,
-                this.stairs ? new SuCraftBlockType(this.getSuffixedIdentifier("_stairs"))
+                this.stairs ? new SuCraftBlockType(this.getShapeIdentifier("_stairs"))
                     .stairsFactory(this.getStairsBaseState())
                     .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.wall ? new SuCraftBlockType(this.getSuffixedIdentifier("_wall"))
+                this.wall ? new SuCraftBlockType(this.getShapeIdentifier("_wall"))
                     .wallFactory()
                     .properties(this::getWallProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
                     .wallConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.fence ? new SuCraftBlockType(this.getSuffixedIdentifier("_fence"))
+                this.fence ? new SuCraftBlockType(this.getShapeIdentifier("_fence"))
                     .fenceFactory()
                     .properties(this::getFenceProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, this.getFenceFallback())
                     .fenceConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.button ? new SuCraftBlockType(this.getSuffixedIdentifier("_button"))
+                this.fenceGate ? new SuCraftBlockType(this.getShapeIdentifier("_fence_gate"))
+                    .fenceGateFactory(this.getWoodType())
+                    .properties(this::getFenceGateProperties)
+                    .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, this.getFenceGateFallback())
+                    .fenceGateConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelf()
+                    : null,
+                this.button ? new SuCraftBlockType(this.getShapeIdentifier("_button"))
                     .buttonFactory(this.getBlockSetType(), this.getButtonTicksToStayPressed())
                     .properties(this::getButtonProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
                     .buttonConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.pressurePlate ? new SuCraftBlockType(this.getSuffixedIdentifier("_pressure_plate"))
+                this.pressurePlate ? new SuCraftBlockType(this.getShapeIdentifier("_pressure_plate"))
                     .pressurePlateFactory(this.getBlockSetType())
                     .properties(this::getPressurePlateProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, this.getPressurePlateFallback())

@@ -7,13 +7,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ButtonBlock;import net.minecraft.world.level.block.FenceBlock;import net.minecraft.world.level.block.PressurePlateBlock;import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.ItemLike;import net.minecraft.world.level.block.BasePressurePlateBlock;import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;import net.minecraft.world.level.block.FenceBlock;import net.minecraft.world.level.block.FenceGateBlock;import net.minecraft.world.level.block.PressurePlateBlock;import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockSetType;import org.bukkit.NamespacedKey;
+import net.minecraft.world.level.block.state.properties.BlockSetType;import net.minecraft.world.level.block.state.properties.WoodType;import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
@@ -175,6 +175,10 @@ public final class SuCraftBlockType implements ItemLike {
         return this.blockBuild(builder -> builder.factoryNMS(FenceBlock::new));
     }
 
+    public SuCraftBlockType fenceGateFactory(Supplier<WoodType> woodType) {
+        return this.blockBuild(builder -> builder.factoryNMS(properties -> new FenceGateBlock(woodType.get(), properties)));
+    }
+
     public SuCraftBlockType buttonFactory(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed) {
         return this.blockBuild(builder -> builder.factoryNMS(properties -> new ButtonBlock(blockSetType.get(), ticksToStayPressed.getAsInt(), properties)));
     }
@@ -269,6 +273,10 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType fenceConstructorForDataGeneration() {
         return this.constructorForDataGeneration(FenceBlock::new);
+    }
+
+    public SuCraftBlockType fenceGateConstructorForDataGeneration() {
+        return this.constructorForDataGeneration(properties -> new FenceGateBlock(WoodType.OAK, properties));
     }
 
     public SuCraftBlockType buttonConstructorForDataGeneration() {
@@ -391,6 +399,19 @@ public final class SuCraftBlockType implements ItemLike {
         return this.fence(propertiesFromAndFallback, propertiesFromAndFallback);
     }
 
+    public SuCraftBlockType fenceGate(Supplier<WoodType> woodType, Block propertiesFrom, Block fallback) {
+        this.fenceGateFactory(woodType);
+        this.propertiesFull(propertiesFrom);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, fallback);
+        this.fenceGateConstructorForDataGeneration();
+        this.dataGenerateModel(factory -> factory.addBlockFenceGate(this.getForDataGeneration()));
+        return this.dataGenerateBlockLootTableForDropSelf();
+    }
+
+    public SuCraftBlockType fenceGate(Supplier<WoodType> woodType, Block propertiesFromAndFallback) {
+        return this.fenceGate(woodType, propertiesFromAndFallback, propertiesFromAndFallback);
+    }
+
     public SuCraftBlockType button(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed, Block propertiesFrom, Block fallback) {
         this.buttonFactory(blockSetType, ticksToStayPressed);
         this.propertiesFull(propertiesFrom);
@@ -417,9 +438,19 @@ public final class SuCraftBlockType implements ItemLike {
         return this.pressurePlate(blockSetType, propertiesFromAndFallback, propertiesFromAndFallback);
     }
 
+    public static @Nullable WoodType deriveWoodType(Block block) {
+        if (block instanceof FenceGateBlock fenceGate) {
+            return fenceGate.type;
+        }
+        return null;
+    }
+
     public static @Nullable BlockSetType deriveBlockSetType(Block block) {
         if (block instanceof ButtonBlock button) {
             return button.type;
+        }
+        if (block instanceof BasePressurePlateBlock pressurePlate) {
+            return pressurePlate.type;
         }
         return null;
     }

@@ -31,6 +31,7 @@ public final class Models {
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
             Supplier<@Nullable Block> fence,
+            Supplier<@Nullable Block> fenceGate,
             Supplier<@Nullable Block> button,
             Supplier<@Nullable Block> pressurePlate
         ) {
@@ -51,6 +52,10 @@ public final class Models {
                 var fenceBlock = fence.get();
                 if (fenceBlock != null) {
                     provider.fence(fenceBlock);
+                }
+                var fenceGateBlock = fenceGate.get();
+                if (fenceGateBlock != null) {
+                    provider.fenceGate(fenceGateBlock);
                 }
                 var buttonBlock = button.get();
                 if (buttonBlock != null) {
@@ -87,6 +92,10 @@ public final class Models {
         }
 
         public void addBlockFence(Block fence) {
+            // TODO
+        }
+
+        public void addBlockFenceGate(Block fenceGate) {
             // TODO
         }
 

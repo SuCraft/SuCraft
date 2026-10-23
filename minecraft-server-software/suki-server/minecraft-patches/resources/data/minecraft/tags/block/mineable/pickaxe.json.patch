@@ -1,0 +1,11 @@
+--- a/data/minecraft/tags/block/mineable/pickaxe.json
++++ b/data/minecraft/tags/block/mineable/pickaxe.json
+@@ -233,7 +_,7 @@
+     "minecraft:infested_mossy_stone_bricks",
+     "minecraft:infested_stone_bricks",
+     "#minecraft:stone_buttons",
+-    "#minecraft:walls",
++    "#sucraft:stone_walls",
+     "#minecraft:shulker_boxes",
+     "#minecraft:anvil",
+     "#minecraft:cauldrons",

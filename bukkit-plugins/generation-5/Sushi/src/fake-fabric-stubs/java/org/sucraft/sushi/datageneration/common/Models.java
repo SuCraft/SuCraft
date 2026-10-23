@@ -18,6 +18,7 @@ public interface Models {
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
             Supplier<@Nullable Block> fence,
+            Supplier<@Nullable Block> fenceGate,
             Supplier<@Nullable Block> button,
             Supplier<@Nullable Block> pressurePlate
         );
@@ -31,6 +32,8 @@ public interface Models {
         void addBlockWall(Block wall);
 
         void addBlockFence(Block fence);
+
+        void addBlockFenceGate(Block fenceGate);
 
         void addBlockButton(Block button);
 

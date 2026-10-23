@@ -14,6 +14,8 @@ import org.sucraft.sushi.datageneration.mineral.copper.Copper;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
+import org.sucraft.sushi.datageneration.wood.Oak;
+import org.sucraft.sushi.datageneration.wood.Spruce;
 
 public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
@@ -42,6 +44,10 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Stone / Regular
         DirtyStoneBricks.add(factories);
         SnowyStoneBricks.add(factories);
+
+        // Wood
+        Oak.add(factories);
+        Spruce.add(factories);
 
         pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());

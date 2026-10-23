@@ -10,6 +10,8 @@ import org.sucraft.sushi.datageneration.common.CommonBlockAdder;
 import org.sucraft.sushi.datageneration.common.CommonItemAdder;
 import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
+import org.sucraft.sushi.datageneration.mineral.copper.Copper;
+import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
 
@@ -30,6 +32,12 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
         CommonBlockAdder.add(factories);
         CommonItemAdder.add(factories);
+
+        // Mineral / Copper
+        Copper.add(factories);
+
+        // Stone / Deepslate
+        Deepslate.add(factories);
 
         // Stone / Regular
         DirtyStoneBricks.add(factories);

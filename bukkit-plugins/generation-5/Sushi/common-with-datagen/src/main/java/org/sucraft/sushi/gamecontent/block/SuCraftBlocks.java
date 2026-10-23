@@ -19,6 +19,9 @@ import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.datageneration.common.BlockLootTables;
+import org.sucraft.sushi.datageneration.common.CollectedFactories;
+import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.gamecontent.item.SuCraftItems;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
@@ -54,6 +57,30 @@ public final class SuCraftBlocks {
             .vanilla(Blocks.STONE_BRICKS)
             .fullBlock().slab().stairs().wall()
             .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall ANDESITE_BRICKS =
+        BlockSet.builder("andesite_bricks")
+            .vanilla(Blocks.POLISHED_ANDESITE)
+            .fullBlock().slab().stairs().wall()
+            .wallFallback(Blocks.ANDESITE_WALL)
+            .build();
+    public static final Type CHISELED_ANDESITE_BRICKS = blockType("chiseled_andesite_bricks")
+        .fullBlock(Blocks.POLISHED_ANDESITE);
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall DIORITE_BRICKS =
+        BlockSet.builder("diorite_bricks")
+            .vanilla(Blocks.POLISHED_DIORITE)
+            .fullBlock().slab().stairs().wall()
+            .wallFallback(Blocks.DIORITE_WALL)
+            .build();
+    public static final Type CHISELED_DIORITE_BRICKS = blockType("chiseled_diorite_bricks")
+        .fullBlock(Blocks.POLISHED_DIORITE);
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall GRANITE_BRICKS =
+        BlockSet.builder("granite_bricks")
+            .vanilla(Blocks.POLISHED_GRANITE)
+            .fullBlock().slab().stairs().wall()
+            .wallFallback(Blocks.GRANITE_WALL)
+            .build();
+    public static final Type CHISELED_GRANITE_BRICKS = blockType("chiseled_granite_bricks")
+        .fullBlock(Blocks.POLISHED_GRANITE);
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall ROUGH_POLISHED_TUFF =
         BlockSet.builder("polished_tuff")
             .vanilla(Blocks.POLISHED_TUFF)
@@ -64,6 +91,36 @@ public final class SuCraftBlocks {
             .vanilla(Blocks.TUFF_BRICKS)
             .fullBlock().slab().stairs().wall()
             .build();
+    public static final Type ROUGH_CHISELED_TUFF_BRICKS = blockType("chiseled_tuff_bricks")
+        .fullBlock(Blocks.CHISELED_TUFF_BRICKS);
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall POLISHED_CALCITE =
+        BlockSet.builder("polished_calcite")
+            .vanilla(Blocks.CALCITE)
+            .fullBlock().slab().stairs().wall()
+            .slabFallback(Blocks.SMOOTH_QUARTZ_SLAB).stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS).wallFallback(Blocks.DIORITE_WALL)
+            .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall CALCITE_BRICKS =
+        BlockSet.builder("calcite_bricks")
+            .vanilla(Blocks.CALCITE)
+            .fullBlock().slab().stairs().wall()
+            .slabFallback(Blocks.SMOOTH_QUARTZ_SLAB).stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS).wallFallback(Blocks.DIORITE_WALL)
+            .build();
+    public static final Type CHISELED_CALCITE_BRICKS = blockType("chiseled_calcite_bricks")
+        .fullBlock(Blocks.CALCITE);
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall POLISHED_DRIPSTONE =
+        BlockSet.builder("polished_dripstone")
+            .vanilla(Blocks.DRIPSTONE_BLOCK)
+            .fullBlock().slab().stairs().wall()
+            .slabFallback(Blocks.GRANITE_SLAB).stairsFallback(Blocks.GRANITE_STAIRS).wallFallback(Blocks.GRANITE_WALL)
+            .build();
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall DRIPSTONE_BRICKS =
+        BlockSet.builder("dripstone_bricks")
+            .vanilla(Blocks.DRIPSTONE_BLOCK)
+            .fullBlock().slab().stairs().wall()
+            .slabFallback(Blocks.GRANITE_SLAB).stairsFallback(Blocks.GRANITE_STAIRS).wallFallback(Blocks.GRANITE_WALL)
+            .build();
+    public static final Type CHISELED_DRIPSTONE_BRICKS = blockType("chiseled_dripstone_bricks")
+        .fullBlock(Blocks.DRIPSTONE_BLOCK);
 
     private static Type blockType(String path) {
         return new Type(path);
@@ -81,6 +138,9 @@ public final class SuCraftBlocks {
         private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
         private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
         private @Nullable Function<BlockBehaviour.Properties, Block> constructorForDataGeneration = Block::new;
+        private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
+        private @Nullable Consumer<Models.CollectedFactory> dataGeneratingModel;
+        private @Nullable Consumer<BlockLootTables.CollectedFactory> dataGeneratingBlockLootTable;
 
         public Type(String path, boolean item) {
             this(Identifier.fromNamespaceAndPath("sucraft", path), item);
@@ -194,8 +254,8 @@ public final class SuCraftBlocks {
             return this.blockBuild(builder -> builder.factoryNMS(WallBlock::new));
         }
 
-        public Type properties(BlockBehaviour.Properties properties) {
-            return this.blockBuild(builder -> builder.propertiesNMS(properties));
+        public Type properties(Supplier<BlockBehaviour.Properties> properties) {
+            return this.blockBuild(builder -> builder.propertiesNMS(properties.get()));
         }
 
         public Type properties(Consumer<BlockBehaviour.Properties> properties) {
@@ -203,11 +263,11 @@ public final class SuCraftBlocks {
         }
 
         public Type propertiesLegacy(Block block) {
-            return this.properties(BlockBehaviour.Properties.ofLegacyCopy(block));
+            return this.properties(() -> BlockBehaviour.Properties.ofLegacyCopy(block));
         }
 
         public Type propertiesFull(Block block) {
-            return this.properties(BlockBehaviour.Properties.ofFullCopy(block));
+            return this.properties(() -> BlockBehaviour.Properties.ofFullCopy(block));
         }
 
         public void applyToBlockStateMappingMacroBuilder(BlockStateMappingMacroRegistryEntryBuilderNMS builder) {
@@ -278,10 +338,52 @@ public final class SuCraftBlocks {
             return this.constructorForDataGeneration(WallBlock::new);
         }
 
+        public void applyDataGeneration(CollectedFactories factories) {
+            this.dataGenerating.forEach(it -> it.accept(factories));
+            this.dataGenerating = null;
+            if (this.dataGeneratingModel != null) {
+                this.dataGeneratingModel.accept(factories.models());
+                this.dataGeneratingModel = null;
+            }
+            if (this.dataGeneratingBlockLootTable != null) {
+                this.dataGeneratingBlockLootTable.accept(factories.blockLootTables());
+                this.dataGeneratingBlockLootTable = null;
+            }
+        }
+
+        public Type dataGenerate(Consumer<CollectedFactories> factoriesConsumer) {
+            this.dataGenerating.add(factoriesConsumer);
+            return this;
+        }
+
+        public Type dataGenerateModel(@Nullable Consumer<Models.CollectedFactory> factoryConsumer) {
+            this.dataGeneratingModel = factoryConsumer;
+            return this;
+        }
+
+        public Type dataGenerateModelForBlock(Models.BlockStateModelGenerator generatorsConsumer) {
+            return this.dataGenerateModel(factory -> factory.addBlock(generatorsConsumer));
+        }
+
+        public Type dataGenerateBlockLootTable(@Nullable Consumer<BlockLootTables.CollectedFactory> factoryConsumer) {
+            this.dataGeneratingBlockLootTable = factoryConsumer;
+            return this;
+        }
+
+        public Type dataGenerateBlockLootTableForDropSelf() {
+            return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getForDataGeneration())));
+        }
+
+        public Type dataGenerateBlockLootTableForDropSelfSlab() {
+            return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getForDataGeneration(), provider::createSlabItemTable)));
+        }
+
         public Type fullBlock(Block propertiesFrom, Block fallback) {
             this.propertiesFull(propertiesFrom);
             this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
-            return this.blockConstructorForDataGeneration();
+            this.blockConstructorForDataGeneration();
+            this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getForDataGeneration()));
+            return this.dataGenerateBlockLootTableForDropSelf();
         }
 
         public Type fullBlock(Block propertiesFromAndFallback) {
@@ -292,7 +394,9 @@ public final class SuCraftBlocks {
             this.slabFactory();
             this.propertiesFull(propertiesFrom);
             this.slabMacro(BlockStateMappingMacroTypes.SLAB, fallback, fallbackBlockState);
-            return this.slabConstructorForDataGeneration();
+            this.slabConstructorForDataGeneration();
+            this.dataGenerateModel(factory -> factory.addBlockSlab(this.getForDataGeneration()));
+            return this.dataGenerateBlockLootTableForDropSelfSlab();
         }
 
         public Type slab(Block propertiesFromAndFallback, @Nullable BlockState fallbackBlockState) {
@@ -311,7 +415,9 @@ public final class SuCraftBlocks {
             this.stairsFactory(base);
             this.propertiesFull(propertiesFrom);
             this.fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, fallback);
-            return this.stairsConstructorForDataGeneration(base);
+            this.stairsConstructorForDataGeneration(base);
+            this.dataGenerateModel(factory -> factory.addBlockStairs(this.getForDataGeneration()));
+            return this.dataGenerateBlockLootTableForDropSelf();
         }
 
         public Type stairs(Supplier<Block> base, Block propertiesFromAndFallback) {
@@ -322,7 +428,9 @@ public final class SuCraftBlocks {
             this.wallFactory();
             this.propertiesFull(propertiesFrom);
             this.fromToBlockMacro(BlockStateMappingMacroTypes.WALL, fallback);
-            return this.wallConstructorForDataGeneration();
+            this.wallConstructorForDataGeneration();
+            this.dataGenerateModel(factory -> factory.addBlockWall(this.getForDataGeneration()));
+            return this.dataGenerateBlockLootTableForDropSelf();
         }
 
         public Type wall(Block propertiesFromAndFallback) {

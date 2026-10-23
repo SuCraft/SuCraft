@@ -3,10 +3,10 @@
 # Rebuilds all patches (in IntelliJ, right-click -> Run 'rebuild')
 
 cd ../..
-./gradlew :suki:rebuildPaperApiFeaturePatches # includes rebuildPaperApiFilePatches
-./gradlew :suki:rebuildSpoutApiFeaturePatches # includes rebuildSpoutApiFilePatches
-./gradlew :suki:rebuildSpoutSingleFilePatches
-./gradlew :suki:suki-server:rebuildMinecraftFeaturePatches # includes :suki-server:rebuildMinecraftFilePatches, which includes :suki-server:rebuildMinecraftResourcePatches and :suki-server:rebuildMinecraftSourcePatches
-./gradlew :suki:suki-server:rebuildPaperServerFeaturePatches # includes :suki-server:rebuildPaperServerFilePatches
-./gradlew :suki:suki-server:rebuildSpoutServerFeaturePatches # includes :suki-server:rebuildSpoutServerFilePatches
+./gradlew :minecraft-server-software:rebuildPaperApiFeaturePatches # includes rebuildPaperApiFilePatches
+./gradlew :minecraft-server-software:rebuildSpoutApiFeaturePatches # includes rebuildSpoutApiFilePatches
+./gradlew :minecraft-server-software:rebuildSpoutSingleFilePatches
+./gradlew :minecraft-server-software:suki-server:rebuildMinecraftFeaturePatches # includes :suki-server:rebuildMinecraftFilePatches, which includes :suki-server:rebuildMinecraftResourcePatches and :suki-server:rebuildMinecraftSourcePatches
+./gradlew :minecraft-server-software:suki-server:rebuildPaperServerFeaturePatches # includes :suki-server:rebuildPaperServerFilePatches
+./gradlew :minecraft-server-software:suki-server:rebuildSpoutServerFeaturePatches # includes :suki-server:rebuildSpoutServerFilePatches
 cd minecraft-server-software/gradle-bin

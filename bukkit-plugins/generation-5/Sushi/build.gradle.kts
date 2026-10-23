@@ -481,6 +481,8 @@ sourceSets {
         java.srcDir(layout.projectDirectory.dir("common-with-datagen/src/main/java"))
         resources.srcDir(layout.projectDirectory.dir("common-with-datagen/src/main/resources"))
         resources.srcDir(layout.buildDirectory.dir("generated/langfiles"))
+        java.srcDir(layout.projectDirectory.dir("src/fake-fabric-stubs/java"))
+        resources.srcDir(layout.projectDirectory.dir("src/fake-fabric-stubs/resources"))
     }
 }
 

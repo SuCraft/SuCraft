@@ -14,8 +14,8 @@ public final class CommonItemAdder {
     }
 
     public static void add(CollectedFactories factories) {
-        for (SuCraftItems.Type type : SuCraftItems.types()) {
-            System.out.println(type.identifier);
+        for (var type : SuCraftItems.types()) {
+            // Nothing to do at the moment
         }
     }
 

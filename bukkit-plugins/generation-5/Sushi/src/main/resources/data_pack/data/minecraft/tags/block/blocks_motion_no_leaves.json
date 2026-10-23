@@ -1,5 +1,18 @@
 {
   "values": [
+    "sucraft:andesite_bricks",
+    "sucraft:calcite_bricks",
+    "sucraft:chiseled_andesite_bricks",
+    "sucraft:chiseled_calcite_bricks",
+    "sucraft:chiseled_diorite_bricks",
+    "sucraft:chiseled_dripstone_bricks",
+    "sucraft:chiseled_granite_bricks",
+    "sucraft:chiseled_tuff_bricks",
+    "sucraft:diorite_bricks",
+    "sucraft:dripstone_bricks",
+    "sucraft:granite_bricks",
+    "sucraft:polished_calcite",
+    "sucraft:polished_dripstone",
     "sucraft:polished_tuff",
     "sucraft:tuff_bricks"
   ]

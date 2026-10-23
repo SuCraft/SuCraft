@@ -1,4 +1,17 @@
 The following files (referenced relative to the parent folder of the folder this file is in) are/were part of [Quark](https://quarkmod.net/), which is/was maintained by [Violet Moon](https://violetmoon.org/):
+* `assets/sucraft/textures/block/andesite_bricks.png`
+* `assets/sucraft/textures/block/calcite_bricks.png`
+* `assets/sucraft/textures/block/chiseled_andesite_bricks.png`
+* `assets/sucraft/textures/block/chiseled_calcite_bricks.png`
+* `assets/sucraft/textures/block/chiseled_diorite_bricks.png`
+* `assets/sucraft/textures/block/chiseled_dripstone_bricks.png`
+* `assets/sucraft/textures/block/chiseled_granite_bricks.png`
+* `assets/sucraft/textures/block/chiseled_tuff_bricks.png`
+* `assets/sucraft/textures/block/diorite_bricks.png`
+* `assets/sucraft/textures/block/dripstone_bricks.png`
+* `assets/sucraft/textures/block/granite_bricks.png`
+* `assets/sucraft/textures/block/polished_calcite.png`
+* `assets/sucraft/textures/block/polished_dripstone.png`
 * `assets/sucraft/textures/block/polished_tuff.png`
 * `assets/sucraft/textures/block/tuff_bricks.png`
 

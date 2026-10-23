@@ -1,6 +1,7 @@
 package org.sucraft.sushi.gamecontent.recipe;
 
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -39,6 +40,8 @@ import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.block.OldReplacedBlocks;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -165,24 +168,30 @@ public final class AutomaticRecipeAdder {
     public static void run() {
 
         // Collect ignored items
-        var ignoredItems = OldReplacedBlocks.LIST.stream()
+        var ignoredItems = new HashSet<>(OldReplacedBlocks.LIST.stream()
             .map(it -> BuiltInRegistries.ITEM.get(it.oldBlock()))
-            .filter(Optional::isPresent).map(Optional::get).map(Holder.Reference::value).collect(Collectors.toSet());
+            .filter(Optional::isPresent).map(Optional::get).map(Holder.Reference::value).collect(Collectors.toSet()));
+        // Regular deepslate is also ignored because it is obtained by smelting, while all other forms are obtained by crafting and/or stonecutting
+        ignoredItems.add(Items.DEEPSLATE);
 
         // Get the existing recipes (by their potential input and output)
-        var recipesByInputOutput = new Object2ObjectOpenHashMap<Pair<Item, Item>, List<SimpleRecipeDescription>>();
+        var recipesByInputOutput = new Object2ObjectOpenHashMap<Item, Object2ObjectMap<Item, List<SimpleRecipeDescription>>>();
 
         class RecipeAdders {
+
+            private void recomputeRecipesByInputByOutput() {
+                recipesByInputOutput.clear();
+                MinecraftServer.getServer().getRecipeManager().getRecipes().forEach(this::mapRecipeByInputOutput);
+            }
 
             private @Nullable SimpleRecipeDescription mapRecipeByInputOutput(RecipeHolder<?> holder) {
                 var description = wrap(holder);
                 if (description != null) {
                     final var finalOutput = description.output;
                     description.inputs().forEach(
-                        input -> recipesByInputOutput.computeIfAbsent(
-                            Pair.of(input, finalOutput),
-                            _ -> new ArrayList<>(2)
-                        ).add(description)
+                        input -> recipesByInputOutput.computeIfAbsent(input, _ -> new Object2ObjectOpenHashMap<>(2))
+                            .computeIfAbsent(finalOutput, _ -> new ArrayList<>(2))
+                            .add(description)
                     );
                 }
                 return description;
@@ -191,20 +200,23 @@ public final class AutomaticRecipeAdder {
             private void unmapRecipeByInputOutput(SimpleRecipeDescription description) {
                 final var finalOutput = description.output;
                 description.inputs().forEach(input -> {
-                    var recipesForInputOutput = recipesByInputOutput.get(Pair.of(input, finalOutput));
-                    if (recipesForInputOutput != null) {
-                        recipesForInputOutput.remove(description);
+                    var recipesForInput = recipesByInputOutput.get(input);
+                    if (recipesForInput != null) {
+                        var recipesForOutput = recipesForInput.get(finalOutput);
+                        if (recipesForOutput != null) {
+                            recipesForOutput.remove(description);
+                        }
                     }
                 });
             }
 
-            private @Nullable SimpleRecipeDescription getExistingRecipe(Item output, RecipeInput input, @Nullable List<SimpleRecipeDescription> recipes, Set<RecipeType<?>> types) {
+            private @Nullable SimpleRecipeDescription getExistingRecipe(Item output, RecipeInput input, @Nullable List<SimpleRecipeDescription> recipes, Set<RecipeType<?>> types, boolean mustMatchOutput) {
                 if (recipes == null) return null;
                 for (var recipe : recipes) {
                     try {
                         if (types.contains(recipe.recipe.getType())) {
                             if (((Recipe) recipe.recipe).matches(input, null)) {
-                                if (recipe.output == output) {
+                                if (!mustMatchOutput || recipe.output == output) {
                                     return recipe;
                                 }
                             }
@@ -216,19 +228,19 @@ public final class AutomaticRecipeAdder {
             }
 
             private @Nullable SimpleRecipeDescription getExistingCraftingRecipe(Item output, CraftingInput input) {
-                return getExistingRecipe(output, input, recipesByInputOutput.get(Pair.of(input.items().getFirst().getItem(), output)), Set.of(RecipeType.CRAFTING));
+                return getExistingRecipe(output, input, recipesByInputOutput.getOrDefault(input.items().getFirst().getItem(), Object2ObjectMaps.emptyMap()).values().stream().flatMap(Collection::stream).toList(), Set.of(RecipeType.CRAFTING), false);
             }
 
-            private @Nullable SimpleRecipeDescription getExistingSingleItemRecipe(Item output, SingleRecipeInput input, Set<RecipeType<?>> types) {
-                return getExistingRecipe(output, input, recipesByInputOutput.get(Pair.of(input.item().getItem(), output)), types);
+            private @Nullable SimpleRecipeDescription getExistingSingleItemRecipe(Item output, SingleRecipeInput input, Set<RecipeType<?>> types, boolean mustMatchOutput) {
+                return getExistingRecipe(output, input, recipesByInputOutput.getOrDefault(input.item().getItem(), Object2ObjectMaps.emptyMap()).get(output), types, mustMatchOutput);
             }
 
-            private @Nullable SimpleRecipeDescription getExistingSingleItemRecipe(Item output, Item ingredient, Set<RecipeType<?>> types) {
-                return this.getExistingSingleItemRecipe(output, new SingleRecipeInput(new ItemStack(ingredient)), types);
+            private @Nullable SimpleRecipeDescription getExistingSingleItemRecipe(Item output, Item ingredient, Set<RecipeType<?>> types, boolean mustMatchOutput) {
+                return this.getExistingSingleItemRecipe(output, new SingleRecipeInput(new ItemStack(ingredient)), types, mustMatchOutput);
             }
 
-            private @Nullable SimpleRecipeDescription getExistingCraftingRecipe3x3(Item output, List<Item> inputs) {
-                return this.getExistingCraftingRecipe(output, CraftingInput.of(3, 3, inputs.stream().map(item -> item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item)).toList()));
+            private @Nullable SimpleRecipeDescription getExistingCraftingRecipeShaped(Item output, int width, int height, List<Item> inputs) {
+                return this.getExistingCraftingRecipe(output, CraftingInput.of(width, height, inputs.stream().map(item -> item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item)).toList()));
             }
 
             private @Nullable SimpleRecipeDescription getExistingCraftingRecipeShapeless(Item output, List<Item> inputs) {
@@ -271,7 +283,7 @@ public final class AutomaticRecipeAdder {
             private void addRecipeToServer(Identifier key, @Nullable String reason, Recipe<?> recipe) {
                 var holder = new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, key.withSuffix(reason != null ? "_" + reason : "")), recipe);
                 MinecraftServer.getServer().getRecipeManager().addRecipe(holder);
-                this.mapRecipeByInputOutput(holder);
+                this.recomputeRecipesByInputByOutput();
             }
 
             private void addShapelessCraftingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, List<Item> inputs, CraftingBookCategory category, @Nullable Function<Item, @Nullable String> group) {
@@ -285,11 +297,11 @@ public final class AutomaticRecipeAdder {
                 this.addShapelessCraftingRecipeToServer(key, reason, output, outputCount, List.of(input), category, group == null ? null : actualOutput -> group.apply(input, actualOutput));
             }
 
-            private void add3x3CraftingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, List<Item> inputs, CraftingBookCategory category, @Nullable Function<Item, @Nullable String> group) {
+            private void addShapedCraftingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, int width, int height, List<Item> inputs, CraftingBookCategory category, @Nullable Function<Item, @Nullable String> group) {
                 if (ignoredItems.contains(output) || inputs.stream().filter(Objects::nonNull).anyMatch(ignoredItems::contains)) {
                     return;
                 }
-                this.addRecipeToServer(key, reason, new ShapedRecipe(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(category, group != null ? Optional.ofNullable(group.apply(output)).orElse("") : ""), new ShapedRecipePattern(3, 3, inputs.stream().map(input -> input == Items.AIR ? Optional.<Ingredient>empty() : Optional.of(Ingredient.of(input))).toList(), Optional.empty()), new ItemStackTemplate(output.builtInRegistryHolder(), outputCount, DataComponentPatch.EMPTY)));
+                this.addRecipeToServer(key, reason, new ShapedRecipe(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(category, group != null ? Optional.ofNullable(group.apply(output)).orElse("") : ""), new ShapedRecipePattern(width, height, inputs.stream().map(input -> input == Items.AIR ? Optional.<Ingredient>empty() : Optional.of(Ingredient.of(input))).toList(), Optional.empty()), new ItemStackTemplate(output.builtInRegistryHolder(), outputCount, DataComponentPatch.EMPTY)));
             }
 
             private void addStonecuttingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, Item input) {
@@ -320,79 +332,81 @@ public final class AutomaticRecipeAdder {
                 };
             }
 
-            private BiConsumer<Item, Item> add3x3Crafting(int outputCount, @Nullable String reason, Function<Item, List<Item>> inputFunction, CraftingBookCategory category, @Nullable BiFunction<Item, Item, @Nullable String> group) {
+            private BiConsumer<Item, Item> addShapedCrafting(int outputCount, @Nullable String reason, int width, int height, Function<Item, List<Item>> inputFunction, CraftingBookCategory category, @Nullable BiFunction<Item, Item, @Nullable String> group) {
                 return (input, output) -> {
                     var inputs = inputFunction.apply(input);
-                    var existingRecipe = this.getExistingCraftingRecipe3x3(output, inputs);
+                    var existingRecipe = this.getExistingCraftingRecipeShaped(output, width, height, inputs);
                     if (existingRecipe != null) {
                         if (existingRecipe.output != output || existingRecipe.resultCount >= outputCount) {
                             return;
                         }
                         this.removeRecipeFromServer(existingRecipe);
                     }
-                    this.add3x3CraftingRecipeToServer(output.keyInItemRegistry, reason, output, outputCount, inputs, category, group == null ? null : actualOutput -> group.apply(input, actualOutput));
+                    this.addShapedCraftingRecipeToServer(output.keyInItemRegistry, reason, output, outputCount, width, height, inputs, category, group == null ? null : actualOutput -> group.apply(input, actualOutput));
                 };
             }
 
-            private BiConsumer<Item, Item> add3x3Crafting(int outputCount, @Nullable String reason, Function<Item, List<Item>> inputFunction, CraftingBookCategory category) {
-                return this.add3x3Crafting(outputCount, reason, inputFunction, category, null);
+            private BiConsumer<Item, Item> addShapedCrafting(int outputCount, @Nullable String reason, int width, int height, Function<Item, List<Item>> inputFunction, CraftingBookCategory category) {
+                return this.addShapedCrafting(outputCount, reason, width, height, inputFunction, category, null);
             }
 
             private BiConsumer<Item, Item> add1x2RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
-                return this.add3x3Crafting(outputCount, reason, input -> List.of(input, Items.AIR, Items.AIR, input, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR), category);
+                return this.addShapedCrafting(outputCount, reason, 1, 2, input -> List.of(input, input), category);
             }
 
             private BiConsumer<Item, Item> add1x3RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
-                return this.add3x3Crafting(outputCount, reason, input -> List.of(input, Items.AIR, Items.AIR, input, Items.AIR, Items.AIR, input, Items.AIR, Items.AIR), category);
+                return this.addShapedCrafting(outputCount, reason, 1, 3, input -> List.of(input, input, input), category);
             }
 
             private BiConsumer<Item, Item> add2x2RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
-                return this.add3x3Crafting(outputCount, reason, input -> List.of(input, input, Items.AIR, input, input, Items.AIR, Items.AIR, Items.AIR, Items.AIR), category);
+                return this.addShapedCrafting(outputCount, reason, 2, 2, input -> List.of(input, input, input, input), category);
             }
 
             private BiConsumer<Item, Item> add3x2RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
-                return this.add3x3Crafting(outputCount, reason, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.AIR, Items.AIR), category);
+                return (item1, item2) -> {
+                    this.addShapedCrafting(outputCount, reason, 3, 2, input -> List.of(input, input, input, input, input, input), category).accept(item1, item2);
+                };
             }
 
             private BiConsumer<Item, Item> addStairsCrafting() {
-                return this.add3x3Crafting(STAIRS_CRAFTING_OUTPUT_COUNT, null, input -> List.of(input, Items.AIR, Items.AIR, input, input, Items.AIR, input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_stairs" : null);
+                return this.addShapedCrafting(STAIRS_CRAFTING_OUTPUT_COUNT, null, 3, 3, input -> List.of(input, Items.AIR, Items.AIR, input, input, Items.AIR, input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_stairs" : null);
             }
 
             private BiConsumer<Item, Item> addSlabCrafting() {
-                return this.add3x3Crafting(6, null, input -> List.of(input, input, input, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_slab" : null);
+                return this.addShapedCrafting(6, null, 3, 1, input -> List.of(input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_slab" : null);
             }
 
             private BiConsumer<Item, Item> addFenceCrafting() {
-                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.add3x3Crafting(3, null, input -> List.of(input, Items.STICK, input, input, Items.STICK, input, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence" : null));
+                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(3, null, 3, 2, input -> List.of(input, Items.STICK, input, input, Items.STICK, input), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence" : null));
             }
 
             private BiConsumer<Item, Item> addFenceGateCrafting() {
-                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.add3x3Crafting(1, null, input -> List.of(Items.STICK, input, Items.STICK, Items.STICK, input, Items.STICK, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence_gate" : null));
+                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(1, null, 3, 2, input -> List.of(Items.STICK, input, Items.STICK, Items.STICK, input, Items.STICK), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence_gate" : null));
             }
 
             private BiConsumer<Item, Item> addSignCrafting() {
-                return this.add3x3Crafting(3, null, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.STICK, Items.AIR), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_sign" : null);
+                return this.addShapedCrafting(3, null, 3, 3, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.STICK, Items.AIR), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_sign" : null);
             }
 
             private BiConsumer<Item, Item> addButtonCrafting() {
-                return this.add3x3Crafting(1, null, input -> List.of(input, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_button" : null);
+                return this.addShapelessCrafting(1, null, input -> List.of(input), CraftingBookCategory.REDSTONE, input -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_button" : null);
             }
 
             private BiConsumer<Item, Item> addDoorCrafting() {
-                return this.add3x3Crafting(3, null, input -> List.of(input, input, Items.AIR, input, input, Items.AIR, input, input, Items.AIR), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_door" : null);
+                return this.addShapedCrafting(3, null, 2, 3, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_door" : null);
             }
 
             private BiConsumer<Item, Item> addPressurePlateCrafting() {
-                return this.add3x3Crafting(1, null, input -> List.of(input, input, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_pressure_plate" : null);
+                return this.addShapedCrafting(1, null, 2, 1, input -> List.of(input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_pressure_plate" : null);
             }
 
             private BiConsumer<Item, Item> addTrapdoorCrafting() {
-                return this.add3x3Crafting(2, null, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.AIR, Items.AIR), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_trapdoor" : null);
+                return this.addShapedCrafting(2, null, 3, 2, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_trapdoor" : null);
             }
 
             private BiConsumer<Item, Item> addStonecutting(int outputCount, @Nullable String reason) {
                 return (input, output) -> {
-                    var existingRecipe = this.getExistingSingleItemRecipe(output, input, Set.of(RecipeType.STONECUTTING));
+                    var existingRecipe = this.getExistingSingleItemRecipe(output, input, Set.of(RecipeType.STONECUTTING), true);
                     if (existingRecipe != null) {
                         if (existingRecipe.output != output || existingRecipe.resultCount >= outputCount) {
                             return;
@@ -409,7 +423,7 @@ public final class AutomaticRecipeAdder {
 
             private BiConsumer<Item, Item> addSmelting(float experience, int cookingTime, @Nullable String reason) {
                 return (input, output) -> {
-                    var existingRecipe = this.getExistingSingleItemRecipe(output, input, Set.of(RecipeType.SMELTING));
+                    var existingRecipe = this.getExistingSingleItemRecipe(output, input, Set.of(RecipeType.SMELTING), false);
                     if (existingRecipe != null) {
                         if (existingRecipe.output != output || existingRecipe.resultCount >= 1) {
                             return;
@@ -427,7 +441,7 @@ public final class AutomaticRecipeAdder {
         }
         var adders = new RecipeAdders();
 
-        MinecraftServer.getServer().getRecipeManager().getRecipes().forEach(adders::mapRecipeByInputOutput);
+        adders.recomputeRecipesByInputByOutput();
 
         // Go over all items to see if we need to add recipes for them
         BuiltInRegistries.ITEM.forEach(item -> {
@@ -444,7 +458,7 @@ public final class AutomaticRecipeAdder {
                 getSuffixBase(item, "_slab"),
                 adders.addSlabCrafting(),
                 adders.addStonecutting(2),
-                conditional((input, _) -> getPrefixShape(input, "chiseled_") == null, invert(adders.addShapelessCrafting(1, "from_slabs", slab -> List.of(slab, slab), CraftingBookCategory.BUILDING, null)))
+                conditional((input, _) -> getPrefixShape(input, "chiseled_") == null, invert(adders.add1x2RectangleCrafting("from_slabs", 1, CraftingBookCategory.BUILDING)))
             );
             adders.addRecipes(
                 item,
@@ -584,15 +598,30 @@ public final class AutomaticRecipeAdder {
 
     }
 
+    private static @Nullable BlockItem getBlockItemByPath(String originalNamespace, String path) {
+        for (var namespace : List.of(originalNamespace, Identifier.DEFAULT_NAMESPACE)) {
+            var item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(namespace, path));
+            if (item.isPresent() && item.get().value() instanceof BlockItem blockItem) {
+                return blockItem;
+            }
+        }
+        return (BlockItem) BuiltInRegistries.ITEM.stream().filter(item -> item.keyInItemRegistry.getPath().equals(path))
+            .filter(item -> item instanceof BlockItem).findFirst().orElse(null);
+    }
+
     private static @Nullable String getSuffixBasePath(String path, String suffix) {
         if (!path.endsWith(suffix)) return null;
         return path.substring(0, path.length() - suffix.length());
     }
 
     private static @Nullable String getStartOrMiddleBasePath(String path, String substring) {
-        int chiseledIndex = path.indexOf(substring);
-        if (chiseledIndex == -1) return null;
-        return (chiseledIndex == 0 ? "" : path.substring(0, chiseledIndex)) + path.substring(chiseledIndex + substring.length());
+        int substringIndex = path.indexOf(substring);
+        if (substringIndex == -1) return null;
+        return (substringIndex == 0 ? "" : path.substring(0, substringIndex)) + path.substring(substringIndex + substring.length());
+    }
+
+    private static @Nullable Item getSuffixBase(Item item, String suffix) {
+        return getSuffixBase(item, suffix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
     }
 
     private static @Nullable Item getSuffixBase(Item item, String suffix, List<String> baseSuffixes) {
@@ -601,34 +630,22 @@ public final class AutomaticRecipeAdder {
         var path = key.getPath();
         var base = getSuffixBasePath(path, suffix);
         if (base == null) return null;
-        for (var baseSuffix : baseSuffixes) {
-            for (var namespace : List.of(key.getNamespace(), Identifier.DEFAULT_NAMESPACE)) {
-                var blockItem = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(namespace, base + baseSuffix));
-                if (blockItem.isPresent() && blockItem.get().value() instanceof BlockItem) {
-                    return blockItem.get().value();
-                }
-            }
-        }
-        return null;
-    }
-
-    private static @Nullable Item getSuffixBase(Item item, String suffix) {
-        return getSuffixBase(item, suffix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+        return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), base + baseSuffix))
+            .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     private static @Nullable Item getStartOrMiddleBase(Item item, String substring) {
+        return getStartOrMiddleBase(item, substring, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+    }
+
+    private static @Nullable Item getStartOrMiddleBase(Item item, String substring, List<String> baseSuffixes) {
         if (!(item instanceof BlockItem)) return null;
         var key = item.keyInItemRegistry;
         var path = key.getPath();
         var base = getStartOrMiddleBasePath(path, substring);
         if (base == null) return null;
-        for (var namespace : List.of(key.getNamespace(), Identifier.DEFAULT_NAMESPACE)) {
-            var blockItem = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(namespace, base));
-            if (blockItem.isPresent() && blockItem.get().value() instanceof BlockItem) {
-                return blockItem.get().value();
-            }
-        }
-        return null;
+        return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), base + baseSuffix))
+            .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     public static @Nullable Item getSuffixShape(Item base, String suffix) {
@@ -639,36 +656,38 @@ public final class AutomaticRecipeAdder {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
         var path = key.getPath();
-        for (var baseSuffix : baseSuffixes) {
+        return baseSuffixes.stream().map(baseSuffix -> {
             String pathWithoutBaseSuffix;
             if (baseSuffix.isEmpty()) {
                 pathWithoutBaseSuffix = path;
             } else if (path.endsWith(baseSuffix)) {
                 pathWithoutBaseSuffix = path.substring(0, path.length() - baseSuffix.length());
             } else {
-                continue;
+                return null;
             }
-            for (var namespace : List.of(key.getNamespace(), Identifier.DEFAULT_NAMESPACE)) {
-                var blockItem = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(namespace, pathWithoutBaseSuffix + suffix));
-                if (blockItem.isPresent() && blockItem.get().value() instanceof BlockItem) {
-                    return blockItem.get().value();
-                }
-            }
-        }
-        return null;
+            return getBlockItemByPath(key.getNamespace(), pathWithoutBaseSuffix + suffix);
+        }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     public static @Nullable Item getPrefixShape(Item base, String prefix) {
+        return getPrefixShape(base, prefix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+    }
+
+    public static @Nullable Item getPrefixShape(Item base, String prefix, List<String> baseSuffixes) {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
         var path = key.getPath();
-        for (var namespace : List.of(key.getNamespace(), Identifier.DEFAULT_NAMESPACE)) {
-            var blockItem = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(namespace, prefix + path));
-            if (blockItem.isPresent() && blockItem.get().value() instanceof BlockItem) {
-                return blockItem.get().value();
+        return baseSuffixes.stream().map(baseSuffix -> {
+            String pathWithoutBaseSuffix;
+            if (baseSuffix.isEmpty()) {
+                pathWithoutBaseSuffix = path;
+            } else if (path.endsWith(baseSuffix)) {
+                pathWithoutBaseSuffix = path.substring(0, path.length() - baseSuffix.length());
+            } else {
+                return null;
             }
-        }
-        return null;
+            return getBlockItemByPath(key.getNamespace(), prefix + pathWithoutBaseSuffix);
+        }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
 }

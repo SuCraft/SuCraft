@@ -1,0 +1,39 @@
+--- a/net/minecraft/world/level/block/state/BlockBehaviour.java
++++ b/net/minecraft/world/level/block/state/BlockBehaviour.java
+@@ -1211,6 +_,18 @@
+         public static BlockBehaviour.Properties ofFullCopy(final BlockBehaviour block) {
+             BlockBehaviour.Properties copyTo = ofLegacyCopy(block);
+             BlockBehaviour.Properties copyFrom = block.properties;
++            // Suki start - Copy properties to properties
++            return doExtraCopy(copyFrom, copyTo);
++        }
++
++        public static BlockBehaviour.Properties ofFullCopy(final BlockBehaviour.Properties properties) {
++            BlockBehaviour.Properties copyTo = BlockBehaviour.Properties.of();
++            doLegacyCopy(properties, copyTo);
++            return doExtraCopy(properties, copyTo);
++        }
++
++        public static BlockBehaviour.Properties doExtraCopy(final BlockBehaviour.Properties copyFrom, final BlockBehaviour.Properties copyTo) {
++            // Suki end - Copy properties to properties
+             copyTo.jumpFactor = copyFrom.jumpFactor;
+             copyTo.isRedstoneConductor = copyFrom.isRedstoneConductor;
+             copyTo.isValidSpawn = copyFrom.isValidSpawn;
+@@ -1226,6 +_,17 @@
+         public static BlockBehaviour.Properties ofLegacyCopy(final BlockBehaviour block) {
+             BlockBehaviour.Properties copyTo = new BlockBehaviour.Properties();
+             BlockBehaviour.Properties copyFrom = block.properties;
++            // Suki start - Copy properties to properties
++            return doLegacyCopy(copyFrom, copyTo);
++        }
++
++        public static BlockBehaviour.Properties ofLegacyCopy(final BlockBehaviour.Properties properties) {
++            BlockBehaviour.Properties copyTo = BlockBehaviour.Properties.of();
++            return doLegacyCopy(properties, copyTo);
++        }
++
++        public static BlockBehaviour.Properties doLegacyCopy(final BlockBehaviour.Properties copyFrom, final BlockBehaviour.Properties copyTo) {
++            // Suki end - Copy properties to properties
+             copyTo.destroyTime = copyFrom.destroyTime;
+             copyTo.explosionResistance = copyFrom.explosionResistance;
+             copyTo.hasCollision = copyFrom.hasCollision;

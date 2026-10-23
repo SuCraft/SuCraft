@@ -697,31 +697,43 @@ public interface BlockSet {
         }
 
         public Impl build() {
-            return new Impl(
+            final Impl[] built = new Impl[1];
+            built[0] = new Impl(
                 this.fullBlock ? new SuCraftBlocks.Type(this.getFullBlockIdentifier())
-                    .properties(this.getFullBlockProperties())
+                    .properties(this::getFullBlockProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
                     .blockConstructorForDataGeneration()
+                    .dataGenerateModel(factory -> factory.addBlockFamily(
+                        () -> built[0].fullBlockType().getForDataGeneration(),
+                        () -> built[0].hasSlab() ? built[0].slabType().getForDataGeneration() : null,
+                        () -> built[0].hasStairs() ? built[0].stairsType().getForDataGeneration() : null,
+                        () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null
+                    ))
+                    .dataGenerateBlockLootTableForDropSelf()
                     : null,
                 this.slab ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_slab"))
                     .slabFactory()
-                    .properties(this.getSlabProperties())
+                    .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelfSlab()
                     : null,
                 this.stairs ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_stairs"))
                     .stairsFactory(this.getStairsBaseState())
-                    .properties(this.getStairsProperties())
+                    .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())
+                    .dataGenerateBlockLootTableForDropSelf()
                     : null,
                 this.wall ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_wall"))
                     .wallFactory()
-                    .properties(this.getWallProperties())
+                    .properties(this::getWallProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
                     .wallConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelf()
                     : null
             );
+            return built[0];
         }
 
         private static String getBasePath(String fullBlockPath) {

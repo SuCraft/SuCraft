@@ -3,10 +3,10 @@
 # Fixes up all file patches (in IntelliJ, right-click -> Run 'fixup')
 
 cd ../..
-./gradlew :suki:fixupPaperApiFilePatches || true
-./gradlew :suki:fixupSpoutApiFilePatches || true
-./gradlew :suki:suki-server:fixupMinecraftResourcePatches || true
-./gradlew :suki:suki-server:fixupMinecraftSourcePatches || true
-./gradlew :suki:suki-server:fixupPaperServerFilePatches || true
-./gradlew :suki:suki-server:fixupSpoutServerFilePatches || true
+./gradlew :minecraft-server-software:fixupPaperApiFilePatches || true
+./gradlew :minecraft-server-software:fixupSpoutApiFilePatches || true
+./gradlew :minecraft-server-software:suki-server:fixupMinecraftResourcePatches || true
+./gradlew :minecraft-server-software:suki-server:fixupMinecraftSourcePatches || true
+./gradlew :minecraft-server-software:suki-server:fixupPaperServerFilePatches || true
+./gradlew :minecraft-server-software:suki-server:fixupSpoutServerFilePatches || true
 cd minecraft-server-software/gradle-bin

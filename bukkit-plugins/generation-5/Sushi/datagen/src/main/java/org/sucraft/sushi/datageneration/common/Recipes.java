@@ -324,7 +324,7 @@ public final class Recipes {
             return this;
         }
 
-        public ProviderFunction addAllStairs(Item stairs, Item fullBlock) {
+        public ProviderFunction addAllStairs(ItemLike stairs, ItemLike fullBlock) {
             this.setIngredientFromItem(fullBlock);
             this.setResult(stairs);
             return this.addAllStairs();
@@ -337,7 +337,7 @@ public final class Recipes {
             return this;
         }
 
-        public ProviderFunction addAllSlabs(Item slab, Item fullBlock) {
+        public ProviderFunction addAllSlabs(ItemLike slab, ItemLike fullBlock) {
             this.setIngredientFromItem(fullBlock);
             this.setResult(slab);
             return this.addAllSlabs();
@@ -347,13 +347,13 @@ public final class Recipes {
             return this.addRecipeSupplier(this.createStonecutting());
         }
 
-        public ProviderFunction addStonecutting(Item result, Item ingredient) {
+        public ProviderFunction addStonecutting(ItemLike result, ItemLike ingredient) {
             this.setIngredientFromItem(ingredient);
             this.setResult(result);
             return this.addStonecutting();
         }
 
-        public ProviderFunction addStonecutting(Item result, Item ingredient, int count) {
+        public ProviderFunction addStonecutting(ItemLike result, ItemLike ingredient, int count) {
             this.setResultCount(count);
             return this.addStonecutting(result, ingredient);
         }

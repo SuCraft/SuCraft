@@ -13,7 +13,7 @@ public final class BlockLootTables {
         throw new UnsupportedOperationException();
     }
 
-    public static class CollectedFactory extends org.sucraft.sushi.datageneration.common.CollectedFactory<FabricBlockLootSubProvider, Consumer<BlockLootSubProvider>> {
+    public static class CollectedFactory extends org.sucraft.sushi.datageneration.common.CollectedFactory<FabricBlockLootSubProvider, Consumer<FabricBlockLootSubProvider>> {
 
         @Override
         public FabricBlockLootSubProvider createProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {

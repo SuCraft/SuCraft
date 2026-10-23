@@ -6,9 +6,13 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.Block;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class Models {
 
@@ -20,6 +24,52 @@ public final class Models {
 
         public void addBlock(BlockStateModelGenerator generator) {
             this.add(generator);
+        }
+
+        public void addBlockFamily(
+            Supplier<Block> fullBlock,
+            Supplier<@Nullable Block> slab,
+            Supplier<@Nullable Block> stairs,
+            Supplier<@Nullable Block> wall
+        ) {
+            this.addBlock(generators -> {
+                var provider = generators.family(fullBlock.get());
+                var slabBlock = slab.get();
+                if (slabBlock != null) {
+                    provider.slab(slabBlock);
+                }
+                var stairsBlock = stairs.get();
+                if (stairsBlock != null) {
+                    provider.stairs(stairsBlock);
+                }
+                var wallBlock = wall.get();
+                if (wallBlock != null) {
+                    provider.wall(wallBlock);
+                }
+            });
+        }
+
+        public void addBlockTrivialCube(Block block) {
+            this.addBlock(generators -> generators.createTrivialCube(block));
+        }
+
+        public void addBlockSlab(Block slab) {
+            // TODO
+        }
+
+        public void addBlockStairs(Block stairs) {
+            // TODO
+            // this.addBlock(generators -> {
+            //     MultiVariant inner = BlockModelGenerators.plainVariant(this.getOrCreateModel(ModelTemplates.STAIRS_INNER, stairs));
+            //     Identifier straight = this.getOrCreateModel(ModelTemplates.STAIRS_STRAIGHT, stairs);
+            //     MultiVariant outer = BlockModelGenerators.plainVariant(this.getOrCreateModel(ModelTemplates.STAIRS_OUTER, stairs));
+            //     generators.blockStateOutput.accept(BlockModelGenerators.createStairs(stairs, inner, BlockModelGenerators.plainVariant(straight), outer));
+            //     // generators.registerSimpleItemModel(stairs, straight);
+            // });
+        }
+
+        public void addBlockWall(Block slab) {
+            // TODO
         }
 
         public void addItem(ItemModelGenerator generator) {

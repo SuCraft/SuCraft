@@ -73,6 +73,8 @@ java \
   -Xlog:async \
   -Dlog4j2.formatMsgNoLookups=true \
   -Djdk.serialFilter='!java.rmi.MarshalledObject' \
+  -Dcom.sun.net.ssl.checkRevocation=true \
+  -Dcom.sun.security.enableCRLDP=true \
   -jar server.jar \
   nogui
 # Allow the user to read the logs in the terminal before terminating

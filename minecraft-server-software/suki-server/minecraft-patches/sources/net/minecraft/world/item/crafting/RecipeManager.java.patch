@@ -1,17 +1,20 @@
 --- a/net/minecraft/world/item/crafting/RecipeManager.java
 +++ b/net/minecraft/world/item/crafting/RecipeManager.java
-@@ -236,6 +_,19 @@
+@@ -236,6 +_,22 @@
              Recipe<?> recipe = recipeHolder.value();
              OptionalInt groupId;
              if (recipe.group().isEmpty()) {
 +                // Suki start - Use default group for recipes without group
 +                String fallbackGroup = null;
 +                if (recipe instanceof ShapedRecipe shapedRecipe) {
-+                    fallbackGroup = shapedRecipe.result.item().value().keyInItemRegistry.getPath();
++                    var key = shapedRecipe.result.item().value().keyInItemRegistry;
++                    fallbackGroup = (key.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE) ? "" : key.getNamespace() + "_") + key.getPath();
 +                } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-+                    fallbackGroup = shapelessRecipe.result.item().value().keyInItemRegistry.getPath();
++                    var key = shapelessRecipe.result.item().value().keyInItemRegistry;
++                    fallbackGroup = (key.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE) ? "" : key.getNamespace() + "_") + key.getPath();
 +                } else if (recipe instanceof SingleItemRecipe singleItemRecipe) {
-+                    fallbackGroup = singleItemRecipe.result.item().value().keyInItemRegistry.getPath();
++                    var key = singleItemRecipe.result.item().value().keyInItemRegistry;
++                    fallbackGroup = (key.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE) ? "" : key.getNamespace() + "_") + key.getPath();
 +                }
 +                if (fallbackGroup != null)
 +                    groupId = OptionalInt.of(recipeGroups.computeIfAbsent(fallbackGroup, _ -> recipeGroups.size()));

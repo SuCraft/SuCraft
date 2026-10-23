@@ -6,3 +6,7 @@ accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder ingredients L
 accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
 accessible field net/minecraft/data/recipes/SingleItemRecipeBuilder ingredient Lnet/minecraft/world/item/crafting/Ingredient;
 accessible field net/minecraft/data/recipes/SingleItemRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
+accessible field net/minecraft/world/level/block/Blocks NEAR_PLANE_INTERSECTS_OUTLINE Lnet/minecraft/world/level/block/state/BlockBehaviour$StateArgumentPredicate;
+accessible field net/minecraft/world/level/block/ButtonBlock ticksToStayPressed I
+accessible field net/minecraft/world/level/block/ButtonBlock type Lnet/minecraft/world/level/block/state/properties/BlockSetType;
+accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;

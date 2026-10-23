@@ -16,7 +16,8 @@ public interface Models {
             Supplier<Block> fullBlock,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
-            Supplier<@Nullable Block> wall
+            Supplier<@Nullable Block> wall,
+            Supplier<@Nullable Block> button
         );
 
         void addBlockTrivialCube(Block block);
@@ -26,6 +27,8 @@ public interface Models {
         void addBlockStairs(Block stairs);
 
         void addBlockWall(Block slab);
+
+        void addBlockButton(Block slab);
 
     }
 

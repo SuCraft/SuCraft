@@ -3,18 +3,22 @@ package org.sucraft.sushi.gamecontent.block;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
-import org.sucraft.sushi.gamecontent.item.SuCraftItems;
+import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -26,13 +30,13 @@ public interface BlockSet {
 
     Block[] valuesForDataGeneration();
 
-    SuCraftBlocks.Type[] types();
+    SuCraftBlockType[] types();
 
     ItemType[] items();
 
     Item[] itemsNMS();
 
-    SuCraftItems.Type[] itemTypes();
+    SuCraftItemType[] itemTypes();
 
     boolean hasFullBlock();
 
@@ -42,7 +46,9 @@ public interface BlockSet {
 
     boolean hasWall();
 
-    interface WithFullBlock extends BlockSet {
+    boolean hasButton();
+
+    interface WithFullBlock extends BlockSet, ItemLike {
 
         BlockType fullBlock();
 
@@ -50,7 +56,7 @@ public interface BlockSet {
 
         Block fullBlockForDataGeneration();
 
-        SuCraftBlocks.Type fullBlockType();
+        SuCraftBlockType fullBlockType();
 
         ItemType fullBlockItem();
 
@@ -58,7 +64,11 @@ public interface BlockSet {
 
         Item fullBlockItemForDataGeneration();
 
-        SuCraftItems.Type fullBlockItemType();
+        SuCraftItemType fullBlockItemType();
+
+        default Item asItem() {
+            return this.fullBlockItemNMS();
+        }
 
     }
 
@@ -70,7 +80,7 @@ public interface BlockSet {
 
         Block slabForDataGeneration();
 
-        SuCraftBlocks.Type slabType();
+        SuCraftBlockType slabType();
 
         ItemType slabItem();
 
@@ -78,7 +88,7 @@ public interface BlockSet {
 
         Item slabItemForDataGeneration();
 
-        SuCraftItems.Type slabItemType();
+        SuCraftItemType slabItemType();
 
     }
 
@@ -90,7 +100,7 @@ public interface BlockSet {
 
         Block stairsForDataGeneration();
 
-        SuCraftBlocks.Type stairsType();
+        SuCraftBlockType stairsType();
 
         ItemType stairsItem();
 
@@ -98,7 +108,7 @@ public interface BlockSet {
 
         Item stairsItemForDataGeneration();
 
-        SuCraftItems.Type stairsItemType();
+        SuCraftItemType stairsItemType();
 
     }
 
@@ -108,7 +118,7 @@ public interface BlockSet {
 
         Block wallNMS();
 
-        SuCraftBlocks.Type wallType();
+        SuCraftBlockType wallType();
 
         Block wallForDataGeneration();
 
@@ -116,9 +126,29 @@ public interface BlockSet {
 
         Item wallItemNMS();
 
-        SuCraftItems.Type wallItemType();
+        SuCraftItemType wallItemType();
 
         Item wallItemForDataGeneration();
+
+    }
+
+    interface WithButton extends BlockSet {
+
+        BlockType button();
+
+        Block buttonNMS();
+
+        SuCraftBlockType buttonType();
+
+        Block buttonForDataGeneration();
+
+        ItemType buttonItem();
+
+        Item buttonItemNMS();
+
+        SuCraftItemType buttonItemType();
+
+        Item buttonItemForDataGeneration();
 
     }
 
@@ -131,39 +161,45 @@ public interface BlockSet {
     interface WithFullBlockAndSlabAndStairsAndWall extends WithFullBlockAndSlabAndStairs, WithWall {
     }
 
-    final class Impl implements WithFullBlockAndSlabAndStairsAndWall {
+    interface WithFullBlockAndSlabAndStairsAndWallAndButton extends WithFullBlockAndSlabAndStairsAndWall, WithButton {
+    }
 
-        private SuCraftBlocks.@Nullable Type fullBlock;
-        private SuCraftBlocks.@Nullable Type slab;
-        private SuCraftBlocks.@Nullable Type stairs;
-        private SuCraftBlocks.@Nullable Type wall;
+    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndButton {
+
+        private @Nullable SuCraftBlockType fullBlock;
+        private @Nullable SuCraftBlockType slab;
+        private @Nullable SuCraftBlockType stairs;
+        private @Nullable SuCraftBlockType wall;
+        private @Nullable SuCraftBlockType button;
 
         private BlockType @Nullable [] values;
         private Block @Nullable [] valuesNMS;
         private Block @Nullable [] valuesForDataGeneration;
-        private SuCraftBlocks.Type @Nullable [] types;
+        private SuCraftBlockType @Nullable [] types;
         private ItemType @Nullable [] items;
         private Item @Nullable [] itemsNMS;
         private Item @Nullable [] itemsForDataGeneration;
-        private SuCraftItems.Type @Nullable [] itemTypes;
+        private SuCraftItemType @Nullable [] itemTypes;
 
         Impl(
-            SuCraftBlocks.@Nullable Type fullBlock,
-            SuCraftBlocks.@Nullable Type slab,
-            SuCraftBlocks.@Nullable Type stairs,
-            SuCraftBlocks.@Nullable Type wall
+            @Nullable SuCraftBlockType fullBlock,
+            @Nullable SuCraftBlockType slab,
+            @Nullable SuCraftBlockType stairs,
+            @Nullable SuCraftBlockType wall,
+            @Nullable SuCraftBlockType button
         ) {
             this.fullBlock = fullBlock;
             this.slab = slab;
             this.stairs = stairs;
             this.wall = wall;
+            this.button = button;
         }
 
         @Override
         public BlockType[] values() {
             if (this.values == null) {
                 this.values = Arrays.stream(this.types())
-                    .map(SuCraftBlocks.Type::get).toArray(BlockType[]::new);
+                    .map(SuCraftBlockType::get).toArray(BlockType[]::new);
             }
             return this.values;
         }
@@ -172,7 +208,7 @@ public interface BlockSet {
         public Block[] valuesNMS() {
             if (this.valuesNMS == null) {
                 this.valuesNMS = Arrays.stream(this.types())
-                    .map(SuCraftBlocks.Type::getNMS).toArray(Block[]::new);
+                    .map(SuCraftBlockType::getNMS).toArray(Block[]::new);
             }
             return this.valuesNMS;
         }
@@ -181,16 +217,21 @@ public interface BlockSet {
         public Block[] valuesForDataGeneration() {
             if (this.valuesForDataGeneration == null) {
                 this.valuesForDataGeneration = Arrays.stream(this.types())
-                    .map(SuCraftBlocks.Type::getForDataGeneration).toArray(Block[]::new);
+                    .map(SuCraftBlockType::getForDataGeneration).toArray(Block[]::new);
             }
             return this.valuesForDataGeneration;
         }
 
         @Override
-        public SuCraftBlocks.Type[] types() {
+        public SuCraftBlockType[] types() {
             if (this.types == null) {
-                this.types = Stream.of(this.fullBlock, this.slab, this.stairs, this.wall)
-                    .filter(Objects::nonNull).toArray(SuCraftBlocks.Type[]::new);
+                this.types = Stream.of(
+                    this.fullBlock,
+                    this.slab,
+                    this.stairs,
+                    this.wall,
+                    this.button
+                ).filter(Objects::nonNull).toArray(SuCraftBlockType[]::new);
             }
             return this.types;
         }
@@ -199,7 +240,7 @@ public interface BlockSet {
         public ItemType[] items() {
             if (this.items == null) {
                 this.items = Arrays.stream(this.itemTypes())
-                    .map(SuCraftItems.Type::get).toArray(ItemType[]::new);
+                    .map(SuCraftItemType::get).toArray(ItemType[]::new);
             }
             return this.items;
         }
@@ -208,16 +249,16 @@ public interface BlockSet {
         public Item[] itemsNMS() {
             if (this.itemsNMS == null) {
                 this.itemsNMS = Arrays.stream(this.itemTypes())
-                    .map(SuCraftItems.Type::getNMS).toArray(Item[]::new);
+                    .map(SuCraftItemType::getNMS).toArray(Item[]::new);
             }
             return this.itemsNMS;
         }
 
         @Override
-        public SuCraftItems.Type[] itemTypes() {
+        public SuCraftItemType[] itemTypes() {
             if (this.itemTypes == null) {
                 this.itemTypes = Arrays.stream(this.types())
-                    .map(SuCraftBlocks.Type::item).filter(Objects::nonNull).toArray(SuCraftItems.Type[]::new);
+                    .map(SuCraftBlockType::item).filter(Objects::nonNull).toArray(SuCraftItemType[]::new);
             }
             return this.itemTypes;
         }
@@ -243,6 +284,11 @@ public interface BlockSet {
         }
 
         @Override
+        public boolean hasButton() {
+            return this.button != null;
+        }
+
+        @Override
         public BlockType fullBlock() {
             return this.fullBlock.get();
         }
@@ -258,7 +304,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftBlocks.Type fullBlockType() {
+        public SuCraftBlockType fullBlockType() {
             return this.fullBlock;
         }
 
@@ -278,7 +324,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftItems.Type fullBlockItemType() {
+        public SuCraftItemType fullBlockItemType() {
             return this.fullBlock.itemType();
         }
 
@@ -298,7 +344,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftBlocks.Type slabType() {
+        public SuCraftBlockType slabType() {
             return this.slab;
         }
 
@@ -318,7 +364,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftItems.Type slabItemType() {
+        public SuCraftItemType slabItemType() {
             return this.slab.itemType();
         }
 
@@ -338,7 +384,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftBlocks.Type stairsType() {
+        public SuCraftBlockType stairsType() {
             return this.stairs;
         }
 
@@ -358,7 +404,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftItems.Type stairsItemType() {
+        public SuCraftItemType stairsItemType() {
             return this.stairs.itemType();
         }
 
@@ -378,7 +424,7 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftBlocks.Type wallType() {
+        public SuCraftBlockType wallType() {
             return this.wall;
         }
 
@@ -398,8 +444,48 @@ public interface BlockSet {
         }
 
         @Override
-        public SuCraftItems.Type wallItemType() {
+        public SuCraftItemType wallItemType() {
             return this.wall.itemType();
+        }
+
+        @Override
+        public BlockType button() {
+            return this.button.get();
+        }
+
+        @Override
+        public Block buttonNMS() {
+            return this.button.getNMS();
+        }
+
+        @Override
+        public Block buttonForDataGeneration() {
+            return this.button.getForDataGeneration();
+        }
+
+        @Override
+        public SuCraftBlockType buttonType() {
+            return this.button;
+        }
+
+        @Override
+        public ItemType buttonItem() {
+            return this.button.item();
+        }
+
+        @Override
+        public Item buttonItemNMS() {
+            return this.button.itemNMS();
+        }
+
+        @Override
+        public Item buttonItemForDataGeneration() {
+            return this.button.itemForDataGeneration();
+        }
+
+        @Override
+        public SuCraftItemType buttonItemType() {
+            return this.button.itemType();
         }
 
     }
@@ -412,18 +498,23 @@ public interface BlockSet {
         private boolean stairs;
         private boolean slab;
         private boolean wall;
+        private boolean button;
         private @Nullable Consumer<BlockBehaviour.Properties> propertiesFinalizer;
         private BlockBehaviour.@Nullable Properties properties;
         private @Nullable Block propertiesFrom;
         private @Nullable Block slabPropertiesFrom;
         private @Nullable Block stairsPropertiesFrom;
         private @Nullable Block wallPropertiesFrom;
+        private @Nullable Block buttonPropertiesFrom;
         private @Nullable Block fallback;
         private @Nullable Block stairsFallback;
         private @Nullable Block slabFallback;
         private @Nullable Block wallFallback;
+        private @Nullable Block buttonFallback;
         private @Nullable BlockState slabFullBlockFallback;
         private @Nullable Supplier<BlockState> stairsBaseState;
+        private @Nullable Supplier<BlockSetType> blockSetType;
+        private @Nullable IntSupplier buttonTicksToStayPressed;
 
         Builder() {
         }
@@ -459,6 +550,11 @@ public interface BlockSet {
 
         public Builder wall() {
             this.wall = true;
+            return this;
+        }
+
+        public Builder button() {
+            this.button = true;
             return this;
         }
 
@@ -539,6 +635,22 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder buttonPropertiesFrom(Block propertiesFrom) {
+            this.buttonPropertiesFrom = propertiesFrom;
+            return this;
+        }
+
+        public Builder buttonFallback(Block fallback) {
+            this.buttonFallback = fallback;
+            return this;
+        }
+
+        public Builder buttonVanilla(Block propertiesFromAndFallback) {
+            this.buttonPropertiesFrom = propertiesFromAndFallback;
+            this.buttonFallback = propertiesFromAndFallback;
+            return this;
+        }
+
         public Builder slabFullBlockFallback(BlockState fullBlockFallback) {
             this.slabFullBlockFallback = fullBlockFallback;
             return this;
@@ -548,17 +660,35 @@ public interface BlockSet {
             return this.slabFullBlockFallback(fullBlockFallback.defaultBlockState());
         }
 
-        public Builder stairsBaseState(Supplier<BlockState> stairsBaseState) {
-            this.stairsBaseState = stairsBaseState;
+        public Builder stairsBaseState(Supplier<BlockState> baseState) {
+            this.stairsBaseState = baseState;
             return this;
         }
 
-        public Builder stairsBaseState(BlockState stairsBaseState) {
-            return this.stairsBaseState(() -> stairsBaseState);
+        public Builder stairsBaseState(BlockState baseState) {
+            return this.stairsBaseState(() -> baseState);
         }
 
-        public Builder stairsBaseState(Block stairsBaseState) {
-            return this.stairsBaseState(stairsBaseState::defaultBlockState);
+        public Builder stairsBaseState(Block baseState) {
+            return this.stairsBaseState(baseState::defaultBlockState);
+        }
+
+        public Builder blockSetType(Supplier<BlockSetType> blockSetType) {
+            this.blockSetType = blockSetType;
+            return this;
+        }
+
+        public Builder blockSetType(BlockSetType blockSetType) {
+            return this.blockSetType(() -> blockSetType);
+        }
+
+        public Builder buttonTicksToStayPressed(IntSupplier ticksToStayPressed) {
+            this.buttonTicksToStayPressed = ticksToStayPressed;
+            return this;
+        }
+
+        public Builder buttonTicksToStayPressed(int ticksToStayPressed) {
+            return this.buttonTicksToStayPressed(() -> ticksToStayPressed);
         }
 
         private Identifier getBaseIdentifier() {
@@ -615,7 +745,7 @@ public interface BlockSet {
 
         private BlockBehaviour.Properties getSlabProperties() {
             return this.getShapeProperties(
-                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(PlatformDependent.Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
+                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
                 () -> {
                     if (this.slabPropertiesFrom != null) {
                         return this.slabPropertiesFrom;
@@ -627,7 +757,7 @@ public interface BlockSet {
 
         private BlockBehaviour.Properties getStairsProperties() {
             return this.getShapeProperties(
-                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(PlatformDependent.Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
+                properties -> PlatformDependent.BlockBehaviourProperties.ofLegacyCopy(properties).isViewBlocking(Blocks.NEAR_PLANE_INTERSECTS_OUTLINE),
                 () -> {
                     if (this.stairsPropertiesFrom != null) {
                         return this.stairsPropertiesFrom;
@@ -645,6 +775,18 @@ public interface BlockSet {
                         return this.wallPropertiesFrom;
                     }
                     return getShapeIfExists(this.propertiesFrom, "_wall");
+                }
+            );
+        }
+
+        private BlockBehaviour.Properties getButtonProperties() {
+            return this.getShapeProperties(
+                _ -> Blocks.buttonProperties(),
+                () -> {
+                    if (this.buttonPropertiesFrom != null) {
+                        return this.buttonPropertiesFrom;
+                    }
+                    return getShapeIfExists(this.propertiesFrom, "_button");
                 }
             );
         }
@@ -674,6 +816,13 @@ public interface BlockSet {
             return Objects.requireNonNull(getShapeIfExists(this.fallback, "_wall"));
         }
 
+        private Block getButtonFallback() {
+            if (this.buttonFallback != null) {
+                return this.buttonFallback;
+            }
+            return Objects.requireNonNull(getShapeIfExists(this.fallback, "_button"));
+        }
+
         public @Nullable BlockState getSlabFullBlockFallback() {
             if (this.slabFullBlockFallback != null) {
                 return this.slabFullBlockFallback;
@@ -696,10 +845,39 @@ public interface BlockSet {
             };
         }
 
+        public Supplier<BlockSetType> getBlockSetType() {
+            if (this.blockSetType != null) {
+                return this.blockSetType;
+            }
+            return () -> {
+                if (this.fullBlock) {
+                    BlockSetType fromFullBlock = SuCraftBlockType.deriveBlockSetType(BuiltInRegistries.BLOCK.getValue(this.getFullBlockIdentifier()));
+                    if (fromFullBlock != null) {
+                        return fromFullBlock;
+                    }
+                }
+                if (this.button) {
+                    Block buttonFallback = this.getButtonFallback();
+                    BlockSetType fromButtonFallback = SuCraftBlockType.deriveBlockSetType(buttonFallback);
+                    if (fromButtonFallback != null) {
+                        return fromButtonFallback;
+                    }
+                }
+                throw new NullPointerException("No block set type given");
+            };
+        }
+
+        public IntSupplier getButtonTicksToStayPressed() {
+            if (this.buttonTicksToStayPressed != null) {
+                return this.buttonTicksToStayPressed;
+            }
+            return () -> ((ButtonBlock) this.getButtonFallback()).ticksToStayPressed;
+        }
+
         public Impl build() {
             final Impl[] built = new Impl[1];
             built[0] = new Impl(
-                this.fullBlock ? new SuCraftBlocks.Type(this.getFullBlockIdentifier())
+                this.fullBlock ? new SuCraftBlockType(this.getFullBlockIdentifier())
                     .properties(this::getFullBlockProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
                     .blockConstructorForDataGeneration()
@@ -707,29 +885,37 @@ public interface BlockSet {
                         () -> built[0].fullBlockType().getForDataGeneration(),
                         () -> built[0].hasSlab() ? built[0].slabType().getForDataGeneration() : null,
                         () -> built[0].hasStairs() ? built[0].stairsType().getForDataGeneration() : null,
-                        () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null
+                        () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null,
+                        () -> built[0].hasButton() ? built[0].buttonType().getForDataGeneration() : null
                     ))
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.slab ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_slab"))
+                this.slab ? new SuCraftBlockType(this.getSuffixedIdentifier("_slab"))
                     .slabFactory()
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelfSlab()
                     : null,
-                this.stairs ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_stairs"))
+                this.stairs ? new SuCraftBlockType(this.getSuffixedIdentifier("_stairs"))
                     .stairsFactory(this.getStairsBaseState())
                     .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
-                this.wall ? new SuCraftBlocks.Type(this.getSuffixedIdentifier("_wall"))
+                this.wall ? new SuCraftBlockType(this.getSuffixedIdentifier("_wall"))
                     .wallFactory()
                     .properties(this::getWallProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
                     .wallConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelf()
+                    : null,
+                this.button ? new SuCraftBlockType(this.getSuffixedIdentifier("_button"))
+                    .buttonFactory(this.getBlockSetType(), this.getButtonTicksToStayPressed())
+                    .properties(this::getButtonProperties)
+                    .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
+                    .buttonConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null
             );

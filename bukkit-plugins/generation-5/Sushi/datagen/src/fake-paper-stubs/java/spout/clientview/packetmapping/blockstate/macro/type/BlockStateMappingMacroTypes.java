@@ -2,6 +2,7 @@ package spout.clientview.packetmapping.blockstate.macro.type;
 
 public interface BlockStateMappingMacroTypes {
 
+    BlockStateMappingMacroType BUTTON = null;
     BlockStateMappingMacroType FULL_BLOCK = null;
     BlockStateMappingMacroType SLAB = null;
     BlockStateMappingMacroType STAIRS = null;

@@ -494,8 +494,8 @@ public final class AutomaticRecipeAdder {
             adders.addRecipes(
                 item,
                 filterOut(getSuffixBase(item, "_button"), STORAGE_BLOCKS),
-                adders.addButtonCrafting(),
-                adders.addStonecutting(1)
+                adders.addButtonCrafting()
+                // adders.addStonecutting(1)
                 // invert(adders.addStonecutting(1, "from_button"))
             );
             adders.addRecipes(
@@ -523,7 +523,7 @@ public final class AutomaticRecipeAdder {
                 item,
                 getSuffixBase(item, "_bricks"),
                 (input, output) -> {
-                    Item polished = getPrefixShape(input, "polished_");
+                    Item polished = getPrefixShape(getSpecialNamespaceIfPresent(input, output), input, "polished_");
                     if (polished != null) {
                         adders.add2x2RectangleCrafting("from_polished", 4, CraftingBookCategory.BUILDING).accept(polished, output);
                     } else {
@@ -553,9 +553,10 @@ public final class AutomaticRecipeAdder {
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_chiseled"))
             );
+            @Nullable Item withoutChiseled = getStartOrMiddleBase(item, "chiseled_");
             adders.addRecipes(
                 item,
-                getSuffixShape(getStartOrMiddleBase(item, "chiseled_"), "_slab"),
+                getSuffixShape(getSpecialNamespaceIfPresent(item, withoutChiseled), withoutChiseled, "_slab"),
                 adders.add1x2RectangleCrafting("from_unchiseled_slabs", 1, CraftingBookCategory.BUILDING)
             );
             adders.addRecipes(
@@ -589,9 +590,10 @@ public final class AutomaticRecipeAdder {
                 getSuffixBase(item, "_planks", List.of("_log")),
                 adders.addStonecutting(4, "from_log")
             );
+            @Nullable Item log = getSuffixBase(item, "_planks", List.of("_log"));
             adders.addRecipes(
                 item,
-                getPrefixShape(getSuffixBase(item, "_planks", List.of("_log")), "stripped_"),
+                getPrefixShape(getSpecialNamespaceIfPresent(item, log), log, "stripped_"),
                 adders.addStonecutting(4, "from_stripped_log")
             );
         });
@@ -649,10 +651,18 @@ public final class AutomaticRecipeAdder {
     }
 
     public static @Nullable Item getSuffixShape(Item base, String suffix) {
-        return getSuffixShape(base, suffix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+        return getSuffixShape(null, base, suffix);
+    }
+
+    public static @Nullable Item getSuffixShape(@Nullable String preferredNamespace, Item base, String suffix) {
+        return getSuffixShape(preferredNamespace, base, suffix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
     }
 
     public static @Nullable Item getSuffixShape(Item base, String suffix, List<String> baseSuffixes) {
+        return getSuffixShape(null, base, suffix, baseSuffixes);
+    }
+
+    public static @Nullable Item getSuffixShape(String preferredNamespace, Item base, String suffix, List<String> baseSuffixes) {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
         var path = key.getPath();
@@ -665,15 +675,23 @@ public final class AutomaticRecipeAdder {
             } else {
                 return null;
             }
-            return getBlockItemByPath(key.getNamespace(), pathWithoutBaseSuffix + suffix);
+            return getBlockItemByPath(preferredNamespace != null ? preferredNamespace : key.getNamespace(), pathWithoutBaseSuffix + suffix);
         }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     public static @Nullable Item getPrefixShape(Item base, String prefix) {
-        return getPrefixShape(base, prefix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+        return getPrefixShape(null, base, prefix);
+    }
+
+    public static @Nullable Item getPrefixShape(@Nullable String preferredNamespace, Item base, String prefix) {
+        return getPrefixShape(preferredNamespace, base, prefix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
     }
 
     public static @Nullable Item getPrefixShape(Item base, String prefix, List<String> baseSuffixes) {
+        return getPrefixShape(null, base, prefix, baseSuffixes);
+    }
+
+    public static @Nullable Item getPrefixShape(@Nullable String preferredNamespace, Item base, String prefix, List<String> baseSuffixes) {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
         var path = key.getPath();
@@ -686,8 +704,23 @@ public final class AutomaticRecipeAdder {
             } else {
                 return null;
             }
-            return getBlockItemByPath(key.getNamespace(), prefix + pathWithoutBaseSuffix);
+            return getBlockItemByPath(preferredNamespace != null ? preferredNamespace : key.getNamespace(), prefix + pathWithoutBaseSuffix);
         }).filter(Objects::nonNull).findFirst().orElse(null);
+    }
+
+    public static @Nullable String getSpecialNamespaceIfPresent(@Nullable Item... items) {
+        if (items == null) {
+            return null;
+        }
+        for (Item item : items) {
+            if (item != null) {
+                String namespace = item.keyInItemRegistry.getNamespace();
+                if (!namespace.equals(Identifier.DEFAULT_NAMESPACE)) {
+                    return namespace;
+                }
+            }
+        }
+        return null;
     }
 
 }

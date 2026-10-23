@@ -30,7 +30,8 @@ public final class Models {
             Supplier<Block> fullBlock,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
-            Supplier<@Nullable Block> wall
+            Supplier<@Nullable Block> wall,
+            Supplier<@Nullable Block> button
         ) {
             this.addBlock(generators -> {
                 var provider = generators.family(fullBlock.get());
@@ -45,6 +46,10 @@ public final class Models {
                 var wallBlock = wall.get();
                 if (wallBlock != null) {
                     provider.wall(wallBlock);
+                }
+                var buttonBlock = button.get();
+                if (buttonBlock != null) {
+                    provider.button(buttonBlock);
                 }
             });
         }
@@ -69,6 +74,10 @@ public final class Models {
         }
 
         public void addBlockWall(Block slab) {
+            // TODO
+        }
+
+        public void addBlockButton(Block button) {
             // TODO
         }
 

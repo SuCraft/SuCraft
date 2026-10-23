@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/block/Blocks.java
++++ b/net/minecraft/world/level/block/Blocks.java
+@@ -5855,7 +_,7 @@
+             .pushReaction(PushReaction.IMMOVEABLE);
+     }
+ 
+-    private static BlockBehaviour.Properties buttonProperties() {
++    public static BlockBehaviour.Properties buttonProperties() { // Suki - Common class tweakers - Make accessible
+         return BlockBehaviour.Properties.of().noCollision().strength(0.5F).pushReaction(PushReaction.POPPED);
+     }
+ 

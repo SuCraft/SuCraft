@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_planks",
+    "sucraft:black_vibrant_planks",
     "sucraft:blue_planks",
+    "sucraft:blue_vibrant_planks",
     "sucraft:brown_planks",
+    "sucraft:brown_vibrant_planks",
     "sucraft:cyan_planks",
+    "sucraft:cyan_vibrant_planks",
     "sucraft:gray_planks",
+    "sucraft:gray_vibrant_planks",
     "sucraft:green_planks",
+    "sucraft:green_vibrant_planks",
     "sucraft:light_blue_planks",
+    "sucraft:light_blue_vibrant_planks",
     "sucraft:light_gray_planks",
+    "sucraft:light_gray_vibrant_planks",
     "sucraft:lime_planks",
+    "sucraft:lime_vibrant_planks",
     "sucraft:magenta_planks",
+    "sucraft:magenta_vibrant_planks",
     "sucraft:orange_planks",
+    "sucraft:orange_vibrant_planks",
     "sucraft:pink_planks",
+    "sucraft:pink_vibrant_planks",
     "sucraft:purple_planks",
+    "sucraft:purple_vibrant_planks",
     "sucraft:red_planks",
+    "sucraft:red_vibrant_planks",
     "sucraft:white_planks",
-    "sucraft:yellow_planks"
+    "sucraft:white_vibrant_planks",
+    "sucraft:yellow_planks",
+    "sucraft:yellow_vibrant_planks"
   ]
 }

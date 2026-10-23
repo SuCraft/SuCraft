@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_plank_wall",
+    "sucraft:black_vibrant_plank_wall",
     "sucraft:blue_plank_wall",
+    "sucraft:blue_vibrant_plank_wall",
     "sucraft:brown_plank_wall",
+    "sucraft:brown_vibrant_plank_wall",
     "sucraft:cyan_plank_wall",
+    "sucraft:cyan_vibrant_plank_wall",
     "sucraft:gray_plank_wall",
+    "sucraft:gray_vibrant_plank_wall",
     "sucraft:green_plank_wall",
+    "sucraft:green_vibrant_plank_wall",
     "sucraft:light_blue_plank_wall",
+    "sucraft:light_blue_vibrant_plank_wall",
     "sucraft:light_gray_plank_wall",
+    "sucraft:light_gray_vibrant_plank_wall",
     "sucraft:lime_plank_wall",
+    "sucraft:lime_vibrant_plank_wall",
     "sucraft:magenta_plank_wall",
+    "sucraft:magenta_vibrant_plank_wall",
     "sucraft:orange_plank_wall",
+    "sucraft:orange_vibrant_plank_wall",
     "sucraft:pink_plank_wall",
+    "sucraft:pink_vibrant_plank_wall",
     "sucraft:purple_plank_wall",
+    "sucraft:purple_vibrant_plank_wall",
     "sucraft:red_plank_wall",
+    "sucraft:red_vibrant_plank_wall",
     "sucraft:white_plank_wall",
-    "sucraft:yellow_plank_wall"
+    "sucraft:white_vibrant_plank_wall",
+    "sucraft:yellow_plank_wall",
+    "sucraft:yellow_vibrant_plank_wall"
   ]
 }

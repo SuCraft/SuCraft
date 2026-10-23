@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_plank_pressure_plate",
+    "sucraft:black_vibrant_plank_pressure_plate",
     "sucraft:blue_plank_pressure_plate",
+    "sucraft:blue_vibrant_plank_pressure_plate",
     "sucraft:brown_plank_pressure_plate",
+    "sucraft:brown_vibrant_plank_pressure_plate",
     "sucraft:cyan_plank_pressure_plate",
+    "sucraft:cyan_vibrant_plank_pressure_plate",
     "sucraft:gray_plank_pressure_plate",
+    "sucraft:gray_vibrant_plank_pressure_plate",
     "sucraft:green_plank_pressure_plate",
+    "sucraft:green_vibrant_plank_pressure_plate",
     "sucraft:light_blue_plank_pressure_plate",
+    "sucraft:light_blue_vibrant_plank_pressure_plate",
     "sucraft:light_gray_plank_pressure_plate",
+    "sucraft:light_gray_vibrant_plank_pressure_plate",
     "sucraft:lime_plank_pressure_plate",
+    "sucraft:lime_vibrant_plank_pressure_plate",
     "sucraft:magenta_plank_pressure_plate",
+    "sucraft:magenta_vibrant_plank_pressure_plate",
     "sucraft:orange_plank_pressure_plate",
+    "sucraft:orange_vibrant_plank_pressure_plate",
     "sucraft:pink_plank_pressure_plate",
+    "sucraft:pink_vibrant_plank_pressure_plate",
     "sucraft:purple_plank_pressure_plate",
+    "sucraft:purple_vibrant_plank_pressure_plate",
     "sucraft:red_plank_pressure_plate",
+    "sucraft:red_vibrant_plank_pressure_plate",
     "sucraft:white_plank_pressure_plate",
-    "sucraft:yellow_plank_pressure_plate"
+    "sucraft:white_vibrant_plank_pressure_plate",
+    "sucraft:yellow_plank_pressure_plate",
+    "sucraft:yellow_vibrant_plank_pressure_plate"
   ]
 }

@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_plank_button",
+    "sucraft:black_vibrant_plank_button",
     "sucraft:blue_plank_button",
+    "sucraft:blue_vibrant_plank_button",
     "sucraft:brown_plank_button",
+    "sucraft:brown_vibrant_plank_button",
     "sucraft:cyan_plank_button",
+    "sucraft:cyan_vibrant_plank_button",
     "sucraft:gray_plank_button",
+    "sucraft:gray_vibrant_plank_button",
     "sucraft:green_plank_button",
+    "sucraft:green_vibrant_plank_button",
     "sucraft:light_blue_plank_button",
+    "sucraft:light_blue_vibrant_plank_button",
     "sucraft:light_gray_plank_button",
+    "sucraft:light_gray_vibrant_plank_button",
     "sucraft:lime_plank_button",
+    "sucraft:lime_vibrant_plank_button",
     "sucraft:magenta_plank_button",
+    "sucraft:magenta_vibrant_plank_button",
     "sucraft:orange_plank_button",
+    "sucraft:orange_vibrant_plank_button",
     "sucraft:pink_plank_button",
+    "sucraft:pink_vibrant_plank_button",
     "sucraft:purple_plank_button",
+    "sucraft:purple_vibrant_plank_button",
     "sucraft:red_plank_button",
+    "sucraft:red_vibrant_plank_button",
     "sucraft:white_plank_button",
-    "sucraft:yellow_plank_button"
+    "sucraft:white_vibrant_plank_button",
+    "sucraft:yellow_plank_button",
+    "sucraft:yellow_vibrant_plank_button"
   ]
 }

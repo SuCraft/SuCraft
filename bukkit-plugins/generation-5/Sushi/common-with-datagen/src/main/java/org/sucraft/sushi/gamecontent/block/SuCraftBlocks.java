@@ -1,5 +1,6 @@
 package org.sucraft.sushi.gamecontent.block;
 
+import it.unimi.dsi.fastutil.booleans.Boolean2ObjectFunction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.block.BlockType;
@@ -15,51 +16,8 @@ public final class SuCraftBlocks {
         throw new UnsupportedOperationException();
     }
 
-    public static final Family.DyeColor<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate> DYED_PLANKS = Family.forDyeColor(dyeColor ->
-        BlockSet.builder(dyeColor.getSerializedName() + "_planks")
-            .shapeIdentifierSuffixFunction(suffix -> "_plank" + suffix)
-            .fallback(switch (dyeColor) {
-                case BLACK -> Blocks.DARK_OAK_PLANKS;
-                case BLUE -> Blocks.WARPED_PLANKS;
-                case BROWN -> Blocks.SPRUCE_PLANKS;
-                case CYAN -> Blocks.WARPED_PLANKS;
-                case GRAY -> Blocks.POPLAR_PLANKS;
-                case GREEN -> Blocks.WARPED_PLANKS;
-                case LIGHT_BLUE -> Blocks.WARPED_PLANKS;
-                case LIGHT_GRAY -> Blocks.POPLAR_PLANKS;
-                case LIME -> Blocks.WARPED_PLANKS;
-                case MAGENTA -> Blocks.CRIMSON_PLANKS;
-                case ORANGE -> Blocks.ACACIA_PLANKS;
-                case PINK -> Blocks.CHERRY_PLANKS;
-                case PURPLE -> Blocks.CRIMSON_PLANKS;
-                case RED -> Blocks.MANGROVE_PLANKS;
-                case WHITE -> Blocks.PALE_OAK_PLANKS;
-                case YELLOW -> Blocks.BAMBOO_PLANKS;
-            })
-            .propertiesFrom(Blocks.OAK_PLANKS)
-            .fullBlock().slab().stairs().wall().fence().fenceGate().button().pressurePlate()
-            .wallFallback(switch (dyeColor) {
-                case BLACK -> Blocks.POLISHED_BLACKSTONE_BRICK_WALL;
-                case BLUE -> Blocks.PRISMARINE_WALL;
-                case BROWN -> Blocks.MUD_BRICK_WALL;
-                case CYAN -> Blocks.PRISMARINE_WALL;
-                case GRAY -> Blocks.POLISHED_TUFF_WALL;
-                case GREEN -> Blocks.PRISMARINE_WALL;
-                case LIGHT_BLUE -> Blocks.PRISMARINE_WALL;
-                case LIGHT_GRAY -> Blocks.ANDESITE_WALL;
-                case LIME -> Blocks.PRISMARINE_WALL;
-                case MAGENTA -> Blocks.CINNABAR_WALL;
-                case ORANGE -> Blocks.RED_SANDSTONE_WALL;
-                case PINK -> Blocks.CINNABAR_WALL;
-                case PURPLE -> Blocks.CINNABAR_WALL;
-                case RED -> Blocks.CINNABAR_BRICK_WALL;
-                case WHITE -> Blocks.DIORITE_WALL;
-                case YELLOW -> Blocks.SULFUR_BRICK_WALL;
-            })
-            .build()
-    );
-
     // Stone / Andesite
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate ANDESITE_BRICKS =
         BlockSet.builder("andesite_bricks")
             .vanilla(Blocks.POLISHED_ANDESITE)
@@ -73,6 +31,7 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.POLISHED_ANDESITE);
 
     // Stone / Calcite
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate POLISHED_CALCITE =
         BlockSet.builder("polished_calcite")
             .vanilla(Blocks.CALCITE)
@@ -82,6 +41,7 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.PALE_OAK_BUTTON)
             .pressurePlateFallback(Blocks.PALE_OAK_PRESSURE_PLATE)
             .build();
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate CALCITE_BRICKS =
         BlockSet.builder("calcite_bricks")
             .vanilla(Blocks.CALCITE)
@@ -95,6 +55,7 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.CALCITE);
 
     // Stone / Diorite
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate DIORITE_BRICKS =
         BlockSet.builder("diorite_bricks")
             .vanilla(Blocks.POLISHED_DIORITE)
@@ -104,10 +65,12 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.PALE_OAK_BUTTON)
             .pressurePlateFallback(Blocks.PALE_OAK_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType CHISELED_DIORITE_BRICKS = blockType("chiseled_diorite_bricks")
         .fullBlock(Blocks.POLISHED_DIORITE);
 
     // Stone / Dripstone
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate POLISHED_DRIPSTONE =
         BlockSet.builder("polished_dripstone")
             .vanilla(Blocks.DRIPSTONE_BLOCK)
@@ -117,6 +80,7 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.JUNGLE_BUTTON)
             .pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
             .build();
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate DRIPSTONE_BRICKS =
         BlockSet.builder("dripstone_bricks")
             .vanilla(Blocks.DRIPSTONE_BLOCK)
@@ -139,10 +103,12 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.JUNGLE_BUTTON)
             .pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType CHISELED_GRANITE_BRICKS = blockType("chiseled_granite_bricks")
         .fullBlock(Blocks.POLISHED_GRANITE);
 
     // Stone / Regular
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate DIRTY_STONE_BRICKS =
         BlockSet.builder("dirty_stone_bricks")
             .vanilla(Blocks.STONE_BRICKS)
@@ -151,6 +117,7 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.STONE_BUTTON)
             .pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate SNOWY_STONE_BRICKS =
         BlockSet.builder("snowy_stone_bricks")
             .vanilla(Blocks.STONE_BRICKS)
@@ -161,6 +128,7 @@ public final class SuCraftBlocks {
             .build();
 
     // Stone / Tuff
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate ROUGH_POLISHED_TUFF =
         BlockSet.builder("polished_tuff")
             .vanilla(Blocks.POLISHED_TUFF)
@@ -169,6 +137,7 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.STONE_BUTTON)
             .pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate ROUGH_TUFF_BRICKS =
         BlockSet.builder("tuff_bricks")
             .vanilla(Blocks.TUFF_BRICKS)
@@ -177,8 +146,74 @@ public final class SuCraftBlocks {
             .buttonFallback(Blocks.STONE_BUTTON)
             .pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType ROUGH_CHISELED_TUFF_BRICKS = blockType("chiseled_tuff_bricks")
         .fullBlock(Blocks.CHISELED_TUFF_BRICKS);
+
+    // Wood / Dyed planks
+
+    public static final class DyedPlankFamily<V> extends Family.Boolean<V> {
+
+        public DyedPlankFamily(Boolean2ObjectFunction<V> constructor) {
+            super(constructor);
+        }
+
+        public V painted() {
+            return this.get(false);
+        }
+
+        public V abraded() {
+            return this.get(true);
+        }
+
+    }
+
+    public static final DyedPlankFamily<Family.DyeColor<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate>> DYED_PLANKS =
+        new DyedPlankFamily<>(sanded ->
+            new Family.DyeColor<>(dyeColor ->
+                BlockSet.builder(dyeColor.getSerializedName() + (sanded ? "" : "_vibrant") + "_planks")
+                    .shapeIdentifierSuffixFunction(suffix -> "_plank" + suffix)
+                    .fallback(switch (dyeColor) {
+                        case BLACK -> Blocks.DARK_OAK_PLANKS;
+                        case BLUE -> Blocks.WARPED_PLANKS;
+                        case BROWN -> Blocks.SPRUCE_PLANKS;
+                        case CYAN -> Blocks.WARPED_PLANKS;
+                        case GRAY -> Blocks.POPLAR_PLANKS;
+                        case GREEN -> Blocks.WARPED_PLANKS;
+                        case LIGHT_BLUE -> Blocks.WARPED_PLANKS;
+                        case LIGHT_GRAY -> Blocks.POPLAR_PLANKS;
+                        case LIME -> Blocks.WARPED_PLANKS;
+                        case MAGENTA -> Blocks.CRIMSON_PLANKS;
+                        case ORANGE -> Blocks.ACACIA_PLANKS;
+                        case PINK -> Blocks.CHERRY_PLANKS;
+                        case PURPLE -> Blocks.CRIMSON_PLANKS;
+                        case RED -> Blocks.MANGROVE_PLANKS;
+                        case WHITE -> Blocks.PALE_OAK_PLANKS;
+                        case YELLOW -> Blocks.BAMBOO_PLANKS;
+                    })
+                    .propertiesFrom(Blocks.OAK_PLANKS)
+                    .fullBlock().slab().stairs().wall().fence().fenceGate().button().pressurePlate()
+                    .wallFallback(switch (dyeColor) {
+                        case BLACK -> Blocks.POLISHED_BLACKSTONE_BRICK_WALL;
+                        case BLUE -> Blocks.PRISMARINE_WALL;
+                        case BROWN -> Blocks.MUD_BRICK_WALL;
+                        case CYAN -> Blocks.PRISMARINE_WALL;
+                        case GRAY -> Blocks.POLISHED_TUFF_WALL;
+                        case GREEN -> Blocks.PRISMARINE_WALL;
+                        case LIGHT_BLUE -> Blocks.PRISMARINE_WALL;
+                        case LIGHT_GRAY -> Blocks.ANDESITE_WALL;
+                        case LIME -> Blocks.PRISMARINE_WALL;
+                        case MAGENTA -> Blocks.CINNABAR_WALL;
+                        case ORANGE -> Blocks.RED_SANDSTONE_WALL;
+                        case PINK -> Blocks.CINNABAR_WALL;
+                        case PURPLE -> Blocks.CINNABAR_WALL;
+                        case RED -> Blocks.CINNABAR_BRICK_WALL;
+                        case WHITE -> Blocks.DIORITE_WALL;
+                        case YELLOW -> Blocks.SULFUR_BRICK_WALL;
+                    })
+                    .build()
+            )
+        );
 
     private static SuCraftBlockType blockType(String path) {
         return new SuCraftBlockType(path);

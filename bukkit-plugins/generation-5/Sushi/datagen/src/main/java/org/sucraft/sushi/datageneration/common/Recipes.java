@@ -18,13 +18,16 @@ import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -408,6 +411,9 @@ public final class Recipes {
                     ingredients = List.of(singleItemBuilder.ingredient);
                 }
                 if (ingredients != null) {
+                    int[] actuallyAddedIngredientI = {0};
+                    var itemsAlreadyAdded = new HashSet<Item>();
+                    var tagsAlreadyAdded = new HashSet<TagKey<Item>>();
                     for (int i = 0; i < ingredients.size(); i++) {
                         var ingredient = ingredients.get(i);
                         boolean sameIngredientAlreadyChecked = false;
@@ -419,12 +425,25 @@ public final class Recipes {
                         }
                         if (sameIngredientAlreadyChecked) continue;
                         if (this.unlockedByIngredientPredicate.test(ingredient)) {
-                            if (ingredient.getSingleItem().isPresent()) {
-                                builder.unlockedBy(
-                                    "has_ingredient" + (ingredients.size() == 1 ? "" : "_" + (i + 1)),
-                                    RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), ingredient.getSingleItem().get().value()))
-                                );
-                            }
+                            var unwrapped = ingredient.values.unwrap();
+                            unwrapped.ifLeft(tag -> {
+                                if (tagsAlreadyAdded.add(tag)) {
+                                    int ingredientI = ++actuallyAddedIngredientI[0];
+                                    builder.unlockedBy(
+                                        "has_ingredient_" + ingredientI,
+                                        RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), tag))
+                                    );
+                                }
+                            });
+                            unwrapped.ifRight(items -> items.forEach(item -> {
+                                if (itemsAlreadyAdded.add(item.value())) {
+                                    int ingredientI = ++actuallyAddedIngredientI[0];
+                                    builder.unlockedBy(
+                                        "has_ingredient_" + ingredientI,
+                                        RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), item.value()))
+                                    );
+                                }
+                            }));
                         }
                     }
                 }

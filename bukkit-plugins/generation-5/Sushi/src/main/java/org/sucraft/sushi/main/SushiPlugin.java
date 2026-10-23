@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.sucraft.sushi.gamecontent.item.ReplaceOldItemsInInventories;
 import org.sucraft.sushi.gamecontent.recipe.AutomaticRecipeAdder;
+import org.sucraft.sushi.gamecontent.recipe.AutomaticRecipeAdvancementAdder;
 
 public final class SushiPlugin extends JavaPlugin {
 
@@ -17,6 +18,7 @@ public final class SushiPlugin extends JavaPlugin {
 
         // Run initializers
         AutomaticRecipeAdder.run();
+        AutomaticRecipeAdvancementAdder.run();
 
         // Log to console
         getLogger().info(getName() + " is enabled!");

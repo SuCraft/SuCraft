@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_plank_slab",
+    "sucraft:black_vibrant_plank_slab",
     "sucraft:blue_plank_slab",
+    "sucraft:blue_vibrant_plank_slab",
     "sucraft:brown_plank_slab",
+    "sucraft:brown_vibrant_plank_slab",
     "sucraft:cyan_plank_slab",
+    "sucraft:cyan_vibrant_plank_slab",
     "sucraft:gray_plank_slab",
+    "sucraft:gray_vibrant_plank_slab",
     "sucraft:green_plank_slab",
+    "sucraft:green_vibrant_plank_slab",
     "sucraft:light_blue_plank_slab",
+    "sucraft:light_blue_vibrant_plank_slab",
     "sucraft:light_gray_plank_slab",
+    "sucraft:light_gray_vibrant_plank_slab",
     "sucraft:lime_plank_slab",
+    "sucraft:lime_vibrant_plank_slab",
     "sucraft:magenta_plank_slab",
+    "sucraft:magenta_vibrant_plank_slab",
     "sucraft:orange_plank_slab",
+    "sucraft:orange_vibrant_plank_slab",
     "sucraft:pink_plank_slab",
+    "sucraft:pink_vibrant_plank_slab",
     "sucraft:purple_plank_slab",
+    "sucraft:purple_vibrant_plank_slab",
     "sucraft:red_plank_slab",
+    "sucraft:red_vibrant_plank_slab",
     "sucraft:white_plank_slab",
-    "sucraft:yellow_plank_slab"
+    "sucraft:white_vibrant_plank_slab",
+    "sucraft:yellow_plank_slab",
+    "sucraft:yellow_vibrant_plank_slab"
   ]
 }

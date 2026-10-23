@@ -1,20 +1,36 @@
 {
   "values": [
     "sucraft:black_plank_fence",
+    "sucraft:black_vibrant_plank_fence",
     "sucraft:blue_plank_fence",
+    "sucraft:blue_vibrant_plank_fence",
     "sucraft:brown_plank_fence",
+    "sucraft:brown_vibrant_plank_fence",
     "sucraft:cyan_plank_fence",
+    "sucraft:cyan_vibrant_plank_fence",
     "sucraft:gray_plank_fence",
+    "sucraft:gray_vibrant_plank_fence",
     "sucraft:green_plank_fence",
+    "sucraft:green_vibrant_plank_fence",
     "sucraft:light_blue_plank_fence",
+    "sucraft:light_blue_vibrant_plank_fence",
     "sucraft:light_gray_plank_fence",
+    "sucraft:light_gray_vibrant_plank_fence",
     "sucraft:lime_plank_fence",
+    "sucraft:lime_vibrant_plank_fence",
     "sucraft:magenta_plank_fence",
+    "sucraft:magenta_vibrant_plank_fence",
     "sucraft:orange_plank_fence",
+    "sucraft:orange_vibrant_plank_fence",
     "sucraft:pink_plank_fence",
+    "sucraft:pink_vibrant_plank_fence",
     "sucraft:purple_plank_fence",
+    "sucraft:purple_vibrant_plank_fence",
     "sucraft:red_plank_fence",
+    "sucraft:red_vibrant_plank_fence",
     "sucraft:white_plank_fence",
-    "sucraft:yellow_plank_fence"
+    "sucraft:white_vibrant_plank_fence",
+    "sucraft:yellow_plank_fence",
+    "sucraft:yellow_vibrant_plank_fence"
   ]
 }

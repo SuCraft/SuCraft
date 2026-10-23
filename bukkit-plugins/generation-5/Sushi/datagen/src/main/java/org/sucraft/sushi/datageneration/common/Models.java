@@ -6,7 +6,6 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +30,9 @@ public final class Models {
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
-            Supplier<@Nullable Block> button
+            Supplier<@Nullable Block> fence,
+            Supplier<@Nullable Block> button,
+            Supplier<@Nullable Block> pressurePlate
         ) {
             this.addBlock(generators -> {
                 var provider = generators.family(fullBlock.get());
@@ -47,9 +48,17 @@ public final class Models {
                 if (wallBlock != null) {
                     provider.wall(wallBlock);
                 }
+                var fenceBlock = fence.get();
+                if (fenceBlock != null) {
+                    provider.fence(fenceBlock);
+                }
                 var buttonBlock = button.get();
                 if (buttonBlock != null) {
                     provider.button(buttonBlock);
+                }
+                var pressurePlateBlock = pressurePlate.get();
+                if (pressurePlateBlock != null) {
+                    provider.pressurePlate(pressurePlateBlock);
                 }
             });
         }
@@ -73,11 +82,19 @@ public final class Models {
             // });
         }
 
-        public void addBlockWall(Block slab) {
+        public void addBlockWall(Block wall) {
+            // TODO
+        }
+
+        public void addBlockFence(Block fence) {
             // TODO
         }
 
         public void addBlockButton(Block button) {
+            // TODO
+        }
+
+        public void addBlockPressurePlate(Block pressurePlate) {
             // TODO
         }
 

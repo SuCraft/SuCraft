@@ -380,6 +380,18 @@ public final class AutomaticRecipeAdder {
                 return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(3, null, 3, 2, input -> List.of(input, Items.STICK, input, input, Items.STICK, input), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence" : null));
             }
 
+            public boolean isNonPlankNewFence(Item input, Item output) {
+                return input != Items.NETHER_BRICKS && !input.builtInRegistryHolder().is(ItemTags.PLANKS);
+            }
+
+            private BiConsumer<Item, Item> addNewNonWoodenFenceStonecutting() {
+                return conditional(this::isNonPlankNewFence, this.addStonecutting(1, null));
+            }
+
+            private BiConsumer<Item, Item> addReverseNewNonWoodenFenceStonecutting() {
+                return conditional(this::isNonPlankNewFence, invert(this.addStonecutting(1, null)));
+            }
+
             private BiConsumer<Item, Item> addFenceGateCrafting() {
                 return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(1, null, 3, 2, input -> List.of(Items.STICK, input, Items.STICK, Items.STICK, input, Items.STICK), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence_gate" : null));
             }
@@ -467,6 +479,12 @@ public final class AutomaticRecipeAdder {
                 adders.addStonecutting(1),
                 // adders::addToBaseSingleCrafting,
                 invert(adders.addStonecutting(1, "from_wall"))
+            );
+            adders.addRecipes(
+                item,
+                getSuffixBase(item, "_fence"),
+                adders.addNewNonWoodenFenceStonecutting(),
+                adders.addReverseNewNonWoodenFenceStonecutting()
             );
             adders.addRecipes(
                 item,

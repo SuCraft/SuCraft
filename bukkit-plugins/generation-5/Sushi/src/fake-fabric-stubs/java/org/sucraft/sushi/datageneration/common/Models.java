@@ -17,7 +17,9 @@ public interface Models {
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
-            Supplier<@Nullable Block> button
+            Supplier<@Nullable Block> fence,
+            Supplier<@Nullable Block> button,
+            Supplier<@Nullable Block> pressurePlate
         );
 
         void addBlockTrivialCube(Block block);
@@ -26,9 +28,13 @@ public interface Models {
 
         void addBlockStairs(Block stairs);
 
-        void addBlockWall(Block slab);
+        void addBlockWall(Block wall);
 
-        void addBlockButton(Block slab);
+        void addBlockFence(Block fence);
+
+        void addBlockButton(Block button);
+
+        void addBlockPressurePlate(Block pressurePlate);
 
     }
 

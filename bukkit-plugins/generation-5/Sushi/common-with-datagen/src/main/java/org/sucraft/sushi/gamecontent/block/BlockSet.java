@@ -5,10 +5,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.material.PushReaction;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
@@ -46,7 +48,11 @@ public interface BlockSet {
 
     boolean hasWall();
 
+    boolean hasFence();
+
     boolean hasButton();
+
+    boolean hasPressurePlate();
 
     interface WithFullBlock extends BlockSet, ItemLike {
 
@@ -132,6 +138,26 @@ public interface BlockSet {
 
     }
 
+    interface WithFence extends BlockSet {
+
+        BlockType fence();
+
+        Block fenceNMS();
+
+        SuCraftBlockType fenceType();
+
+        Block fenceForDataGeneration();
+
+        ItemType fenceItem();
+
+        Item fenceItemNMS();
+
+        SuCraftItemType fenceItemType();
+
+        Item fenceItemForDataGeneration();
+
+    }
+
     interface WithButton extends BlockSet {
 
         BlockType button();
@@ -152,6 +178,26 @@ public interface BlockSet {
 
     }
 
+    interface WithPressurePlate extends BlockSet {
+
+        BlockType pressurePlate();
+
+        Block pressurePlateNMS();
+
+        SuCraftBlockType pressurePlateType();
+
+        Block pressurePlateForDataGeneration();
+
+        ItemType pressurePlateItem();
+
+        Item pressurePlateItemNMS();
+
+        SuCraftItemType pressurePlateItemType();
+
+        Item pressurePlateItemForDataGeneration();
+
+    }
+
     interface WithFullBlockAndSlab extends WithFullBlock, WithSlab {
     }
 
@@ -161,16 +207,24 @@ public interface BlockSet {
     interface WithFullBlockAndSlabAndStairsAndWall extends WithFullBlockAndSlabAndStairs, WithWall {
     }
 
-    interface WithFullBlockAndSlabAndStairsAndWallAndButton extends WithFullBlockAndSlabAndStairsAndWall, WithButton {
+    interface WithFullBlockAndSlabAndStairsAndWallAndFence extends WithFullBlockAndSlabAndStairsAndWall, WithFence {
     }
 
-    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndButton {
+    interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndButton extends WithFullBlockAndSlabAndStairsAndWallAndFence, WithButton {
+    }
+
+    interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate extends WithFullBlockAndSlabAndStairsAndWallAndFenceAndButton, WithPressurePlate {
+    }
+
+    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate {
 
         private @Nullable SuCraftBlockType fullBlock;
         private @Nullable SuCraftBlockType slab;
         private @Nullable SuCraftBlockType stairs;
         private @Nullable SuCraftBlockType wall;
+        private @Nullable SuCraftBlockType fence;
         private @Nullable SuCraftBlockType button;
+        private @Nullable SuCraftBlockType pressurePlate;
 
         private BlockType @Nullable [] values;
         private Block @Nullable [] valuesNMS;
@@ -186,13 +240,17 @@ public interface BlockSet {
             @Nullable SuCraftBlockType slab,
             @Nullable SuCraftBlockType stairs,
             @Nullable SuCraftBlockType wall,
-            @Nullable SuCraftBlockType button
+            @Nullable SuCraftBlockType fence,
+            @Nullable SuCraftBlockType button,
+            @Nullable SuCraftBlockType pressurePlate
         ) {
             this.fullBlock = fullBlock;
             this.slab = slab;
             this.stairs = stairs;
             this.wall = wall;
+            this.fence = fence;
             this.button = button;
+            this.pressurePlate = pressurePlate;
         }
 
         @Override
@@ -230,7 +288,9 @@ public interface BlockSet {
                     this.slab,
                     this.stairs,
                     this.wall,
-                    this.button
+                    this.fence,
+                    this.button,
+                    this.pressurePlate
                 ).filter(Objects::nonNull).toArray(SuCraftBlockType[]::new);
             }
             return this.types;
@@ -284,8 +344,18 @@ public interface BlockSet {
         }
 
         @Override
+        public boolean hasFence() {
+            return this.fence != null;
+        }
+
+        @Override
         public boolean hasButton() {
             return this.button != null;
+        }
+
+        @Override
+        public boolean hasPressurePlate() {
+            return this.pressurePlate != null;
         }
 
         @Override
@@ -449,6 +519,46 @@ public interface BlockSet {
         }
 
         @Override
+        public BlockType fence() {
+            return this.fence.get();
+        }
+
+        @Override
+        public Block fenceNMS() {
+            return this.fence.getNMS();
+        }
+
+        @Override
+        public Block fenceForDataGeneration() {
+            return this.fence.getForDataGeneration();
+        }
+
+        @Override
+        public SuCraftBlockType fenceType() {
+            return this.fence;
+        }
+
+        @Override
+        public ItemType fenceItem() {
+            return this.fence.item();
+        }
+
+        @Override
+        public Item fenceItemNMS() {
+            return this.fence.itemNMS();
+        }
+
+        @Override
+        public Item fenceItemForDataGeneration() {
+            return this.fence.itemForDataGeneration();
+        }
+
+        @Override
+        public SuCraftItemType fenceItemType() {
+            return this.fence.itemType();
+        }
+
+        @Override
         public BlockType button() {
             return this.button.get();
         }
@@ -488,6 +598,46 @@ public interface BlockSet {
             return this.button.itemType();
         }
 
+        @Override
+        public BlockType pressurePlate() {
+            return this.pressurePlate.get();
+        }
+
+        @Override
+        public Block pressurePlateNMS() {
+            return this.pressurePlate.getNMS();
+        }
+
+        @Override
+        public Block pressurePlateForDataGeneration() {
+            return this.pressurePlate.getForDataGeneration();
+        }
+
+        @Override
+        public SuCraftBlockType pressurePlateType() {
+            return this.pressurePlate;
+        }
+
+        @Override
+        public ItemType pressurePlateItem() {
+            return this.pressurePlate.item();
+        }
+
+        @Override
+        public Item pressurePlateItemNMS() {
+            return this.pressurePlate.itemNMS();
+        }
+
+        @Override
+        public Item pressurePlateItemForDataGeneration() {
+            return this.pressurePlate.itemForDataGeneration();
+        }
+
+        @Override
+        public SuCraftItemType pressurePlateItemType() {
+            return this.pressurePlate.itemType();
+        }
+
     }
 
     final class Builder {
@@ -498,19 +648,25 @@ public interface BlockSet {
         private boolean stairs;
         private boolean slab;
         private boolean wall;
+        private boolean fence;
         private boolean button;
+        private boolean pressurePlate;
         private @Nullable Consumer<BlockBehaviour.Properties> propertiesFinalizer;
         private BlockBehaviour.@Nullable Properties properties;
         private @Nullable Block propertiesFrom;
         private @Nullable Block slabPropertiesFrom;
         private @Nullable Block stairsPropertiesFrom;
         private @Nullable Block wallPropertiesFrom;
+        private @Nullable Block fencePropertiesFrom;
         private @Nullable Block buttonPropertiesFrom;
+        private @Nullable Block pressurePlatePropertiesFrom;
         private @Nullable Block fallback;
         private @Nullable Block stairsFallback;
         private @Nullable Block slabFallback;
         private @Nullable Block wallFallback;
+        private @Nullable Block fenceFallback;
         private @Nullable Block buttonFallback;
+        private @Nullable Block pressurePlateFallback;
         private @Nullable BlockState slabFullBlockFallback;
         private @Nullable Supplier<BlockState> stairsBaseState;
         private @Nullable Supplier<BlockSetType> blockSetType;
@@ -553,8 +709,18 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder fence() {
+            this.fence = true;
+            return this;
+        }
+
         public Builder button() {
             this.button = true;
+            return this;
+        }
+
+        public Builder pressurePlate() {
+            this.pressurePlate = true;
             return this;
         }
 
@@ -635,6 +801,22 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder fencePropertiesFrom(Block propertiesFrom) {
+            this.fencePropertiesFrom = propertiesFrom;
+            return this;
+        }
+
+        public Builder fenceFallback(Block fallback) {
+            this.fenceFallback = fallback;
+            return this;
+        }
+
+        public Builder fenceVanilla(Block propertiesFromAndFallback) {
+            this.fencePropertiesFrom = propertiesFromAndFallback;
+            this.fenceFallback = propertiesFromAndFallback;
+            return this;
+        }
+
         public Builder buttonPropertiesFrom(Block propertiesFrom) {
             this.buttonPropertiesFrom = propertiesFrom;
             return this;
@@ -648,6 +830,22 @@ public interface BlockSet {
         public Builder buttonVanilla(Block propertiesFromAndFallback) {
             this.buttonPropertiesFrom = propertiesFromAndFallback;
             this.buttonFallback = propertiesFromAndFallback;
+            return this;
+        }
+
+        public Builder pressurePlatePropertiesFrom(Block propertiesFrom) {
+            this.pressurePlatePropertiesFrom = propertiesFrom;
+            return this;
+        }
+
+        public Builder pressurePlateFallback(Block fallback) {
+            this.pressurePlateFallback = fallback;
+            return this;
+        }
+
+        public Builder pressurePlateVanilla(Block propertiesFromAndFallback) {
+            this.pressurePlatePropertiesFrom = propertiesFromAndFallback;
+            this.pressurePlateFallback = propertiesFromAndFallback;
             return this;
         }
 
@@ -779,6 +977,29 @@ public interface BlockSet {
             );
         }
 
+        private BlockBehaviour.Properties getFenceProperties() {
+            return this.getShapeProperties(
+                properties -> {
+                    var newProperties = BlockBehaviour.Properties.of()
+                        .mapColor(properties.mapColor)
+                        .forceSolidOn()
+                        .instrument(properties.instrument)
+                        .strength(properties.destroyTime, properties.explosionResistance)
+                        .sound(properties.soundType);
+                    if (properties.ignitedByLava) {
+                        newProperties.ignitedByLava();
+                    }
+                    return newProperties;
+                },
+                () -> {
+                    if (this.fencePropertiesFrom != null) {
+                        return this.fencePropertiesFrom;
+                    }
+                    return getShapeIfExists(this.propertiesFrom, "_fence");
+                }
+            );
+        }
+
         private BlockBehaviour.Properties getButtonProperties() {
             return this.getShapeProperties(
                 _ -> Blocks.buttonProperties(),
@@ -787,6 +1008,30 @@ public interface BlockSet {
                         return this.buttonPropertiesFrom;
                     }
                     return getShapeIfExists(this.propertiesFrom, "_button");
+                }
+            );
+        }
+
+        private BlockBehaviour.Properties getPressurePlateProperties() {
+            return this.getShapeProperties(
+                properties -> {
+                    var newProperties = BlockBehaviour.Properties.of()
+                        .mapColor(properties.mapColor)
+                        .forceSolidOn()
+                        .instrument(properties.instrument)
+                        .noCollision()
+                        .strength(0.5f)
+                        .pushReaction(PushReaction.POPPED);
+                    if (properties.ignitedByLava) {
+                        newProperties.ignitedByLava();
+                    }
+                    return newProperties;
+                },
+                () -> {
+                    if (this.pressurePlatePropertiesFrom != null) {
+                        return this.pressurePlatePropertiesFrom;
+                    }
+                    return getShapeIfExists(this.propertiesFrom, "_pressure_plate");
                 }
             );
         }
@@ -816,11 +1061,25 @@ public interface BlockSet {
             return Objects.requireNonNull(getShapeIfExists(this.fallback, "_wall"));
         }
 
+        private Block getFenceFallback() {
+            if (this.fenceFallback != null) {
+                return this.fenceFallback;
+            }
+            return Objects.requireNonNull(getShapeIfExists(this.fallback, "_fence"));
+        }
+
         private Block getButtonFallback() {
             if (this.buttonFallback != null) {
                 return this.buttonFallback;
             }
             return Objects.requireNonNull(getShapeIfExists(this.fallback, "_button"));
+        }
+
+        private Block getPressurePlateFallback() {
+            if (this.pressurePlateFallback != null) {
+                return this.pressurePlateFallback;
+            }
+            return Objects.requireNonNull(getShapeIfExists(this.fallback, "_pressure_plate"));
         }
 
         public @Nullable BlockState getSlabFullBlockFallback() {
@@ -886,7 +1145,9 @@ public interface BlockSet {
                         () -> built[0].hasSlab() ? built[0].slabType().getForDataGeneration() : null,
                         () -> built[0].hasStairs() ? built[0].stairsType().getForDataGeneration() : null,
                         () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null,
-                        () -> built[0].hasButton() ? built[0].buttonType().getForDataGeneration() : null
+                        () -> built[0].hasFence() ? built[0].fenceType().getForDataGeneration() : null,
+                        () -> built[0].hasButton() ? built[0].buttonType().getForDataGeneration() : null,
+                        () -> built[0].hasPressurePlate() ? built[0].pressurePlateType().getForDataGeneration() : null
                     ))
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
@@ -911,11 +1172,25 @@ public interface BlockSet {
                     .wallConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null,
+                this.fence ? new SuCraftBlockType(this.getSuffixedIdentifier("_fence"))
+                    .fenceFactory()
+                    .properties(this::getFenceProperties)
+                    .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, this.getFenceFallback())
+                    .fenceConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelf()
+                    : null,
                 this.button ? new SuCraftBlockType(this.getSuffixedIdentifier("_button"))
                     .buttonFactory(this.getBlockSetType(), this.getButtonTicksToStayPressed())
                     .properties(this::getButtonProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
                     .buttonConstructorForDataGeneration()
+                    .dataGenerateBlockLootTableForDropSelf()
+                    : null,
+                this.pressurePlate ? new SuCraftBlockType(this.getSuffixedIdentifier("_pressure_plate"))
+                    .pressurePlateFactory(this.getBlockSetType())
+                    .properties(this::getPressurePlateProperties)
+                    .fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, this.getPressurePlateFallback())
+                    .pressurePlateConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
                     : null
             );

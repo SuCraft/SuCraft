@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ButtonBlock;import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.ButtonBlock;import net.minecraft.world.level.block.FenceBlock;import net.minecraft.world.level.block.PressurePlateBlock;import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -171,8 +171,16 @@ public final class SuCraftBlockType implements ItemLike {
         return this.blockBuild(builder -> builder.factoryNMS(WallBlock::new));
     }
 
+    public SuCraftBlockType fenceFactory() {
+        return this.blockBuild(builder -> builder.factoryNMS(FenceBlock::new));
+    }
+
     public SuCraftBlockType buttonFactory(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed) {
         return this.blockBuild(builder -> builder.factoryNMS(properties -> new ButtonBlock(blockSetType.get(), ticksToStayPressed.getAsInt(), properties)));
+    }
+
+    public SuCraftBlockType pressurePlateFactory(Supplier<BlockSetType> blockSetType) {
+        return this.blockBuild(builder -> builder.factoryNMS(properties -> new PressurePlateBlock(blockSetType.get(), properties)));
     }
 
     public SuCraftBlockType properties(Supplier<BlockBehaviour.Properties> properties) {
@@ -259,8 +267,16 @@ public final class SuCraftBlockType implements ItemLike {
         return this.constructorForDataGeneration(WallBlock::new);
     }
 
+    public SuCraftBlockType fenceConstructorForDataGeneration() {
+        return this.constructorForDataGeneration(FenceBlock::new);
+    }
+
     public SuCraftBlockType buttonConstructorForDataGeneration() {
         return this.constructorForDataGeneration(properties -> new ButtonBlock(BlockSetType.STONE, 1, properties));
+    }
+
+    public SuCraftBlockType pressurePlateConstructorForDataGeneration() {
+        return this.constructorForDataGeneration(properties -> new PressurePlateBlock(BlockSetType.STONE, properties));
     }
 
     public void applyDataGeneration(CollectedFactories factories) {
@@ -362,6 +378,19 @@ public final class SuCraftBlockType implements ItemLike {
         return this.wall(propertiesFromAndFallback, propertiesFromAndFallback);
     }
 
+    public SuCraftBlockType fence(Block propertiesFrom, Block fallback) {
+        this.fenceFactory();
+        this.propertiesFull(propertiesFrom);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, fallback);
+        this.fenceConstructorForDataGeneration();
+        this.dataGenerateModel(factory -> factory.addBlockFence(this.getForDataGeneration()));
+        return this.dataGenerateBlockLootTableForDropSelf();
+    }
+
+    public SuCraftBlockType fence(Block propertiesFromAndFallback) {
+        return this.fence(propertiesFromAndFallback, propertiesFromAndFallback);
+    }
+
     public SuCraftBlockType button(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed, Block propertiesFrom, Block fallback) {
         this.buttonFactory(blockSetType, ticksToStayPressed);
         this.propertiesFull(propertiesFrom);
@@ -373,6 +402,19 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType button(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed, Block propertiesFromAndFallback) {
         return this.button(blockSetType, ticksToStayPressed, propertiesFromAndFallback, propertiesFromAndFallback);
+    }
+
+    public SuCraftBlockType pressurePlate(Supplier<BlockSetType> blockSetType, Block propertiesFrom, Block fallback) {
+        this.pressurePlateFactory(blockSetType);
+        this.propertiesFull(propertiesFrom);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, fallback);
+        this.pressurePlateConstructorForDataGeneration();
+        this.dataGenerateModel(factory -> factory.addBlockPressurePlate(this.getForDataGeneration()));
+        return this.dataGenerateBlockLootTableForDropSelf();
+    }
+
+    public SuCraftBlockType pressurePlate(Supplier<BlockSetType> blockSetType, Block propertiesFromAndFallback) {
+        return this.pressurePlate(blockSetType, propertiesFromAndFallback, propertiesFromAndFallback);
     }
 
     public static @Nullable BlockSetType deriveBlockSetType(Block block) {

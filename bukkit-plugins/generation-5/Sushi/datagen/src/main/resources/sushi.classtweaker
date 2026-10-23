@@ -9,4 +9,10 @@ accessible field net/minecraft/data/recipes/SingleItemRecipeBuilder result Lnet/
 accessible field net/minecraft/world/level/block/Blocks NEAR_PLANE_INTERSECTS_OUTLINE Lnet/minecraft/world/level/block/state/BlockBehaviour$StateArgumentPredicate;
 accessible field net/minecraft/world/level/block/ButtonBlock ticksToStayPressed I
 accessible field net/minecraft/world/level/block/ButtonBlock type Lnet/minecraft/world/level/block/state/properties/BlockSetType;
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties destroyTime F
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties explosionResistance F
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties ignitedByLava Z
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties instrument Lnet/minecraft/world/level/block/state/properties/NoteBlockInstrument;
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties mapColor Ljava/util/function/Function;
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
 accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;

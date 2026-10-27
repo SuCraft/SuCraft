@@ -1,7 +1,6 @@
 package org.sucraft.sushi.datageneration.wood;
 
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.tags.ItemTags;
@@ -12,6 +11,7 @@ import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import org.sucraft.sushi.gamecontent.item.SuCraftItemTags;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public final class DyedPlanks {
@@ -23,23 +23,28 @@ public final class DyedPlanks {
     public static void add(CollectedFactories factories) {
         for (var dyeColor : DyeColor.values()) {
             var vibrant = SuCraftBlocks.DYED_PLANKS.vibrant().get(dyeColor);
-            var faded = SuCraftBlocks.DYED_PLANKS.faded().get(dyeColor);
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.fullBlockItemForDataGeneration(), vibrant.fullBlockItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.slabItemForDataGeneration(), vibrant.slabItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.stairsItemForDataGeneration(), vibrant.stairsItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.wallItemForDataGeneration(), vibrant.wallItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.fenceItemForDataGeneration(), vibrant.fenceItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.fenceGateItemForDataGeneration(), vibrant.fenceGateItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.buttonItemForDataGeneration(), vibrant.buttonItemForDataGeneration()));
-            factories.recipes().add(Recipes.start()
-                .addStonecutting(faded.pressurePlateItemForDataGeneration(), vibrant.pressurePlateItemForDataGeneration()));
+            var faded = SuCraftBlocks.DYED_PLANKS.abraded().get(dyeColor);
+            Map.of(
+                vibrant, faded,
+                faded, vibrant
+            ).forEach((from, to) -> {
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.fullBlockItemForDataGeneration(), from.fullBlockItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.slabItemForDataGeneration(), from.slabItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.stairsItemForDataGeneration(), from.stairsItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.wallItemForDataGeneration(), from.wallItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.fenceItemForDataGeneration(), from.fenceItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.fenceGateItemForDataGeneration(), from.fenceGateItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.buttonItemForDataGeneration(), from.buttonItemForDataGeneration()));
+                factories.recipes().add(Recipes.start()
+                    .addStonecutting(to.pressurePlateItemForDataGeneration(), from.pressurePlateItemForDataGeneration()));
+            });
             Stream.of(
                 Pair.of(ItemTags.PLANKS, vibrant.fullBlockItemForDataGeneration()),
                 Pair.of(ItemTags.WOODEN_SLABS, vibrant.slabItemForDataGeneration()),

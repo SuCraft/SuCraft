@@ -8,6 +8,7 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/chiseled_granite_bricks.png`
 * `assets/sucraft/textures/block/chiseled_tuff_bricks.png`
 * `assets/sucraft/textures/block/diorite_bricks.png`
+* `assets/sucraft/textures/block/dirt_bricks.png`
 * `assets/sucraft/textures/block/dripstone_bricks.png`
 * `assets/sucraft/textures/block/granite_bricks.png`
 * `assets/sucraft/textures/block/polished_calcite.png`

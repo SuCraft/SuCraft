@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/item/crafting/RecipeManager.java
 +++ b/net/minecraft/world/item/crafting/RecipeManager.java
-@@ -236,6 +_,22 @@
+@@ -236,6 +_,55 @@
              Recipe<?> recipe = recipeHolder.value();
              OptionalInt groupId;
              if (recipe.group().isEmpty()) {
@@ -16,9 +16,42 @@
 +                    var key = singleItemRecipe.result.item().value().keyInItemRegistry;
 +                    fallbackGroup = (key.getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE) ? "" : key.getNamespace() + "_") + key.getPath();
 +                }
-+                if (fallbackGroup != null)
++                if (fallbackGroup != null) {
++                    for (var type : List.of(
++                        it.unimi.dsi.fastutil.Pair.<List<?>, java.util.function.Function<Object, String>>of(
++                            java.util.Arrays.asList(net.minecraft.world.item.DyeColor.values()),
++                            it -> ((net.minecraft.world.item.DyeColor) it).getSerializedName()
++                        ),
++                        it.unimi.dsi.fastutil.Pair.<List<?>, java.util.function.Function<Object, String>>of(
++                            net.minecraft.world.level.block.state.properties.WoodType.values().toList(),
++                            it -> ((net.minecraft.world.level.block.state.properties.WoodType) it).name()
++                        ),
++                        it.unimi.dsi.fastutil.Pair.<List<?>, java.util.function.Function<Object, String>>of(
++                            net.minecraft.world.level.block.state.properties.BlockSetType.values().toList(),
++                            it -> ((net.minecraft.world.level.block.state.properties.BlockSetType) it).name()
++                        )
++                    )) {
++                        var values = type.left();
++                        var nameGetter = type.right();
++                        while (true) {
++                            String longest = null;
++                            for (var element : values) {
++                                var name = nameGetter.apply(element);
++                                if (fallbackGroup.contains(name + "_")) {
++                                    if (longest == null || name.length() > longest.length()) {
++                                        longest = name;
++                                    }
++                                }
++                            }
++                            if (longest != null) {
++                                fallbackGroup = fallbackGroup.replaceFirst(longest + "_", "");
++                            } else {
++                                break;
++                            }
++                        }
++                    }
 +                    groupId = OptionalInt.of(recipeGroups.computeIfAbsent(fallbackGroup, _ -> recipeGroups.size()));
-+                else
++                } else
 +                // Suki end - Use default group for recipes without group
                  groupId = OptionalInt.empty();
              } else {

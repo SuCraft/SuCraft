@@ -4,7 +4,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -12,22 +14,18 @@ import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -373,12 +371,22 @@ public final class Recipes {
         }
 
         public RecipeSupplier appendFinalizers(RecipeSupplier recipeSupplier) {
-            var result = appendUnlockedByResultFinalizer(recipeSupplier);
+            var result = appendMandatoryUnlockFinalizer(recipeSupplier);
+            result = appendUnlockedByResultFinalizer(result);
             result = appendUnlockedByIngredientsFinalizer(result);
             return result;
         }
 
+        public RecipeSupplier appendMandatoryUnlockFinalizer(RecipeSupplier recipeSupplier) {
+            return recipeSupplier.map(builder -> {
+                builder.unlockedBy("mandatory", new Criterion<>(CriteriaTriggers.TICK, new PlayerTrigger.TriggerInstance(Optional.empty())));
+                return builder;
+            });
+        }
+
         public RecipeSupplier appendUnlockedByResultFinalizer(RecipeSupplier recipeSupplier) {
+            return recipeSupplier; // Replaced by AutomaticRecipeAdvancementAdder in Sushi
+            /*
             return recipeSupplier.map(builder -> {
                 if (this.unlockedByResult) {
                     ItemLike result = null;
@@ -398,57 +406,59 @@ public final class Recipes {
                 }
                 return builder;
             });
+            */
         }
 
         public RecipeSupplier appendUnlockedByIngredientsFinalizer(RecipeSupplier recipeSupplier) {
-            return recipeSupplier.map(builder -> {
-                List<Ingredient> ingredients = null;
-                if (builder instanceof ShapedRecipeBuilder shapedBuilder) {
-                    ingredients = new ArrayList<>(shapedBuilder.key.values());
-                } else if (builder instanceof ShapelessRecipeBuilder shapelessBuilder) {
-                    ingredients = shapelessBuilder.ingredients;
-                } else if (builder instanceof SingleItemRecipeBuilder singleItemBuilder) {
-                    ingredients = List.of(singleItemBuilder.ingredient);
-                }
-                if (ingredients != null) {
-                    int[] actuallyAddedIngredientI = {0};
-                    var itemsAlreadyAdded = new HashSet<Item>();
-                    var tagsAlreadyAdded = new HashSet<TagKey<Item>>();
-                    for (int i = 0; i < ingredients.size(); i++) {
-                        var ingredient = ingredients.get(i);
-                        boolean sameIngredientAlreadyChecked = false;
-                        for (int j = 0; j < i; j++) {
-                            if (ingredients.get(j).equals(ingredient)) {
-                                sameIngredientAlreadyChecked = true;
-                                break;
-                            }
-                        }
-                        if (sameIngredientAlreadyChecked) continue;
-                        if (this.unlockedByIngredientPredicate.test(ingredient)) {
-                            var unwrapped = ingredient.values.unwrap();
-                            unwrapped.ifLeft(tag -> {
-                                if (tagsAlreadyAdded.add(tag)) {
-                                    int ingredientI = ++actuallyAddedIngredientI[0];
-                                    builder.unlockedBy(
-                                        "has_ingredient_" + ingredientI,
-                                        RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), tag))
-                                    );
-                                }
-                            });
-                            unwrapped.ifRight(items -> items.forEach(item -> {
-                                if (itemsAlreadyAdded.add(item.value())) {
-                                    int ingredientI = ++actuallyAddedIngredientI[0];
-                                    builder.unlockedBy(
-                                        "has_ingredient_" + ingredientI,
-                                        RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), item.value()))
-                                    );
-                                }
-                            }));
-                        }
-                    }
-                }
-                return builder;
-            });
+            return recipeSupplier; // Replaced by AutomaticRecipeAdvancementAdder in Sushi
+            // return recipeSupplier.map(builder -> {
+            //     List<Ingredient> ingredients = null;
+            //     if (builder instanceof ShapedRecipeBuilder shapedBuilder) {
+            //         ingredients = new ArrayList<>(shapedBuilder.key.values());
+            //     } else if (builder instanceof ShapelessRecipeBuilder shapelessBuilder) {
+            //         ingredients = shapelessBuilder.ingredients;
+            //     } else if (builder instanceof SingleItemRecipeBuilder singleItemBuilder) {
+            //         ingredients = List.of(singleItemBuilder.ingredient);
+            //     }
+            //     if (ingredients != null) {
+            //         int[] actuallyAddedIngredientI = {0};
+            //         var itemsAlreadyAdded = new HashSet<Item>();
+            //         var tagsAlreadyAdded = new HashSet<TagKey<Item>>();
+            //         for (int i = 0; i < ingredients.size(); i++) {
+            //             var ingredient = ingredients.get(i);
+            //             boolean sameIngredientAlreadyChecked = false;
+            //             for (int j = 0; j < i; j++) {
+            //                 if (ingredients.get(j).equals(ingredient)) {
+            //                     sameIngredientAlreadyChecked = true;
+            //                     break;
+            //                 }
+            //             }
+            //             if (sameIngredientAlreadyChecked) continue;
+            //             if (this.unlockedByIngredientPredicate.test(ingredient)) {
+            //                 var unwrapped = ingredient.values.unwrap();
+            //                 unwrapped.ifLeft(tag -> {
+            //                     if (tagsAlreadyAdded.add(tag)) {
+            //                         int ingredientI = ++actuallyAddedIngredientI[0];
+            //                         builder.unlockedBy(
+            //                             "has_ingredient_" + ingredientI,
+            //                             RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), tag))
+            //                         );
+            //                     }
+            //                 });
+            //                 unwrapped.ifRight(items -> items.forEach(item -> {
+            //                     if (itemsAlreadyAdded.add(item.value())) {
+            //                         int ingredientI = ++actuallyAddedIngredientI[0];
+            //                         builder.unlockedBy(
+            //                             "has_ingredient_" + ingredientI,
+            //                             RecipeProvider.inventoryTrigger(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), item.value()))
+            //                         );
+            //                     }
+            //                 }));
+            //             }
+            //         }
+            //     }
+            //     return builder;
+            // });
         }
 
         public RecipeSupplier createReverseConditional(RecipeSupplier reverse) {

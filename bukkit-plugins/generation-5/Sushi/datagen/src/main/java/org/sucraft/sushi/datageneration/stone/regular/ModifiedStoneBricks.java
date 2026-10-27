@@ -13,13 +13,13 @@ public final class ModifiedStoneBricks {
         throw new UnsupportedOperationException();
     }
 
-    public static void addAddModificationRecipe(CollectedFactories factories, ItemLike modified, ItemLike unmodified, ItemLike modifier, int itemsPerModifier) {
+    public static void addAddModificationRecipe(CollectedFactories factories, ItemLike modified, ItemLike unmodified, ItemLike modifier, int itemsPerRecipe, int modifiersPerRecipe) {
         factories.recipes().add(Recipes.start()
             .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
                     () -> function.provider
-                        .shapeless(RecipeCategory.BUILDING_BLOCKS, modified, itemsPerModifier)
-                        .requires(unmodified, itemsPerModifier)
-                        .requires(modifier),
+                        .shapeless(RecipeCategory.BUILDING_BLOCKS, modified, itemsPerRecipe)
+                        .requires(unmodified, itemsPerRecipe)
+                        .requires(modifier, modifiersPerRecipe),
                     "_from_" + modifier.asItem().builtInRegistryHolder().key().identifier().getPath()
                 )
             )

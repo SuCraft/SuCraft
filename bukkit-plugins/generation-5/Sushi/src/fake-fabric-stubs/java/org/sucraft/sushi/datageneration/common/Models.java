@@ -1,6 +1,7 @@
 package org.sucraft.sushi.datageneration.common;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
@@ -24,6 +25,10 @@ public interface Models {
         );
 
         void addBlockTrivialCube(Block block);
+
+        void addBlockCubeColumn(Block block, @Nullable Block side, @Nullable Block end);
+
+        void addBlockCubeColumn(Block block, @Nullable Identifier side, @Nullable Identifier end);
 
         void addBlockSlab(Block slab);
 

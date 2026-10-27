@@ -5,9 +5,14 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.jspecify.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -70,6 +75,21 @@ public final class Models {
 
         public void addBlockTrivialCube(Block block) {
             this.addBlock(generators -> generators.createTrivialCube(block));
+        }
+
+        public void addBlockCubeColumn(Block block, @Nullable Block side, @Nullable Block end) {
+            this.addBlockCubeColumn(block, getBlockTextureIdentifier(side), getBlockTextureIdentifier(end));
+        }
+
+        public void addBlockCubeColumn(Block block, @Nullable Identifier side, @Nullable Identifier end) {
+            this.addBlock(generators -> generators.createTrivialBlock(block, TexturedModel.COLUMN.updateTexture(mapping -> {
+                if (side != null) {
+                    mapping.put(TextureSlot.SIDE, new Material(side));
+                }
+                if (end != null) {
+                    mapping.put(TextureSlot.END, new Material(end));
+                }
+            })));
         }
 
         public void addBlockSlab(Block slab) {
@@ -154,6 +174,13 @@ public final class Models {
                 item.getBlock().builtInRegistryHolder().key().identifier().withPrefix("block/")
             )
         );
+    }
+
+    public static @Nullable Identifier getBlockTextureIdentifier(@Nullable Block block) {
+        if (block == null) {
+            return null;
+        }
+        return block.builtInRegistryHolder().key().identifier().withPrefix("block/");
     }
 
 }

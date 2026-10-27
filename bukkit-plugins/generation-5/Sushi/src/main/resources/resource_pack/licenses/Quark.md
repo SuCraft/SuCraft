@@ -1,4 +1,5 @@
 The following files (referenced relative to the parent folder of the folder this file is in) are/were part of [Quark](https://quarkmod.net/), which is/was maintained by [Violet Moon](https://violetmoon.org/):
+* `assets/sucraft/textures/block/acacia_bookshelf.png`
 * `assets/sucraft/textures/block/andesite_bricks.png`
 * `assets/sucraft/textures/block/calcite_bricks.png`
 * `assets/sucraft/textures/block/chiseled_andesite_bricks.png`

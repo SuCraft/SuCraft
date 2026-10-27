@@ -34,7 +34,9 @@ import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMac
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;import java.util.function.Consumer;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;import java.util.function.Supplier;
 
@@ -308,6 +310,10 @@ public final class SuCraftBlockType implements ItemLike {
     public SuCraftBlockType dataGenerateModel(@Nullable Consumer<Models.CollectedFactory> factoryConsumer) {
         this.dataGeneratingModel = factoryConsumer;
         return this;
+    }
+
+    public SuCraftBlockType dataGenerateModel(@Nullable BiConsumer<Models.CollectedFactory, Block> factoryAndBlockConsumer) {
+        return this.dataGenerateModel(factory -> factoryAndBlockConsumer.accept(factory, this.getForDataGeneration()));
     }
 
     public SuCraftBlockType dataGenerateModelForBlock(Models.BlockStateModelGenerator generatorsConsumer) {

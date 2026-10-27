@@ -164,6 +164,17 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType ROUGH_CHISELED_TUFF_BRICKS = blockType("chiseled_tuff_bricks")
         .fullBlock(Blocks.CHISELED_TUFF_BRICKS);
 
+    // Wood / Bookshelves
+
+    public static final SuCraftBlockType ACACIA_BOOKSHELF = blockType("acacia_bookshelf")
+        .fullBlock(Blocks.BOOKSHELF)
+        .properties(properties -> properties.mapColor(Blocks.ACACIA_PLANKS.defaultMapColor()))
+        .dataGenerateModel((factory, block) -> factory.addBlockCubeColumn(
+            block,
+            block,
+            Blocks.ACACIA_PLANKS
+        ));
+
     // Wood / Dyed planks
 
     public static final class DyedPlankFamily<V> extends Family.Boolean<V> {

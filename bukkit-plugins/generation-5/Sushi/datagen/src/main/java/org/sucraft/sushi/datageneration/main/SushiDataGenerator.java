@@ -12,11 +12,16 @@ import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import org.sucraft.sushi.datageneration.creative.Barrier;
 import org.sucraft.sushi.datageneration.creative.Light;
+import org.sucraft.sushi.datageneration.flora.Coral;
 import org.sucraft.sushi.datageneration.glass.Glass;
 import org.sucraft.sushi.datageneration.mineral.copper.Copper;
+import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
+import org.sucraft.sushi.datageneration.redstone.Dispenser;
+import org.sucraft.sushi.datageneration.redstone.Repeater;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
+import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
 import org.sucraft.sushi.datageneration.wood.Oak;
 import org.sucraft.sushi.datageneration.wood.Spruce;
@@ -43,11 +48,21 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         Barrier.add(factories);
         Light.add(factories);
 
+        // Flora
+        Coral.add(factories);
+
         // Glass
         Glass.add(factories);
 
         // Mineral / Copper
         Copper.add(factories);
+
+        // Mineral / Iron
+        Minecarts.add(factories);
+
+        // Redstone
+        Dispenser.add(factories);
+        Repeater.add(factories);
 
         // Stone / Deepslate
         Deepslate.add(factories);
@@ -57,6 +72,7 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         SnowyStoneBricks.add(factories);
 
         // Wood
+        Chests.add(factories);
         DyedPlanks.add(factories);
         Oak.add(factories);
         Spruce.add(factories);

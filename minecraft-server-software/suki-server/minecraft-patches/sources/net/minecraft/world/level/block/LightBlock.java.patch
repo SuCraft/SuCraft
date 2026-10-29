@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/block/LightBlock.java
++++ b/net/minecraft/world/level/block/LightBlock.java
+@@ -54,7 +_,7 @@
+     protected InteractionResult useWithoutItem(
+         final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult
+     ) {
+-        if (!level.isClientSide() && player.canUseGameMasterBlocks()) {
++        if (!level.isClientSide()/* && player.canUseGameMasterBlocks()*/) { // Suki - Light level can be changed in survival mode
+             level.setBlock(pos, state.cycle(LEVEL), Block.UPDATE_CLIENTS);
+             return InteractionResult.SUCCESS_SERVER;
+         } else {

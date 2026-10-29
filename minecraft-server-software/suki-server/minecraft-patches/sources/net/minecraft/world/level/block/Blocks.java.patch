@@ -1,5 +1,23 @@
 --- a/net/minecraft/world/level/block/Blocks.java
 +++ b/net/minecraft/world/level/block/Blocks.java
+@@ -3159,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .strength(-1.0F, 3600000.8F)
+             .mapColor(waterloggedMapColor(MapColor.NONE))
+-            .noLootTable()
++            // .noLootTable() // Suki - Barrier drops itself
+             .noOcclusion()
+             .isValidSpawn(Blocks::never)
+             .noTerrainParticles()
+@@ -3172,7 +_,7 @@
+             .replaceable()
+             .strength(-1.0F, 3600000.8F)
+             .mapColor(waterloggedMapColor(MapColor.NONE))
+-            .noLootTable()
++            // .noLootTable() // Suki - Light drops itself
+             .noOcclusion()
+             .lightLevel(LightBlock.LIGHT_EMISSION)
+     );
 @@ -5855,7 +_,7 @@
              .pushReaction(PushReaction.IMMOVEABLE);
      }

@@ -1,5 +1,26 @@
 --- a/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/net/minecraft/world/level/block/state/BlockBehaviour.java
+@@ -360,6 +_,20 @@
+     }
+ 
+     protected float getDestroyProgress(final BlockState state, final Player player, final BlockGetter level, final BlockPos pos, @Nullable ItemStack heldItemStack) {
++        // Suki start - Barrier drops itself
++        if (state.getBlock() == Blocks.BARRIER) {
++            if (!player.getMainHandItem().isEmpty() && player.getMainHandItem().getItem() == net.minecraft.world.item.Items.BARRIER) {
++                return 2.0f;
++            }
++        }
++        // Suki end - Barrier drops itself
++        // Suki start - Light drops itself
++        if (state.getBlock() == Blocks.LIGHT) {
++            if (!player.getMainHandItem().isEmpty() && player.getMainHandItem().getItem() == net.minecraft.world.item.Items.LIGHT) {
++                return 2.0f;
++            }
++        }
++        // Suki end - Light drops itself
+         // Spout end - Client view / Packet mapping / Block states / Apply / Breaking speed - Implement calculating destroy progress with given held item stack
+         float destroySpeed = state.getDestroySpeed(level, pos);
+         if (destroySpeed == -1.0F) {
 @@ -1211,6 +_,18 @@
          public static BlockBehaviour.Properties ofFullCopy(final BlockBehaviour block) {
              BlockBehaviour.Properties copyTo = ofLegacyCopy(block);

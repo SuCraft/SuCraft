@@ -1,17 +1,20 @@
 {
   "values": [
-    "#sucraft:bookshelf_stairs",
+    "#sucraft:bookshelf_stairss",
     "sucraft:andesite_brick_stairs",
+    "sucraft:calcite_stairs",
     "sucraft:calcite_brick_stairs",
     "sucraft:diorite_brick_stairs",
     "sucraft:dirt_brick_stairs",
     "sucraft:dirty_stone_brick_stairs",
+    "sucraft:dripstone_stairs",
     "sucraft:dripstone_brick_stairs",
     "sucraft:granite_brick_stairs",
     "sucraft:polished_calcite_stairs",
     "sucraft:polished_dripstone_stairs",
     "sucraft:polished_tuff_stairs",
     "sucraft:snowy_stone_brick_stairs",
+    "sucraft:soul_sandstone_stairs",
     "sucraft:tuff_brick_stairs"
   ]
 }

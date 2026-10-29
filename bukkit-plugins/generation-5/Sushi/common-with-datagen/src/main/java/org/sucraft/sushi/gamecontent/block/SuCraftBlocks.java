@@ -51,6 +51,23 @@ public final class SuCraftBlocks {
             .pressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
             .build();
 
+    // Soil - Soul
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SOUL_SANDSTONE =
+        BlockSet.builder("soul_sandstone")
+            .fullBlock().vanilla(Blocks.SOUL_SOIL).fullBlockModelProvider(block -> TexturedModel.CUBE_BOTTOM_TOP.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
+                mappings.put(TextureSlot.TEXTURE, TextureMapping.getBlockTexture(block));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(block));
+            }))
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            /*.fence().fenceFallback(Blocks.DARK_OAK_FENCE)*/
+            .button().buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
+
     // Stone / Andesite
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ANDESITE_BRICKS =
@@ -71,8 +88,8 @@ public final class SuCraftBlocks {
     public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate CALCITE =
         BlockSet.builder("calcite")
             .fullBlockOnlyForDataGeneration().vanilla(Blocks.CALCITE)
-            .slab().slabFallback(Blocks.SMOOTH_QUARTZ_SLAB)
-            .stairs().stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS)
+            .slab().slabFallback(Blocks.WOOL_SLAB.white())
+            .stairs().stairsFallback(Blocks.WOOL_STAIRS.white())
             .wall().wallFallback(Blocks.DIORITE_WALL)
             /*.fence().fenceFallback(Blocks.PALE_OAK_FENCE)*/
             .button().buttonFallback(Blocks.PALE_OAK_BUTTON).blockSetType(BlockSetType.STONE)
@@ -82,8 +99,8 @@ public final class SuCraftBlocks {
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate POLISHED_CALCITE =
         BlockSet.builder("polished_calcite")
             .fullBlock().vanilla(Blocks.CALCITE)
-            .slab().slabFallback(Blocks.SMOOTH_QUARTZ_SLAB)
-            .stairs().stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS)
+            .slab().slabFallback(Blocks.POLISHED_DIORITE_SLAB)
+            .stairs().stairsFallback(Blocks.POLISHED_DIORITE_STAIRS)
             .wall().wallFallback(Blocks.DIORITE_WALL)
             /*.fence().fenceFallback(Blocks.PALE_OAK_FENCE)*/
             .button().buttonFallback(Blocks.PALE_OAK_BUTTON).pressurePlate().pressurePlateFallback(Blocks.PALE_OAK_PRESSURE_PLATE)
@@ -92,8 +109,8 @@ public final class SuCraftBlocks {
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate CALCITE_BRICKS =
         BlockSet.builder("calcite_bricks")
             .fullBlock().vanilla(Blocks.CALCITE)
-            .slab().slabFallback(Blocks.SMOOTH_QUARTZ_SLAB)
-            .stairs().stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS)
+            .slab().slabFallback(Blocks.POLISHED_DIORITE_SLAB)
+            .stairs().stairsFallback(Blocks.POLISHED_DIORITE_STAIRS)
             .wall().wallFallback(Blocks.DIORITE_WALL)
             /*.fence().fenceFallback(Blocks.PALE_OAK_FENCE)*/
             .button().buttonFallback(Blocks.PALE_OAK_BUTTON)
@@ -134,8 +151,8 @@ public final class SuCraftBlocks {
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate POLISHED_DRIPSTONE =
         BlockSet.builder("polished_dripstone")
             .fullBlock().vanilla(Blocks.DRIPSTONE_BLOCK)
-            .slab().slabFallback(Blocks.GRANITE_SLAB)
-            .stairs().stairsFallback(Blocks.GRANITE_STAIRS)
+            .slab().slabFallback(Blocks.POLISHED_GRANITE_SLAB)
+            .stairs().stairsFallback(Blocks.POLISHED_GRANITE_STAIRS)
             .wall().wallFallback(Blocks.GRANITE_WALL)
             /*.fence().fenceFallback(Blocks.JUNGLE_FENCE)*/
             .button().buttonFallback(Blocks.JUNGLE_BUTTON)
@@ -145,8 +162,8 @@ public final class SuCraftBlocks {
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate DRIPSTONE_BRICKS =
         BlockSet.builder("dripstone_bricks")
             .fullBlock().vanilla(Blocks.DRIPSTONE_BLOCK)
-            .slab().slabFallback(Blocks.GRANITE_SLAB)
-            .stairs().stairsFallback(Blocks.GRANITE_STAIRS)
+            .slab().slabFallback(Blocks.POLISHED_GRANITE_SLAB)
+            .stairs().stairsFallback(Blocks.POLISHED_GRANITE_STAIRS)
             .wall().wallFallback(Blocks.GRANITE_WALL)
             /*.fence().fenceFallback(Blocks.JUNGLE_FENCE)*/
             .button().buttonFallback(Blocks.JUNGLE_BUTTON)
@@ -156,6 +173,7 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.DRIPSTONE_BLOCK);
 
     // Stone / Granite
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate GRANITE_BRICKS =
         BlockSet.builder("granite_bricks")
             .fullBlock().vanilla(Blocks.POLISHED_GRANITE)
@@ -173,7 +191,7 @@ public final class SuCraftBlocks {
 
     // Stone / Regular
 
-    private static final SuCraftBlockType infested(
+    private static SuCraftBlockType infested(
         String path,
         Block vanilla,
         Supplier<Block> hostBlock,

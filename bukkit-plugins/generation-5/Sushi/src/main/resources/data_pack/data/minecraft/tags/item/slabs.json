@@ -2,16 +2,19 @@
   "values": [
     "#sucraft:bookshelf_slabs",
     "sucraft:andesite_brick_slab",
+    "sucraft:calcite_slab",
     "sucraft:calcite_brick_slab",
     "sucraft:diorite_brick_slab",
     "sucraft:dirt_brick_slab",
     "sucraft:dirty_stone_brick_slab",
+    "sucraft:dripstone_slab",
     "sucraft:dripstone_brick_slab",
     "sucraft:granite_brick_slab",
     "sucraft:polished_calcite_slab",
     "sucraft:polished_dripstone_slab",
     "sucraft:polished_tuff_slab",
     "sucraft:snowy_stone_brick_slab",
+    "sucraft:soul_sandstone_slab",
     "sucraft:tuff_brick_slab"
   ]
 }

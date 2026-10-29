@@ -2,15 +2,18 @@
   "values": [
     "sucraft:andesite_brick_pressure_plate",
     "sucraft:calcite_brick_pressure_plate",
+    "sucraft:calcite_pressure_plate",
     "sucraft:diorite_brick_pressure_plate",
     "sucraft:dirt_brick_pressure_plate",
     "sucraft:dirty_stone_brick_pressure_plate",
     "sucraft:dripstone_brick_pressure_plate",
+    "sucraft:dripstone_pressure_plate",
     "sucraft:granite_brick_pressure_plate",
     "sucraft:polished_calcite_pressure_plate",
     "sucraft:polished_dripstone_pressure_plate",
     "sucraft:polished_tuff_pressure_plate",
     "sucraft:snowy_stone_brick_pressure_plate",
+    "sucraft:soul_sandstone_pressure_plate",
     "sucraft:tuff_brick_pressure_plate"
   ]
 }

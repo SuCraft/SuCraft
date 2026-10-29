@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 public interface TexturedModel {
 
     TexturedModel.Provider CUBE = null;
+    TexturedModel.Provider CUBE_BOTTOM_TOP = null;
     TexturedModel.Provider COLUMN = null;
 
     interface Provider {

@@ -347,10 +347,6 @@ public final class SuCraftBlockType implements ItemLike {
         return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getForDataGeneration(), provider::createSlabItemTable)));
     }
 
-    public SuCraftBlockType dataGenerateBlockLootTableForBookshelf() {
-        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getForDataGeneration())));
-    }
-
     public SuCraftBlockType fullBlock(Block propertiesFrom, Block fallback) {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);

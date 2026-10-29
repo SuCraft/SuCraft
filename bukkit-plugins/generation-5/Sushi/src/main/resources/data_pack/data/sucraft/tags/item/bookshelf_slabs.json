@@ -1,5 +1,15 @@
 {
   "values": [
-    "sucraft:acacia_bookshelf_slab"
+    "sucraft:acacia_bookshelf_slab",
+    "sucraft:bamboo_bookshelf_slab",
+    "sucraft:birch_bookshelf_slab",
+    "sucraft:cherry_bookshelf_slab",
+    "sucraft:crimson_bookshelf_slab",
+    "sucraft:dark_oak_bookshelf_slab",
+    "sucraft:jungle_bookshelf_slab",
+    "sucraft:mangrove_bookshelf_slab",
+    "sucraft:oak_bookshelf_slab",
+    "sucraft:spruce_bookshelf_slab",
+    "sucraft:warped_bookshelf_slab"
   ]
 }

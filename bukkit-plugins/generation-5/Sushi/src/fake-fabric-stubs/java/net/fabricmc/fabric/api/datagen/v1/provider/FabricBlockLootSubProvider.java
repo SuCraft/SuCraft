@@ -40,6 +40,11 @@ public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
+    public void otherWhenSilkTouch(Block block, Block other) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void dropSelf(Block block) { // Suk
         throw new UnsupportedOperationException();
     }

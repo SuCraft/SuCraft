@@ -1,6 +1,7 @@
 {
   "values": [
     "#minecraft:stone_pressure_plates",
+    "#sucraft:infested_stone_bricks",
     "sucraft:andesite_bricks",
     "sucraft:andesite_brick_slab",
     "sucraft:andesite_brick_stairs",

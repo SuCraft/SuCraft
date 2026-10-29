@@ -2,6 +2,10 @@ package org.sucraft.sushi.gamecontent.block;
 
 import it.unimi.dsi.fastutil.booleans.Boolean2ObjectFunction;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
@@ -9,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -19,10 +24,12 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.bukkit.block.BlockType;
-import org.jspecify.annotations.Nullable;import org.sucraft.sushi.gamecontent.common.Family;
+import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.gamecontent.common.Family;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public final class SuCraftBlocks {
@@ -166,6 +173,27 @@ public final class SuCraftBlocks {
 
     // Stone / Regular
 
+    private static final SuCraftBlockType infested(
+        String path,
+        Block vanilla,
+        Supplier<Block> hostBlock,
+        Supplier<Block> hostBlockForDataGeneration
+    ) {
+        var type = blockType(path)
+            .fullBlock(vanilla)
+            .blockBuild(builder -> builder.factoryNMS(properties -> new InfestedBlock(hostBlock.get(), properties)));
+        type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.otherWhenSilkTouch(type.getForDataGeneration(), hostBlockForDataGeneration.get())));
+        type.dataGenerateModel((factory, block) -> {
+            factory.addBlock(generators -> {
+                Block host = hostBlockForDataGeneration.get();
+                MultiVariant model = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(host));
+                generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model));
+                generators.itemModelOutput.copy(host.asItem(), block.asItem());
+            });
+        });
+        return type;
+    }
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate DIRTY_STONE_BRICKS =
         BlockSet.builder("dirty_stone_bricks")
             .fullBlock().vanilla(Blocks.STONE_BRICKS)
@@ -177,6 +205,13 @@ public final class SuCraftBlocks {
             .pressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
 
+    public static final SuCraftBlockType INFESTED_DIRTY_STONE_BRICKS = infested(
+        "infested_dirty_stone_bricks",
+        Blocks.INFESTED_STONE_BRICKS,
+        DIRTY_STONE_BRICKS::fullBlockNMS,
+        DIRTY_STONE_BRICKS::fullBlockForDataGeneration
+    );
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SNOWY_STONE_BRICKS =
         BlockSet.builder("snowy_stone_bricks")
             .fullBlock().vanilla(Blocks.STONE_BRICKS)
@@ -187,6 +222,13 @@ public final class SuCraftBlocks {
             .button().buttonFallback(Blocks.STONE_BUTTON)
             .pressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
+    public static final SuCraftBlockType INFESTED_SNOWY_STONE_BRICKS = infested(
+        "infested_snowy_stone_bricks",
+        Blocks.INFESTED_STONE_BRICKS,
+        SNOWY_STONE_BRICKS::fullBlockNMS,
+        SNOWY_STONE_BRICKS::fullBlockForDataGeneration
+    );
 
     // Stone / Tuff
 
@@ -217,7 +259,7 @@ public final class SuCraftBlocks {
 
     // Wood / Bookshelves
 
-    public static BlockSet.WithFullBlockAndSlabAndStairs bookshelf(
+    private static BlockSet.WithFullBlockAndSlabAndStairs bookshelf(
         String fullBlockPath,
         Block fullBlockPlanks,
         Block slabFallback,
@@ -227,7 +269,7 @@ public final class SuCraftBlocks {
         return bookshelf(fullBlockPath, fullBlockPlanks, slabFallback, stairsFallback, wallFallback, null);
     }
 
-    public static BlockSet.Impl bookshelf(
+    private static BlockSet.Impl bookshelf(
         String fullBlockPath,
         Block fullBlockPlanks,
         Block slabFallback,

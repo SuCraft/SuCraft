@@ -1,5 +1,15 @@
 {
   "values": [
-    "sucraft:acacia_bookshelf_stairs"
+    "sucraft:acacia_bookshelf_stairs",
+    "sucraft:bamboo_bookshelf_stairs",
+    "sucraft:birch_bookshelf_stairs",
+    "sucraft:cherry_bookshelf_stairs",
+    "sucraft:crimson_bookshelf_stairs",
+    "sucraft:dark_oak_bookshelf_stairs",
+    "sucraft:jungle_bookshelf_stairs",
+    "sucraft:mangrove_bookshelf_stairs",
+    "sucraft:oak_bookshelf_stairs",
+    "sucraft:spruce_bookshelf_stairs",
+    "sucraft:warped_bookshelf_stairs"
   ]
 }

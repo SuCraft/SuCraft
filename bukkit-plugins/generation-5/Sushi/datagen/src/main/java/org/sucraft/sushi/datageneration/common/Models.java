@@ -12,8 +12,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import org.jspecify.annotations.Nullable;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -32,6 +32,7 @@ public final class Models {
 
         public void addBlockFamily(
             Supplier<Block> fullBlock,
+            Supplier<@Nullable TexturedModel> fullBlockModel,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
@@ -41,6 +42,13 @@ public final class Models {
             Supplier<@Nullable Block> pressurePlate
         ) {
             this.addBlock(generators -> {
+                var texturedModel = fullBlockModel.get();
+                if (texturedModel != null) {
+                    if (!(BlockModelGenerators.TEXTURED_MODELS instanceof HashMap)) {
+                        BlockModelGenerators.TEXTURED_MODELS = new HashMap<>(BlockModelGenerators.TEXTURED_MODELS);
+                    }
+                    BlockModelGenerators.TEXTURED_MODELS.put(fullBlock.get(), texturedModel);
+                }
                 var provider = generators.family(fullBlock.get());
                 var slabBlock = slab.get();
                 if (slabBlock != null) {

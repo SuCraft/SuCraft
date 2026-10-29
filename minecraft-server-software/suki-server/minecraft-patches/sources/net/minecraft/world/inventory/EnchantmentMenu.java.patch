@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/inventory/EnchantmentMenu.java
++++ b/net/minecraft/world/inventory/EnchantmentMenu.java
+@@ -107,10 +_,9 @@
+                     int bookcases = 0;
+ 
+                     for (BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+-                        if (EnchantingTableBlock.isValidBookShelf(level, pos, offset)) {
+-                            bookcases++;
+-                        }
++                        bookcases += EnchantingTableBlock.getBookshelfDoublePower(level, pos, offset); // Suki - Allow slabs to provide power
+                     }
++                    bookcases /= 2; // Suki - Allow slabs to provide power
+ 
+                     this.random.setSeed(this.enchantmentSeed.get());
+ 

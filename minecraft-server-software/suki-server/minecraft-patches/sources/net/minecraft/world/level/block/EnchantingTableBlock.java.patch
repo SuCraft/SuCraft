@@ -1,0 +1,34 @@
+--- a/net/minecraft/world/level/block/EnchantingTableBlock.java
++++ b/net/minecraft/world/level/block/EnchantingTableBlock.java
+@@ -39,8 +_,29 @@
+     }
+ 
+     public static boolean isValidBookShelf(final Level level, final BlockPos pos, final BlockPos offset) {
+-        return level.getBlockState(pos.offset(offset)).is(BlockTags.ENCHANTMENT_POWER_PROVIDER)
+-            && level.getBlockState(pos.offset(offset.getX() / 2, offset.getY(), offset.getZ() / 2)).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER);
++        // Suki start - Allow slabs to provide power
++        return getBookshelfDoublePower(level, pos, offset) > 0;
++    }
++
++    public static int getBookshelfDoublePower(final Level level, final BlockPos pos, final BlockPos offset) {
++        var blockState = level.getBlockState(pos.offset(offset));
++        int blockFactor;
++        if (blockState.is(BlockTags.ENCHANTMENT_POWER_PROVIDER)) {
++            blockFactor = 2;
++        } else if (blockState.getBlock() instanceof SlabBlock) {
++            if (blockState.getValue(SlabBlock.TYPE) == net.minecraft.world.level.block.state.properties.SlabType.DOUBLE) {
++                blockFactor = 2;
++            } else {
++                blockFactor = 1;
++            }
++        } else {
++            return 0;
++        }
++        if (level.getBlockState(pos.offset(offset.getX() / 2, offset.getY(), offset.getZ() / 2)).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
++            return blockFactor;
++        }
++        return 0;
++        // Suki end - Allow slabs to provide power
+     }
+ 
+     @Override

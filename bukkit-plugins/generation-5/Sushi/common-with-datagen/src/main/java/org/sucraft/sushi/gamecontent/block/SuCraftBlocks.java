@@ -1,8 +1,24 @@
 package org.sucraft.sushi.gamecontent.block;
 
 import it.unimi.dsi.fastutil.booleans.Boolean2ObjectFunction;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.bukkit.block.BlockType;
 import org.sucraft.sushi.gamecontent.common.Family;
 import java.lang.reflect.Field;
@@ -166,14 +182,116 @@ public final class SuCraftBlocks {
 
     // Wood / Bookshelves
 
-    public static final SuCraftBlockType ACACIA_BOOKSHELF = blockType("acacia_bookshelf")
-        .fullBlock(Blocks.BOOKSHELF)
-        .properties(properties -> properties.mapColor(Blocks.ACACIA_PLANKS.defaultMapColor()))
-        .dataGenerateModel((factory, block) -> factory.addBlockCubeColumn(
-            block,
-            block,
-            Blocks.ACACIA_PLANKS
-        ));
+    public static BlockSet.WithFullBlockAndSlabAndStairs bookshelf(
+        String fullBlockPath,
+        Block fullBlockPlanks,
+        Block slabFallback,
+        Block stairsFallback,
+        Block wallFallback
+    ) {
+        return BlockSet.builder(fullBlockPath)
+            .vanilla(Blocks.BOOKSHELF)
+            .fullBlock().slab().stairs()/*.wall()*/
+            .slabFallback(slabFallback)
+            .stairsFallback(stairsFallback)
+            /*.wallFallback(wallFallback)*/
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(fullBlockPlanks));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
+            }))
+            .propertiesFinalizer(properties -> properties.mapColor(fullBlockPlanks.defaultMapColor()))
+            .fullBlockFinalizer(type -> type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(type.getForDataGeneration(),
+                block -> provider.createSingleItemTableWithSilkTouch(block, Items.BOOK, ContextIntProviders.exactly(3))
+            ))))
+            .slabFinalizer(type -> type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(type.getForDataGeneration(),
+                block -> LootTable.lootTable()
+                    // Silk Touch: drop the block itself
+                    .withPool(
+                        LootPool.lootPool()
+                            .when(provider.hasSilkTouch())
+                            .setRolls(ContextIntProviders.exactly(1))
+                            .add(LootItem.lootTableItem(block).apply(
+                                SetItemCountFunction.setCount(ContextIntProviders.exactly(2)).when(
+                                    MatchBlock.blockMatches(BuiltInRegistries.BLOCK, block,
+                                        StatePropertiesPredicate.Builder.properties()
+                                            .hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)
+                                    )
+                                )
+                            ))
+                    )
+                    // Otherwise: drop books
+                    .withPool(
+                        LootPool.lootPool()
+                            .when(provider.doesNotHaveSilkTouch())
+                            .setRolls(ContextIntProviders.exactly(1))
+                            .add(LootItem.lootTableItem(Items.BOOK).apply(
+                                SetItemCountFunction.setCount(ContextIntProviders.exactly(3)).when(
+                                    MatchBlock.blockMatches(BuiltInRegistries.BLOCK, block,
+                                        StatePropertiesPredicate.Builder.properties()
+                                            .hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)
+                                    )
+                                )
+                            ))
+                    )
+            ))))
+            .stairsFinalizer(type -> type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(type.getForDataGeneration(),
+                block -> provider.createSingleItemTableWithSilkTouch(block, Items.BOOK, ContextIntProviders.exactly(3))
+            ))))
+            /*.wallFinalizer(type -> type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(type.getForDataGeneration(),
+                block -> provider.createSingleItemTableWithSilkTouch(block, Items.BOOK, ContextIntProviders.exactly(3))
+            ))))*/
+            .build();
+    }
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs ACACIA_BOOKSHELF = bookshelf(
+        "acacia_bookshelf",
+        Blocks.ACACIA_PLANKS, Blocks.ACACIA_SLAB, Blocks.ACACIA_STAIRS, Blocks.RED_SANDSTONE_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs BAMBOO_BOOKSHELF = bookshelf(
+        "bamboo_bookshelf",
+        Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_STAIRS, Blocks.SULFUR_BRICK_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs BIRCH_BOOKSHELF = bookshelf(
+        "birch_bookshelf",
+        Blocks.BIRCH_PLANKS, Blocks.BIRCH_SLAB, Blocks.BIRCH_STAIRS, Blocks.SANDSTONE_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs CHERRY_BOOKSHELF = bookshelf(
+        "cherry_bookshelf",
+        Blocks.CHERRY_PLANKS, Blocks.CHERRY_SLAB, Blocks.CHERRY_STAIRS, Blocks.GRANITE_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs CRIMSON_BOOKSHELF = bookshelf(
+        "crimson_bookshelf",
+        Blocks.CRIMSON_PLANKS, Blocks.CRIMSON_SLAB, Blocks.CRIMSON_STAIRS, Blocks.NETHER_BRICK_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs DARK_OAK_BOOKSHELF = bookshelf(
+        "dark_oak_bookshelf",
+        Blocks.DARK_OAK_PLANKS, Blocks.DARK_OAK_SLAB, Blocks.DARK_OAK_STAIRS, Blocks.MUD_BRICK_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs JUNGLE_BOOKSHELF = bookshelf(
+        "jungle_bookshelf",
+        Blocks.JUNGLE_PLANKS, Blocks.JUNGLE_SLAB, Blocks.JUNGLE_STAIRS, Blocks.GRANITE_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs MANGROVE_BOOKSHELF = bookshelf(
+        "mangrove_bookshelf",
+        Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_SLAB, Blocks.MANGROVE_STAIRS, Blocks.CINNABAR_BRICK_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs SPRUCE_BOOKSHELF = bookshelf(
+        "spruce_bookshelf",
+        Blocks.SPRUCE_PLANKS, Blocks.SPRUCE_SLAB, Blocks.SPRUCE_STAIRS, Blocks.MUD_BRICK_WALL
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs WARPED_BOOKSHELF = bookshelf(
+        "warped_bookshelf",
+        Blocks.WARPED_PLANKS, Blocks.WARPED_SLAB, Blocks.WARPED_STAIRS, Blocks.PRISMARINE_WALL
+    );
 
     // Wood / Dyed planks
 

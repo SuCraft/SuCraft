@@ -1,5 +1,8 @@
 {
   "values": [
+    "#c:bookshelves",
+    "#sucraft:bookshelf_slabs",
+    "#sucraft:bookshelf_stairs",
     "#sucraft:wooden_walls"
   ]
 }

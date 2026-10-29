@@ -156,6 +156,11 @@ public final class SuCraftBlockType implements ItemLike {
         this.blockBuilding = null;
     }
 
+    public SuCraftBlockType update(@Nullable Consumer<SuCraftBlockType> updater) {
+        if (updater != null) updater.accept(this);
+        return this;
+    }
+
     public SuCraftBlockType blockBuild(Consumer<BlockTypeRegistryEntryBuilderNMS> builderConsumer) {
         this.blockBuilding.add(builderConsumer);
         return this;
@@ -331,6 +336,10 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType dataGenerateBlockLootTableForDropSelfSlab() {
         return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getForDataGeneration(), provider::createSlabItemTable)));
+    }
+
+    public SuCraftBlockType dataGenerateBlockLootTableForBookshelf() {
+        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getForDataGeneration())));
     }
 
     public SuCraftBlockType fullBlock(Block propertiesFrom, Block fallback) {

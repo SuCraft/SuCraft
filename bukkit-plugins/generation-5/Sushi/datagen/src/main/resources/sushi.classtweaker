@@ -1,5 +1,6 @@
 classTweaker v1 official
 
+accessible field net/minecraft/client/data/models/BlockModelGenerators TEXTURED_MODELS Ljava/util/Map;
 accessible field net/minecraft/data/recipes/ShapedRecipeBuilder key Ljava/util/Map;
 accessible field net/minecraft/data/recipes/ShapedRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
 accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder ingredients Ljava/util/List;
@@ -19,3 +20,4 @@ accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties mapColor Ljava/util/function/Function;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
 accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+mutable field net/minecraft/client/data/models/BlockModelGenerators TEXTURED_MODELS Ljava/util/Map;

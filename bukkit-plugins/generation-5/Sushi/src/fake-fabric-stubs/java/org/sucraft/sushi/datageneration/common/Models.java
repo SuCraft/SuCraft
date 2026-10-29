@@ -1,6 +1,8 @@
 package org.sucraft.sushi.datageneration.common;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
@@ -15,6 +17,7 @@ public interface Models {
 
         void addBlockFamily(
             Supplier<Block> fullBlock,
+            Supplier<@Nullable TexturedModel> fullBlockModel,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,

@@ -1,7 +1,7 @@
 package net.minecraft.client.data.models.model;
 
 import net.minecraft.world.level.block.Block;
-import net.net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 
 public interface TextureMapping {
 

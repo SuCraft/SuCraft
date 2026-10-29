@@ -1,5 +1,7 @@
 package org.sucraft.sushi.gamecontent.block;
 
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -13,9 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.client.resources.model.sprite.Material;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.util.Arrays;
@@ -249,7 +253,29 @@ public interface BlockSet {
     interface WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate extends WithFullBlockAndSlabAndStairsAndWallAndFenceAndButton, WithPressurePlate {
     }
 
-    final class Impl implements WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate, WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate {
+    interface WithFullBlockAndSlabAndStairsAndWallAndButton extends WithFullBlockAndSlabAndStairsAndWall, WithButton {
+    }
+
+    interface WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate extends WithFullBlockAndSlabAndStairsAndWallAndButton, WithPressurePlate {
+    }
+
+    interface WithSlabAndStairs extends WithSlab, WithStairs {
+    }
+
+    interface WithSlabAndStairsAndWall extends WithSlabAndStairs, WithWall {
+    }
+
+    interface WithSlabAndStairsAndWallAndButton extends WithSlabAndStairsAndWall, WithButton {
+    }
+
+    interface WithSlabAndStairsAndWallAndButtonAndPressurePlate extends WithSlabAndStairsAndWallAndButton, WithPressurePlate {
+    }
+
+    final class Impl implements
+        WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
+        WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate,
+        WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate,
+        WithSlabAndStairsAndWallAndButtonAndPressurePlate {
 
         private @Nullable SuCraftBlockType fullBlock;
         private @Nullable SuCraftBlockType slab;
@@ -727,6 +753,7 @@ public interface BlockSet {
         private @Nullable String fullBlockPath;
         private @Nullable String basePath;
         private boolean fullBlock;
+        private boolean fullBlockOnlyForDataGeneration;
         private @Nullable Function<Block, Object> fullBlockModelProvider;
         private boolean stairs;
         private boolean slab;
@@ -790,9 +817,28 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder fullBlockOnlyForDataGeneration() {
+            this.fullBlockOnlyForDataGeneration = true;
+            return this;
+        }
+
+        public Builder fullBlock(boolean onlyForDataGeneration) {
+            return onlyForDataGeneration ? this.fullBlockOnlyForDataGeneration() : this.fullBlock();
+        }
+
         public Builder fullBlockModelProvider(Function<Block, Object> provider) {
             this.fullBlockModelProvider = provider;
             return this;
+        }
+
+        public Builder fullBlockModelProviderFromCube(Material texture) {
+            return this.fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings ->
+                mappings.put(TextureSlot.ALL, texture)
+            ));
+        }
+
+        public Builder fullBlockModelProviderFromCube(Block blockWithTexture) {
+            return this.fullBlockModelProviderFromCube(TextureMapping.getBlockTexture(blockWithTexture));
         }
 
         public Builder slab() {
@@ -1093,6 +1139,29 @@ public interface BlockSet {
             return properties;
         }
 
+        public @Nullable Consumer<SuCraftBlockType> getFullBlockFinalizer() {
+            if (this.fullBlockFinalizer != null) {
+                return this.fullBlockFinalizer;
+            }
+            if (this.fullBlockOnlyForDataGeneration) {
+                this.fullBlockFinalizer(type -> type.dataGenerateBlockLootTable(_ -> {
+                }));
+                return this.fullBlockFinalizer;
+            }
+            return null;
+        }
+
+        public @Nullable Function<Block, Object> getFullBlockModelProvider() {
+            if (this.fullBlockModelProvider != null) {
+                return this.fullBlockModelProvider;
+            }
+            if (this.fullBlockOnlyForDataGeneration) {
+                this.fullBlockModelProviderFromCube(this.getFullBlockFallback());
+                return this.fullBlockModelProvider;
+            }
+            return null;
+        }
+
         private BlockBehaviour.Properties getFullBlockProperties() {
             BlockBehaviour.Properties unfinalizedProperties;
             if (this.properties != null) {
@@ -1309,6 +1378,9 @@ public interface BlockSet {
                 if (this.fullBlock) {
                     return BuiltInRegistries.BLOCK.getValue(this.getFullBlockIdentifier()).defaultBlockState();
                 }
+                if (this.fullBlockOnlyForDataGeneration) {
+                    return this.getFullBlockFallback().defaultBlockState();
+                }
                 return Objects.requireNonNull(this.fallback).defaultBlockState();
             };
         }
@@ -1323,6 +1395,9 @@ public interface BlockSet {
                     if (fromFullBlock != null) {
                         return fromFullBlock;
                     }
+                }
+                if (this.fullBlockOnlyForDataGeneration) {
+                    return SuCraftBlockType.deriveWoodType(this.getFullBlockFallback());
                 }
                 if (this.fenceGate) {
                     Block fenceGateFallback = this.getFenceGateFallback();
@@ -1345,6 +1420,9 @@ public interface BlockSet {
                     if (fromFullBlock != null) {
                         return fromFullBlock;
                     }
+                }
+                if (this.fullBlockOnlyForDataGeneration) {
+                    return SuCraftBlockType.deriveBlockSetType(this.getFullBlockFallback());
                 }
                 if (this.button) {
                     Block buttonFallback = this.getButtonFallback();
@@ -1374,31 +1452,36 @@ public interface BlockSet {
         public Impl build() {
             final Impl[] built = new Impl[1];
             built[0] = new Impl(
-                this.fullBlock ? new SuCraftBlockType(this.getFullBlockIdentifier())
+                (DataGenerationFlag.isDataGeneration ? this.fullBlock || this.fullBlockOnlyForDataGeneration : this.fullBlock) ? new SuCraftBlockType(this.getFullBlockIdentifier())
                     .properties(this::getFullBlockProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
                     .blockConstructorForDataGeneration()
                     .dataGenerateModel(factory -> {
                         factory.addBlockFamily(
-                            () -> built[0].fullBlockType().getForDataGeneration(),
-                            () -> this.fullBlockModelProvider != null ? (TexturedModel) this.fullBlockModelProvider.apply(built[0].fullBlockType().getForDataGeneration()) : null,
-                            () -> built[0].hasSlab() ? built[0].slabType().getForDataGeneration() : null,
-                            () -> built[0].hasStairs() ? built[0].stairsType().getForDataGeneration() : null,
-                            () -> built[0].hasWall() ? built[0].wallType().getForDataGeneration() : null,
-                            () -> built[0].hasFence() ? built[0].fenceType().getForDataGeneration() : null,
-                            () -> built[0].hasFenceGate() ? built[0].fenceGateType().getForDataGeneration() : null,
-                            () -> built[0].hasButton() ? built[0].buttonType().getForDataGeneration() : null,
-                            () -> built[0].hasPressurePlate() ? built[0].pressurePlateType().getForDataGeneration() : null
+                            () -> built[0].fullBlockForDataGeneration(),
+                            () -> this.getFullBlockModelProvider() != null ? (TexturedModel) this.getFullBlockModelProvider().apply(built[0].fullBlockForDataGeneration()) : null,
+                            () -> built[0].hasSlab() ? built[0].slabForDataGeneration() : null,
+                            () -> built[0].hasStairs() ? built[0].stairsForDataGeneration() : null,
+                            () -> built[0].hasWall() ? built[0].wallForDataGeneration() : null,
+                            () -> built[0].hasFence() ? built[0].fenceForDataGeneration() : null,
+                            () -> built[0].hasFenceGate() ? built[0].fenceGateForDataGeneration() : null,
+                            () -> built[0].hasButton() ? built[0].buttonForDataGeneration() : null,
+                            () -> built[0].hasPressurePlate() ? built[0].pressurePlateForDataGeneration() : null
                         );
                     })
                     .dataGenerateBlockLootTableForDropSelf()
-                    .update(this.fullBlockFinalizer)
+                    .update(this.getFullBlockFinalizer())
                     : null,
                 this.slab ? new SuCraftBlockType(this.getShapeIdentifier("_slab"))
                     .slabFactory()
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
+                    .dataGenerateModel(factory -> {
+                        if (!this.fullBlock) {
+                            factory.addBlockSlab(built[0].slabForDataGeneration());
+                        }
+                    })
                     .dataGenerateBlockLootTableForDropSelfSlab()
                     .update(this.slabFinalizer)
                     : null,

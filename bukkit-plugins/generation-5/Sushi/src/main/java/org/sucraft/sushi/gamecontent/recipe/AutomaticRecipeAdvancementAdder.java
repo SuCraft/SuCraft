@@ -29,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
+import org.sucraft.sushi.main.SushiPlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +43,8 @@ public final class AutomaticRecipeAdvancementAdder {
     }
 
     public static void run() {
+
+        SushiPlugin.getPluginLogger().info("Automatically adding recipe advancements...");
 
         // Get the advancements map as a mutable map
         var advancements = new HashMap<>(MinecraftServer.getServer().getAdvancements().advancements);

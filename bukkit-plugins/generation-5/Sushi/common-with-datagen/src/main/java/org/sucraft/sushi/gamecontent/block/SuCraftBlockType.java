@@ -7,13 +7,21 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;import net.minecraft.world.level.block.BasePressurePlateBlock;import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ButtonBlock;import net.minecraft.world.level.block.FenceBlock;import net.minecraft.world.level.block.FenceGateBlock;import net.minecraft.world.level.block.PressurePlateBlock;import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.BasePressurePlateBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockSetType;import net.minecraft.world.level.block.state.properties.WoodType;import org.bukkit.NamespacedKey;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
@@ -38,13 +46,14 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.IntSupplier;import java.util.function.Supplier;
+import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 public final class SuCraftBlockType implements ItemLike {
 
     public final NamespacedKey key;
     public final Identifier identifier;
-    private@Nullable  SuCraftItemType item;
+    private @Nullable SuCraftItemType item;
     private @Nullable BlockType value;
     private @Nullable Block valueNMS;
     private @Nullable Block valueForDataGeneration;
@@ -147,7 +156,7 @@ public final class SuCraftBlockType implements ItemLike {
         return this.item != null ? this.item.getForDataGeneration() : null;
     }
 
-    public@Nullable  SuCraftItemType itemType() {
+    public @Nullable SuCraftItemType itemType() {
         return this.item;
     }
 

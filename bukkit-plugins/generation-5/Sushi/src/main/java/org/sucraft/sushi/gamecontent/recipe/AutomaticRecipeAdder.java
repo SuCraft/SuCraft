@@ -38,6 +38,7 @@ import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.block.OldReplacedBlocks;
+import org.sucraft.sushi.main.SushiPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -149,6 +150,16 @@ public final class AutomaticRecipeAdder {
         }
     }
 
+    private static @Nullable Item firstNotNullOf(@Nullable Item... items) {
+        if (items == null) return null;
+        for (var item : items) {
+            if (item != null) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     private static @Nullable Item filterOut(@Nullable Item item, Set<Item> filter) {
         return item == null ? null : filter.contains(item) ? null : item;
     }
@@ -166,6 +177,8 @@ public final class AutomaticRecipeAdder {
     }
 
     public static void run() {
+
+        SushiPlugin.getPluginLogger().info("Automatically adding recipes...");
 
         // Collect ignored items
         var ignoredItems = new HashSet<>(OldReplacedBlocks.LIST.stream()
@@ -470,7 +483,7 @@ public final class AutomaticRecipeAdder {
                 getSuffixBase(item, "_slab"),
                 adders.addSlabCrafting(),
                 adders.addStonecutting(2),
-                conditional((input, _) -> getPrefixShape(input, "chiseled_") == null, invert(adders.add1x2RectangleCrafting("from_slabs", 1, CraftingBookCategory.BUILDING)))
+                conditional((input, _) -> filterOut(getPrefixShape(input, "chiseled_"), Set.of(Items.CHISELED_BOOKSHELF)) == null, invert(adders.add1x2RectangleCrafting("from_slabs", 1, CraftingBookCategory.BUILDING)))
             );
             adders.addRecipes(
                 item,
@@ -533,13 +546,13 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
-                getSuffixBase(item, "_tiles"),
+                firstNotNullOf(getSuffixBase(item, "_tiles"), getMiddleOrEndBase(item, "_tile")),
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_tiles"))
             );
             adders.addRecipes(
                 item,
-                getSuffixBase(item, "_bricks"),
+                firstNotNullOf(getSuffixBase(item, "_bricks"), getMiddleOrEndBase(item, "_brick")),
                 (input, output) -> {
                     Item polished = getPrefixShape(getSpecialNamespaceIfPresent(input, output), input, "polished_");
                     if (polished != null) {
@@ -565,13 +578,13 @@ public final class AutomaticRecipeAdder {
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_cut"))
             );
+            @Nullable Item withoutChiseled = filterOut(getStartOrMiddleBase(item, "chiseled_"), Set.of(Items.BOOKSHELF));
             adders.addRecipes(
                 item,
-                getStartOrMiddleBase(item, "chiseled_"),
+                withoutChiseled,
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_chiseled"))
             );
-            @Nullable Item withoutChiseled = getStartOrMiddleBase(item, "chiseled_");
             adders.addRecipes(
                 item,
                 getSuffixShape(getSpecialNamespaceIfPresent(item, withoutChiseled), withoutChiseled, "_slab"),
@@ -605,10 +618,15 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
-                getSuffixBase(item, "_planks", List.of("_log")),
+                getSuffixBase(item, "_stem", List.of("_hyphae")),
+                adders.addStonecutting(1, "from_hyphae")
+            );
+            @Nullable Item log = getSuffixBase(item, "_planks", List.of("_log", "_stem"));
+            adders.addRecipes(
+                item,
+                log,
                 adders.addStonecutting(4, "from_log")
             );
-            @Nullable Item log = getSuffixBase(item, "_planks", List.of("_log"));
             adders.addRecipes(
                 item,
                 getPrefixShape(getSpecialNamespaceIfPresent(item, log), log, "stripped_"),
@@ -640,6 +658,12 @@ public final class AutomaticRecipeAdder {
         return (substringIndex == 0 ? "" : path.substring(0, substringIndex)) + path.substring(substringIndex + substring.length());
     }
 
+    private static @Nullable String getMiddleOrEndBasePath(String path, String substring) {
+        int substringIndex = path.indexOf(substring);
+        if (substringIndex == -1) return null;
+        return path.substring(0, substringIndex) + (substringIndex + substring.length() == path.length() ? "" : path.substring(substringIndex + substring.length()));
+    }
+
     private static @Nullable Item getSuffixBase(Item item, String suffix) {
         return getSuffixBase(item, suffix, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
     }
@@ -650,8 +674,18 @@ public final class AutomaticRecipeAdder {
         var path = key.getPath();
         var base = getSuffixBasePath(path, suffix);
         if (base == null) return null;
-        return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), base + baseSuffix))
-            .filter(Objects::nonNull).findFirst().orElse(null);
+        List<String> basePrefixes = List.of("", "oak_");
+        return basePrefixes.stream().flatMap(basePrefix -> {
+            String baseWithoutPrefix;
+            if (basePrefix.isEmpty()) {
+                baseWithoutPrefix = base;
+            } else if (base.startsWith(basePrefix)) {
+                baseWithoutPrefix = base.substring(basePrefix.length());
+            } else {
+                return Stream.empty();
+            }
+            return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), baseWithoutPrefix + baseSuffix));
+        }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     private static @Nullable Item getStartOrMiddleBase(Item item, String substring) {
@@ -663,6 +697,20 @@ public final class AutomaticRecipeAdder {
         var key = item.keyInItemRegistry;
         var path = key.getPath();
         var base = getStartOrMiddleBasePath(path, substring);
+        if (base == null) return null;
+        return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), base + baseSuffix))
+            .filter(Objects::nonNull).findFirst().orElse(null);
+    }
+
+    private static @Nullable Item getMiddleOrEndBase(Item item, String substring) {
+        return getMiddleOrEndBase(item, substring, List.of("_planks", "_plank", "s_block", "_block", "s", ""));
+    }
+
+    private static @Nullable Item getMiddleOrEndBase(Item item, String substring, List<String> baseSuffixes) {
+        if (!(item instanceof BlockItem)) return null;
+        var key = item.keyInItemRegistry;
+        var path = key.getPath();
+        var base = getMiddleOrEndBasePath(path, substring);
         if (base == null) return null;
         return baseSuffixes.stream().map(baseSuffix -> getBlockItemByPath(key.getNamespace(), base + baseSuffix))
             .filter(Objects::nonNull).findFirst().orElse(null);
@@ -684,7 +732,8 @@ public final class AutomaticRecipeAdder {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
         var path = key.getPath();
-        return baseSuffixes.stream().map(baseSuffix -> {
+        List<String> basePrefixes = List.of("", "oak_");
+        return basePrefixes.stream().flatMap(basePrefix -> baseSuffixes.stream().map(baseSuffix -> {
             String pathWithoutBaseSuffix;
             if (baseSuffix.isEmpty()) {
                 pathWithoutBaseSuffix = path;
@@ -693,8 +742,9 @@ public final class AutomaticRecipeAdder {
             } else {
                 return null;
             }
-            return getBlockItemByPath(preferredNamespace != null ? preferredNamespace : key.getNamespace(), pathWithoutBaseSuffix + suffix);
-        }).filter(Objects::nonNull).findFirst().orElse(null);
+            String pathWithBasePrefixWithoutBaseSuffix = basePrefix + pathWithoutBaseSuffix;
+            return getBlockItemByPath(preferredNamespace != null ? preferredNamespace : key.getNamespace(), pathWithBasePrefixWithoutBaseSuffix + suffix);
+        })).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     public static @Nullable Item getPrefixShape(Item base, String prefix) {

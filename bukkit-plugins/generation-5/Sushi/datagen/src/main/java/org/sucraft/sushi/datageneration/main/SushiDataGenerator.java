@@ -21,10 +21,10 @@ import org.sucraft.sushi.datageneration.redstone.Repeater;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
+import org.sucraft.sushi.datageneration.wood.Bookshelves;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
-import org.sucraft.sushi.datageneration.wood.Oak;
-import org.sucraft.sushi.datageneration.wood.Spruce;
+import org.sucraft.sushi.datageneration.wood.Barrels;
 
 public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
@@ -72,10 +72,10 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         SnowyStoneBricks.add(factories);
 
         // Wood
+        Barrels.add(factories);
+        Bookshelves.add(factories);
         Chests.add(factories);
         DyedPlanks.add(factories);
-        Oak.add(factories);
-        Spruce.add(factories);
 
         pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());

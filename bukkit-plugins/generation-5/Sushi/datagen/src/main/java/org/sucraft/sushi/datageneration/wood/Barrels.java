@@ -5,9 +5,9 @@ import net.minecraft.world.item.Items;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
 
-public final class Spruce {
+public final class Barrels {
 
-    private Spruce() {
+    private Barrels() {
         throw new UnsupportedOperationException();
     }
 

@@ -39,6 +39,7 @@ import net.minecraft.world.item.crafting.display.SlotDisplay;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.block.OldReplacedBlocks;
 import org.sucraft.sushi.main.SushiPlugin;
+import spout.gamecontent.builtin.recipe.MissingTransitiveStonecuttingRecipeAdder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -455,7 +456,7 @@ public final class AutomaticRecipeAdder {
                         }
                         this.removeRecipeFromServer(existingRecipe);
                     }
-                    this.addSmeltingRecipeToServer(Identifier.fromNamespaceAndPath("sucraft", input.keyInItemRegistry.getNamespace() + "_" + input.keyInItemRegistry.getPath() + "_to_" + output.keyInItemRegistry.getNamespace() + "_" + output.keyInItemRegistry.getPath()), reason, input, output, CookingBookCategory.BLOCKS, null, experience, cookingTime);
+                    this.addSmeltingRecipeToServer(Identifier.fromNamespaceAndPath("sucraft", input.keyInItemRegistry.getNamespace() + "_" + input.keyInItemRegistry.getPath() + "_to_" + output.keyInItemRegistry.getNamespace() + "_" + output.keyInItemRegistry.getPath()), reason, output, input, CookingBookCategory.BLOCKS, null, experience, cookingTime);
                 };
             }
 
@@ -467,6 +468,9 @@ public final class AutomaticRecipeAdder {
         var adders = new RecipeAdders();
 
         adders.recomputeRecipesByInputByOutput();
+
+        // Start a queue of transitive recipe additions
+        MissingTransitiveStonecuttingRecipeAdder.startQueue();
 
         // Go over all items to see if we need to add recipes for them
         BuiltInRegistries.ITEM.forEach(item -> {
@@ -592,6 +596,12 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
+                getStartOrMiddleBase(item, "rough_"),
+                adders.addStonecutting(1, "from_non_rough"),
+                invert(adders.addStonecutting(1, "from_rough"))
+            );
+            adders.addRecipes(
+                item,
                 getStartOrMiddleBase(item, "smooth_"),
                 adders.addSmelting(0.1f, 200)
             );
@@ -632,7 +642,15 @@ public final class AutomaticRecipeAdder {
                 getPrefixShape(getSpecialNamespaceIfPresent(item, log), log, "stripped_"),
                 adders.addStonecutting(4, "from_stripped_log")
             );
+            adders.addRecipes(
+                item,
+                getReplaced(item, "sandstone", "sand"),
+                adders.add2x2RectangleCrafting("from_sand", 1, CraftingBookCategory.BUILDING)
+            );
         });
+
+        // Flush the queued transitive recipe additions
+        MissingTransitiveStonecuttingRecipeAdder.flushQueue();
 
     }
 
@@ -645,6 +663,20 @@ public final class AutomaticRecipeAdder {
         }
         return (BlockItem) BuiltInRegistries.ITEM.stream().filter(item -> item.keyInItemRegistry.getPath().equals(path))
             .filter(item -> item instanceof BlockItem).findFirst().orElse(null);
+    }
+
+    private static @Nullable String getReplacedPath(String path, String from, String to) {
+        if (!path.contains(from)) return null;
+        return path.replaceFirst(from, to);
+    }
+
+    private static @Nullable Item getReplaced(Item item, String from, String to) {
+        if (!(item instanceof BlockItem)) return null;
+        var key = item.keyInItemRegistry;
+        var path = key.getPath();
+        var replacedPath = getReplacedPath(path, from, to);
+        if (replacedPath == null) return null;
+        return getBlockItemByPath(key.getNamespace(), replacedPath);
     }
 
     private static @Nullable String getSuffixBasePath(String path, String suffix) {

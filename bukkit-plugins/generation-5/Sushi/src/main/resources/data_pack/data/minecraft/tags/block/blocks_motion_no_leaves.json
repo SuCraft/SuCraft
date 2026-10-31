@@ -17,6 +17,12 @@
     "sucraft:polished_calcite",
     "sucraft:polished_dripstone",
     "sucraft:polished_tuff",
-    "sucraft:tuff_bricks"
+    "sucraft:tuff_bricks",
+    "sucraft:soul_sandstone",
+    "sucraft:soul_sandstone_bricks",
+    "sucraft:cut_soul_sandstone",
+    "sucraft:chiseled_soul_sandstone",
+    "sucraft:smooth_soul_sandstone",
+    "sucraft:rough_soul_sandstone"
   ]
 }

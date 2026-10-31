@@ -68,6 +68,70 @@ public final class SuCraftBlocks {
             .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
             .build();
 
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate CUT_SOUL_SANDSTONE =
+        BlockSet.builder("cut_soul_sandstone")
+            .fullBlock().vanilla(Blocks.SOUL_SOIL).fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(SOUL_SANDSTONE.fullBlockForDataGeneration(), "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
+                mappings.put(TextureSlot.TEXTURE, TextureMapping.getBlockTexture(block));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(block));
+            }))
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            /*.fence().fenceFallback(Blocks.DARK_OAK_FENCE)*/
+            .button().buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SMOOTH_SOUL_SANDSTONE =
+        BlockSet.builder("smooth_soul_sandstone")
+            .fullBlock().vanilla(Blocks.SOUL_SOIL).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.ALL, TextureMapping.getBlockTexture(SOUL_SANDSTONE.fullBlockForDataGeneration(), "_top"));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(SOUL_SANDSTONE.fullBlockForDataGeneration(), "_top"));
+            }))
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            /*.fence().fenceFallback(Blocks.DARK_OAK_FENCE)*/
+            .button().buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_SOUL_SANDSTONE =
+        BlockSet.builder("rough_soul_sandstone")
+            .fullBlock().vanilla(Blocks.SOUL_SOIL).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.ALL, TextureMapping.getBlockTexture(SOUL_SANDSTONE.fullBlockForDataGeneration(), "_bottom"));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(SOUL_SANDSTONE.fullBlockForDataGeneration(), "_bottom"));
+            }))
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            /*.fence().fenceFallback(Blocks.DARK_OAK_FENCE)*/
+            .button().buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SOUL_SANDSTONE_BRICKS =
+        BlockSet.builder("soul_sandstone_bricks")
+            .fullBlock().vanilla(Blocks.SOUL_SOIL)
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            /*.fence().fenceFallback(Blocks.DARK_OAK_FENCE)*/
+            .button().buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
+
+    public static final SuCraftBlockType CHISELED_SOUL_SANDSTONE = blockType("chiseled_soul_sandstone")
+        .fullBlock(Blocks.SOUL_SOIL).dataGenerateModel((factory, block) -> {
+            factory.addBlockCubeColumn(
+                block,
+                block.builtInRegistryHolder().key().identifier().withPrefix("block/"),
+                SOUL_SANDSTONE.fullBlockType().identifier.withSuffix("_top").withPrefix("block/")
+            );
+        });
+
     // Stone / Andesite
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ANDESITE_BRICKS =
@@ -80,6 +144,7 @@ public final class SuCraftBlocks {
             .button().buttonFallback(Blocks.STONE_BUTTON)
             .pressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType CHISELED_ANDESITE_BRICKS = blockType("chiseled_andesite_bricks")
         .fullBlock(Blocks.POLISHED_ANDESITE);
 
@@ -116,6 +181,7 @@ public final class SuCraftBlocks {
             .button().buttonFallback(Blocks.PALE_OAK_BUTTON)
             .pressurePlate().pressurePlateFallback(Blocks.PALE_OAK_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType CHISELED_CALCITE_BRICKS = blockType("chiseled_calcite_bricks")
         .fullBlock(Blocks.CALCITE);
 
@@ -169,6 +235,7 @@ public final class SuCraftBlocks {
             .button().buttonFallback(Blocks.JUNGLE_BUTTON)
             .pressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
             .build();
+
     public static final SuCraftBlockType CHISELED_DRIPSTONE_BRICKS = blockType("chiseled_dripstone_bricks")
         .fullBlock(Blocks.DRIPSTONE_BLOCK);
 

@@ -14,6 +14,10 @@
     "sucraft:polished_tuff_pressure_plate",
     "sucraft:snowy_stone_brick_pressure_plate",
     "sucraft:soul_sandstone_pressure_plate",
+    "sucraft:cut_soul_sandstone_pressure_plate",
+    "sucraft:smooth_soul_sandstone_pressure_plate",
+    "sucraft:rough_soul_sandstone_pressure_plate",
+    "sucraft:soul_sandstone_brick_pressure_plate",
     "sucraft:tuff_brick_pressure_plate"
   ]
 }

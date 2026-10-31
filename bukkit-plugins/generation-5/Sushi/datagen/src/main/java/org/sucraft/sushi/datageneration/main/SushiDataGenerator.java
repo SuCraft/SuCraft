@@ -18,6 +18,7 @@ import org.sucraft.sushi.datageneration.mineral.copper.Copper;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
+import org.sucraft.sushi.datageneration.soil.SoulSandstone;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
@@ -63,6 +64,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Redstone
         Dispenser.add(factories);
         Repeater.add(factories);
+
+        // Soil / Soul
+        SoulSandstone.add(factories);
 
         // Stone / Deepslate
         Deepslate.add(factories);

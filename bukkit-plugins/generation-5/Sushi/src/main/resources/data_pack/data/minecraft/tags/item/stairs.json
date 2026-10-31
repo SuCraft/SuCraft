@@ -1,6 +1,6 @@
 {
   "values": [
-    "#sucraft:bookshelf_stairss",
+    "#sucraft:bookshelf_stairs",
     "sucraft:andesite_brick_stairs",
     "sucraft:calcite_stairs",
     "sucraft:calcite_brick_stairs",
@@ -15,6 +15,10 @@
     "sucraft:polished_tuff_stairs",
     "sucraft:snowy_stone_brick_stairs",
     "sucraft:soul_sandstone_stairs",
+    "sucraft:soul_sandstone_brick_stairs",
+    "sucraft:cut_soul_sandstone_stairs",
+    "sucraft:smooth_soul_sandstone_stairs",
+    "sucraft:rough_soul_sandstone_stairs",
     "sucraft:tuff_brick_stairs"
   ]
 }

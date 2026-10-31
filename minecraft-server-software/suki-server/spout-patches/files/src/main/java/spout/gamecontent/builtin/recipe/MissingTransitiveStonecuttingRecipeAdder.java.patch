@@ -1,0 +1,39 @@
+--- a/src/main/java/spout/gamecontent/builtin/recipe/MissingTransitiveStonecuttingRecipeAdder.java
++++ b/src/main/java/spout/gamecontent/builtin/recipe/MissingTransitiveStonecuttingRecipeAdder.java
+@@ -36,7 +_,36 @@
+ 
+     private static final List<ResourceKey<Recipe<?>>> transitiveRecipes = new ArrayList<>(0);
+ 
++    // Suki start - Support queue
++    private static boolean queueActive;
++    private static @Nullable List<RecipeHolder<StonecutterRecipe>> queue;
++
++    public static void startQueue() {
++        queueActive = true;
++        queue = new ArrayList<>(1);
++    }
++
++    public static void flushQueue() {
++        queueActive = false;
++        run(net.minecraft.server.MinecraftServer.getServer().getRecipeManager().recipes, queue.stream().distinct().toList());
++        queue = null;
++    }
++    // Suki end - Support queue
++
+     public static void run(RecipeMap recipeMap, @Nullable List<RecipeHolder<StonecutterRecipe>> recipesToProcess) {
++
++        // Suki start - Support queue
++        if (queueActive) {
++            if (queue != null) {
++                if (recipesToProcess == null) {
++                    queue = null;
++                } else {
++                    queue.addAll(recipesToProcess);
++                }
++            }
++            return;
++        }
++        // Suki end - Support queue
+ 
+         // Skip if not needed
+         if (!SpoutGlobalConfiguration.get().recipes.stonecutting.addMissingTransitiveRecipes) return;

@@ -1,0 +1,13 @@
+--- a/net/minecraft/advancements/predicates/entity/MovementAffectedByPredicate.java
++++ b/net/minecraft/advancements/predicates/entity/MovementAffectedByPredicate.java
+@@ -14,6 +_,9 @@
+     @Override
+     public boolean matches(final Entity entity, final ServerLevel level, final @Nullable Vec3 position) {
+         Vec3 onPos = Vec3.atCenterOf(entity.getBlockPosBelowThatAffectsMyMovement());
+-        return this.predicate.matches(level, onPos.x(), onPos.y(), onPos.z());
++        // Suki start - Soul speed works on slabs
++        Vec3 onPos2 = onPos.add(0, 0.5, 0);
++        return this.predicate.matches(level, onPos.x(), onPos.y(), onPos.z()) || this.predicate.matches(level, onPos2.x(), onPos2.y(), onPos2.z());
++        // Suki end - Soul speed works on slabs
+     }
+ }

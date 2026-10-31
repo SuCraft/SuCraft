@@ -271,11 +271,32 @@ public interface BlockSet {
     interface WithSlabAndStairsAndWallAndButtonAndPressurePlate extends WithSlabAndStairsAndWallAndButton, WithPressurePlate {
     }
 
+    interface WithStairsAndWall extends WithStairs, WithWall {
+    }
+
+    interface WithStairsAndWallAndButton extends WithStairsAndWall, WithButton {
+    }
+
+    interface WithStairsAndWallAndButtonAndPressurePlate extends WithStairsAndWallAndButton, WithPressurePlate {
+    }
+
+    interface WithWallAndButton extends WithWall, WithButton {
+    }
+
+    interface WithWallAndButtonAndPressurePlate extends WithWallAndButton, WithPressurePlate {
+    }
+
+    interface WithButtonAndPressurePlate extends WithButton, WithPressurePlate {
+    }
+
     final class Impl implements
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate,
-        WithSlabAndStairsAndWallAndButtonAndPressurePlate {
+        WithSlabAndStairsAndWallAndButtonAndPressurePlate,
+        WithStairsAndWallAndButtonAndPressurePlate,
+        WithWallAndButtonAndPressurePlate,
+        WithButtonAndPressurePlate {
 
         private @Nullable SuCraftBlockType fullBlock;
         private @Nullable SuCraftBlockType slab;

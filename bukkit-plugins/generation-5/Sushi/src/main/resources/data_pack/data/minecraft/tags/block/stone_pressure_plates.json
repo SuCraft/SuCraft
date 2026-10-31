@@ -22,6 +22,12 @@
     "sucraft:red_sandstone_brick_pressure_plate",
     "sucraft:rough_red_sandstone_pressure_plate",
     "sucraft:sandstone_brick_pressure_plate",
-    "sucraft:rough_sandstone_pressure_plate"
+    "sucraft:rough_sandstone_pressure_plate",
+    "sucraft:sandstone_pressure_plate",
+    "sucraft:red_sandstone_pressure_plate",
+    "sucraft:cut_sandstone_pressure_plate",
+    "sucraft:cut_red_sandstone_pressure_plate",
+    "sucraft:smooth_sandstone_pressure_plate",
+    "sucraft:smooth_red_sandstone_pressure_plate"
   ]
 }

@@ -53,6 +53,32 @@ public final class SuCraftBlocks {
 
     // Soil - Red sand
 
+    public static final BlockSet.WithButtonAndPressurePlate RED_SANDSTONE =
+        BlockSet.builder("red_sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.RED_SANDSTONE)
+            .button().buttonFallback(Blocks.ACACIA_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithStairsAndWallAndButtonAndPressurePlate CUT_RED_SANDSTONE =
+        BlockSet.builder("cut_red_sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.CUT_RED_SANDSTONE)
+            .stairs().stairsFallback(Blocks.RED_SANDSTONE_STAIRS)
+            .wall().wallFallback(Blocks.RED_SANDSTONE_WALL)
+            .button().buttonFallback(Blocks.ACACIA_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithWallAndButtonAndPressurePlate SMOOTH_RED_SANDSTONE =
+        BlockSet.builder("smooth_red_sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_RED_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.RED_SANDSTONE, "_top"));
+            }))
+            .wall().wallFallback(Blocks.RED_SANDSTONE_WALL)
+            .button().buttonFallback(Blocks.ACACIA_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_RED_SANDSTONE =
         BlockSet.builder("rough_red_sandstone")
             .fullBlock().vanilla(Blocks.RED_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
@@ -79,6 +105,32 @@ public final class SuCraftBlocks {
             .build();
 
     // Soil - Sand
+
+    public static final BlockSet.WithButtonAndPressurePlate SANDSTONE =
+        BlockSet.builder("sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SANDSTONE)
+            .button().buttonFallback(Blocks.BIRCH_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithStairsAndWallAndButtonAndPressurePlate CUT_SANDSTONE =
+        BlockSet.builder("cut_sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.CUT_SANDSTONE)
+            .stairs().stairsFallback(Blocks.SANDSTONE_STAIRS)
+            .wall().wallFallback(Blocks.SANDSTONE_WALL)
+            .button().buttonFallback(Blocks.BIRCH_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithWallAndButtonAndPressurePlate SMOOTH_SANDSTONE =
+        BlockSet.builder("smooth_sandstone")
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.SANDSTONE, "_top"));
+            }))
+            .wall().wallFallback(Blocks.SANDSTONE_WALL)
+            .button().buttonFallback(Blocks.BIRCH_BUTTON).blockSetType(BlockSetType.STONE)
+            .pressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
+            .build();
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_SANDSTONE =
         BlockSet.builder("rough_sandstone")

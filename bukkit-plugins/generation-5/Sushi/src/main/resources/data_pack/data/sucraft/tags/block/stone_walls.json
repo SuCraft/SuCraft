@@ -18,6 +18,10 @@
     "sucraft:cut_soul_sandstone_wall",
     "sucraft:smooth_soul_sandstone_wall",
     "sucraft:rough_soul_sandstone_wall",
-    "sucraft:tuff_brick_wall"
+    "sucraft:tuff_brick_wall",
+    "sucraft:red_sandstone_brick_wall",
+    "sucraft:rough_red_sandstone_wall",
+    "sucraft:sandstone_brick_wall",
+    "sucraft:rough_sandstone_wall"
   ]
 }

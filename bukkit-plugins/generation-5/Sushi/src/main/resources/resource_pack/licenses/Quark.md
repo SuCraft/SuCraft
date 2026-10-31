@@ -25,6 +25,8 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/spruce_bookshelf.png`
 * `assets/sucraft/textures/block/tuff_bricks.png`
 * `assets/sucraft/textures/block/warped_bookshelf.png`
+* `assets/sucraft/textures/block/sandstone_bricks.png`
+* `assets/sucraft/textures/block/red_sandstone_bricks.png`
 
 These files are provided under an `Attribution-NonCommercial-ShareAlike 3.0 Unported` license, which is included below.
 

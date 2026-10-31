@@ -19,6 +19,10 @@
     "sucraft:cut_soul_sandstone_stairs",
     "sucraft:smooth_soul_sandstone_stairs",
     "sucraft:rough_soul_sandstone_stairs",
-    "sucraft:tuff_brick_stairs"
+    "sucraft:tuff_brick_stairs",
+    "sucraft:red_sandstone_brick_stairs",
+    "sucraft:rough_red_sandstone_stairs",
+    "sucraft:sandstone_brick_stairs",
+    "sucraft:rough_sandstone_stairs"
   ]
 }

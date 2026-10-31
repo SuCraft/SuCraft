@@ -51,6 +51,60 @@ public final class SuCraftBlocks {
             .pressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
             .build();
 
+    // Soil - Red sand
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_RED_SANDSTONE =
+        BlockSet.builder("rough_red_sandstone")
+            .fullBlock().vanilla(Blocks.RED_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.ALL, TextureMapping.getBlockTexture(Blocks.RED_SANDSTONE, "_bottom"));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.RED_SANDSTONE, "_bottom"));
+            }))
+            .slab()
+            .stairs()
+            .wall()
+            /*.fence().fenceFallback(Blocks.ACACIA_FENCE)*/
+            .button().buttonFallback(Blocks.ACACIA_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate RED_SANDSTONE_BRICKS =
+        BlockSet.builder("red_sandstone_bricks")
+            .fullBlock().vanilla(Blocks.RED_SANDSTONE)
+            .slab()
+            .stairs()
+            .wall()
+            /*.fence().fenceFallback(Blocks.ACACIA_FENCE)*/
+            .button().buttonFallback(Blocks.ACACIA_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
+    // Soil - Sand
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_SANDSTONE =
+        BlockSet.builder("rough_sandstone")
+            .fullBlock().vanilla(Blocks.SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.ALL, TextureMapping.getBlockTexture(Blocks.SANDSTONE, "_bottom"));
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.SANDSTONE, "_bottom"));
+            }))
+            .slab()
+            .stairs()
+            .wall()
+            /*.fence().fenceFallback(Blocks.BIRCH_FENCE)*/
+            .button().buttonFallback(Blocks.BIRCH_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SANDSTONE_BRICKS =
+        BlockSet.builder("sandstone_bricks")
+            .fullBlock().vanilla(Blocks.SANDSTONE)
+            .slab()
+            .stairs()
+            .wall()
+            /*.fence().fenceFallback(Blocks.BIRCH_FENCE)*/
+            .button().buttonFallback(Blocks.BIRCH_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
+            .build();
+
     // Soil - Soul
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate SOUL_SANDSTONE =

@@ -19,6 +19,10 @@
     "sucraft:cut_soul_sandstone_slab",
     "sucraft:smooth_soul_sandstone_slab",
     "sucraft:rough_soul_sandstone_slab",
-    "sucraft:tuff_brick_slab"
+    "sucraft:tuff_brick_slab",
+    "sucraft:red_sandstone_brick_slab",
+    "sucraft:rough_red_sandstone_slab",
+    "sucraft:sandstone_brick_slab",
+    "sucraft:rough_sandstone_slab"
   ]
 }

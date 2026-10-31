@@ -72,6 +72,22 @@
     "sucraft:soul_sandstone_brick_wall",
     "sucraft:cut_soul_sandstone_wall",
     "sucraft:smooth_soul_sandstone_wall",
-    "sucraft:rough_soul_sandstone_wall"
+    "sucraft:rough_soul_sandstone_wall",
+    "sucraft:red_sandstone_bricks",
+    "sucraft:red_sandstone_brick_slab",
+    "sucraft:red_sandstone_brick_stairs",
+    "sucraft:red_sandstone_brick_wall",
+    "sucraft:rough_red_sandstone",
+    "sucraft:rough_red_sandstone_slab",
+    "sucraft:rough_red_sandstone_stairs",
+    "sucraft:rough_red_sandstone_wall",
+    "sucraft:sandstone_bricks",
+    "sucraft:sandstone_brick_slab",
+    "sucraft:sandstone_brick_stairs",
+    "sucraft:sandstone_brick_wall",
+    "sucraft:rough_sandstone",
+    "sucraft:rough_sandstone_slab",
+    "sucraft:rough_sandstone_stairs",
+    "sucraft:rough_sandstone_wall"
   ]
 }

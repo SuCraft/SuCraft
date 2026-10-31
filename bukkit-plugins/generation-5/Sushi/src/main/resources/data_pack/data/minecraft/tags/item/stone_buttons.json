@@ -18,6 +18,10 @@
     "sucraft:smooth_soul_sandstone_button",
     "sucraft:rough_soul_sandstone_button",
     "sucraft:soul_sandstone_brick_button",
-    "sucraft:tuff_brick_button"
+    "sucraft:tuff_brick_button",
+    "sucraft:red_sandstone_brick_button",
+    "sucraft:rough_red_sandstone_button",
+    "sucraft:sandstone_brick_button",
+    "sucraft:rough_sandstone_button"
   ]
 }

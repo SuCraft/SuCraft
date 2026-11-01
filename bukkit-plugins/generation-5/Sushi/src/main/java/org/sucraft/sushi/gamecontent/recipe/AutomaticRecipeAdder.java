@@ -556,6 +556,18 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
+                firstNotNullOf(getSuffixBase(item, "_diagonal_tiles"), getMiddleOrEndBase(item, "_diagonal_tile")),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_diagonal_tiles"))
+            );
+            adders.addRecipes(
+                item,
+                firstNotNullOf(getSuffixBase(item, "_scales"), getMiddleOrEndBase(item, "_scale")),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_scales"))
+            );
+            adders.addRecipes(
+                item,
                 firstNotNullOf(getSuffixBase(item, "_bricks"), getMiddleOrEndBase(item, "_brick")),
                 (input, output) -> {
                     Item polished = getPrefixShape(getSpecialNamespaceIfPresent(input, output), input, "polished_");
@@ -588,6 +600,12 @@ public final class AutomaticRecipeAdder {
                 withoutChiseled,
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_chiseled"))
+            );
+            adders.addRecipes(
+                item,
+                getStartOrMiddleBase(item, "engraved_"),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_engraved"))
             );
             adders.addRecipes(
                 item,

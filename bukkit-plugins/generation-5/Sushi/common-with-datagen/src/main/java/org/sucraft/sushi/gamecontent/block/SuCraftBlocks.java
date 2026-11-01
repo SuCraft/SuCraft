@@ -323,6 +323,45 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.CALCITE)
         .mineableWithPickaxe();
 
+    // Stone / Cinnabar
+
+    public static final BlockSet.WithButtonAndPressurePlate CINNABAR =
+        BlockSet.builder("cinnabar").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.CINNABAR)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.MANGROVE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate POLISHED_CINNABAR =
+        BlockSet.builder("polished_cinnabar").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.POLISHED_CINNABAR)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.MANGROVE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate CINNABAR_BRICKS =
+        BlockSet.builder("cinnabar_bricks").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.CINNABAR_BRICKS)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.MANGROVE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
+            .build();
+
+    // Stone / Cobblestone
+
+    public static final BlockSet.WithWall COBBLESTONE =
+        BlockSet.builder("cobblestone").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.COBBLESTONE)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithWall MOSSY_COBBLESTONE =
+        BlockSet.builder("mossy_cobblestone").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.MOSSY_COBBLESTONE)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+            .build();
+
     // Stone / Diorite
 
     public static final BlockSet.WithButtonAndPressurePlate DIORITE =
@@ -425,6 +464,79 @@ public final class SuCraftBlocks {
 
     public static final SuCraftBlockType CHISELED_GRANITE_BRICKS = blockType("chiseled_granite_bricks")
         .fullBlock(Blocks.POLISHED_GRANITE)
+        .mineableWithPickaxe();
+
+    // Stone / Prismarine
+
+    public static final BlockSet.WithButtonAndPressurePlate PRISMARINE =
+        BlockSet.builder("prismarine").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.PRISMARINE)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate DARK_PRISMARINE =
+        BlockSet.builder("dark_prismarine").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.DARK_PRISMARINE)
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate PRISMARINE_BRICKS =
+        BlockSet.builder("prismarine_bricks").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.PRISMARINE_BRICKS)
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ENGRAVED_PRISMARINE_BRICKS =
+        BlockSet.builder("engraved_prismarine_bricks").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.PRISMARINE_BRICKS)
+            .slab()
+            .stairs()
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            /*.stoneFence().fenceFallback(Blocks.WARPED_FENCE)*/
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate PRISMARINE_DIAGONAL_TILES =
+        BlockSet.builder("prismarine_diagonal_tiles").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.PRISMARINE_BRICKS)
+            .slab()
+            .stairs()
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            /*.stoneFence().fenceFallback(Blocks.WARPED_FENCE)*/
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate PRISMARINE_SCALES =
+        BlockSet.builder("prismarine_scales").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.PRISMARINE_BRICKS)
+            .slab()
+            .stairs()
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            /*.stoneFence().fenceFallback(Blocks.WARPED_FENCE)*/
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate PRISMARINE_STONE_BRICKS =
+        BlockSet.builder("prismarine_stone_bricks").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.PRISMARINE_BRICKS)
+            .slab()
+            .stairs()
+            .stoneWall().wallFallback(Blocks.PRISMARINE_WALL)
+            /*.stoneFence().fenceFallback(Blocks.WARPED_FENCE)*/
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.WARPED_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.WARPED_PRESSURE_PLATE)
+            .build();
+
+    public static final SuCraftBlockType CHISELED_PRISMARINE_BRICKS = blockType("chiseled_prismarine_bricks")
+        .fullBlock(Blocks.PRISMARINE_BRICKS)
         .mineableWithPickaxe();
 
     // Stone / Regular
@@ -530,7 +642,37 @@ public final class SuCraftBlocks {
     ).mineableWithPickaxe()
         .dataGenerateTag(SuCraftBlockItemTags.INFESTED_STONE_BRICKS);
 
+    // Stone / Sulfur
+
+    public static final BlockSet.WithButtonAndPressurePlate SULFUR =
+        BlockSet.builder("sulfur").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SULFUR)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.BAMBOO_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.BAMBOO_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate POLISHED_SULFUR =
+        BlockSet.builder("polished_sulfur").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.POLISHED_SULFUR)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.BAMBOO_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.BAMBOO_PRESSURE_PLATE)
+            .build();
+
+    public static final BlockSet.WithButtonAndPressurePlate SULFUR_BRICKS =
+        BlockSet.builder("sulfur_bricks").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SULFUR_BRICKS)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.BAMBOO_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.BAMBOO_PRESSURE_PLATE)
+            .build();
+
     // Stone / Tuff
+
+    public static final BlockSet.WithButtonAndPressurePlate TUFF =
+        BlockSet.builder("tuff").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.TUFF)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+            .build();
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_POLISHED_TUFF =
         BlockSet.builder("polished_tuff").mineableWithPickaxe()
@@ -557,6 +699,24 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType ROUGH_CHISELED_TUFF_BRICKS = blockType("chiseled_tuff_bricks")
         .fullBlock(Blocks.CHISELED_TUFF_BRICKS)
         .mineableWithPickaxe();
+
+    // public static final SuCraftBlockType SMOO
+    //
+    // public static final BlockSet.WithButtonAndPressurePlate SMOOTH_POLISHED_TUFF =
+    //     BlockSet.builder("polished_tuff").mineableWithPickaxe()
+    //         .shapeIdentifierSuffixFunction(suffix -> suffix + "_new")
+    //         .vanilla(Blocks.POLISHED_TUFF)
+    //         .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+    //         .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+    //         .build();
+    //
+    // public static final BlockSet.WithButtonAndPressurePlate SMOOTH_TUFF_BRICKS =
+    //     BlockSet.builder("tuff_bricks").mineableWithPickaxe()
+    //         .shapeIdentifierSuffixFunction(suffix -> suffix + "_new")
+    //         .vanilla(Blocks.TUFF_BRICKS)
+    //         .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+    //         .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+    //         .build();
 
     // Wood / Bookshelves
 

@@ -8,7 +8,7 @@ The following files (referenced relative to the parent folder of the folder this
 These files are provided under "all rights reserved"
 as the original mod does not come with a license to redistribute.
 
-As such, the files can only be used in singleplayer.
+As such, the files can only be used in single-player.
 We feel that that is not the author's original intention,
 so we include them in the resource pack (which requires distribution) anyway,
 in a potentially non-compliant but nevertheless respectful way.

@@ -10,12 +10,12 @@ public final class CommonItemAdder {
 
     public static void initialize() {
         // Make sure all items are registered
-        SuCraftItems.valuesForDataGeneration();
+        SuCraftItems.valuesNMS();
     }
 
     public static void add(CollectedFactories factories) {
         for (var type : SuCraftItems.types()) {
-            // Nothing to do at the moment
+            type.applyDataGeneration(factories);
         }
     }
 

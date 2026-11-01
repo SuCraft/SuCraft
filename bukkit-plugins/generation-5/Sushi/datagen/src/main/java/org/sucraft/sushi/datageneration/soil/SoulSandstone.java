@@ -17,7 +17,7 @@ public final class SoulSandstone {
         factories.recipes().add(Recipes.start()
             .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
                 () -> function.provider
-                    .shaped(RecipeCategory.BUILDING_BLOCKS, SuCraftBlocks.SOUL_SANDSTONE.fullBlockItemForDataGeneration())
+                    .shaped(RecipeCategory.BUILDING_BLOCKS, SuCraftBlocks.SOUL_SANDSTONE.fullBlockItemNMS())
                     .pattern("SS")
                     .pattern("SS")
                     .define('S', Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL)),

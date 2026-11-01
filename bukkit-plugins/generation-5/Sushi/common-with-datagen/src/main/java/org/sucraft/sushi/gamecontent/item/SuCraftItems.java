@@ -20,7 +20,6 @@ public final class SuCraftItems {
 
     private static ItemType[] values;
     private static Item[] valuesNMS;
-    private static Item[] valuesForDataGeneration;
     private static SuCraftItemType[] types;
 
     public static ItemType[] values() {
@@ -37,14 +36,6 @@ public final class SuCraftItems {
                 .map(SuCraftItemType::getNMS).toArray(Item[]::new);
         }
         return valuesNMS;
-    }
-
-    public static Item[] valuesForDataGeneration() {
-        if (valuesForDataGeneration == null) {
-            valuesForDataGeneration = Arrays.stream(types())
-                .map(SuCraftItemType::getForDataGeneration).toArray(Item[]::new);
-        }
-        return valuesForDataGeneration;
     }
 
     public static SuCraftItemType[] types() {

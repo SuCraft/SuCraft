@@ -8,4 +8,8 @@ public interface CollectedFactories {
 
     Recipes.CollectedFactory recipes();
 
+    Tags.BlockCollectedFactory blockTags();
+
+    Tags.ItemCollectedFactory itemTags();
+
 }

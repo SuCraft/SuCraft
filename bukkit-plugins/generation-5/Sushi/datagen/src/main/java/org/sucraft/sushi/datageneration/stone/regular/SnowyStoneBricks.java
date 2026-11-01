@@ -21,12 +21,12 @@ public final class SnowyStoneBricks {
     }
 
     public static void add(CollectedFactories factories) {
-        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.fullBlockItemForDataGeneration(), Items.STONE_BRICKS, 1, 1);
-        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.slabItemForDataGeneration(), Items.STONE_BRICK_SLAB, 2, 1);
-        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.stairsItemForDataGeneration(), Items.STONE_BRICK_STAIRS, 1, 1);
-        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.wallItemForDataGeneration(), Items.STONE_BRICK_WALL, 1, 1);
-        // addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.buttonItemForDataGeneration(), SuCraftBlocks.STONE_BRICKS.buttonItemForDataGeneration(), 1, 1); // TODO add
-        // addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.pressurePlateItemForDataGeneration(), SuCraftBlocks.STONE_BRICKS.pressurePlateItemForDataGeneration(), 1, 2); // TODO add
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.fullBlockItemNMS(), Items.STONE_BRICKS, 1, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.slabItemNMS(), Items.STONE_BRICK_SLAB, 2, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.stairsItemNMS(), Items.STONE_BRICK_STAIRS, 1, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.wallItemNMS(), Items.STONE_BRICK_WALL, 1, 1);
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.buttonItemNMS(), SuCraftBlocks.STONE_BRICKS.buttonItemNMS(), 1, 1); // TODO add
+        addAddRemoveSnowRecipes(factories, SuCraftBlocks.SNOWY_STONE_BRICKS.pressurePlateItemNMS(), SuCraftBlocks.STONE_BRICKS.pressurePlateItemNMS(), 1, 2); // TODO add
     }
 
 }

@@ -6,6 +6,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockItemTagId;
+import net.minecraft.tags.BlockItemTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
@@ -13,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -28,7 +33,9 @@ import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.BlockLootTables;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
+import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.datageneration.common.Models;
+import org.sucraft.sushi.gamecontent.common.CBlockItemTags;
 import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
@@ -56,7 +63,6 @@ public final class SuCraftBlockType implements ItemLike {
     private @Nullable SuCraftItemType item;
     private @Nullable BlockType value;
     private @Nullable Block valueNMS;
-    private @Nullable Block valueForDataGeneration;
 
     private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
     private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
@@ -64,6 +70,24 @@ public final class SuCraftBlockType implements ItemLike {
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
     private @Nullable Consumer<Models.CollectedFactory> dataGeneratingModel;
     private @Nullable Consumer<BlockLootTables.CollectedFactory> dataGeneratingBlockLootTable;
+    private @Nullable List<TagKey<Block>> dataGeneratingTags;
+    private boolean tryAutomaticFullBlockTags;
+    private boolean skipAutomaticBookshelfTag;
+    private boolean skipAutomaticBlocksMotionNoLeavesTag;
+    private boolean tryAutomaticSlabTags;
+    private boolean skipAutomaticSlabTag;
+    private boolean tryAutomaticStairsTags;
+    private boolean skipAutomaticStairsTag;
+    private boolean tryAutomaticWallTags;
+    private boolean skipAutomaticWallTag;
+    private boolean tryAutomaticFenceTags;
+    private boolean skipAutomaticFenceTag;
+    private boolean tryAutomaticFenceGateTags;
+    private boolean skipAutomaticFenceGateTag;
+    private boolean tryAutomaticButtonTags;
+    private boolean skipAutomaticButtonTag;
+    private boolean tryAutomaticPressurePlateTags;
+    private boolean skipAutomaticPressurePlateTag;
 
     public SuCraftBlockType(String path, boolean item) {
         this(Identifier.fromNamespaceAndPath("sucraft", path), item);
@@ -78,7 +102,7 @@ public final class SuCraftBlockType implements ItemLike {
         this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
         if (item) {
             this.item = new SuCraftItemType(key);
-            this.item.block(this::getForDataGeneration);
+            this.item.block(this::getNMS);
         }
     }
 
@@ -123,23 +147,18 @@ public final class SuCraftBlockType implements ItemLike {
     public Block getNMS() {
         Block value = this.valueNMS;
         if (value == null) {
-            value = BuiltInRegistries.BLOCK.getValue(this.identifier);
+            if (DataGenerationFlag.isDataGeneration) {
+                var key = ResourceKey.create(Registries.BLOCK, this.identifier);
+                var properties = BlockBehaviour.Properties.of().setId(key);
+                value = net.minecraft.core.Registry.register(
+                    BuiltInRegistries.BLOCK,
+                    key,
+                    this.constructorForDataGeneration.apply(properties)
+                );
+            } else {
+                value = BuiltInRegistries.BLOCK.getValue(this.identifier);
+            }
             this.valueNMS = value;
-        }
-        return value;
-    }
-
-    public Block getForDataGeneration() {
-        Block value = this.valueForDataGeneration;
-        if (value == null) {
-            var key = ResourceKey.create(Registries.BLOCK, this.identifier);
-            var properties = BlockBehaviour.Properties.of().setId(key);
-            value = net.minecraft.core.Registry.register(
-                BuiltInRegistries.BLOCK,
-                key,
-                this.constructorForDataGeneration.apply(properties)
-            );
-            this.valueForDataGeneration = value;
         }
         return value;
     }
@@ -152,10 +171,6 @@ public final class SuCraftBlockType implements ItemLike {
         return this.item != null ? this.item.getNMS() : null;
     }
 
-    public @Nullable Item itemForDataGeneration() {
-        return this.item != null ? this.item.getForDataGeneration() : null;
-    }
-
     public @Nullable SuCraftItemType itemType() {
         return this.item;
     }
@@ -163,6 +178,94 @@ public final class SuCraftBlockType implements ItemLike {
     public void applyToBlockBuilder(BlockTypeRegistryEntryBuilderNMS builder) {
         this.blockBuilding.forEach(it -> it.accept(builder));
         this.blockBuilding = null;
+    }
+
+    public void applyDataGeneration(CollectedFactories factories) {
+        this.dataGenerating.forEach(it -> it.accept(factories));
+        this.dataGenerating = null;
+        if (this.dataGeneratingModel != null) {
+            this.dataGeneratingModel.accept(factories.models());
+            this.dataGeneratingModel = null;
+        }
+        if (this.dataGeneratingBlockLootTable != null) {
+            this.dataGeneratingBlockLootTable.accept(factories.blockLootTables());
+            this.dataGeneratingBlockLootTable = null;
+        }
+        if (this.dataGeneratingTags != null) {
+            for (var tag : this.dataGeneratingTags) {
+                factories.blockTags().add(tag, this.getNMS());
+            }
+            this.dataGeneratingTags = null;
+        }
+        if (this.tryAutomaticFullBlockTags) {
+            if (!this.skipAutomaticBookshelfTag) {
+                if (this.key.getKey().contains("bookshelf")) {
+                    factories.blockTags().add(CBlockItemTags.BOOKSHELVES.block(), this.getNMS());
+                    if (this.item != null) {
+                        this.item.dataGenerateTag(CBlockItemTags.BOOKSHELVES);
+                    }
+                }
+            }
+            if (!this.skipAutomaticBlocksMotionNoLeavesTag) {
+                Block block = this.getNMS();
+                if (!(block instanceof LeavesBlock)) {
+                    factories.blockTags().add(BlockTags.BLOCKS_MOTION_NO_LEAVES, block);
+                }
+            }
+        }
+        if (this.tryAutomaticSlabTags) {
+            if (!this.skipAutomaticSlabTag) {
+                factories.blockTags().add(BlockTags.SLABS, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.SLABS);
+                }
+            }
+        }
+        if (this.tryAutomaticStairsTags) {
+            if (!this.skipAutomaticStairsTag) {
+                factories.blockTags().add(BlockTags.STAIRS, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.STAIRS);
+                }
+            }
+        }
+        if (this.tryAutomaticWallTags) {
+            if (!this.skipAutomaticWallTag) {
+                factories.blockTags().add(BlockTags.WALLS, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.WALLS);
+                }
+            }
+        }
+        if (this.tryAutomaticFenceTags) {
+            if (!this.skipAutomaticFenceTag) {
+                factories.blockTags().add(BlockTags.FENCES, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.FENCES);
+                }
+            }
+        }
+        if (this.tryAutomaticFenceGateTags) {
+            if (!this.skipAutomaticFenceGateTag) {
+                factories.blockTags().add(BlockTags.FENCE_GATES, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.FENCE_GATES);
+                }
+            }
+        }
+        if (this.tryAutomaticButtonTags) {
+            if (!this.skipAutomaticButtonTag) {
+                factories.blockTags().add(BlockTags.BUTTONS, this.getNMS());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(BlockItemTags.BUTTONS);
+                }
+            }
+        }
+        if (this.tryAutomaticPressurePlateTags) {
+            if (!this.skipAutomaticPressurePlateTag) {
+                factories.blockTags().add(BlockTags.PRESSURE_PLATES, this.getNMS());
+            }
+        }
     }
 
     public SuCraftBlockType update(@Nullable Consumer<SuCraftBlockType> updater) {
@@ -303,19 +406,6 @@ public final class SuCraftBlockType implements ItemLike {
         return this.constructorForDataGeneration(properties -> new PressurePlateBlock(BlockSetType.STONE, properties));
     }
 
-    public void applyDataGeneration(CollectedFactories factories) {
-        this.dataGenerating.forEach(it -> it.accept(factories));
-        this.dataGenerating = null;
-        if (this.dataGeneratingModel != null) {
-            this.dataGeneratingModel.accept(factories.models());
-            this.dataGeneratingModel = null;
-        }
-        if (this.dataGeneratingBlockLootTable != null) {
-            this.dataGeneratingBlockLootTable.accept(factories.blockLootTables());
-            this.dataGeneratingBlockLootTable = null;
-        }
-    }
-
     public SuCraftBlockType dataGenerate(Consumer<CollectedFactories> factoriesConsumer) {
         this.dataGenerating.add(factoriesConsumer);
         return this;
@@ -327,7 +417,7 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateModel(@Nullable BiConsumer<Models.CollectedFactory, Block> factoryAndBlockConsumer) {
-        return this.dataGenerateModel(factory -> factoryAndBlockConsumer.accept(factory, this.getForDataGeneration()));
+        return this.dataGenerateModel(factory -> factoryAndBlockConsumer.accept(factory, this.getNMS()));
     }
 
     public SuCraftBlockType dataGenerateModelForBlock(Models.BlockStateModelGenerator generatorsConsumer) {
@@ -340,19 +430,171 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateBlockLootTableForDropSelf() {
-        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getForDataGeneration())));
+        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getNMS())));
     }
 
     public SuCraftBlockType dataGenerateBlockLootTableForDropSelfSlab() {
-        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getForDataGeneration(), provider::createSlabItemTable)));
+        return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getNMS(), provider::createSlabItemTable)));
+    }
+
+    public SuCraftBlockType dataGenerateTagUnsafe(Object... tags) {
+        if (tags.length != 0) {
+            for (var tag : tags) {
+                if (tag instanceof TagKey tagKey) {
+                    if (((TagKey<?>) tag).registry().equals(Registries.BLOCK)) {
+                        this.dataGenerateTag(tagKey);
+                    } else if (((TagKey<?>) tag).registry().equals(Registries.ITEM)) {
+                        this.dataGenerateItemTag(tagKey);
+                    }
+                } else if (tag instanceof BlockItemTagId tagId) {
+                    this.dataGenerateTag(tagId);
+                }
+            }
+        }
+        return this;
+    }
+
+    public SuCraftBlockType dataGenerateTag(TagKey<Block>... tags) {
+        if (tags.length != 0) {
+            if (this.dataGeneratingTags == null) {
+                this.dataGeneratingTags = new ArrayList<>(1);
+            }
+            for (var tag : tags) {
+                this.dataGeneratingTags.add(tag);
+            }
+        }
+        return this;
+    }
+
+    public SuCraftBlockType dataGenerateItemTag(TagKey<Item>... tags) {
+        if (tags.length != 0 && this.item != null) {
+            for (var tag : tags) {
+                this.item.dataGenerateTag(tag);
+            }
+        }
+        return this;
+    }
+
+    public SuCraftBlockType dataGenerateTag(BlockItemTagId... tags) {
+        if (tags.length != 0) {
+            for (var tag : tags) {
+                this.dataGenerateTag(tag.block());
+                if (this.item != null) {
+                    this.item.dataGenerateTag(tag.item());
+                }
+            }
+        }
+        return this;
+    }
+
+    public SuCraftBlockType mineableWithAxe() {
+        return this.dataGenerateTag(BlockTags.MINEABLE_WITH_AXE);
+    }
+
+    public SuCraftBlockType mineableWithHoe() {
+        return this.dataGenerateTag(BlockTags.MINEABLE_WITH_HOE);
+    }
+
+    public SuCraftBlockType mineableWithPickaxe() {
+        return this.dataGenerateTag(BlockTags.MINEABLE_WITH_PICKAXE);
+    }
+
+    public SuCraftBlockType mineableWithShovel() {
+        return this.dataGenerateTag(BlockTags.MINEABLE_WITH_SHOVEL);
+    }
+
+    public SuCraftBlockType tryAutomaticFullBlockTags() {
+        this.tryAutomaticFullBlockTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticBookshelfTag() {
+        this.skipAutomaticBookshelfTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticBlocksMotionNoLeavesTag() {
+        this.skipAutomaticBlocksMotionNoLeavesTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticSlabTags() {
+        this.tryAutomaticSlabTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticSlabTag() {
+        this.skipAutomaticSlabTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticStairsTags() {
+        this.tryAutomaticStairsTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticStairsTag() {
+        this.skipAutomaticStairsTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticWallTags() {
+        this.tryAutomaticWallTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticWallTag() {
+        this.skipAutomaticWallTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticFenceTags() {
+        this.tryAutomaticFenceTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticFenceTag() {
+        this.skipAutomaticFenceTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticFenceGateTags() {
+        this.tryAutomaticFenceGateTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticFenceGateTag() {
+        this.skipAutomaticFenceGateTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticButtonTags() {
+        this.tryAutomaticButtonTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticButtonTag() {
+        this.skipAutomaticButtonTag = true;
+        return this;
+    }
+
+    public SuCraftBlockType tryAutomaticPressurePlateTags() {
+        this.tryAutomaticPressurePlateTags = true;
+        return this;
+    }
+
+    public SuCraftBlockType skipAutomaticPressurePlateTag() {
+        this.skipAutomaticPressurePlateTag = true;
+        return this;
     }
 
     public SuCraftBlockType fullBlock(Block propertiesFrom, Block fallback) {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
         this.blockConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticFullBlockTags();
     }
 
     public SuCraftBlockType fullBlock(Block propertiesFromAndFallback) {
@@ -364,8 +606,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.slabMacro(BlockStateMappingMacroTypes.SLAB, fallback, fallbackBlockState);
         this.slabConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockSlab(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelfSlab();
+        this.dataGenerateModel(factory -> factory.addBlockSlab(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelfSlab();
+        return this.tryAutomaticSlabTags();
     }
 
     public SuCraftBlockType slab(Block propertiesFromAndFallback, @Nullable BlockState fallbackBlockState) {
@@ -385,8 +628,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, fallback);
         this.stairsConstructorForDataGeneration(base);
-        this.dataGenerateModel(factory -> factory.addBlockStairs(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockStairs(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticStairsTags();
     }
 
     public SuCraftBlockType stairs(Supplier<Block> base, Block propertiesFromAndFallback) {
@@ -398,8 +642,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.WALL, fallback);
         this.wallConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockWall(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockWall(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticWallTags();
     }
 
     public SuCraftBlockType wall(Block propertiesFromAndFallback) {
@@ -411,8 +656,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, fallback);
         this.fenceConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockFence(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockFence(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticFenceTags();
     }
 
     public SuCraftBlockType fence(Block propertiesFromAndFallback) {
@@ -424,8 +670,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, fallback);
         this.fenceGateConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockFenceGate(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockFenceGate(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticFenceGateTags();
     }
 
     public SuCraftBlockType fenceGate(Supplier<WoodType> woodType, Block propertiesFromAndFallback) {
@@ -437,8 +684,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, fallback);
         this.buttonConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockButton(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockButton(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticButtonTags();
     }
 
     public SuCraftBlockType button(Supplier<BlockSetType> blockSetType, IntSupplier ticksToStayPressed, Block propertiesFromAndFallback) {
@@ -450,8 +698,9 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, fallback);
         this.pressurePlateConstructorForDataGeneration();
-        this.dataGenerateModel(factory -> factory.addBlockPressurePlate(this.getForDataGeneration()));
-        return this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateModel(factory -> factory.addBlockPressurePlate(this.getNMS()));
+        this.dataGenerateBlockLootTableForDropSelf();
+        return this.tryAutomaticPressurePlateTags();
     }
 
     public SuCraftBlockType pressurePlate(Supplier<BlockSetType> blockSetType, Block propertiesFromAndFallback) {

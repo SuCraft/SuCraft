@@ -1,0 +1,6 @@
+config-version: 4
+enabled: true
+update-interval-ticks: 2
+max-render-distance-blocks: 480
+minimum-proxy-distance-blocks: 0
+send-spectators: false

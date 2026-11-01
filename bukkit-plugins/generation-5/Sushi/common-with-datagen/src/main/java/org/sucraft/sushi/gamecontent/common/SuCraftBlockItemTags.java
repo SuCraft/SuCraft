@@ -9,6 +9,10 @@ public final class SuCraftBlockItemTags {
         throw new UnsupportedOperationException();
     }
 
+    public static final BlockItemTagId BOOKSHELF_SLABS = createSuCraft("bookshelf_slabs");
+    public static final BlockItemTagId BOOKSHELF_STAIRS = createSuCraft("bookshelf_stairs");
+    public static final BlockItemTagId INFESTED_STONE_BRICKS = createSuCraft("infested_stone_bricks");
+    public static final BlockItemTagId STONE_WALLS = createSuCraft("stone_walls");
     public static final BlockItemTagId WOODEN_WALLS = createSuCraft("wooden_walls");
 
     /**

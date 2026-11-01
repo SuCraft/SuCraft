@@ -18,16 +18,16 @@ public final class Bookshelves {
     public static void add(CollectedFactories factories) {
         List.of(
             Pair.of(Items.BOOKSHELF, Items.OAK_PLANKS),
-            Pair.of(SuCraftBlocks.ACACIA_BOOKSHELF.fullBlockItemForDataGeneration(), Items.ACACIA_PLANKS),
-            Pair.of(SuCraftBlocks.BAMBOO_BOOKSHELF.fullBlockItemForDataGeneration(), Items.BAMBOO_PLANKS),
-            Pair.of(SuCraftBlocks.BIRCH_BOOKSHELF.fullBlockItemForDataGeneration(), Items.BIRCH_PLANKS),
-            Pair.of(SuCraftBlocks.CHERRY_BOOKSHELF.fullBlockItemForDataGeneration(), Items.CHERRY_PLANKS),
-            Pair.of(SuCraftBlocks.CRIMSON_BOOKSHELF.fullBlockItemForDataGeneration(), Items.CRIMSON_PLANKS),
-            Pair.of(SuCraftBlocks.DARK_OAK_BOOKSHELF.fullBlockItemForDataGeneration(), Items.DARK_OAK_PLANKS),
-            Pair.of(SuCraftBlocks.JUNGLE_BOOKSHELF.fullBlockItemForDataGeneration(), Items.JUNGLE_PLANKS),
-            Pair.of(SuCraftBlocks.MANGROVE_BOOKSHELF.fullBlockItemForDataGeneration(), Items.MANGROVE_PLANKS),
-            Pair.of(SuCraftBlocks.SPRUCE_BOOKSHELF.fullBlockItemForDataGeneration(), Items.SPRUCE_PLANKS),
-            Pair.of(SuCraftBlocks.WARPED_BOOKSHELF.fullBlockItemForDataGeneration(), Items.WARPED_PLANKS)
+            Pair.of(SuCraftBlocks.ACACIA_BOOKSHELF.fullBlockItemNMS(), Items.ACACIA_PLANKS),
+            Pair.of(SuCraftBlocks.BAMBOO_BOOKSHELF.fullBlockItemNMS(), Items.BAMBOO_PLANKS),
+            Pair.of(SuCraftBlocks.BIRCH_BOOKSHELF.fullBlockItemNMS(), Items.BIRCH_PLANKS),
+            Pair.of(SuCraftBlocks.CHERRY_BOOKSHELF.fullBlockItemNMS(), Items.CHERRY_PLANKS),
+            Pair.of(SuCraftBlocks.CRIMSON_BOOKSHELF.fullBlockItemNMS(), Items.CRIMSON_PLANKS),
+            Pair.of(SuCraftBlocks.DARK_OAK_BOOKSHELF.fullBlockItemNMS(), Items.DARK_OAK_PLANKS),
+            Pair.of(SuCraftBlocks.JUNGLE_BOOKSHELF.fullBlockItemNMS(), Items.JUNGLE_PLANKS),
+            Pair.of(SuCraftBlocks.MANGROVE_BOOKSHELF.fullBlockItemNMS(), Items.MANGROVE_PLANKS),
+            Pair.of(SuCraftBlocks.SPRUCE_BOOKSHELF.fullBlockItemNMS(), Items.SPRUCE_PLANKS),
+            Pair.of(SuCraftBlocks.WARPED_BOOKSHELF.fullBlockItemNMS(), Items.WARPED_PLANKS)
         ).forEach(pair -> {
             Item bookshelf = pair.left();
             Item planks = pair.right();

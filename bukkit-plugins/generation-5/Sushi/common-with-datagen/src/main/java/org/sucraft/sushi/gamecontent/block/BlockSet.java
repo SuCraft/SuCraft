@@ -5,7 +5,7 @@ import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
+import net.minecraft.tags.BlockItemTagId;import net.minecraft.tags.BlockItemTags;import net.minecraft.tags.BlockTags;import net.minecraft.tags.TagKey;import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,10 +20,10 @@ import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
-import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
+import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.ArrayList;import java.util.Arrays;
+import java.util.List;import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
@@ -35,8 +35,6 @@ public interface BlockSet {
     BlockType[] values();
 
     Block[] valuesNMS();
-
-    Block[] valuesForDataGeneration();
 
     SuCraftBlockType[] types();
 
@@ -68,15 +66,11 @@ public interface BlockSet {
 
         Block fullBlockNMS();
 
-        Block fullBlockForDataGeneration();
-
         SuCraftBlockType fullBlockType();
 
         ItemType fullBlockItem();
 
         Item fullBlockItemNMS();
-
-        Item fullBlockItemForDataGeneration();
 
         SuCraftItemType fullBlockItemType();
 
@@ -92,15 +86,11 @@ public interface BlockSet {
 
         Block slabNMS();
 
-        Block slabForDataGeneration();
-
         SuCraftBlockType slabType();
 
         ItemType slabItem();
 
         Item slabItemNMS();
-
-        Item slabItemForDataGeneration();
 
         SuCraftItemType slabItemType();
 
@@ -112,15 +102,11 @@ public interface BlockSet {
 
         Block stairsNMS();
 
-        Block stairsForDataGeneration();
-
         SuCraftBlockType stairsType();
 
         ItemType stairsItem();
 
         Item stairsItemNMS();
-
-        Item stairsItemForDataGeneration();
 
         SuCraftItemType stairsItemType();
 
@@ -134,15 +120,11 @@ public interface BlockSet {
 
         SuCraftBlockType wallType();
 
-        Block wallForDataGeneration();
-
         ItemType wallItem();
 
         Item wallItemNMS();
 
         SuCraftItemType wallItemType();
-
-        Item wallItemForDataGeneration();
 
     }
 
@@ -154,15 +136,11 @@ public interface BlockSet {
 
         SuCraftBlockType fenceType();
 
-        Block fenceForDataGeneration();
-
         ItemType fenceItem();
 
         Item fenceItemNMS();
 
         SuCraftItemType fenceItemType();
-
-        Item fenceItemForDataGeneration();
 
     }
 
@@ -174,15 +152,11 @@ public interface BlockSet {
 
         SuCraftBlockType fenceGateType();
 
-        Block fenceGateForDataGeneration();
-
         ItemType fenceGateItem();
 
         Item fenceGateItemNMS();
 
         SuCraftItemType fenceGateItemType();
-
-        Item fenceGateItemForDataGeneration();
 
     }
 
@@ -194,15 +168,11 @@ public interface BlockSet {
 
         SuCraftBlockType buttonType();
 
-        Block buttonForDataGeneration();
-
         ItemType buttonItem();
 
         Item buttonItemNMS();
 
         SuCraftItemType buttonItemType();
-
-        Item buttonItemForDataGeneration();
 
     }
 
@@ -214,15 +184,11 @@ public interface BlockSet {
 
         SuCraftBlockType pressurePlateType();
 
-        Block pressurePlateForDataGeneration();
-
         ItemType pressurePlateItem();
 
         Item pressurePlateItemNMS();
 
         SuCraftItemType pressurePlateItemType();
-
-        Item pressurePlateItemForDataGeneration();
 
     }
 
@@ -309,7 +275,6 @@ public interface BlockSet {
 
         private BlockType @Nullable [] values;
         private Block @Nullable [] valuesNMS;
-        private Block @Nullable [] valuesForDataGeneration;
         private SuCraftBlockType @Nullable [] types;
         private ItemType @Nullable [] items;
         private Item @Nullable [] itemsNMS;
@@ -352,15 +317,6 @@ public interface BlockSet {
                     .map(SuCraftBlockType::getNMS).toArray(Block[]::new);
             }
             return this.valuesNMS;
-        }
-
-        @Override
-        public Block[] valuesForDataGeneration() {
-            if (this.valuesForDataGeneration == null) {
-                this.valuesForDataGeneration = Arrays.stream(this.types())
-                    .map(SuCraftBlockType::getForDataGeneration).toArray(Block[]::new);
-            }
-            return this.valuesForDataGeneration;
         }
 
         @Override
@@ -458,11 +414,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block fullBlockForDataGeneration() {
-            return this.fullBlock.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType fullBlockType() {
             return this.fullBlock;
         }
@@ -475,11 +426,6 @@ public interface BlockSet {
         @Override
         public Item fullBlockItemNMS() {
             return this.fullBlock.itemNMS();
-        }
-
-        @Override
-        public Item fullBlockItemForDataGeneration() {
-            return this.fullBlock.itemForDataGeneration();
         }
 
         @Override
@@ -498,11 +444,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block slabForDataGeneration() {
-            return this.slab.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType slabType() {
             return this.slab;
         }
@@ -515,11 +456,6 @@ public interface BlockSet {
         @Override
         public Item slabItemNMS() {
             return this.slab.itemNMS();
-        }
-
-        @Override
-        public Item slabItemForDataGeneration() {
-            return this.slab.itemForDataGeneration();
         }
 
         @Override
@@ -538,11 +474,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block stairsForDataGeneration() {
-            return this.stairs.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType stairsType() {
             return this.stairs;
         }
@@ -555,11 +486,6 @@ public interface BlockSet {
         @Override
         public Item stairsItemNMS() {
             return this.stairs.itemNMS();
-        }
-
-        @Override
-        public Item stairsItemForDataGeneration() {
-            return this.stairs.itemForDataGeneration();
         }
 
         @Override
@@ -578,11 +504,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block wallForDataGeneration() {
-            return this.wall.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType wallType() {
             return this.wall;
         }
@@ -595,11 +516,6 @@ public interface BlockSet {
         @Override
         public Item wallItemNMS() {
             return this.wall.itemNMS();
-        }
-
-        @Override
-        public Item wallItemForDataGeneration() {
-            return this.wall.itemForDataGeneration();
         }
 
         @Override
@@ -618,11 +534,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block fenceForDataGeneration() {
-            return this.fence.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType fenceType() {
             return this.fence;
         }
@@ -635,11 +546,6 @@ public interface BlockSet {
         @Override
         public Item fenceItemNMS() {
             return this.fence.itemNMS();
-        }
-
-        @Override
-        public Item fenceItemForDataGeneration() {
-            return this.fence.itemForDataGeneration();
         }
 
         @Override
@@ -658,11 +564,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block fenceGateForDataGeneration() {
-            return this.fenceGate.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType fenceGateType() {
             return this.fenceGate;
         }
@@ -675,11 +576,6 @@ public interface BlockSet {
         @Override
         public Item fenceGateItemNMS() {
             return this.fenceGate.itemNMS();
-        }
-
-        @Override
-        public Item fenceGateItemForDataGeneration() {
-            return this.fenceGate.itemForDataGeneration();
         }
 
         @Override
@@ -698,11 +594,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block buttonForDataGeneration() {
-            return this.button.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType buttonType() {
             return this.button;
         }
@@ -715,11 +606,6 @@ public interface BlockSet {
         @Override
         public Item buttonItemNMS() {
             return this.button.itemNMS();
-        }
-
-        @Override
-        public Item buttonItemForDataGeneration() {
-            return this.button.itemForDataGeneration();
         }
 
         @Override
@@ -738,11 +624,6 @@ public interface BlockSet {
         }
 
         @Override
-        public Block pressurePlateForDataGeneration() {
-            return this.pressurePlate.getForDataGeneration();
-        }
-
-        @Override
         public SuCraftBlockType pressurePlateType() {
             return this.pressurePlate;
         }
@@ -755,11 +636,6 @@ public interface BlockSet {
         @Override
         public Item pressurePlateItemNMS() {
             return this.pressurePlate.itemNMS();
-        }
-
-        @Override
-        public Item pressurePlateItemForDataGeneration() {
-            return this.pressurePlate.itemForDataGeneration();
         }
 
         @Override
@@ -807,6 +683,14 @@ public interface BlockSet {
         private @Nullable Supplier<WoodType> woodType;
         private @Nullable Supplier<BlockSetType> blockSetType;
         private @Nullable IntSupplier buttonTicksToStayPressed;
+        private @Nullable List<Object> fullBlockTags;
+        private @Nullable List<Object> slabTags;
+        private @Nullable List<Object> stairsTags;
+        private @Nullable List<Object> wallTags;
+        private @Nullable List<Object> fenceTags;
+        private @Nullable List<Object> fenceGateTags;
+        private @Nullable List<Object> buttonTags;
+        private @Nullable List<Object> pressurePlateTags;
         private @Nullable Consumer<SuCraftBlockType> fullBlockFinalizer;
         private @Nullable Consumer<SuCraftBlockType> slabFinalizer;
         private @Nullable Consumer<SuCraftBlockType> stairsFinalizer;
@@ -867,9 +751,19 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder woodenSlab() {
+            this.slab();
+            return this.slabTag(BlockItemTags.WOODEN_SLABS);
+        }
+
         public Builder stairs() {
             this.stairs = true;
             return this;
+        }
+
+        public Builder woodenStairs() {
+            this.stairs();
+            return this.stairsTag(BlockItemTags.WOODEN_STAIRS);
         }
 
         public Builder wall() {
@@ -877,9 +771,28 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder woodenWall() {
+            this.wall();
+            return this.wallTag(SuCraftBlockItemTags.WOODEN_WALLS);
+        }
+
+        public Builder stoneWall() {
+            this.wall();
+            return this.wallTag(SuCraftBlockItemTags.STONE_WALLS);
+        }
+
         public Builder fence() {
             this.fence = true;
             return this;
+        }
+
+        public Builder woodenFence() {
+            this.fence();
+            return this.fenceTag(BlockItemTags.WOODEN_FENCES);
+        }
+
+        public Builder stoneFence() {
+            return this.fence();
         }
 
         public Builder fenceGate() {
@@ -887,14 +800,62 @@ public interface BlockSet {
             return this;
         }
 
+        public Builder woodenFenceGate() {
+            return this.fenceGate();
+        }
+
+        public Builder stoneFenceGate() {
+            return this.fenceGate();
+        }
+
         public Builder button() {
             this.button = true;
             return this;
         }
 
+        public Builder stoneButton() {
+            this.button();
+            return this.buttonTag(BlockItemTags.STONE_BUTTONS);
+        }
+
+        public Builder stoneButton(BlockSetType blockSetType) {
+            this.stoneButton();
+            return this.blockSetType(blockSetType);
+        }
+
+        public Builder woodenButton() {
+            this.button();
+            return this.buttonTag(BlockItemTags.WOODEN_BUTTONS);
+        }
+
+        public Builder woodenButton(BlockSetType blockSetType) {
+            this.woodenButton();
+            return this.blockSetType(blockSetType);
+        }
+
         public Builder pressurePlate() {
             this.pressurePlate = true;
             return this;
+        }
+
+        public Builder stonePressurePlate() {
+            this.pressurePlate();
+            return this.pressurePlateTag(BlockTags.STONE_PRESSURE_PLATES);
+        }
+
+        public Builder stonePressurePlate(BlockSetType blockSetType) {
+            this.stonePressurePlate();
+            return this.blockSetType(blockSetType);
+        }
+
+        public Builder woodenPressurePlate() {
+            this.pressurePlate();
+            return this.pressurePlateTag(BlockItemTags.WOODEN_PRESSURE_PLATES);
+        }
+
+        public Builder woodenPressurePlate(BlockSetType blockSetType) {
+            this.woodenPressurePlate();
+            return this.blockSetType(blockSetType);
         }
 
         public Builder shapeIdentifierSuffixFunction(Function<String, String> function) {
@@ -1090,6 +1051,226 @@ public interface BlockSet {
 
         public Builder buttonTicksToStayPressed(int ticksToStayPressed) {
             return this.buttonTicksToStayPressed(() -> ticksToStayPressed);
+        }
+
+        private Builder fullBlockTagUnsafe(Object tag) {
+            if (this.fullBlockTags == null) {
+                this.fullBlockTags = new ArrayList<>(1);
+            }
+            this.fullBlockTags.add(tag);
+            return this;
+        }
+
+        public Builder fullBlockTag(TagKey<Block> tag) {
+            return this.fullBlockTagUnsafe(tag);
+        }
+
+        public Builder fullBlockItemTag(TagKey<Item> tag) {
+            return this.fullBlockTagUnsafe(tag);
+        }
+
+        public Builder fullBlockTag(BlockItemTagId tag) {
+            return this.fullBlockTagUnsafe(tag);
+        }
+
+        private Builder slabTagUnsafe(Object tag) {
+            if (this.slabTags == null) {
+                this.slabTags = new ArrayList<>(1);
+            }
+            this.slabTags.add(tag);
+            return this;
+        }
+
+        public Builder slabTag(TagKey<Block> tag) {
+            return this.slabTagUnsafe(tag);
+        }
+
+        public Builder slabItemTag(TagKey<Item> tag) {
+            return this.slabTagUnsafe(tag);
+        }
+
+        public Builder slabTag(BlockItemTagId tag) {
+            return this.slabTagUnsafe(tag);
+        }
+
+        private Builder stairsTagUnsafe(Object tag) {
+            if (this.stairsTags == null) {
+                this.stairsTags = new ArrayList<>(1);
+            }
+            this.stairsTags.add(tag);
+            return this;
+        }
+
+        public Builder stairsTag(TagKey<Block> tag) {
+            return this.stairsTagUnsafe(tag);
+        }
+
+        public Builder stairsItemTag(TagKey<Item> tag) {
+            return this.stairsTagUnsafe(tag);
+        }
+
+        public Builder stairsTag(BlockItemTagId tag) {
+            return this.stairsTagUnsafe(tag);
+        }
+
+        private Builder wallTagUnsafe(Object tag) {
+            if (this.wallTags == null) {
+                this.wallTags = new ArrayList<>(1);
+            }
+            this.wallTags.add(tag);
+            return this;
+        }
+
+        public Builder wallTag(TagKey<Block> tag) {
+            return this.wallTagUnsafe(tag);
+        }
+
+        public Builder wallItemTag(TagKey<Item> tag) {
+            return this.wallTagUnsafe(tag);
+        }
+
+        public Builder wallTag(BlockItemTagId tag) {
+            return this.wallTagUnsafe(tag);
+        }
+
+        private Builder fenceTagUnsafe(Object tag) {
+            if (this.fenceTags == null) {
+                this.fenceTags = new ArrayList<>(1);
+            }
+            this.fenceTags.add(tag);
+            return this;
+        }
+
+        public Builder fenceTag(TagKey<Block> tag) {
+            return this.fenceTagUnsafe(tag);
+        }
+
+        public Builder fenceItemTag(TagKey<Item> tag) {
+            return this.fenceTagUnsafe(tag);
+        }
+
+        public Builder fenceTag(BlockItemTagId tag) {
+            return this.fenceTagUnsafe(tag);
+        }
+
+        private Builder fenceGateTagUnsafe(Object tag) {
+            if (this.fenceGateTags == null) {
+                this.fenceGateTags = new ArrayList<>(1);
+            }
+            this.fenceGateTags.add(tag);
+            return this;
+        }
+
+        public Builder fenceGateTag(TagKey<Block> tag) {
+            return this.fenceGateTagUnsafe(tag);
+        }
+
+        public Builder fenceGateItemTag(TagKey<Item> tag) {
+            return this.fenceGateTagUnsafe(tag);
+        }
+
+        public Builder fenceGateTag(BlockItemTagId tag) {
+            return this.fenceGateTagUnsafe(tag);
+        }
+
+        private Builder buttonTagUnsafe(Object tag) {
+            if (this.buttonTags == null) {
+                this.buttonTags = new ArrayList<>(1);
+            }
+            this.buttonTags.add(tag);
+            return this;
+        }
+
+        public Builder buttonTag(TagKey<Block> tag) {
+            return this.buttonTagUnsafe(tag);
+        }
+
+        public Builder buttonItemTag(TagKey<Item> tag) {
+            return this.buttonTagUnsafe(tag);
+        }
+
+        public Builder buttonTag(BlockItemTagId tag) {
+            return this.buttonTagUnsafe(tag);
+        }
+
+        private Builder pressurePlateTagUnsafe(Object tag) {
+            if (this.pressurePlateTags == null) {
+                this.pressurePlateTags = new ArrayList<>(1);
+            }
+            this.pressurePlateTags.add(tag);
+            return this;
+        }
+
+        public Builder pressurePlateTag(TagKey<Block> tag) {
+            return this.pressurePlateTagUnsafe(tag);
+        }
+
+        public Builder pressurePlateItemTag(TagKey<Item> tag) {
+            return this.pressurePlateTagUnsafe(tag);
+        }
+
+        public Builder pressurePlateTag(BlockItemTagId tag) {
+            return this.pressurePlateTagUnsafe(tag);
+        }
+
+        private Builder tagUnsafe(Object tag) {
+            this.fullBlockTagUnsafe(tag);
+            this.slabTagUnsafe(tag);
+            this.stairsTagUnsafe(tag);
+            this.wallTagUnsafe(tag);
+            this.fenceTagUnsafe(tag);
+            this.fenceGateTagUnsafe(tag);
+            this.buttonTagUnsafe(tag);
+            return this.pressurePlateTagUnsafe(tag);
+        }
+
+        public Builder tag(TagKey<Block> tag) {
+            return this.tagUnsafe(tag);
+        }
+
+        public Builder itemTag(TagKey<Item> tag) {
+            return this.tagUnsafe(tag);
+        }
+
+        public Builder tag(BlockItemTagId tag) {
+            return this.tagUnsafe(tag);
+        }
+
+        private Builder nonVolatileShapeTagUnsafe(Object tag) {
+            this.fullBlockTagUnsafe(tag);
+            this.slabTagUnsafe(tag);
+            this.stairsTagUnsafe(tag);
+            this.wallTagUnsafe(tag);
+            this.fenceTagUnsafe(tag);
+            return this.fenceGateTagUnsafe(tag);
+        }
+
+        public Builder nonVolatileShapeTag(TagKey<Block> tag) {
+            return this.nonVolatileShapeTagUnsafe(tag);
+        }
+
+        public Builder itemNonVolatileShapeTag(TagKey<Item> tag) {
+            return this.nonVolatileShapeTagUnsafe(tag);
+        }
+
+        public Builder nonVolatileShapeTag(BlockItemTagId tag) {
+            return this.nonVolatileShapeTagUnsafe(tag);
+        }
+
+        public Builder mineableWithAxe() {
+            return this.tag(BlockTags.MINEABLE_WITH_AXE);
+        }
+
+        public Builder mineableWithHoe() {
+            return this.tag(BlockTags.MINEABLE_WITH_HOE);
+        }
+
+        public Builder mineableWithPickaxe() {
+            return this.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        }
+
+        public Builder mineableWithShovel() {
+            return this.tag(BlockTags.MINEABLE_WITH_SHOVEL);
         }
 
         public Builder fullBlockFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
@@ -1470,6 +1651,70 @@ public interface BlockSet {
             return () -> ((ButtonBlock) this.getButtonFallback()).ticksToStayPressed;
         }
 
+        public Object[] getFullBlockTags() {
+            if (this.fullBlockTags == null) {
+                return new Object[0];
+            } else {
+                return this.fullBlockTags.toArray();
+            }
+        }
+
+        public Object[] getSlabTags() {
+            if (this.slabTags == null) {
+                return new Object[0];
+            } else {
+                return this.slabTags.toArray();
+            }
+        }
+
+        public Object[] getStairsTags() {
+            if (this.stairsTags == null) {
+                return new Object[0];
+            } else {
+                return this.stairsTags.toArray();
+            }
+        }
+
+        public Object[] getWallTags() {
+            if (this.wallTags == null) {
+                return new Object[0];
+            } else {
+                return this.wallTags.toArray();
+            }
+        }
+
+        public Object[] getFenceTags() {
+            if (this.fenceTags == null) {
+                return new Object[0];
+            } else {
+                return this.fenceTags.toArray();
+            }
+        }
+
+        public Object[] getFenceGateTags() {
+            if (this.fenceGateTags == null) {
+                return new Object[0];
+            } else {
+                return this.fenceGateTags.toArray();
+            }
+        }
+
+        public Object[] getButtonTags() {
+            if (this.buttonTags == null) {
+                return new Object[0];
+            } else {
+                return this.buttonTags.toArray();
+            }
+        }
+
+        public Object[] getPressurePlateTags() {
+            if (this.pressurePlateTags == null) {
+                return new Object[0];
+            } else {
+                return this.pressurePlateTags.toArray();
+            }
+        }
+
         public Impl build() {
             final Impl[] built = new Impl[1];
             built[0] = new Impl(
@@ -1479,18 +1724,24 @@ public interface BlockSet {
                     .blockConstructorForDataGeneration()
                     .dataGenerateModel(factory -> {
                         factory.addBlockFamily(
-                            () -> built[0].fullBlockForDataGeneration(),
-                            () -> this.getFullBlockModelProvider() != null ? (TexturedModel) this.getFullBlockModelProvider().apply(built[0].fullBlockForDataGeneration()) : null,
-                            () -> built[0].hasSlab() ? built[0].slabForDataGeneration() : null,
-                            () -> built[0].hasStairs() ? built[0].stairsForDataGeneration() : null,
-                            () -> built[0].hasWall() ? built[0].wallForDataGeneration() : null,
-                            () -> built[0].hasFence() ? built[0].fenceForDataGeneration() : null,
-                            () -> built[0].hasFenceGate() ? built[0].fenceGateForDataGeneration() : null,
-                            () -> built[0].hasButton() ? built[0].buttonForDataGeneration() : null,
-                            () -> built[0].hasPressurePlate() ? built[0].pressurePlateForDataGeneration() : null
+                            () -> built[0].fullBlockNMS(),
+                            () -> this.getFullBlockModelProvider() != null ? (TexturedModel) this.getFullBlockModelProvider().apply(built[0].fullBlockNMS()) : null,
+                            () -> built[0].hasSlab() ? built[0].slabNMS() : null,
+                            () -> built[0].hasStairs() ? built[0].stairsNMS() : null,
+                            () -> built[0].hasWall() ? built[0].wallNMS() : null,
+                            () -> built[0].hasFence() ? built[0].fenceNMS() : null,
+                            () -> built[0].hasFenceGate() ? built[0].fenceGateNMS() : null,
+                            () -> built[0].hasButton() ? built[0].buttonNMS() : null,
+                            () -> built[0].hasPressurePlate() ? built[0].pressurePlateNMS() : null
                         );
                     })
                     .dataGenerateBlockLootTableForDropSelf()
+                    .update(type -> {
+                        if (!this.fullBlockOnlyForDataGeneration) {
+                            type.tryAutomaticFullBlockTags();
+                            type.dataGenerateTagUnsafe(this.getFullBlockTags());
+                        }
+                    })
                     .update(this.getFullBlockFinalizer())
                     : null,
                 this.slab ? new SuCraftBlockType(this.getShapeIdentifier("_slab"))
@@ -1500,10 +1751,12 @@ public interface BlockSet {
                     .slabConstructorForDataGeneration()
                     .dataGenerateModel(factory -> {
                         if (!this.fullBlock) {
-                            factory.addBlockSlab(built[0].slabForDataGeneration());
+                            factory.addBlockSlab(built[0].slabNMS());
                         }
                     })
                     .dataGenerateBlockLootTableForDropSelfSlab()
+                    .tryAutomaticSlabTags()
+                    .dataGenerateTagUnsafe(this.getSlabTags())
                     .update(this.slabFinalizer)
                     : null,
                 this.stairs ? new SuCraftBlockType(this.getShapeIdentifier("_stairs"))
@@ -1512,6 +1765,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticStairsTags()
+                    .dataGenerateTagUnsafe(this.getStairsTags())
                     .update(this.stairsFinalizer)
                     : null,
                 this.wall ? new SuCraftBlockType(this.getShapeIdentifier("_wall"))
@@ -1520,6 +1775,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
                     .wallConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticWallTags()
+                    .dataGenerateTagUnsafe(this.getWallTags())
                     .update(this.wallFinalizer)
                     : null,
                 this.fence ? new SuCraftBlockType(this.getShapeIdentifier("_fence"))
@@ -1528,6 +1785,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, this.getFenceFallback())
                     .fenceConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticFenceTags()
+                    .dataGenerateTagUnsafe(this.getFenceTags())
                     .update(this.fenceFinalizer)
                     : null,
                 this.fenceGate ? new SuCraftBlockType(this.getShapeIdentifier("_fence_gate"))
@@ -1536,6 +1795,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, this.getFenceGateFallback())
                     .fenceGateConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticFenceGateTags()
+                    .dataGenerateTagUnsafe(this.getFenceGateTags())
                     .update(this.fenceGateFinalizer)
                     : null,
                 this.button ? new SuCraftBlockType(this.getShapeIdentifier("_button"))
@@ -1544,6 +1805,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
                     .buttonConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticButtonTags()
+                    .dataGenerateTagUnsafe(this.getButtonTags())
                     .update(this.buttonFinalizer)
                     : null,
                 this.pressurePlate ? new SuCraftBlockType(this.getShapeIdentifier("_pressure_plate"))
@@ -1552,6 +1815,8 @@ public interface BlockSet {
                     .fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, this.getPressurePlateFallback())
                     .pressurePlateConstructorForDataGeneration()
                     .dataGenerateBlockLootTableForDropSelf()
+                    .tryAutomaticPressurePlateTags()
+                    .dataGenerateTagUnsafe(this.getPressurePlateTags())
                     .update(this.pressurePlateFinalizer)
                     : null
             );

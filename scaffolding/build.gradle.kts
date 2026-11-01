@@ -250,6 +250,11 @@ val targetFiles = arrayListOf(
         "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"
     ),
     FileToUpdateByDownloading(
+        "minecraft-server/plugins/SeeU.jar",
+        "https://cdn.modrinth.com/data/coyNPDey/versions/BpDhqiyb/seeu-paper-0.9.5.jar?mr_download_reason=standalone&mr_game_version=26.3&mr_loader=paper",
+        "c62c45887948f0277148b19ad449faefbf9db0621382c94a5ce59b24eca57ee3"
+    ),
+    FileToUpdateByDownloading(
         "minecraft-server/plugins/SkinsRestorer.jar",
         "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.6/SkinsRestorer.jar",
         "a85b4a370f988741c9a38f4d0498262edacbf3220314790ac1c127461996359c"
@@ -259,6 +264,11 @@ val targetFiles = arrayListOf(
         "https://hangarcdn.papermc.io/plugins/DevHeim/UltimateAdvancementAPI/versions/3.0.0-beta-4/PAPER/UltimateAdvancementAPI-Plugin-3.0.0-beta-4.jar",
         "8be40e20c41a057d3d71f037474e6d829a4935d422756d63d9f16a584b5cd2fe"
     ),
+    // FileToUpdateByDownloading(
+    //     "minecraft-server/plugins/Voxy.jar",
+    //     "https://cdn.modrinth.com/data/84zcagOb/versions/bjO69Vv4/voxy-server-side-paper.jar?mr_download_reason=standalone&mr_game_version=26.3&mr_loader=paper",
+    //     "57b5869f351c2e21b5c2e0556588b0c754de6afd76afad6e718591285c387b10"
+    // ),
     FileToUpdateByDownloading(
         "minecraft-server/plugins/WorldEdit.jar",
         "https://mediafilez.forgecdn.net/files/8962/666/worldedit-bukkit-7.4.6-beta-02.jar",
@@ -292,7 +302,9 @@ tasks.register("printFileHashes") {
                 val intendedHash = targetFile.intendedSha256Hash
                 if (actualHash != intendedHash) {
                     logger.lifecycle(
-                        "${targetFile::class.simpleName} / ${targetFile.targetFile().relativeTo(runDirectory.toPath()).pathString} -> $actualHash"
+                        "${targetFile::class.simpleName} / ${
+                            targetFile.targetFile().relativeTo(runDirectory.toPath()).pathString
+                        } -> $actualHash"
                     )
                 }
             }

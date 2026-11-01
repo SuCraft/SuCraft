@@ -29,31 +29,31 @@ public final class DyedPlanks {
                 faded, vibrant
             ).forEach((from, to) -> {
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.fullBlockItemForDataGeneration(), from.fullBlockItemForDataGeneration()));
+                    .addStonecutting(to.fullBlockItemNMS(), from.fullBlockItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.slabItemForDataGeneration(), from.slabItemForDataGeneration()));
+                    .addStonecutting(to.slabItemNMS(), from.slabItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.stairsItemForDataGeneration(), from.stairsItemForDataGeneration()));
+                    .addStonecutting(to.stairsItemNMS(), from.stairsItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.wallItemForDataGeneration(), from.wallItemForDataGeneration()));
+                    .addStonecutting(to.wallItemNMS(), from.wallItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.fenceItemForDataGeneration(), from.fenceItemForDataGeneration()));
+                    .addStonecutting(to.fenceItemNMS(), from.fenceItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.fenceGateItemForDataGeneration(), from.fenceGateItemForDataGeneration()));
+                    .addStonecutting(to.fenceGateItemNMS(), from.fenceGateItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.buttonItemForDataGeneration(), from.buttonItemForDataGeneration()));
+                    .addStonecutting(to.buttonNMS(), from.buttonNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.pressurePlateItemForDataGeneration(), from.pressurePlateItemForDataGeneration()));
+                    .addStonecutting(to.pressurePlateNMS(), from.pressurePlateNMS()));
             });
             Stream.of(
-                Pair.of(ItemTags.PLANKS, vibrant.fullBlockItemForDataGeneration()),
-                Pair.of(ItemTags.WOODEN_SLABS, vibrant.slabItemForDataGeneration()),
-                Pair.of(ItemTags.WOODEN_STAIRS, vibrant.stairsItemForDataGeneration()),
-                Pair.of(SuCraftItemTags.WOODEN_WALLS, vibrant.wallItemForDataGeneration()),
-                Pair.of(ItemTags.WOODEN_FENCES, vibrant.fenceItemForDataGeneration()),
-                Pair.of(ItemTags.FENCE_GATES, vibrant.fenceGateItemForDataGeneration()),
-                Pair.of(ItemTags.WOODEN_BUTTONS, vibrant.buttonItemForDataGeneration()),
-                Pair.of(ItemTags.WOODEN_PRESSURE_PLATES, vibrant.pressurePlateItemForDataGeneration())
+                Pair.of(ItemTags.PLANKS, vibrant.fullBlockItemNMS()),
+                Pair.of(ItemTags.WOODEN_SLABS, vibrant.slabItemNMS()),
+                Pair.of(ItemTags.WOODEN_STAIRS, vibrant.stairsItemNMS()),
+                Pair.of(SuCraftItemTags.WOODEN_WALLS, vibrant.wallItemNMS()),
+                Pair.of(ItemTags.WOODEN_FENCES, vibrant.fenceItemNMS()),
+                Pair.of(ItemTags.FENCE_GATES, vibrant.fenceGateItemNMS()),
+                Pair.of(ItemTags.WOODEN_BUTTONS, vibrant.buttonNMS()),
+                Pair.of(ItemTags.WOODEN_PRESSURE_PLATES, vibrant.pressurePlateNMS())
             ).forEach(inputOutput ->
                 factories.recipes().add(Recipes.start()
                     .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(

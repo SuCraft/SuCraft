@@ -10,6 +10,7 @@ import org.sucraft.sushi.datageneration.common.CommonBlockAdder;
 import org.sucraft.sushi.datageneration.common.CommonItemAdder;
 import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.datageneration.common.Recipes;
+import org.sucraft.sushi.datageneration.common.Tags;
 import org.sucraft.sushi.datageneration.creative.Barrier;
 import org.sucraft.sushi.datageneration.creative.Light;
 import org.sucraft.sushi.datageneration.flora.Coral;
@@ -19,8 +20,10 @@ import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
 import org.sucraft.sushi.datageneration.soil.SoulSandstone;
+import org.sucraft.sushi.datageneration.stone.StoneWalls;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
+import org.sucraft.sushi.datageneration.stone.regular.InfestedStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
 import org.sucraft.sushi.datageneration.wood.Bookshelves;
 import org.sucraft.sushi.datageneration.wood.Chests;
@@ -39,7 +42,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         var factories = new CollectedFactories(
             new Models.CollectedFactory(),
             new BlockLootTables.CollectedFactory(),
-            new Recipes.CollectedFactory()
+            new Recipes.CollectedFactory(),
+            new Tags.BlockCollectedFactory(),
+            new Tags.ItemCollectedFactory()
         );
 
         CommonBlockAdder.add(factories);
@@ -68,11 +73,15 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Soil / Soul
         SoulSandstone.add(factories);
 
+        // Stone
+        StoneWalls.add(factories);
+
         // Stone / Deepslate
         Deepslate.add(factories);
 
         // Stone / Regular
         DirtyStoneBricks.add(factories);
+        InfestedStoneBricks.add(factories);
         SnowyStoneBricks.add(factories);
 
         // Wood
@@ -84,6 +93,8 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());
         pack.addProvider(factories.recipes());
+        pack.addProvider(factories.blockTags());
+        pack.addProvider(factories.itemTags());
 
     }
 

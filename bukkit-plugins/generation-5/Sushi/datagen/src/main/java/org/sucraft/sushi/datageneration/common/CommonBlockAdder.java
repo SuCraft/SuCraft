@@ -10,7 +10,7 @@ public final class CommonBlockAdder {
 
     public static void initialize() {
         // Make sure all blocks are registered
-        SuCraftBlocks.valuesForDataGeneration();
+        SuCraftBlocks.valuesNMS();
     }
 
     public static void add(CollectedFactories factories) {

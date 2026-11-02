@@ -2,11 +2,15 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/acacia_bookshelf.png`
 * `assets/sucraft/textures/block/acacia_ladder.png`
 * `assets/sucraft/textures/block/andesite_bricks.png`
+* `assets/sucraft/textures/block/andesite_pillar.png`
+* `assets/sucraft/textures/block/andesite_pillar_top.png`
 * `assets/sucraft/textures/block/bamboo_bookshelf.png`
 * `assets/sucraft/textures/block/bamboo_ladder.png`
 * `assets/sucraft/textures/block/birch_bookshelf.png`
 * `assets/sucraft/textures/block/birch_ladder.png`
 * `assets/sucraft/textures/block/calcite_bricks.png`
+* `assets/sucraft/textures/block/calcite_pillar.png`
+* `assets/sucraft/textures/block/calcite_pillar_top.png`
 * `assets/sucraft/textures/block/cherry_bookshelf.png`
 * `assets/sucraft/textures/block/cherry_ladder.png`
 * `assets/sucraft/textures/block/chiseled_andesite_bricks.png`
@@ -20,9 +24,15 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/dark_oak_bookshelf.png`
 * `assets/sucraft/textures/block/dark_oak_ladder.png`
 * `assets/sucraft/textures/block/diorite_bricks.png`
+* `assets/sucraft/textures/block/diorite_pillar.png`
+* `assets/sucraft/textures/block/diorite_pillar_top.png`
 * `assets/sucraft/textures/block/dirt_bricks.png`
 * `assets/sucraft/textures/block/dripstone_bricks.png`
+* `assets/sucraft/textures/block/dripstone_pillar.png`
+* `assets/sucraft/textures/block/dripstone_pillar_top.png`
 * `assets/sucraft/textures/block/granite_bricks.png`
+* `assets/sucraft/textures/block/granite_pillar.png`
+* `assets/sucraft/textures/block/granite_pillar_top.png`
 * `assets/sucraft/textures/block/jungle_bookshelf.png`
 * `assets/sucraft/textures/block/jungle_ladder.png`
 * `assets/sucraft/textures/block/mangrove_bookshelf.png`
@@ -35,6 +45,8 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/spruce_bookshelf.png`
 * `assets/sucraft/textures/block/spruce_ladder.png`
 * `assets/sucraft/textures/block/tuff_bricks.png`
+* `assets/sucraft/textures/block/tuff_pillar.png`
+* `assets/sucraft/textures/block/tuff_pillar_top.png`
 * `assets/sucraft/textures/block/warped_bookshelf.png`
 * `assets/sucraft/textures/block/warped_ladder.png`
 

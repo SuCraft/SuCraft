@@ -17,6 +17,7 @@ public interface Models {
         void addBlockFamily(
             Supplier<Block> fullBlock,
             Supplier<@Nullable TexturedModel> fullBlockModel,
+            Supplier<@Nullable Object> fullBlockModelCustomGenerator,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,

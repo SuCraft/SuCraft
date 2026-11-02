@@ -1,7 +1,10 @@
 package org.sucraft.sushi.gamecontent.block;
 
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import java.util.function.BiConsumer;
 
 public final class PlatformDependent {
 
@@ -31,11 +34,19 @@ public final class PlatformDependent {
             throw new UnsupportedOperationException();
         }
 
+        public static Object createColumnGenerator(final Block block, final Object normal, final Object mapping, final BiConsumer<Identifier, ?> modelOutput) {
+            throw new UnsupportedOperationException();
+        }
+
         public static void addBarrel(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
             throw new UnsupportedOperationException();
         }
 
         public static void addLadder(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
+            throw new UnsupportedOperationException();
+        }
+
+        public static void addPillar(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
             throw new UnsupportedOperationException();
         }
 

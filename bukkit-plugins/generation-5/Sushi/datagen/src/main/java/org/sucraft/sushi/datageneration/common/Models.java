@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
@@ -13,6 +14,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.datageneration.block.UnsafeBlockStateGeneratorSupplier;
+import org.sucraft.sushi.gamecontent.block.PlatformDependent;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -33,6 +36,7 @@ public final class Models {
         public void addBlockFamily(
             Supplier<Block> fullBlock,
             Supplier<@Nullable TexturedModel> fullBlockModel,
+            Supplier<@Nullable UnsafeBlockStateGeneratorSupplier> fullBlockModelCustomGenerator,
             Supplier<@Nullable Block> slab,
             Supplier<@Nullable Block> stairs,
             Supplier<@Nullable Block> wall,
@@ -49,7 +53,17 @@ public final class Models {
                     }
                     BlockModelGenerators.TEXTURED_MODELS.put(fullBlock.get(), texturedModel);
                 }
+                var customGenerator = fullBlockModelCustomGenerator.get();
+                if (customGenerator != null) {
+                    if (!(BlockModelGenerators.FULL_BLOCK_MODEL_CUSTOM_GENERATORS instanceof HashMap)) {
+                        BlockModelGenerators.FULL_BLOCK_MODEL_CUSTOM_GENERATORS = new HashMap<>(BlockModelGenerators.FULL_BLOCK_MODEL_CUSTOM_GENERATORS);
+                    }
+                    BlockModelGenerators.FULL_BLOCK_MODEL_CUSTOM_GENERATORS.put(fullBlock.get(), (block, normal, mapping, modelOutput) -> (BlockModelDefinitionGenerator) customGenerator.create(block, normal, mapping, modelOutput));
+                }
                 var provider = generators.family(fullBlock.get());
+                if (customGenerator != null) {
+                    provider.skipGeneratingModelsFor.add(fullBlock.get());
+                }
                 var slabBlock = slab.get();
                 if (slabBlock != null) {
                     provider.slab(slabBlock);

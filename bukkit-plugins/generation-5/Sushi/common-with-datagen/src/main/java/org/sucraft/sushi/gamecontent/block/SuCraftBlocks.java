@@ -14,10 +14,10 @@ import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.InfestedBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -31,7 +31,6 @@ import org.bukkit.block.BlockType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.common.Family;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
-import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -263,6 +262,26 @@ public final class SuCraftBlocks {
 
     // Stone / Andesite
 
+    private static BlockSet.WithFullBlockAndSlabAndStairs stonePillarSet(
+        String fullBlockPath,
+        Block vanilla,
+        Block slabFallback,
+        Block stairsFallback
+    ) {
+        return BlockSet.builder(fullBlockPath).mineableWithPickaxe()
+            .fullBlock().vanilla(vanilla).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY)
+            .fullBlockBlockBuild(builder -> builder.factoryNMS(RotatedPillarBlock::new))
+            .fullBlockConstructorForDataGeneration(RotatedPillarBlock::new)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(block, "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
+            }))
+            .fullBlockModelCustomGenerator(PlatformDependent.BlockModelGenerators::createColumnGenerator)
+            .slab().slabFallback(slabFallback)
+            .stairs().stairsFallback(stairsFallback)
+            .build();
+    }
+
     public static final BlockSet.WithButtonAndPressurePlate ANDESITE =
         BlockSet.builder("andesite").mineableWithPickaxe()
             .fullBlockOnlyForDataGeneration().vanilla(Blocks.ANDESITE)
@@ -304,6 +323,13 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.POLISHED_ANDESITE)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs ANDESITE_PILLAR = stonePillarSet(
+        "andesite_pillar",
+        Blocks.POLISHED_ANDESITE,
+        Blocks.POLISHED_ANDESITE_SLAB,
+        Blocks.POLISHED_ANDESITE_STAIRS
+    );
 
     // Stone / Blackstone
 
@@ -360,6 +386,13 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.CALCITE)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs CALCITE_PILLAR = stonePillarSet(
+        "calcite_pillar",
+        Blocks.CALCITE,
+        Blocks.POLISHED_DIORITE_SLAB,
+        Blocks.POLISHED_DIORITE_STAIRS
+    );
 
     // Stone / Cinnabar
 
@@ -510,6 +543,13 @@ public final class SuCraftBlocks {
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
 
+    public static final BlockSet.WithFullBlockAndSlabAndStairs DIORITE_PILLAR = stonePillarSet(
+        "diorite_pillar",
+        Blocks.POLISHED_DIORITE,
+        Blocks.POLISHED_DIORITE_SLAB,
+        Blocks.POLISHED_DIORITE_STAIRS
+    );
+
     // Stone / Dripstone
 
     public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate DRIPSTONE =
@@ -549,6 +589,13 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.DRIPSTONE_BLOCK)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs DRIPSTONE_PILLAR = stonePillarSet(
+        "dripstone_pillar",
+        Blocks.DRIPSTONE_BLOCK,
+        Blocks.POLISHED_GRANITE_SLAB,
+        Blocks.POLISHED_GRANITE_STAIRS
+    );
 
     // Stone / End stone
 
@@ -628,6 +675,13 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.POLISHED_GRANITE)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs GRANITE_PILLAR = stonePillarSet(
+        "granite_pillar",
+        Blocks.POLISHED_GRANITE,
+        Blocks.POLISHED_GRANITE_SLAB,
+        Blocks.POLISHED_GRANITE_STAIRS
+    );
 
     // Stone / Nether bricks
 
@@ -1031,6 +1085,13 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.CHISELED_TUFF_BRICKS)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs TUFF_PILLAR = stonePillarSet(
+        "tuff_pillar",
+        Blocks.POLISHED_TUFF,
+        Blocks.POLISHED_TUFF_SLAB,
+        Blocks.POLISHED_TUFF_STAIRS
+    );
 
     // public static final SuCraftBlockType SMOO
     //

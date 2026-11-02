@@ -23,10 +23,10 @@ import net.minecraft.client.resources.model.sprite.Material;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
-import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
+import org.sucraft.sushi.datageneration.block.UnsafeBlockStateGeneratorSupplier;import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
-import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
+import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -665,7 +665,10 @@ public interface BlockSet {
         private @Nullable String basePath;
         private boolean fullBlock;
         private boolean fullBlockOnlyForDataGeneration;
+        private @Nullable List<Consumer<BlockTypeRegistryEntryBuilderNMS>> fullBlockBlockBuilders;
+        private @Nullable Function<BlockBehaviour.Properties, Block> fullBlockConstructorForDataGeneration;
         private @Nullable Function<Block, Object> fullBlockModelProvider;
+        private @Nullable UnsafeBlockStateGeneratorSupplier fullBlockModelCustomGenerator;
         private boolean stairs;
         private boolean slab;
         private boolean wall;
@@ -745,8 +748,26 @@ public interface BlockSet {
             return onlyForDataGeneration ? this.fullBlockOnlyForDataGeneration() : this.fullBlock();
         }
 
+        public Builder fullBlockBlockBuild(Consumer<BlockTypeRegistryEntryBuilderNMS> builder) {
+            if (this.fullBlockBlockBuilders == null) {
+                this.fullBlockBlockBuilders = new ArrayList<>(1);
+            }
+            this.fullBlockBlockBuilders.add(builder);
+            return this;
+        }
+
+        public Builder fullBlockConstructorForDataGeneration(Function<BlockBehaviour.Properties, Block> constructor) {
+            this.fullBlockConstructorForDataGeneration = constructor;
+            return this;
+        }
+
         public Builder fullBlockModelProvider(Function<Block, Object> provider) {
             this.fullBlockModelProvider = provider;
+            return this;
+        }
+
+        public Builder fullBlockModelCustomGenerator(UnsafeBlockStateGeneratorSupplier supplier) {
+            this.fullBlockModelCustomGenerator = supplier;
             return this;
         }
 
@@ -1378,6 +1399,10 @@ public interface BlockSet {
             return null;
         }
 
+        public @Nullable UnsafeBlockStateGeneratorSupplier getFullBlockModelCustomGenerator() {
+            return this.fullBlockModelCustomGenerator;
+        }
+
         private BlockBehaviour.Properties getFullBlockProperties() {
             BlockBehaviour.Properties unfinalizedProperties;
             if (this.properties != null) {
@@ -1733,13 +1758,25 @@ public interface BlockSet {
             final Impl[] built = new Impl[1];
             built[0] = new Impl(
                 (DataGenerationFlag.isDataGeneration ? this.fullBlock || this.fullBlockOnlyForDataGeneration : this.fullBlock) ? new SuCraftBlockType(this.getFullBlockIdentifier())
+                    .update(type -> {
+                        if (this.fullBlockBlockBuilders != null) {
+                            this.fullBlockBlockBuilders.forEach(type::blockBuild);
+                        }
+                    })
                     .properties(this::getFullBlockProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
-                    .blockConstructorForDataGeneration()
+                    .update(type -> {
+                        if (this.fullBlockConstructorForDataGeneration != null) {
+                            type.constructorForDataGeneration(this.fullBlockConstructorForDataGeneration);
+                        } else {
+                            type.blockConstructorForDataGeneration();
+                        }
+                    })
                     .dataGenerateModel(factory -> {
                         factory.addBlockFamily(
                             () -> built[0].fullBlockNMS(),
                             () -> this.getFullBlockModelProvider() != null ? (TexturedModel) this.getFullBlockModelProvider().apply(built[0].fullBlockNMS()) : null,
+                            () -> this.getFullBlockModelCustomGenerator(),
                             () -> built[0].hasSlab() ? built[0].slabNMS() : null,
                             () -> built[0].hasStairs() ? built[0].stairsNMS() : null,
                             () -> built[0].hasWall() ? built[0].wallNMS() : null,

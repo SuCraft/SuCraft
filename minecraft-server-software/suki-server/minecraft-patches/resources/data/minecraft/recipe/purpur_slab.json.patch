@@ -1,0 +1,12 @@
+--- a/data/minecraft/recipe/purpur_slab.json
++++ b/data/minecraft/recipe/purpur_slab.json
+@@ -3,8 +_,7 @@
+   "category": "building",
+   "key": {
+     "#": [
+-      "minecraft:purpur_block",
+-      "minecraft:purpur_pillar"
++      "minecraft:purpur_block"
+     ]
+   },
+   "pattern": [

@@ -5,7 +5,11 @@ import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.BlockItemTagId;import net.minecraft.tags.BlockItemTags;import net.minecraft.tags.BlockTags;import net.minecraft.tags.TagKey;import net.minecraft.world.item.Item;
+import net.minecraft.tags.BlockItemTagId;
+import net.minecraft.tags.BlockItemTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,10 +24,13 @@ import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
-import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
+import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
+import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
-import java.util.ArrayList;import java.util.Arrays;
-import java.util.List;import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
@@ -252,6 +259,12 @@ public interface BlockSet {
     interface WithWallAndButtonAndPressurePlate extends WithWallAndButton, WithPressurePlate {
     }
 
+    interface WithFenceAndButton extends WithFence, WithButton {
+    }
+
+    interface WithFenceAndButtonAndPressurePlate extends WithFenceAndButton, WithPressurePlate {
+    }
+
     interface WithButtonAndPressurePlate extends WithButton, WithPressurePlate {
     }
 
@@ -262,6 +275,7 @@ public interface BlockSet {
         WithSlabAndStairsAndWallAndButtonAndPressurePlate,
         WithStairsAndWallAndButtonAndPressurePlate,
         WithWallAndButtonAndPressurePlate,
+        WithFenceAndButtonAndPressurePlate,
         WithButtonAndPressurePlate {
 
         private @Nullable SuCraftBlockType fullBlock;

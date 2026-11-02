@@ -390,12 +390,20 @@ public final class AutomaticRecipeAdder {
                 return this.addShapedCrafting(6, null, 3, 1, input -> List.of(input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_slab" : null);
             }
 
-            private BiConsumer<Item, Item> addFenceCrafting() {
+            private BiConsumer<Item, Item> addWoodenFenceCrafting() {
                 return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(3, null, 3, 2, input -> List.of(input, Items.STICK, input, input, Items.STICK, input), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence" : null));
             }
 
+            private BiConsumer<Item, Item> addNetherBrickFenceCrafting() {
+                return conditional(this::isNetherBrickFence, this.addShapedCrafting(6, null, 3, 2, input -> List.of(input, Items.NETHER_BRICK, input, input, Items.NETHER_BRICK, input), CraftingBookCategory.MISC));
+            }
+
+            public boolean isNetherBrickFence(Item input, Item output) {
+                return input == Items.NETHER_BRICKS || input == Items.RED_NETHER_BRICKS;
+            }
+
             public boolean isNonPlankNewFence(Item input, Item output) {
-                return input != Items.NETHER_BRICKS && !input.builtInRegistryHolder().is(ItemTags.PLANKS);
+                return !isNetherBrickFence(input, output) && !input.builtInRegistryHolder().is(ItemTags.PLANKS);
             }
 
             private BiConsumer<Item, Item> addNewNonWoodenFenceStonecutting() {
@@ -513,8 +521,15 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
+                getSuffixBase(item, "_spiral_meander"),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_spiral_meander"))
+            );
+            adders.addRecipes(
+                item,
                 filterOut(getSuffixBase(item, "_fence"), STORAGE_BLOCKS),
-                adders.addFenceCrafting()
+                adders.addWoodenFenceCrafting(),
+                adders.addNetherBrickFenceCrafting()
             );
             adders.addRecipes(
                 item,
@@ -568,6 +583,12 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
+                firstNotNullOf(getSuffixBase(item, "_small_bricks"), getMiddleOrEndBase(item, "_small_brick")),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_small_bricks"))
+            );
+            adders.addRecipes(
+                item,
                 firstNotNullOf(getSuffixBase(item, "_bricks"), getMiddleOrEndBase(item, "_brick")),
                 (input, output) -> {
                     Item polished = getPrefixShape(getSpecialNamespaceIfPresent(input, output), input, "polished_");
@@ -606,6 +627,32 @@ public final class AutomaticRecipeAdder {
                 getStartOrMiddleBase(item, "engraved_"),
                 adders.addStonecutting(1),
                 invert(adders.addStonecutting(1, "from_engraved"))
+            );
+            Stream.of("elder", "ender", "shulker", "warden", "ghastly").forEach(chiselType -> {
+                adders.addRecipes(
+                    item,
+                    getStartOrMiddleBase(item, chiselType + "_chiseled_"),
+                    adders.addStonecutting(1),
+                    invert(adders.addStonecutting(1, "from_" + chiselType + "_chiseled"))
+                );
+            });
+            adders.addRecipes(
+                item,
+                getStartOrMiddleBase(item, "recessed_"),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_recessed"))
+            );
+            adders.addRecipes(
+                item,
+                getStartOrMiddleBase(item, "sculpted_"),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_sculpted"))
+            );
+            adders.addRecipes(
+                item,
+                getStartOrMiddleBase(item, "draconic_"),
+                adders.addStonecutting(1),
+                invert(adders.addStonecutting(1, "from_draconic"))
             );
             adders.addRecipes(
                 item,
@@ -699,19 +746,31 @@ public final class AutomaticRecipeAdder {
 
     private static @Nullable String getSuffixBasePath(String path, String suffix) {
         if (!path.endsWith(suffix)) return null;
-        return path.substring(0, path.length() - suffix.length());
+        String base = path.substring(0, path.length() - suffix.length());
+        if (base.contains("mud") && !base.contains("mud_brick") && path.contains("mud_brick")) {
+            base = base.replace("mud", "packed_mud");
+        }
+        return base;
     }
 
     private static @Nullable String getStartOrMiddleBasePath(String path, String substring) {
         int substringIndex = path.indexOf(substring);
         if (substringIndex == -1) return null;
-        return (substringIndex == 0 ? "" : path.substring(0, substringIndex)) + path.substring(substringIndex + substring.length());
+        String base = (substringIndex == 0 ? "" : path.substring(0, substringIndex)) + path.substring(substringIndex + substring.length());
+        if (base.contains("mud") && !base.contains("mud_brick") && path.contains("mud_brick")) {
+            base = base.replace("mud", "packed_mud");
+        }
+        return base;
     }
 
     private static @Nullable String getMiddleOrEndBasePath(String path, String substring) {
         int substringIndex = path.indexOf(substring);
         if (substringIndex == -1) return null;
-        return path.substring(0, substringIndex) + (substringIndex + substring.length() == path.length() ? "" : path.substring(substringIndex + substring.length()));
+        String base = path.substring(0, substringIndex) + (substringIndex + substring.length() == path.length() ? "" : path.substring(substringIndex + substring.length()));
+        if (base.contains("mud") && !base.contains("mud_brick") && path.contains("mud_brick")) {
+            base = base.replace("mud", "packed_mud");
+        }
+        return base;
     }
 
     private static @Nullable Item getSuffixBase(Item item, String suffix) {
@@ -781,7 +840,15 @@ public final class AutomaticRecipeAdder {
     public static @Nullable Item getSuffixShape(String preferredNamespace, Item base, String suffix, List<String> baseSuffixes) {
         if (!(base instanceof BlockItem)) return null;
         var key = base.keyInItemRegistry;
-        var path = key.getPath();
+        var unfinalPath = key.getPath();
+        if (suffix.contains("brick")) {
+            if (unfinalPath.contains("packed_mud")) {
+                unfinalPath = unfinalPath.replace("packed_mud", "mud");
+            } else if (unfinalPath.contains("mud")) {
+                return null;
+            }
+        }
+        var path = unfinalPath;
         List<String> basePrefixes = List.of("", "oak_");
         return basePrefixes.stream().flatMap(basePrefix -> baseSuffixes.stream().map(baseSuffix -> {
             String pathWithoutBaseSuffix;

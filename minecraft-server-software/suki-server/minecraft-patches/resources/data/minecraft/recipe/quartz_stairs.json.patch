@@ -1,0 +1,13 @@
+--- a/data/minecraft/recipe/quartz_stairs.json
++++ b/data/minecraft/recipe/quartz_stairs.json
+@@ -3,9 +_,7 @@
+   "category": "building",
+   "key": {
+     "#": [
+-      "minecraft:chiseled_quartz_block",
+-      "minecraft:quartz_block",
+-      "minecraft:quartz_pillar"
++      "minecraft:quartz_block"
+     ]
+   },
+   "pattern": [

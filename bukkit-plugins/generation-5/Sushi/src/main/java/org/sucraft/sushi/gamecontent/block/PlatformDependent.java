@@ -35,6 +35,10 @@ public final class PlatformDependent {
             throw new UnsupportedOperationException();
         }
 
+        public static void addLadder(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
 }

@@ -49,6 +49,11 @@ public final class PlatformDependent {
             generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.OPEN).select(false, closedModel).select(true, openModel)).with(net.minecraft.client.data.models.BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
         }
 
+        public static void addLadder(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
+            generators.createNonTemplateHorizontalBlock(block);
+            generators.registerSimpleFlatItemModel(block);
+        }
+
     }
 
 }

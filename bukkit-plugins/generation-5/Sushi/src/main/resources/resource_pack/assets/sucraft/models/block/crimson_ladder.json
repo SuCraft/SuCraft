@@ -1,0 +1,6 @@
+{
+  "parent": "sucraft:block/template_ladder",
+  "textures": {
+    "ladder": "sucraft:block/crimson_ladder"
+  }
+}

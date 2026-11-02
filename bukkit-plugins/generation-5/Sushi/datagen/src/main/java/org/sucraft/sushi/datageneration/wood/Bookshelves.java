@@ -17,7 +17,6 @@ public final class Bookshelves {
 
     public static void add(CollectedFactories factories) {
         List.of(
-            Pair.of(Items.BOOKSHELF, Items.OAK_PLANKS),
             Pair.of(SuCraftBlocks.ACACIA_BOOKSHELF.fullBlockItemNMS(), Items.ACACIA_PLANKS),
             Pair.of(SuCraftBlocks.BAMBOO_BOOKSHELF.fullBlockItemNMS(), Items.BAMBOO_PLANKS),
             Pair.of(SuCraftBlocks.BIRCH_BOOKSHELF.fullBlockItemNMS(), Items.BIRCH_PLANKS),
@@ -26,6 +25,7 @@ public final class Bookshelves {
             Pair.of(SuCraftBlocks.DARK_OAK_BOOKSHELF.fullBlockItemNMS(), Items.DARK_OAK_PLANKS),
             Pair.of(SuCraftBlocks.JUNGLE_BOOKSHELF.fullBlockItemNMS(), Items.JUNGLE_PLANKS),
             Pair.of(SuCraftBlocks.MANGROVE_BOOKSHELF.fullBlockItemNMS(), Items.MANGROVE_PLANKS),
+            Pair.of(Items.BOOKSHELF, Items.OAK_PLANKS),
             Pair.of(SuCraftBlocks.SPRUCE_BOOKSHELF.fullBlockItemNMS(), Items.SPRUCE_PLANKS),
             Pair.of(SuCraftBlocks.WARPED_BOOKSHELF.fullBlockItemNMS(), Items.WARPED_PLANKS)
         ).forEach(pair -> {

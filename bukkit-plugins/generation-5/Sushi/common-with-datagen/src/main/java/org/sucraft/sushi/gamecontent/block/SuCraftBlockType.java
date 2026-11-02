@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.LadderBlock;import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -38,7 +38,7 @@ import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.gamecontent.common.CBlockItemTags;
-import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
+import org.sucraft.sushi.gamecontent.common.SpoutBlockItemTags;import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
 import spout.api.clientview.packetmapping.blockstate.macro.registry.BlockStateMappingMacroRegistryEntryBuilderNMS;
@@ -603,17 +603,41 @@ public final class SuCraftBlockType implements ItemLike {
         return this.fullBlock(propertiesFromAndFallback, propertiesFromAndFallback);
     }
 
-    public SuCraftBlockType barrel(Block planks) {
+    public SuCraftBlockType barrel(Block base) {
         this.blockBuild(builder -> builder.factoryNMS(BarrelBlock::new));
-        this.propertiesFull(planks);
-        this.properties(properties -> properties.mapColor(planks.defaultMapColor()));
+        this.propertiesFull(Blocks.BARREL);
+        this.properties(properties -> properties.mapColor(base.defaultMapColor()));
         this.fromToBlockMacro(BlockStateMappingMacroTypes.BARREL, Blocks.BARREL);
         this.constructorForDataGeneration(BarrelBlock::new);
         this.dataGenerateModel((factory, block) -> factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addBarrel(generators, block)));
         this.dataGenerateBlockLootTableForDropSelf();
-        this.mineableWithAxe();
         this.dataGenerateTag(BlockTags.GUARDED_BY_PIGLINS);
+        this.dataGenerateTag(CBlockItemTags.BARRELS);
         return this.tryAutomaticFullBlockTags();
+    }
+
+    public SuCraftBlockType woodenBarrel(Block planks) {
+        this.barrel(planks);
+        this.mineableWithAxe();
+        return this.dataGenerateTag(CBlockItemTags.BARRELS_WOODEN);
+    }
+
+    public SuCraftBlockType ladder(Block base) {
+        this.blockBuild(builder -> builder.factoryNMS(LadderBlock::new));
+        this.propertiesFull(Blocks.LADDER);
+        this.properties(properties -> properties.mapColor(base.defaultMapColor()));
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.LADDER, Blocks.LADDER);
+        this.constructorForDataGeneration(LadderBlock::new);
+        this.dataGenerateModel((factory, block) -> factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addLadder(generators, block)));
+        this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateTag(SpoutBlockItemTags.LADDERS);
+        return this.tryAutomaticFullBlockTags();
+    }
+
+    public SuCraftBlockType woodenLadder(Block planks) {
+        this.ladder(planks);
+        this.mineableWithAxe();
+        return this.dataGenerateTag(SpoutBlockItemTags.LADDERS_WOODEN);
     }
 
     public SuCraftBlockType slab(Block propertiesFrom, Block fallback, @Nullable BlockState fallbackBlockState) {

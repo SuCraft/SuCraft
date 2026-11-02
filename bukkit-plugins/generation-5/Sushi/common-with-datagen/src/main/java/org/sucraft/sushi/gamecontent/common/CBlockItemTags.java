@@ -9,6 +9,8 @@ public final class CBlockItemTags {
         throw new UnsupportedOperationException();
     }
 
+    public static final BlockItemTagId BARRELS = createC("barrels");
+    public static final BlockItemTagId BARRELS_WOODEN = createC("barrels/wooden");
     public static final BlockItemTagId BOOKSHELVES = createC("bookshelves");
 
     /**

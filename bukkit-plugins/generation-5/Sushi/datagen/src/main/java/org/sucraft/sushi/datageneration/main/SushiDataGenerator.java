@@ -31,6 +31,7 @@ import org.sucraft.sushi.datageneration.wood.Bookshelves;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
 import org.sucraft.sushi.datageneration.wood.Barrels;
+import org.sucraft.sushi.datageneration.wood.Ladders;
 
 public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
@@ -95,6 +96,7 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         Bookshelves.add(factories);
         Chests.add(factories);
         DyedPlanks.add(factories);
+        Ladders.add(factories);
 
         pack.addProvider(factories.models());
         pack.addProvider(factories.blockLootTables());

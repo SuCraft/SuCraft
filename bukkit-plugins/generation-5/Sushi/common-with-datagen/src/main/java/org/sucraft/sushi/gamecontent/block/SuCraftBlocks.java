@@ -1052,21 +1052,21 @@ public final class SuCraftBlocks {
 
     // Wood / Barrels
 
-    private static SuCraftBlockType barrel(String path, Block planks) {
-        return blockType(path).barrel(planks);
+    private static SuCraftBlockType woodenBarrel(String path, Block planks) {
+        return blockType(path).woodenBarrel(planks);
     }
 
-    public static final SuCraftBlockType ACACIA_BARREL = barrel("acacia_barrel", Blocks.ACACIA_PLANKS);
-    public static final SuCraftBlockType BAMBOO_BARREL = barrel("bamboo_barrel", Blocks.BAMBOO_PLANKS);
-    public static final SuCraftBlockType BIRCH_BARREL = barrel("birch_barrel", Blocks.BIRCH_PLANKS);
-    public static final SuCraftBlockType CHERRY_BARREL = barrel("cherry_barrel", Blocks.CHERRY_PLANKS);
-    public static final SuCraftBlockType CRIMSON_BARREL = barrel("crimson_barrel", Blocks.CRIMSON_PLANKS);
-    public static final SuCraftBlockType DARK_OAK_BARREL = barrel("dark_oak_barrel", Blocks.DARK_OAK_PLANKS);
-    public static final SuCraftBlockType JUNGLE_BARREL = barrel("jungle_barrel", Blocks.JUNGLE_PLANKS);
-    public static final SuCraftBlockType MANGROVE_BARREL = barrel("mangrove_barrel", Blocks.MANGROVE_PLANKS);
-    public static final SuCraftBlockType OAK_BARREL = barrel("oak_barrel", Blocks.OAK_PLANKS);
-    public static final SuCraftBlockType PALE_OAK_BARREL = barrel("pale_oak_barrel", Blocks.PALE_OAK_PLANKS);
-    public static final SuCraftBlockType WARPED_BARREL = barrel("warped_barrel", Blocks.WARPED_PLANKS);
+    public static final SuCraftBlockType ACACIA_BARREL = woodenBarrel("acacia_barrel", Blocks.ACACIA_PLANKS);
+    public static final SuCraftBlockType BAMBOO_BARREL = woodenBarrel("bamboo_barrel", Blocks.BAMBOO_PLANKS);
+    public static final SuCraftBlockType BIRCH_BARREL = woodenBarrel("birch_barrel", Blocks.BIRCH_PLANKS);
+    public static final SuCraftBlockType CHERRY_BARREL = woodenBarrel("cherry_barrel", Blocks.CHERRY_PLANKS);
+    public static final SuCraftBlockType CRIMSON_BARREL = woodenBarrel("crimson_barrel", Blocks.CRIMSON_PLANKS);
+    public static final SuCraftBlockType DARK_OAK_BARREL = woodenBarrel("dark_oak_barrel", Blocks.DARK_OAK_PLANKS);
+    public static final SuCraftBlockType JUNGLE_BARREL = woodenBarrel("jungle_barrel", Blocks.JUNGLE_PLANKS);
+    public static final SuCraftBlockType MANGROVE_BARREL = woodenBarrel("mangrove_barrel", Blocks.MANGROVE_PLANKS);
+    public static final SuCraftBlockType OAK_BARREL = woodenBarrel("oak_barrel", Blocks.OAK_PLANKS);
+    public static final SuCraftBlockType PALE_OAK_BARREL = woodenBarrel("pale_oak_barrel", Blocks.PALE_OAK_PLANKS);
+    public static final SuCraftBlockType WARPED_BARREL = woodenBarrel("warped_barrel", Blocks.WARPED_PLANKS);
 
     // Wood / Bookshelves
 
@@ -1268,6 +1268,24 @@ public final class SuCraftBlocks {
                     .build()
             )
         );
+
+    // Wood / Ladder
+
+    private static SuCraftBlockType woodenLadder(String path, Block planks) {
+        return blockType(path).woodenLadder(planks);
+    }
+
+    public static final SuCraftBlockType ACACIA_LADDER = woodenLadder("acacia_ladder", Blocks.ACACIA_PLANKS);
+    public static final SuCraftBlockType BAMBOO_LADDER = woodenLadder("bamboo_ladder", Blocks.BAMBOO_PLANKS);
+    public static final SuCraftBlockType BIRCH_LADDER = woodenLadder("birch_ladder", Blocks.BIRCH_PLANKS);
+    public static final SuCraftBlockType CHERRY_LADDER = woodenLadder("cherry_ladder", Blocks.CHERRY_PLANKS);
+    public static final SuCraftBlockType CRIMSON_LADDER = woodenLadder("crimson_ladder", Blocks.CRIMSON_PLANKS);
+    public static final SuCraftBlockType DARK_OAK_LADDER = woodenLadder("dark_oak_ladder", Blocks.DARK_OAK_PLANKS);
+    public static final SuCraftBlockType JUNGLE_LADDER = woodenLadder("jungle_ladder", Blocks.JUNGLE_PLANKS);
+    public static final SuCraftBlockType MANGROVE_LADDER = woodenLadder("mangrove_ladder", Blocks.MANGROVE_PLANKS);
+    public static final SuCraftBlockType PALE_OAK_LADDER = woodenLadder("pale_oak_ladder", Blocks.PALE_OAK_PLANKS);
+    public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
+    public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
 
     private static SuCraftBlockType blockType(String path) {
         return new SuCraftBlockType(path);

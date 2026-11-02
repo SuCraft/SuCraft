@@ -15,7 +15,8 @@ import org.sucraft.sushi.datageneration.creative.Barrier;
 import org.sucraft.sushi.datageneration.creative.Light;
 import org.sucraft.sushi.datageneration.flora.Coral;
 import org.sucraft.sushi.datageneration.glass.Glass;
-import org.sucraft.sushi.datageneration.mineral.copper.Copper;
+import org.sucraft.sushi.datageneration.mineral.Copper;
+import org.sucraft.sushi.datageneration.mineral.Flint;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
@@ -65,6 +66,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
         // Mineral / Copper
         Copper.add(factories);
+
+        // Mineral / Flint
+        Flint.add(factories);
 
         // Mineral / Iron
         Minecarts.add(factories);

@@ -19,8 +19,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -42,6 +45,33 @@ public final class SuCraftBlocks {
     private SuCraftBlocks() {
         throw new UnsupportedOperationException();
     }
+
+    // Mineral / Flint
+
+    private static void finalizeFlintBlockProperties(BlockBehaviour.Properties properties) {
+        properties.instrument(Blocks.NETHERITE_BLOCK.properties().instrument);
+        properties.sound(SoundType.METAL);
+        properties.mapColor(MapColor.COLOR_GRAY);
+        properties.strength(3.5f, 6.0f);
+    }
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs FLINT_BLOCK =
+        BlockSet.builder("flint_block").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.DEEPSLATE_TILES).fullBlockModelProvider(block -> TexturedModel.CUBE_BOTTOM_TOP.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block));
+            }))
+            .slab()
+            .stairs()
+            .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs FLINT_TILES =
+        BlockSet.builder("flint_tiles").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.DEEPSLATE_TILES)
+            .slab()
+            .stairs()
+            .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
+            .build();
 
     // Soil / Dirt
 

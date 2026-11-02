@@ -1,4 +1,4 @@
-package org.sucraft.sushi.datageneration.mineral.copper;
+package org.sucraft.sushi.datageneration.mineral;
 
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import net.minecraft.data.recipes.RecipeCategory;

@@ -28,9 +28,15 @@ public interface Models {
 
         void addBlockTrivialCube(Block block);
 
+        void addBlockCubeColumn(Block block);
+
         void addBlockCubeColumn(Block block, @Nullable Block side, @Nullable Block end);
 
         void addBlockCubeColumn(Block block, @Nullable Identifier side, @Nullable Identifier end);
+
+        void addBlockCubeBottomTop(Block block);
+
+        void addBlockCubeBottomTop(Block block, @Nullable Identifier side, @Nullable Identifier bottom, @Nullable Identifier top);
 
         void addBlockSlab(Block slab);
 

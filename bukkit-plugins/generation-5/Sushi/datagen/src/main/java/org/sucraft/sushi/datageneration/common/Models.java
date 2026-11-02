@@ -85,6 +85,10 @@ public final class Models {
             this.addBlock(generators -> generators.createTrivialCube(block));
         }
 
+        public void addBlockCubeColumn(Block block) {
+            this.addBlockCubeColumn(block, (Identifier) null, (Identifier) null);
+        }
+
         public void addBlockCubeColumn(Block block, @Nullable Block side, @Nullable Block end) {
             this.addBlockCubeColumn(block, getBlockTextureIdentifier(side), getBlockTextureIdentifier(end));
         }
@@ -96,6 +100,24 @@ public final class Models {
                 }
                 if (end != null) {
                     mapping.put(TextureSlot.END, new Material(end));
+                }
+            })));
+        }
+
+        public void addBlockCubeBottomTop(Block block) {
+            this.addBlockCubeBottomTop(block, (Identifier) null, (Identifier) null, (Identifier) null);
+        }
+
+        public void addBlockCubeBottomTop(Block block, @Nullable Identifier side, @Nullable Identifier bottom, @Nullable Identifier top) {
+            this.addBlock(generators -> generators.createTrivialBlock(block, TexturedModel.CUBE_BOTTOM_TOP.updateTexture(mapping -> {
+                if (side != null) {
+                    mapping.put(TextureSlot.SIDE, new Material(side));
+                }
+                if (bottom != null) {
+                    mapping.put(TextureSlot.BOTTOM, new Material(bottom));
+                }
+                if (top != null) {
+                    mapping.put(TextureSlot.TOP, new Material(top));
                 }
             })));
         }

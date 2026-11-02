@@ -12,8 +12,10 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -599,6 +601,19 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType fullBlock(Block propertiesFromAndFallback) {
         return this.fullBlock(propertiesFromAndFallback, propertiesFromAndFallback);
+    }
+
+    public SuCraftBlockType barrel(Block planks) {
+        this.blockBuild(builder -> builder.factoryNMS(BarrelBlock::new));
+        this.propertiesFull(planks);
+        this.properties(properties -> properties.mapColor(planks.defaultMapColor()));
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.BARREL, Blocks.BARREL);
+        this.constructorForDataGeneration(BarrelBlock::new);
+        this.dataGenerateModel((factory, block) -> factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addBarrel(generators, block)));
+        this.dataGenerateBlockLootTableForDropSelf();
+        this.mineableWithAxe();
+        this.dataGenerateTag(BlockTags.GUARDED_BY_PIGLINS);
+        return this.tryAutomaticFullBlockTags();
     }
 
     public SuCraftBlockType slab(Block propertiesFrom, Block fallback, @Nullable BlockState fallbackBlockState) {

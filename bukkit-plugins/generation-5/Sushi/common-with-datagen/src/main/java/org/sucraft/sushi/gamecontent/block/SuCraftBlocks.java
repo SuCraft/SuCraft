@@ -14,6 +14,7 @@ import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.InfestedBlock;
@@ -30,6 +31,7 @@ import org.bukkit.block.BlockType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.common.Family;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
+import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -1047,6 +1049,24 @@ public final class SuCraftBlocks {
     //         .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
     //         .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
     //         .build();
+
+    // Wood / Barrels
+
+    private static SuCraftBlockType barrel(String path, Block planks) {
+        return blockType(path).barrel(planks);
+    }
+
+    public static final SuCraftBlockType ACACIA_BARREL = barrel("acacia_barrel", Blocks.ACACIA_PLANKS);
+    public static final SuCraftBlockType BAMBOO_BARREL = barrel("bamboo_barrel", Blocks.BAMBOO_PLANKS);
+    public static final SuCraftBlockType BIRCH_BARREL = barrel("birch_barrel", Blocks.BIRCH_PLANKS);
+    public static final SuCraftBlockType CHERRY_BARREL = barrel("cherry_barrel", Blocks.CHERRY_PLANKS);
+    public static final SuCraftBlockType CRIMSON_BARREL = barrel("crimson_barrel", Blocks.CRIMSON_PLANKS);
+    public static final SuCraftBlockType DARK_OAK_BARREL = barrel("dark_oak_barrel", Blocks.DARK_OAK_PLANKS);
+    public static final SuCraftBlockType JUNGLE_BARREL = barrel("jungle_barrel", Blocks.JUNGLE_PLANKS);
+    public static final SuCraftBlockType MANGROVE_BARREL = barrel("mangrove_barrel", Blocks.MANGROVE_PLANKS);
+    public static final SuCraftBlockType OAK_BARREL = barrel("oak_barrel", Blocks.OAK_PLANKS);
+    public static final SuCraftBlockType PALE_OAK_BARREL = barrel("pale_oak_barrel", Blocks.PALE_OAK_PLANKS);
+    public static final SuCraftBlockType WARPED_BARREL = barrel("warped_barrel", Blocks.WARPED_PLANKS);
 
     // Wood / Bookshelves
 

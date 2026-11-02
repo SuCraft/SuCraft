@@ -1,5 +1,6 @@
 package org.sucraft.sushi.gamecontent.block;
 
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public final class PlatformDependent {
@@ -20,6 +21,18 @@ public final class PlatformDependent {
 
         public static BlockBehaviour.Properties ofLegacyCopy(BlockBehaviour.Properties properties) {
             return BlockBehaviour.Properties.ofLegacyCopy(properties);
+        }
+
+    }
+
+    public static final class BlockModelGenerators {
+
+        private BlockModelGenerators() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static void addBarrel(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
+            throw new UnsupportedOperationException();
         }
 
     }

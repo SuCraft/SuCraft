@@ -11,5 +11,5 @@
                      }
 +                    bookcases /= 2; // Suki - Allow slabs to provide power
  
-                     this.random.setSeed(this.enchantmentSeed.get());
- 
+                     fillEnchantmentOffers(this.random, this.enchantmentSeed.get(), bookcases, itemStack, level.registryAccess(), this.costs, this.enchantClue, this.levelClue); // Paper - extracted into net.minecraft.world.inventory.EnchantmentMenu.fillEnchantmentOffers
+                     // CraftBukkit start

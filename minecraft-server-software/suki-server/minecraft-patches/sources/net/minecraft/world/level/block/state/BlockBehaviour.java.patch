@@ -21,7 +21,7 @@
          // Spout end - Client view / Packet mapping / Block states / Apply / Breaking speed - Implement calculating destroy progress with given held item stack
          float destroySpeed = state.getDestroySpeed(level, pos);
          if (destroySpeed == -1.0F) {
-@@ -1211,6 +_,18 @@
+@@ -1264,6 +_,18 @@
          public static BlockBehaviour.Properties ofFullCopy(final BlockBehaviour block) {
              BlockBehaviour.Properties copyTo = ofLegacyCopy(block);
              BlockBehaviour.Properties copyFrom = block.properties;
@@ -40,7 +40,7 @@
              copyTo.jumpFactor = copyFrom.jumpFactor;
              copyTo.isRedstoneConductor = copyFrom.isRedstoneConductor;
              copyTo.isValidSpawn = copyFrom.isValidSpawn;
-@@ -1226,6 +_,17 @@
+@@ -1279,6 +_,17 @@
          public static BlockBehaviour.Properties ofLegacyCopy(final BlockBehaviour block) {
              BlockBehaviour.Properties copyTo = new BlockBehaviour.Properties();
              BlockBehaviour.Properties copyFrom = block.properties;

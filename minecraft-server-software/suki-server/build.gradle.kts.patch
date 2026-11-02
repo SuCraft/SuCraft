@@ -78,7 +78,7 @@
  dependencies {
 -    implementation(project(":spout-api")) // Spout - Project setup - Set up Gradle project
 +    implementation(project(":suki-api")) // Spout - Project setup - Set up Gradle project // Suki - Project setup - Set up Gradle project
-     implementation(platform("ca.spottedleaf.leafpile:bom:1.2.4"))
+     implementation(platform("ca.spottedleaf.leafpile:bom:1.3.2"))
      implementation("ca.spottedleaf.leafpile:common")
      implementation("ca.spottedleaf.leafpile:concurrentutil")
 @@ -229,15 +_,15 @@

@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "sucraft:block/flint_pillar"
+    },
+    "facing=east": {
+      "model": "sucraft:block/flint_pillar_horizontal",
+      "x": 90,
+      "y": 270
+    },
+    "facing=north": {
+      "model": "sucraft:block/flint_pillar_horizontal",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south": {
+      "model": "sucraft:block/flint_pillar_horizontal",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "sucraft:block/flint_pillar",
+      "x": 180
+    },
+    "facing=west": {
+      "model": "sucraft:block/flint_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

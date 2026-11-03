@@ -32,6 +32,7 @@ import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.bukkit.block.BlockType;
 import org.jspecify.annotations.Nullable;
+import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.common.Family;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 import java.lang.reflect.Field;
@@ -72,6 +73,31 @@ public final class SuCraftBlocks {
             .stairs()
             .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
             .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs FLINT_PILLAR;
+
+    static {
+        var definedByCode =
+            BlockSet.builder("flint_pillar").mineableWithPickaxe()
+                .fullBlockOnlyForDataGeneration().vanilla(Blocks.POLISHED_BASALT)
+                .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                    mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(block, "_top"));
+                }))
+                .slab().slabFallback(Blocks.DEEPSLATE_TILE_SLAB)
+                .stairs().stairsFallback(Blocks.DEEPSLATE_TILE_STAIRS)
+                .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
+                .build();
+        FLINT_PILLAR = new BlockSet.IndirectImpl(
+            () -> DataGenerationFlag.isDataGeneration || !PlatformDependent.SushiPlugin.hasEnablingStarted() ? definedByCode.fullBlockType() : blockTypeNotDefinedByCode("flint_pillar"),
+            () -> definedByCode.slabType(),
+            () -> definedByCode.stairsType(),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
 
     // Soil / Dirt
 
@@ -1171,7 +1197,7 @@ public final class SuCraftBlocks {
         return bookshelf(fullBlockPath, fullBlockPlanks, slabFallback, stairsFallback, wallFallback, null);
     }
 
-    private static BlockSet.Impl bookshelf(
+    private static BlockSet.DirectImpl bookshelf(
         String fullBlockPath,
         Block fullBlockPlanks,
         Block slabFallback,
@@ -1360,7 +1386,7 @@ public final class SuCraftBlocks {
             )
         );
 
-    // Wood / Ladder
+    // Wood / Ladders
 
     private static SuCraftBlockType woodenLadder(String path, Block planks) {
         return blockType(path).woodenLadder(planks);
@@ -1379,7 +1405,19 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
 
     private static SuCraftBlockType blockType(String path) {
-        return new SuCraftBlockType(path);
+        return SuCraftBlockType.create(path);
+    }
+
+    private static SuCraftBlockType blockTypeWithoutItem(String path) {
+        return SuCraftBlockType.createWithoutItem(path);
+    }
+
+    private static SuCraftBlockType blockTypeNotDefinedByCode(String path) {
+        return SuCraftBlockType.createNotDefinedByCode(path);
+    }
+
+    private static SuCraftBlockType blockTypeNotDefinedByCode(String path, boolean itemDefinedByCode) {
+        return SuCraftBlockType.createNotDefinedByCode(path, itemDefinedByCode);
     }
 
     private static BlockType[] values;

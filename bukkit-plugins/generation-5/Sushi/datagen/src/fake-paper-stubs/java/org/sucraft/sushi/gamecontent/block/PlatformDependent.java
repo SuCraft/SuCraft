@@ -1,10 +1,8 @@
 package org.sucraft.sushi.gamecontent.block;
 
-import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -89,6 +87,18 @@ public final class PlatformDependent {
             var fullBlockVariant = net.minecraft.client.data.models.BlockModelGenerators.plainModel(fullBlockModelTemplate.create(fullBlock, mapping, generators.modelOutput));
             generators.blockStateOutput.accept(net.minecraft.client.data.models.BlockModelGenerators.createSlab(slab, net.minecraft.client.data.models.BlockModelGenerators.plainVariant(bottom), top, net.minecraft.client.data.models.BlockModelGenerators.variant(fullBlockVariant)));
             generators.registerSimpleItemModel(slab, bottom);
+        }
+
+    }
+
+    public static final class SushiPlugin {
+
+        private SushiPlugin() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static boolean hasEnablingStarted() {
+            throw new UnsupportedOperationException();
         }
 
     }

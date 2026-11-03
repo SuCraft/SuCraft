@@ -15,7 +15,9 @@ public final class CommonItemAdder {
 
     public static void add(CollectedFactories factories) {
         for (var type : SuCraftItems.types()) {
-            type.applyDataGeneration(factories);
+            if (type.definedByCode) {
+                type.applyDataGeneration(factories);
+            }
         }
     }
 

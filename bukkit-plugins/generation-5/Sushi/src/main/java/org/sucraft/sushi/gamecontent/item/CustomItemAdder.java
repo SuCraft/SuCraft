@@ -13,11 +13,13 @@ public final class CustomItemAdder {
 
     public static void register(BootstrapContext context) {
         context.getLifecycleManager().registerEventHandler(RegistryEvents.ITEM_TYPE.compose(), event -> {
-            Arrays.stream(SuCraftItems.types()).forEach(item ->
-                event.registry().register(item.registryKey(), builder ->
-                    item.applyToItemBuilder((ItemTypeRegistryEntryBuilderNMS) builder)
-                )
-            );
+            Arrays.stream(SuCraftItems.types()).forEach(item -> {
+                if (item.definedByCode) {
+                    event.registry().register(item.registryKey(), builder ->
+                        item.applyToItemBuilder((ItemTypeRegistryEntryBuilderNMS) builder)
+                    );
+                }
+            });
         });
     }
 

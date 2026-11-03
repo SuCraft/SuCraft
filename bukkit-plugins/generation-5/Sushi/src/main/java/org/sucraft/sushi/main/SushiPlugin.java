@@ -13,6 +13,7 @@ public final class SushiPlugin extends JavaPlugin {
     private static SushiPlugin instance;
     private static Logger logger;
     private static ComponentLogger componentLogger;
+    private static boolean hasEnablingStarted;
 
     public static SushiPlugin get() {
         return instance;
@@ -26,6 +27,10 @@ public final class SushiPlugin extends JavaPlugin {
         return componentLogger;
     }
 
+    public static boolean hasEnablingStarted() {
+        return hasEnablingStarted;
+    }
+
     @Override
     public void onEnable() {
         // Don't do anything else if the server doesn't support Spout
@@ -35,6 +40,7 @@ public final class SushiPlugin extends JavaPlugin {
         instance = this;
         logger = this.getLogger();
         componentLogger = this.getComponentLogger();
+        hasEnablingStarted = true;
 
         // Register events
         Bukkit.getPluginManager().registerEvents(new ReplaceOldItemsInInventories(), this);

@@ -66,6 +66,7 @@ public final class SuCraftBlockType implements ItemLike {
     private @Nullable BlockType value;
     private @Nullable Block valueNMS;
 
+    public final boolean definedByCode;
     private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
     private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
     private @Nullable Function<BlockBehaviour.Properties, Block> constructorForDataGeneration = Block::new;
@@ -91,33 +92,78 @@ public final class SuCraftBlockType implements ItemLike {
     private boolean tryAutomaticPressurePlateTags;
     private boolean skipAutomaticPressurePlateTag;
 
-    public SuCraftBlockType(String path, boolean item) {
-        this(Identifier.fromNamespaceAndPath("sucraft", path), item);
-    }
-
-    public SuCraftBlockType(NamespacedKey key, boolean item) {
-        this(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()), item);
-    }
-
-    public SuCraftBlockType(Identifier identifier, boolean item) {
+    private SuCraftBlockType(Identifier identifier, boolean item, boolean definedByCode, boolean itemDefinedByCode) {
         this.key = new NamespacedKey(identifier.getNamespace(), identifier.getPath());
         this.identifier = Identifier.fromNamespaceAndPath(key.namespace(), key.value());
         if (item) {
-            this.item = new SuCraftItemType(key);
-            this.item.block(this::getNMS);
+            if (itemDefinedByCode) {
+                this.item = SuCraftItemType.create(identifier);
+                this.item.block(this::getNMS);
+            } else {
+                this.item = SuCraftItemType.createNotDefinedByCode(identifier);
+            }
         }
+        this.definedByCode = definedByCode;
     }
 
-    public SuCraftBlockType(String path) {
-        this(path, true);
+    public static SuCraftBlockType create(String path) {
+        return create(Identifier.fromNamespaceAndPath("sucraft", path));
     }
 
-    public SuCraftBlockType(NamespacedKey key) {
-        this(key, true);
+    public static SuCraftBlockType create(NamespacedKey key) {
+        return create(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
     }
 
-    public SuCraftBlockType(Identifier identifier) {
-        this(identifier, true);
+    public static SuCraftBlockType create(Identifier identifier) {
+        return new SuCraftBlockType(identifier, true, true, true);
+    }
+
+    public static SuCraftBlockType createWithoutItem(String path) {
+        return createWithoutItem(Identifier.fromNamespaceAndPath("sucraft", path));
+    }
+
+    public static SuCraftBlockType createWithoutItem(NamespacedKey key) {
+        return createWithoutItem(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
+    }
+
+    public static SuCraftBlockType createWithoutItem(Identifier identifier) {
+        return new SuCraftBlockType(identifier, false, true, true);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(String path) {
+        return createNotDefinedByCode(path, false);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(NamespacedKey key) {
+        return createNotDefinedByCode(key, false);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(Identifier identifier) {
+        return createNotDefinedByCode(identifier, false);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(String path, boolean itemDefinedByCode) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath("sucraft", path), itemDefinedByCode);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(NamespacedKey key, boolean itemDefinedByCode) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()), itemDefinedByCode);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCode(Identifier identifier, boolean itemDefinedByCode) {
+        return new SuCraftBlockType(identifier, true, false, itemDefinedByCode);
+    }
+
+    public static SuCraftBlockType createNotDefinedByCodeWithoutItem(String path) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath("sucraft", path));
+    }
+
+    public static SuCraftBlockType createNotDefinedByCodeWithoutItem(NamespacedKey key) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
+    }
+
+    public static SuCraftBlockType createNotDefinedByCodeWithoutItem(Identifier identifier) {
+        return new SuCraftBlockType(identifier, false, false, false);
     }
 
     @Override
@@ -178,11 +224,17 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public void applyToBlockBuilder(BlockTypeRegistryEntryBuilderNMS builder) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.blockBuilding.forEach(it -> it.accept(builder));
         this.blockBuilding = null;
     }
 
     public void applyDataGeneration(CollectedFactories factories) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGenerating.forEach(it -> it.accept(factories));
         this.dataGenerating = null;
         if (this.dataGeneratingModel != null) {
@@ -271,11 +323,17 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType update(@Nullable Consumer<SuCraftBlockType> updater) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (updater != null) updater.accept(this);
         return this;
     }
 
     public SuCraftBlockType blockBuild(Consumer<BlockTypeRegistryEntryBuilderNMS> builderConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.blockBuilding.add(builderConsumer);
         return this;
     }
@@ -325,11 +383,17 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public void applyToBlockStateMappingMacroBuilder(BlockStateMappingMacroRegistryEntryBuilderNMS builder) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.blockStateMappingMacroBuilding.forEach(it -> it.accept(builder));
         this.blockStateMappingMacroBuilding = null;
     }
 
     public SuCraftBlockType blockStateMappingMacroBuild(Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS> builderConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.blockStateMappingMacroBuilding.add(builderConsumer);
         return this;
     }
@@ -372,6 +436,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType constructorForDataGeneration(Function<BlockBehaviour.Properties, Block> constructor) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.constructorForDataGeneration = constructor;
         return this;
     }
@@ -409,11 +476,17 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerate(Consumer<CollectedFactories> factoriesConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGenerating.add(factoriesConsumer);
         return this;
     }
 
     public SuCraftBlockType dataGenerateModel(@Nullable Consumer<Models.CollectedFactory> factoryConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGeneratingModel = factoryConsumer;
         return this;
     }
@@ -427,6 +500,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateBlockLootTable(@Nullable Consumer<BlockLootTables.CollectedFactory> factoryConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGeneratingBlockLootTable = factoryConsumer;
         return this;
     }
@@ -440,6 +516,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateTagUnsafe(Object... tags) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (tags.length != 0) {
             for (var tag : tags) {
                 if (tag instanceof TagKey tagKey) {
@@ -457,6 +536,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateTag(TagKey<Block>... tags) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (tags.length != 0) {
             if (this.dataGeneratingTags == null) {
                 this.dataGeneratingTags = new ArrayList<>(1);
@@ -469,6 +551,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateItemTag(TagKey<Item>... tags) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (tags.length != 0 && this.item != null) {
             for (var tag : tags) {
                 this.item.dataGenerateTag(tag);
@@ -478,6 +563,9 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType dataGenerateTag(BlockItemTagId... tags) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (tags.length != 0) {
             for (var tag : tags) {
                 this.dataGenerateTag(tag.block());
@@ -506,86 +594,137 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType tryAutomaticFullBlockTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticFullBlockTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticBookshelfTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticBookshelfTag = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticBlocksMotionNoLeavesTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticBlocksMotionNoLeavesTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticSlabTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticSlabTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticSlabTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticSlabTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticStairsTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticStairsTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticStairsTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticStairsTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticWallTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticWallTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticWallTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticWallTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticFenceTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticFenceTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticFenceTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticFenceTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticFenceGateTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticFenceGateTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticFenceGateTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticFenceGateTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticButtonTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticButtonTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticButtonTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticButtonTag = true;
         return this;
     }
 
     public SuCraftBlockType tryAutomaticPressurePlateTags() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.tryAutomaticPressurePlateTags = true;
         return this;
     }
 
     public SuCraftBlockType skipAutomaticPressurePlateTag() {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.skipAutomaticPressurePlateTag = true;
         return this;
     }

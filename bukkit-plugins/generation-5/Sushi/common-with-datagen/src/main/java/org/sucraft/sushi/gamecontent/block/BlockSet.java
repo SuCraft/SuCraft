@@ -23,10 +23,12 @@ import net.minecraft.client.resources.model.sprite.Material;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
-import org.sucraft.sushi.datageneration.block.UnsafeBlockStateGeneratorSupplier;import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
+import org.sucraft.sushi.datageneration.block.UnsafeBlockStateGeneratorSupplier;
+import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
-import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
+import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;
+import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -268,7 +270,7 @@ public interface BlockSet {
     interface WithButtonAndPressurePlate extends WithButton, WithPressurePlate {
     }
 
-    final class Impl implements
+    abstract class Impl implements
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate,
@@ -278,42 +280,12 @@ public interface BlockSet {
         WithFenceAndButtonAndPressurePlate,
         WithButtonAndPressurePlate {
 
-        private @Nullable SuCraftBlockType fullBlock;
-        private @Nullable SuCraftBlockType slab;
-        private @Nullable SuCraftBlockType stairs;
-        private @Nullable SuCraftBlockType wall;
-        private @Nullable SuCraftBlockType fence;
-        private @Nullable SuCraftBlockType fenceGate;
-        private @Nullable SuCraftBlockType button;
-        private @Nullable SuCraftBlockType pressurePlate;
-
         private BlockType @Nullable [] values;
         private Block @Nullable [] valuesNMS;
         private SuCraftBlockType @Nullable [] types;
         private ItemType @Nullable [] items;
         private Item @Nullable [] itemsNMS;
-        private Item @Nullable [] itemsForDataGeneration;
         private SuCraftItemType @Nullable [] itemTypes;
-
-        Impl(
-            @Nullable SuCraftBlockType fullBlock,
-            @Nullable SuCraftBlockType slab,
-            @Nullable SuCraftBlockType stairs,
-            @Nullable SuCraftBlockType wall,
-            @Nullable SuCraftBlockType fence,
-            @Nullable SuCraftBlockType fenceGate,
-            @Nullable SuCraftBlockType button,
-            @Nullable SuCraftBlockType pressurePlate
-        ) {
-            this.fullBlock = fullBlock;
-            this.slab = slab;
-            this.stairs = stairs;
-            this.wall = wall;
-            this.fence = fence;
-            this.fenceGate = fenceGate;
-            this.button = button;
-            this.pressurePlate = pressurePlate;
-        }
 
         @Override
         public BlockType[] values() {
@@ -337,14 +309,14 @@ public interface BlockSet {
         public SuCraftBlockType[] types() {
             if (this.types == null) {
                 this.types = Stream.of(
-                    this.fullBlock,
-                    this.slab,
-                    this.stairs,
-                    this.wall,
-                    this.fence,
-                    this.fenceGate,
-                    this.button,
-                    this.pressurePlate
+                    this.fullBlockType(),
+                    this.slabType(),
+                    this.stairsType(),
+                    this.wallType(),
+                    this.fenceType(),
+                    this.fenceGateType(),
+                    this.buttonType(),
+                    this.pressurePlateType()
                 ).filter(Objects::nonNull).toArray(SuCraftBlockType[]::new);
             }
             return this.types;
@@ -379,52 +351,275 @@ public interface BlockSet {
 
         @Override
         public boolean hasFullBlock() {
-            return this.fullBlock != null;
+            return this.fullBlockType() != null;
         }
 
         @Override
         public boolean hasSlab() {
-            return this.slab != null;
+            return this.slabType() != null;
         }
 
         @Override
         public boolean hasStairs() {
-            return this.stairs != null;
+            return this.stairsType() != null;
         }
 
         @Override
         public boolean hasWall() {
-            return this.wall != null;
+            return this.wallType() != null;
         }
 
         @Override
         public boolean hasFence() {
-            return this.fence != null;
+            return this.fenceType() != null;
         }
 
         @Override
         public boolean hasFenceGate() {
-            return this.fenceGate != null;
+            return this.fenceGateType() != null;
         }
 
         @Override
         public boolean hasButton() {
-            return this.button != null;
+            return this.buttonType() != null;
         }
 
         @Override
         public boolean hasPressurePlate() {
-            return this.pressurePlate != null;
+            return this.pressurePlateType() != null;
         }
 
         @Override
         public BlockType fullBlock() {
-            return this.fullBlock.get();
+            return this.fullBlockType().get();
         }
 
         @Override
         public Block fullBlockNMS() {
-            return this.fullBlock.getNMS();
+            return this.fullBlockType().getNMS();
+        }
+
+        @Override
+        public ItemType fullBlockItem() {
+            return this.fullBlockType().item();
+        }
+
+        @Override
+        public Item fullBlockItemNMS() {
+            return this.fullBlockType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType fullBlockItemType() {
+            return this.fullBlockType().itemType();
+        }
+
+        @Override
+        public BlockType slab() {
+            return this.slabType().get();
+        }
+
+        @Override
+        public Block slabNMS() {
+            return this.slabType().getNMS();
+        }
+
+        @Override
+        public ItemType slabItem() {
+            return this.slabType().item();
+        }
+
+        @Override
+        public Item slabItemNMS() {
+            return this.slabType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType slabItemType() {
+            return this.slabType().itemType();
+        }
+
+        @Override
+        public BlockType stairs() {
+            return this.stairsType().get();
+        }
+
+        @Override
+        public Block stairsNMS() {
+            return this.stairsType().getNMS();
+        }
+
+        @Override
+        public ItemType stairsItem() {
+            return this.stairsType().item();
+        }
+
+        @Override
+        public Item stairsItemNMS() {
+            return this.stairsType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType stairsItemType() {
+            return this.stairsType().itemType();
+        }
+
+        @Override
+        public BlockType wall() {
+            return this.wallType().get();
+        }
+
+        @Override
+        public Block wallNMS() {
+            return this.wallType().getNMS();
+        }
+
+        @Override
+        public ItemType wallItem() {
+            return this.wallType().item();
+        }
+
+        @Override
+        public Item wallItemNMS() {
+            return this.wallType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType wallItemType() {
+            return this.wallType().itemType();
+        }
+
+        @Override
+        public BlockType fence() {
+            return this.fenceType().get();
+        }
+
+        @Override
+        public Block fenceNMS() {
+            return this.fenceType().getNMS();
+        }
+
+        @Override
+        public ItemType fenceItem() {
+            return this.fenceType().item();
+        }
+
+        @Override
+        public Item fenceItemNMS() {
+            return this.fenceType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType fenceItemType() {
+            return this.fenceType().itemType();
+        }
+
+        @Override
+        public BlockType fenceGate() {
+            return this.fenceGateType().get();
+        }
+
+        @Override
+        public Block fenceGateNMS() {
+            return this.fenceGateType().getNMS();
+        }
+
+        @Override
+        public ItemType fenceGateItem() {
+            return this.fenceGateType().item();
+        }
+
+        @Override
+        public Item fenceGateItemNMS() {
+            return this.fenceGateType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType fenceGateItemType() {
+            return this.fenceGateType().itemType();
+        }
+
+        @Override
+        public BlockType button() {
+            return this.buttonType().get();
+        }
+
+        @Override
+        public Block buttonNMS() {
+            return this.buttonType().getNMS();
+        }
+
+        @Override
+        public ItemType buttonItem() {
+            return this.buttonType().item();
+        }
+
+        @Override
+        public Item buttonItemNMS() {
+            return this.buttonType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType buttonItemType() {
+            return this.buttonType().itemType();
+        }
+
+        @Override
+        public BlockType pressurePlate() {
+            return this.pressurePlateType().get();
+        }
+
+        @Override
+        public Block pressurePlateNMS() {
+            return this.pressurePlateType().getNMS();
+        }
+
+        @Override
+        public ItemType pressurePlateItem() {
+            return this.pressurePlateType().item();
+        }
+
+        @Override
+        public Item pressurePlateItemNMS() {
+            return this.pressurePlateType().itemNMS();
+        }
+
+        @Override
+        public SuCraftItemType pressurePlateItemType() {
+            return this.pressurePlateType().itemType();
+        }
+
+    }
+
+    final class DirectImpl extends Impl {
+
+        private @Nullable SuCraftBlockType fullBlock;
+        private @Nullable SuCraftBlockType slab;
+        private @Nullable SuCraftBlockType stairs;
+        private @Nullable SuCraftBlockType wall;
+        private @Nullable SuCraftBlockType fence;
+        private @Nullable SuCraftBlockType fenceGate;
+        private @Nullable SuCraftBlockType button;
+        private @Nullable SuCraftBlockType pressurePlate;
+
+        DirectImpl(
+            @Nullable SuCraftBlockType fullBlock,
+            @Nullable SuCraftBlockType slab,
+            @Nullable SuCraftBlockType stairs,
+            @Nullable SuCraftBlockType wall,
+            @Nullable SuCraftBlockType fence,
+            @Nullable SuCraftBlockType fenceGate,
+            @Nullable SuCraftBlockType button,
+            @Nullable SuCraftBlockType pressurePlate
+        ) {
+            this.fullBlock = fullBlock;
+            this.slab = slab;
+            this.stairs = stairs;
+            this.wall = wall;
+            this.fence = fence;
+            this.fenceGate = fenceGate;
+            this.button = button;
+            this.pressurePlate = pressurePlate;
         }
 
         @Override
@@ -433,58 +628,8 @@ public interface BlockSet {
         }
 
         @Override
-        public ItemType fullBlockItem() {
-            return this.fullBlock.item();
-        }
-
-        @Override
-        public Item fullBlockItemNMS() {
-            return this.fullBlock.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType fullBlockItemType() {
-            return this.fullBlock.itemType();
-        }
-
-        @Override
-        public BlockType slab() {
-            return this.slab.get();
-        }
-
-        @Override
-        public Block slabNMS() {
-            return this.slab.getNMS();
-        }
-
-        @Override
         public SuCraftBlockType slabType() {
             return this.slab;
-        }
-
-        @Override
-        public ItemType slabItem() {
-            return this.slab.item();
-        }
-
-        @Override
-        public Item slabItemNMS() {
-            return this.slab.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType slabItemType() {
-            return this.slab.itemType();
-        }
-
-        @Override
-        public BlockType stairs() {
-            return this.stairs.get();
-        }
-
-        @Override
-        public Block stairsNMS() {
-            return this.stairs.getNMS();
         }
 
         @Override
@@ -493,58 +638,8 @@ public interface BlockSet {
         }
 
         @Override
-        public ItemType stairsItem() {
-            return this.stairs.item();
-        }
-
-        @Override
-        public Item stairsItemNMS() {
-            return this.stairs.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType stairsItemType() {
-            return this.stairs.itemType();
-        }
-
-        @Override
-        public BlockType wall() {
-            return this.wall.get();
-        }
-
-        @Override
-        public Block wallNMS() {
-            return this.wall.getNMS();
-        }
-
-        @Override
         public SuCraftBlockType wallType() {
             return this.wall;
-        }
-
-        @Override
-        public ItemType wallItem() {
-            return this.wall.item();
-        }
-
-        @Override
-        public Item wallItemNMS() {
-            return this.wall.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType wallItemType() {
-            return this.wall.itemType();
-        }
-
-        @Override
-        public BlockType fence() {
-            return this.fence.get();
-        }
-
-        @Override
-        public Block fenceNMS() {
-            return this.fence.getNMS();
         }
 
         @Override
@@ -553,58 +648,8 @@ public interface BlockSet {
         }
 
         @Override
-        public ItemType fenceItem() {
-            return this.fence.item();
-        }
-
-        @Override
-        public Item fenceItemNMS() {
-            return this.fence.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType fenceItemType() {
-            return this.fence.itemType();
-        }
-
-        @Override
-        public BlockType fenceGate() {
-            return this.fenceGate.get();
-        }
-
-        @Override
-        public Block fenceGateNMS() {
-            return this.fenceGate.getNMS();
-        }
-
-        @Override
         public SuCraftBlockType fenceGateType() {
             return this.fenceGate;
-        }
-
-        @Override
-        public ItemType fenceGateItem() {
-            return this.fenceGate.item();
-        }
-
-        @Override
-        public Item fenceGateItemNMS() {
-            return this.fenceGate.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType fenceGateItemType() {
-            return this.fenceGate.itemType();
-        }
-
-        @Override
-        public BlockType button() {
-            return this.button.get();
-        }
-
-        @Override
-        public Block buttonNMS() {
-            return this.button.getNMS();
         }
 
         @Override
@@ -613,48 +658,81 @@ public interface BlockSet {
         }
 
         @Override
-        public ItemType buttonItem() {
-            return this.button.item();
-        }
-
-        @Override
-        public Item buttonItemNMS() {
-            return this.button.itemNMS();
-        }
-
-        @Override
-        public SuCraftItemType buttonItemType() {
-            return this.button.itemType();
-        }
-
-        @Override
-        public BlockType pressurePlate() {
-            return this.pressurePlate.get();
-        }
-
-        @Override
-        public Block pressurePlateNMS() {
-            return this.pressurePlate.getNMS();
-        }
-
-        @Override
         public SuCraftBlockType pressurePlateType() {
             return this.pressurePlate;
         }
 
-        @Override
-        public ItemType pressurePlateItem() {
-            return this.pressurePlate.item();
+    }
+
+    final class IndirectImpl extends Impl {
+
+        private @Nullable Supplier<@Nullable SuCraftBlockType> fullBlock;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> slab;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> stairs;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> wall;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> fence;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> fenceGate;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> button;
+        private @Nullable Supplier<@Nullable SuCraftBlockType> pressurePlate;
+
+        IndirectImpl(
+            @Nullable Supplier<@Nullable SuCraftBlockType> fullBlock,
+            @Nullable Supplier<@Nullable SuCraftBlockType> slab,
+            @Nullable Supplier<@Nullable SuCraftBlockType> stairs,
+            @Nullable Supplier<@Nullable SuCraftBlockType> wall,
+            @Nullable Supplier<@Nullable SuCraftBlockType> fence,
+            @Nullable Supplier<@Nullable SuCraftBlockType> fenceGate,
+            @Nullable Supplier<@Nullable SuCraftBlockType> button,
+            @Nullable Supplier<@Nullable SuCraftBlockType> pressurePlate
+        ) {
+            this.fullBlock = fullBlock;
+            this.slab = slab;
+            this.stairs = stairs;
+            this.wall = wall;
+            this.fence = fence;
+            this.fenceGate = fenceGate;
+            this.button = button;
+            this.pressurePlate = pressurePlate;
         }
 
         @Override
-        public Item pressurePlateItemNMS() {
-            return this.pressurePlate.itemNMS();
+        public SuCraftBlockType fullBlockType() {
+            return this.fullBlock != null ? this.fullBlock.get() : null;
         }
 
         @Override
-        public SuCraftItemType pressurePlateItemType() {
-            return this.pressurePlate.itemType();
+        public SuCraftBlockType slabType() {
+            return this.slab != null ? this.slab.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType stairsType() {
+            return this.stairs != null ? this.stairs.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType wallType() {
+            return this.wall != null ? this.wall.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType fenceType() {
+            return this.fence != null ? this.fence.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType fenceGateType() {
+            return this.fenceGate != null ? this.fenceGate.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType buttonType() {
+            return this.button != null ? this.button.get() : null;
+        }
+
+        @Override
+        public SuCraftBlockType pressurePlateType() {
+            return this.pressurePlate != null ? this.pressurePlate.get() : null;
         }
 
     }
@@ -1754,10 +1832,10 @@ public interface BlockSet {
             }
         }
 
-        public Impl build() {
-            final Impl[] built = new Impl[1];
-            built[0] = new Impl(
-                (DataGenerationFlag.isDataGeneration ? this.fullBlock || this.fullBlockOnlyForDataGeneration : this.fullBlock) ? new SuCraftBlockType(this.getFullBlockIdentifier())
+        public DirectImpl build() {
+            final DirectImpl[] built = new DirectImpl[1];
+            built[0] = new DirectImpl(
+                (DataGenerationFlag.isDataGeneration ? this.fullBlock || this.fullBlockOnlyForDataGeneration : this.fullBlock) ? SuCraftBlockType.create(this.getFullBlockIdentifier())
                     .update(type -> {
                         if (this.fullBlockBlockBuilders != null) {
                             this.fullBlockBlockBuilders.forEach(type::blockBuild);
@@ -1795,7 +1873,7 @@ public interface BlockSet {
                     })
                     .update(this.getFullBlockFinalizer())
                     : null,
-                this.slab ? new SuCraftBlockType(this.getShapeIdentifier("_slab"))
+                this.slab ? SuCraftBlockType.create(this.getShapeIdentifier("_slab"))
                     .slabFactory()
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
@@ -1810,7 +1888,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getSlabTags())
                     .update(this.slabFinalizer)
                     : null,
-                this.stairs ? new SuCraftBlockType(this.getShapeIdentifier("_stairs"))
+                this.stairs ? SuCraftBlockType.create(this.getShapeIdentifier("_stairs"))
                     .stairsFactory(this.getStairsBaseState())
                     .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
@@ -1820,7 +1898,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getStairsTags())
                     .update(this.stairsFinalizer)
                     : null,
-                this.wall ? new SuCraftBlockType(this.getShapeIdentifier("_wall"))
+                this.wall ? SuCraftBlockType.create(this.getShapeIdentifier("_wall"))
                     .wallFactory()
                     .properties(this::getWallProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
@@ -1830,7 +1908,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getWallTags())
                     .update(this.wallFinalizer)
                     : null,
-                this.fence ? new SuCraftBlockType(this.getShapeIdentifier("_fence"))
+                this.fence ? SuCraftBlockType.create(this.getShapeIdentifier("_fence"))
                     .fenceFactory()
                     .properties(this::getFenceProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, this.getFenceFallback())
@@ -1840,7 +1918,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getFenceTags())
                     .update(this.fenceFinalizer)
                     : null,
-                this.fenceGate ? new SuCraftBlockType(this.getShapeIdentifier("_fence_gate"))
+                this.fenceGate ? SuCraftBlockType.create(this.getShapeIdentifier("_fence_gate"))
                     .fenceGateFactory(this.getWoodType())
                     .properties(this::getFenceGateProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, this.getFenceGateFallback())
@@ -1850,7 +1928,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getFenceGateTags())
                     .update(this.fenceGateFinalizer)
                     : null,
-                this.button ? new SuCraftBlockType(this.getShapeIdentifier("_button"))
+                this.button ? SuCraftBlockType.create(this.getShapeIdentifier("_button"))
                     .buttonFactory(this.getBlockSetType(), this.getButtonTicksToStayPressed())
                     .properties(this::getButtonProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
@@ -1860,7 +1938,7 @@ public interface BlockSet {
                     .dataGenerateTagUnsafe(this.getButtonTags())
                     .update(this.buttonFinalizer)
                     : null,
-                this.pressurePlate ? new SuCraftBlockType(this.getShapeIdentifier("_pressure_plate"))
+                this.pressurePlate ? SuCraftBlockType.create(this.getShapeIdentifier("_pressure_plate"))
                     .pressurePlateFactory(this.getBlockSetType())
                     .properties(this::getPressurePlateProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, this.getPressurePlateFallback())

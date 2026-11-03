@@ -1,9 +1,9 @@
 package org.sucraft.sushi.gamecontent.block;
 
-import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.sucraft.sushi.main.SushiPlugin;
 import java.util.function.BiConsumer;
 
 public final class PlatformDependent {
@@ -48,6 +48,18 @@ public final class PlatformDependent {
 
         public static void addPillar(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
             throw new UnsupportedOperationException();
+        }
+
+    }
+
+    public static final class SushiPlugin {
+
+        private SushiPlugin() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static boolean hasEnablingStarted() {
+            return org.sucraft.sushi.main.SushiPlugin.hasEnablingStarted();
         }
 
     }

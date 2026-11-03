@@ -30,22 +30,40 @@ public final class SuCraftItemType implements ItemLike {
     private @Nullable ItemType value;
     private @Nullable Item valueNMS;
 
+    public final boolean definedByCode;
     private List<Consumer<ItemTypeRegistryEntryBuilderNMS>> itemBuilding = new ArrayList<>();
     private @Nullable Function<Item.Properties, Item> constructorForDataGeneration = Item::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
     private @Nullable List<TagKey<Item>> dataGeneratingTags;
 
-    public SuCraftItemType(String path) {
-        this(Identifier.fromNamespaceAndPath("sucraft", path));
-    }
-
-    public SuCraftItemType(NamespacedKey key) {
-        this(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
-    }
-
-    public SuCraftItemType(Identifier identifier) {
+    private SuCraftItemType(Identifier identifier, boolean definedByCode) {
         this.key = new NamespacedKey(identifier.getNamespace(), identifier.getPath());
         this.identifier = identifier;
+        this.definedByCode = definedByCode;
+    }
+
+    public static SuCraftItemType create(String path) {
+        return create(Identifier.fromNamespaceAndPath("sucraft", path));
+    }
+
+    public static SuCraftItemType create(NamespacedKey key) {
+        return create(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
+    }
+
+    public static SuCraftItemType create(Identifier identifier) {
+        return new SuCraftItemType(identifier, true);
+    }
+
+    public static SuCraftItemType createNotDefinedByCode(String path) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath("sucraft", path));
+    }
+
+    public static SuCraftItemType createNotDefinedByCode(NamespacedKey key) {
+        return createNotDefinedByCode(Identifier.fromNamespaceAndPath(key.getNamespace(), key.getKey()));
+    }
+
+    public static SuCraftItemType createNotDefinedByCode(Identifier identifier) {
+        return new SuCraftItemType(identifier, false);
     }
 
     @Override
@@ -90,11 +108,17 @@ public final class SuCraftItemType implements ItemLike {
     }
 
     public void applyToItemBuilder(ItemTypeRegistryEntryBuilderNMS builder) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.itemBuilding.forEach(it -> it.accept(builder));
         this.itemBuilding = null;
     }
 
     public void applyDataGeneration(CollectedFactories factories) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGenerating.forEach(it -> it.accept(factories));
         this.dataGenerating = null;
         if (this.dataGeneratingTags != null) {
@@ -105,7 +129,18 @@ public final class SuCraftItemType implements ItemLike {
         }
     }
 
+    public SuCraftItemType update(@Nullable Consumer<SuCraftItemType> updater) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        if (updater != null) updater.accept(this);
+        return this;
+    }
+
     public SuCraftItemType itemBuild(Consumer<ItemTypeRegistryEntryBuilderNMS> builderConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.itemBuilding.add(builderConsumer);
         return this;
     }
@@ -115,6 +150,9 @@ public final class SuCraftItemType implements ItemLike {
     }
 
     public SuCraftItemType constructorForDataGeneration(Function<Item.Properties, Item> constructor) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.constructorForDataGeneration = constructor;
         return this;
     }
@@ -128,11 +166,17 @@ public final class SuCraftItemType implements ItemLike {
     }
 
     public SuCraftItemType dataGenerate(Consumer<CollectedFactories> factoriesConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         this.dataGenerating.add(factoriesConsumer);
         return this;
     }
 
     public SuCraftItemType dataGenerateTag(TagKey<Item> tag) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
         if (this.dataGeneratingTags == null) {
             this.dataGeneratingTags = new ArrayList<>(1);
         }

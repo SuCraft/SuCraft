@@ -2,7 +2,8 @@ package org.sucraft.sushi.gamecontent.item;
 
 import net.minecraft.world.item.Item;
 import org.bukkit.inventory.ItemType;
-import org.sucraft.sushi.gamecontent.block.SuCraftBlockType;import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlockType;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Objects;
@@ -15,7 +16,7 @@ public final class SuCraftItems {
     }
 
     private static SuCraftItemType itemType(String path) {
-        return new SuCraftItemType(path);
+        return SuCraftItemType.create(path);
     }
 
     private static ItemType[] values;

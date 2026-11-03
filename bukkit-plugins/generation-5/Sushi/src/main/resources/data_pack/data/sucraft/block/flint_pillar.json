@@ -1,0 +1,11 @@
+{
+  "type": "spout:directional",
+  "properties": {
+    "destroy_time": 3.5,
+    "explosion_resistance": 6.0,
+    "instrument": "minecraft:basedrum",
+    "map_color": "minecraft:color_gray",
+    "requires_correct_tool_for_drops": true,
+    "sound_type": "minecraft:metal"
+  }
+}

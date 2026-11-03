@@ -15,7 +15,9 @@ public final class CommonBlockAdder {
 
     public static void add(CollectedFactories factories) {
         for (var type : SuCraftBlocks.types()) {
-            type.applyDataGeneration(factories);
+            if (type.definedByCode) {
+                type.applyDataGeneration(factories);
+            }
         }
     }
 

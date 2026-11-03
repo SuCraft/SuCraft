@@ -60,27 +60,31 @@ public final class AutomaticRecipeAdder {
 
     public static final int STAIRS_CRAFTING_OUTPUT_COUNT = 6;
 
+    /**
+     * Blocks that have a block item with a path similar to them, but without some suffix (like "s" or "_block"),
+     * which may accidentally get picked up as the base block for some shaped block.
+     */
     public static final Set<Item> STORAGE_BLOCKS = Stream.of(
         Items.BAMBOO_BLOCK,
-        Items.BONE_BLOCK,
-        Items.BRICKS,
-        Items.CLAY,
-        Items.COAL_BLOCK,
-        Items.COPPER_BLOCK.weathering().unaffected(),
-        Items.DIAMOND_BLOCK,
-        Items.DRIED_KELP_BLOCK,
-        Items.EMERALD_BLOCK,
-        Items.GOLD_BLOCK,
-        Items.HAY_BLOCK,
-        Items.HONEY_BLOCK,
-        Items.IRON_BLOCK,
-        Items.LAPIS_BLOCK,
-        Items.NETHERITE_BLOCK,
-        Items.NETHER_BRICKS,
+        // Items.BONE_BLOCK, // Bone is not a block
+        // Items.BRICKS, // Brick is not a block
+        // Items.CLAY, // Clay ball is not a block
+        // Items.COAL_BLOCK, // Coal is not a block
+        // Items.COPPER_BLOCK.weathering().unaffected(), // Copper is not a block
+        // Items.DIAMOND_BLOCK, // Diamond is not a block
+        // Items.DRIED_KELP_BLOCK, // Dried kelp is not a block
+        // Items.EMERALD_BLOCK, // Emerald is not a block
+        // Items.GOLD_BLOCK, // Gold ingot is not a block
+        // Items.HAY_BLOCK, // Wheat is not a block
+        // Items.HONEY_BLOCK, // Honey bottle or honeycomb is not a block
+        // Items.IRON_BLOCK, // Iron ingot is not a block
+        // Items.LAPIS_BLOCK, // Lapis lazuli is not a blcok
+        // Items.NETHERITE_BLOCK, // Netherite ingot is not a block
+        // Items.NETHER_BRICKS, // Nether brick is not a block
         Items.NETHER_WART_BLOCK,
         Items.REDSTONE_BLOCK,
-        Items.RESIN_BLOCK,
-        Items.SLIME_BLOCK,
+        // Items.RESIN_BLOCK, // Resin is not a block
+        // Items.SLIME_BLOCK, // Slimeball is not a block
         Items.SNOW_BLOCK
     ).collect(Collectors.toSet());
 
@@ -374,6 +378,12 @@ public final class AutomaticRecipeAdder {
 
             private BiConsumer<Item, Item> add2x2RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
                 return this.addShapedCrafting(outputCount, reason, 2, 2, input -> List.of(input, input, input, input), category);
+            }
+
+            private BiConsumer<Item, Item> add3x1RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {
+                return (item1, item2) -> {
+                    this.addShapedCrafting(outputCount, reason, 3, 1, input -> List.of(input, input, input), category).accept(item1, item2);
+                };
             }
 
             private BiConsumer<Item, Item> add3x2RectangleCrafting(@Nullable String reason, int outputCount, CraftingBookCategory category) {

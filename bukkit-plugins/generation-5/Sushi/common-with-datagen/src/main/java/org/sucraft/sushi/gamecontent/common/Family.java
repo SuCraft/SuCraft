@@ -2,19 +2,19 @@ package org.sucraft.sushi.gamecontent.common;
 
 import it.unimi.dsi.fastutil.booleans.Boolean2ObjectFunction;
 import it.unimi.dsi.fastutil.booleans.BooleanList;import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
+import java.util.Iterator;import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Function;import java.util.stream.Stream;
 
 /**
  * A family of resources, each defined by a particular base value.
  */
-public class Family<K, V> {
+public class Family<K, V> implements Iterable<V> {
 
     protected final Map<K, V> map;
 
@@ -31,6 +31,15 @@ public class Family<K, V> {
 
     public Collection<V> all() {
         return map.values();
+    }
+
+    @Override
+    public @NonNull Iterator<V> iterator() {
+        return this.all().iterator();
+    }
+
+    public Stream<V> stream() {
+        return this.all().stream();
     }
 
     public @Nullable V getNullable(K key) {

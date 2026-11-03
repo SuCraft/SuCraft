@@ -13,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -88,7 +89,7 @@ public final class SuCraftBlocks {
                 .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
                 .build();
         FLINT_PILLAR = new BlockSet.IndirectImpl(
-            () -> DataGenerationFlag.isDataGeneration || !PlatformDependent.SushiPlugin.hasEnablingStarted() ? definedByCode.fullBlockType() : blockTypeNotDefinedByCode("flint_pillar"),
+            () -> ifInitializingElse(definedByCode.fullBlockType(), blockTypeNotDefinedByCode("flint_pillar")),
             () -> definedByCode.slabType(),
             () -> definedByCode.stairsType(),
             null,
@@ -508,6 +509,81 @@ public final class SuCraftBlocks {
             .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
             .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
+
+    // Stone / Concrete
+
+    private static Block wallFallbackForSmoothDyeColor(DyeColor dyeColor) {
+        return switch (dyeColor) {
+            case BLACK -> Blocks.BLACKSTONE_WALL;
+            case BLUE -> Blocks.PRISMARINE_WALL;
+            case BROWN -> Blocks.MUD_BRICK_WALL;
+            case CYAN -> Blocks.PRISMARINE_WALL;
+            case GRAY -> Blocks.POLISHED_TUFF_WALL;
+            case GREEN -> Blocks.MOSSY_COBBLESTONE_WALL;
+            case LIGHT_BLUE -> Blocks.PRISMARINE_WALL;
+            case LIGHT_GRAY -> Blocks.ANDESITE_WALL;
+            case LIME -> Blocks.MOSSY_COBBLESTONE_WALL;
+            case MAGENTA -> Blocks.CINNABAR_WALL;
+            case ORANGE -> Blocks.RED_SANDSTONE_WALL;
+            case PINK -> Blocks.CINNABAR_WALL;
+            case PURPLE -> Blocks.CINNABAR_WALL;
+            case RED -> Blocks.POLISHED_CINNABAR_WALL;
+            case WHITE -> Blocks.DIORITE_WALL;
+            case YELLOW -> Blocks.POLISHED_SULFUR_WALL;
+        };
+    }
+
+    private static Block buttonFallbackForSmoothDyeColor(DyeColor dyeColor) {
+        return switch (dyeColor) {
+            case BLACK -> Blocks.POLISHED_BLACKSTONE_BUTTON;
+            case BLUE -> Blocks.WARPED_BUTTON;
+            case BROWN -> Blocks.SPRUCE_BUTTON;
+            case CYAN -> Blocks.WARPED_BUTTON;
+            case GRAY -> Blocks.STONE_BUTTON;
+            case GREEN -> Blocks.WARPED_BUTTON;
+            case LIGHT_BLUE -> Blocks.WARPED_BUTTON;
+            case LIGHT_GRAY -> Blocks.STONE_BUTTON;
+            case LIME -> Blocks.WARPED_BUTTON;
+            case MAGENTA -> Blocks.CHERRY_BUTTON;
+            case ORANGE -> Blocks.ACACIA_BUTTON;
+            case PINK -> Blocks.CHERRY_BUTTON;
+            case PURPLE -> Blocks.CRIMSON_BUTTON;
+            case RED -> Blocks.MANGROVE_BUTTON;
+            case WHITE -> Blocks.PALE_OAK_BUTTON;
+            case YELLOW -> Blocks.BAMBOO_BUTTON;
+        };
+    }
+
+    private static Block pressurePlateFallbackForSmoothDyeColor(DyeColor dyeColor) {
+        return switch (dyeColor) {
+            case BLACK -> Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE;
+            case BLUE -> Blocks.WARPED_PRESSURE_PLATE;
+            case BROWN -> Blocks.SPRUCE_PRESSURE_PLATE;
+            case CYAN -> Blocks.WARPED_PRESSURE_PLATE;
+            case GRAY -> Blocks.STONE_PRESSURE_PLATE;
+            case GREEN -> Blocks.WARPED_PRESSURE_PLATE;
+            case LIGHT_BLUE -> Blocks.WARPED_PRESSURE_PLATE;
+            case LIGHT_GRAY -> Blocks.STONE_PRESSURE_PLATE;
+            case LIME -> Blocks.WARPED_PRESSURE_PLATE;
+            case MAGENTA -> Blocks.CHERRY_PRESSURE_PLATE;
+            case ORANGE -> Blocks.ACACIA_PRESSURE_PLATE;
+            case PINK -> Blocks.CHERRY_PRESSURE_PLATE;
+            case PURPLE -> Blocks.CRIMSON_PRESSURE_PLATE;
+            case RED -> Blocks.MANGROVE_PRESSURE_PLATE;
+            case WHITE -> Blocks.PALE_OAK_PRESSURE_PLATE;
+            case YELLOW -> Blocks.BAMBOO_PRESSURE_PLATE;
+        };
+    }
+
+    public static final Family.DyeColor<BlockSet.WithWallAndButtonAndPressurePlate> CONCRETE =
+        new Family.DyeColor<>(dyeColor ->
+            BlockSet.builder(dyeColor.getSerializedName() + "_concrete").mineableWithPickaxe()
+                .fullBlockOnlyForDataGeneration().vanilla(Blocks.CONCRETE.pick(dyeColor))
+                .stoneWall().wallFallback(wallFallbackForSmoothDyeColor(dyeColor)).wallTag(SuCraftBlockItemTags.CONCRETE_WALLS)
+                .stoneButton().blockSetType(BlockSetType.STONE).buttonFallback(buttonFallbackForSmoothDyeColor(dyeColor)).buttonTag(SuCraftBlockItemTags.CONCRETE_BUTTONS)
+                .stonePressurePlate().pressurePlateFallback(pressurePlateFallbackForSmoothDyeColor(dyeColor)).pressurePlateTag(SuCraftBlockItemTags.CONCRETE_PRESSURE_PLATES)
+                .build()
+        );
 
     // Stone / Deepslate
 
@@ -1106,6 +1182,105 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.BAMBOO_PRESSURE_PLATE)
             .build();
 
+    // Stone / Terracotta
+
+    public static final Family.DyeColor<BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate> DYED_TERRACOTTA =
+        new Family.DyeColor<>(dyeColor ->
+            BlockSet.builder(dyeColor.getSerializedName() + "_terracotta").mineableWithPickaxe().nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON).nonVolatileShapeTag(BlockTags.SUPPORTS_DRY_VEGETATION).nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_DRY_VEGETATION_BLOCK_SOUNDS)
+                .fullBlockOnlyForDataGeneration().vanilla(Blocks.DYED_TERRACOTTA.pick(dyeColor))
+                .slab().slabFallback(switch (dyeColor) {
+                    case BLACK -> Blocks.CONCRETE_SLAB.black();
+                    case BLUE -> Blocks.CONCRETE_SLAB.blue();
+                    case BROWN -> Blocks.CONCRETE_SLAB.brown();
+                    case CYAN -> Blocks.POLISHED_TUFF_SLAB;
+                    case GRAY -> Blocks.CONCRETE_SLAB.brown();
+                    case GREEN -> Blocks.CONCRETE_SLAB.green();
+                    case LIGHT_BLUE -> Blocks.CONCRETE_SLAB.lightBlue();
+                    case LIGHT_GRAY -> Blocks.CONCRETE_SLAB.brown();
+                    case LIME -> Blocks.CONCRETE_SLAB.lime();
+                    case MAGENTA -> Blocks.CONCRETE_SLAB.pink();
+                    case ORANGE -> Blocks.SMOOTH_RED_SANDSTONE_SLAB;
+                    case PINK -> Blocks.SMOOTH_RED_SANDSTONE_SLAB;
+                    case PURPLE -> Blocks.CONCRETE_SLAB.purple();
+                    case RED -> Blocks.POLISHED_CINNABAR_SLAB;
+                    case WHITE -> Blocks.SMOOTH_QUARTZ_SLAB;
+                    case YELLOW -> Blocks.CONCRETE_SLAB.yellow();
+                }).slabTag(SuCraftBlockItemTags.TERRACOTTA_SLABS)
+                .stairs().stairsFallback(switch (dyeColor) {
+                    case BLACK -> Blocks.CONCRETE_STAIRS.black();
+                    case BLUE -> Blocks.CONCRETE_STAIRS.blue();
+                    case BROWN -> Blocks.CONCRETE_STAIRS.brown();
+                    case CYAN -> Blocks.POLISHED_TUFF_STAIRS;
+                    case GRAY -> Blocks.CONCRETE_STAIRS.brown();
+                    case GREEN -> Blocks.CONCRETE_STAIRS.green();
+                    case LIGHT_BLUE -> Blocks.CONCRETE_STAIRS.lightBlue();
+                    case LIGHT_GRAY -> Blocks.CONCRETE_STAIRS.brown();
+                    case LIME -> Blocks.CONCRETE_STAIRS.lime();
+                    case MAGENTA -> Blocks.CONCRETE_STAIRS.pink();
+                    case ORANGE -> Blocks.SMOOTH_RED_SANDSTONE_STAIRS;
+                    case PINK -> Blocks.SMOOTH_RED_SANDSTONE_STAIRS;
+                    case PURPLE -> Blocks.CONCRETE_STAIRS.purple();
+                    case RED -> Blocks.POLISHED_CINNABAR_STAIRS;
+                    case WHITE -> Blocks.SMOOTH_QUARTZ_STAIRS;
+                    case YELLOW -> Blocks.CONCRETE_STAIRS.yellow();
+                }).stairsTag(SuCraftBlockItemTags.TERRACOTTA_STAIRS)
+                .stoneWall().wallFallback(switch (dyeColor) {
+                    case BLACK -> Blocks.NETHER_BRICK_WALL;
+                    case BLUE -> Blocks.POLISHED_DEEPSLATE_WALL;
+                    case BROWN -> Blocks.MUD_BRICK_WALL;
+                    case CYAN -> Blocks.POLISHED_TUFF_WALL;
+                    case GRAY -> Blocks.MUD_BRICK_WALL;
+                    case GREEN -> Blocks.MOSSY_COBBLESTONE_WALL;
+                    case LIGHT_BLUE -> Blocks.POLISHED_TUFF_WALL;
+                    case LIGHT_GRAY -> Blocks.MUD_BRICK_WALL;
+                    case LIME -> Blocks.MOSSY_COBBLESTONE_WALL;
+                    case MAGENTA -> Blocks.CINNABAR_WALL;
+                    case ORANGE -> Blocks.RED_SANDSTONE_WALL;
+                    case PINK -> Blocks.POLISHED_CINNABAR_WALL;
+                    case PURPLE -> Blocks.CINNABAR_WALL;
+                    case RED -> Blocks.POLISHED_CINNABAR_WALL;
+                    case WHITE -> Blocks.DIORITE_WALL;
+                    case YELLOW -> Blocks.RED_SANDSTONE_WALL;
+                }).wallTag(SuCraftBlockItemTags.TERRACOTTA_WALLS)
+                .stoneButton().blockSetType(BlockSetType.STONE).buttonFallback(switch (dyeColor) {
+                    case BLACK -> Blocks.DARK_OAK_BUTTON;
+                    case BLUE -> Blocks.DARK_OAK_BUTTON;
+                    case BROWN -> Blocks.SPRUCE_BUTTON;
+                    case CYAN -> Blocks.STONE_BUTTON;
+                    case GRAY -> Blocks.DARK_OAK_BUTTON;
+                    case GREEN -> Blocks.WARPED_BUTTON;
+                    case LIGHT_BLUE -> Blocks.POPLAR_BUTTON;
+                    case LIGHT_GRAY -> Blocks.JUNGLE_BUTTON;
+                    case LIME -> Blocks.BIRCH_BUTTON;
+                    case MAGENTA -> Blocks.MANGROVE_BUTTON;
+                    case ORANGE -> Blocks.ACACIA_BUTTON;
+                    case PINK -> Blocks.JUNGLE_BUTTON;
+                    case PURPLE -> Blocks.CRIMSON_BUTTON;
+                    case RED -> Blocks.MANGROVE_BUTTON;
+                    case WHITE -> Blocks.CHERRY_BUTTON;
+                    case YELLOW -> Blocks.OAK_BUTTON;
+                }).buttonTag(SuCraftBlockItemTags.TERRACOTTA_BUTTONS)
+                .stonePressurePlate().pressurePlateFallback(switch (dyeColor) {
+                    case BLACK -> Blocks.DARK_OAK_PRESSURE_PLATE;
+                    case BLUE -> Blocks.DARK_OAK_PRESSURE_PLATE;
+                    case BROWN -> Blocks.SPRUCE_PRESSURE_PLATE;
+                    case CYAN -> Blocks.STONE_PRESSURE_PLATE;
+                    case GRAY -> Blocks.DARK_OAK_PRESSURE_PLATE;
+                    case GREEN -> Blocks.WARPED_PRESSURE_PLATE;
+                    case LIGHT_BLUE -> Blocks.POPLAR_PRESSURE_PLATE;
+                    case LIGHT_GRAY -> Blocks.JUNGLE_PRESSURE_PLATE;
+                    case LIME -> Blocks.BIRCH_PRESSURE_PLATE;
+                    case MAGENTA -> Blocks.MANGROVE_PRESSURE_PLATE;
+                    case ORANGE -> Blocks.ACACIA_PRESSURE_PLATE;
+                    case PINK -> Blocks.JUNGLE_PRESSURE_PLATE;
+                    case PURPLE -> Blocks.CRIMSON_PRESSURE_PLATE;
+                    case RED -> Blocks.MANGROVE_PRESSURE_PLATE;
+                    case WHITE -> Blocks.CHERRY_PRESSURE_PLATE;
+                    case YELLOW -> Blocks.OAK_PRESSURE_PLATE;
+                }).pressurePlateTag(SuCraftBlockItemTags.TERRACOTTA_PRESSURE_PLATES)
+                .build()
+        );
+
     // Stone / Tuff
 
     public static final BlockSet.WithButtonAndPressurePlate TUFF =
@@ -1366,10 +1541,10 @@ public final class SuCraftBlocks {
                         case BROWN -> Blocks.MUD_BRICK_WALL;
                         case CYAN -> Blocks.PRISMARINE_WALL;
                         case GRAY -> Blocks.POLISHED_TUFF_WALL;
-                        case GREEN -> Blocks.PRISMARINE_WALL;
+                        case GREEN -> Blocks.MOSSY_COBBLESTONE_WALL;
                         case LIGHT_BLUE -> Blocks.PRISMARINE_WALL;
                         case LIGHT_GRAY -> Blocks.ANDESITE_WALL;
-                        case LIME -> Blocks.PRISMARINE_WALL;
+                        case LIME -> Blocks.MOSSY_COBBLESTONE_WALL;
                         case MAGENTA -> Blocks.CINNABAR_WALL;
                         case ORANGE -> Blocks.RED_SANDSTONE_WALL;
                         case PINK -> Blocks.CINNABAR_WALL;
@@ -1403,6 +1578,22 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType PALE_OAK_LADDER = woodenLadder("pale_oak_ladder", Blocks.PALE_OAK_PLANKS);
     public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
     public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
+
+    // Wool
+
+    public static final Family.DyeColor<BlockSet.WithWallAndButtonAndPressurePlate> WOOL =
+        new Family.DyeColor<>(dyeColor ->
+            BlockSet.builder(dyeColor.getSerializedName() + "_wool").tag(BlockItemTags.DAMPENS_VIBRATIONS).nonVolatileShapeTag(BlockTags.SHEARS_MAJOR_BREAKING_SPEED)
+                .fullBlockOnlyForDataGeneration().vanilla(Blocks.WOOL.pick(dyeColor))
+                .wall().wallFallback(wallFallbackForSmoothDyeColor(dyeColor)).wallTag(SuCraftBlockItemTags.WOOL_WALLS)
+                .button().blockSetType(BlockSetType.STONE).buttonFallback(buttonFallbackForSmoothDyeColor(dyeColor)).buttonTag(SuCraftBlockItemTags.WOOL_BUTTONS)
+                .pressurePlate().pressurePlateFallback(pressurePlateFallbackForSmoothDyeColor(dyeColor)).pressurePlateTag(SuCraftBlockItemTags.WOOL_PRESSURE_PLATES)
+                .build()
+        );
+
+    private static SuCraftBlockType ifInitializingElse(SuCraftBlockType ifInitializing, SuCraftBlockType otherwise) {
+        return DataGenerationFlag.isDataGeneration || !PlatformDependent.SushiPlugin.hasEnablingStarted() ? ifInitializing : otherwise;
+    }
 
     private static SuCraftBlockType blockType(String path) {
         return SuCraftBlockType.create(path);
@@ -1446,7 +1637,7 @@ public final class SuCraftBlocks {
     }
 
     private static Stream<SuCraftBlockType> typesFromFamily(Family<?, ?> family) {
-        return family.all().stream().flatMap(value -> {
+        return family.stream().flatMap(value -> {
             if (value instanceof SuCraftBlockType type) {
                 return Stream.of(type);
             } else if (value instanceof BlockSet blockSet) {

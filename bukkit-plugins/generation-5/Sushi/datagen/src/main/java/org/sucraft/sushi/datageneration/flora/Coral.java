@@ -2,6 +2,8 @@ package org.sucraft.sushi.datageneration.flora;
 
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import java.util.List;
@@ -26,18 +28,16 @@ public final class Coral {
             Items.DEAD_FIRE_CORAL_BLOCK, List.of(Items.DEAD_FIRE_CORAL, Items.DEAD_FIRE_CORAL_FAN),
             Items.DEAD_HORN_CORAL_BLOCK, List.of(Items.DEAD_HORN_CORAL, Items.DEAD_HORN_CORAL_FAN),
             Items.DEAD_TUBE_CORAL_BLOCK, List.of(Items.DEAD_TUBE_CORAL, Items.DEAD_TUBE_CORAL_FAN)
-        ).forEach((block, plants) -> {
-            plants.forEach(plant -> factories.recipes().add(Recipes.start()
-                .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
-                    () -> function.provider
-                        .shaped(RecipeCategory.DECORATIONS, block)
-                        .pattern("PP")
-                        .pattern("PP")
-                        .define('P', plant),
-                    "_from_" + plant.builtInRegistryHolder().key().identifier().getPath())
-                )
-            ));
-        });
+        ).forEach((block, plants) -> factories.recipes().add(Recipes.start()
+            .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
+                () -> function.provider
+                    .shaped(RecipeCategory.DECORATIONS, block)
+                    .pattern("PP")
+                    .pattern("PP")
+                    .define('P', Ingredient.of(plants.toArray(ItemLike[]::new))),
+                "_from_" + plants.getFirst().builtInRegistryHolder().key().identifier().getPath())
+            )
+        ));
     }
 
 }

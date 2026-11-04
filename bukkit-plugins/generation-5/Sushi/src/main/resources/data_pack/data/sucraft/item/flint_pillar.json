@@ -1,4 +1,11 @@
 {
   "type": "minecraft:block",
-  "block": "sucraft:flint_pillar"
+  "block": "sucraft:flint_pillar",
+  "mappings": [
+    {
+      "operation": {
+        "to": "minecraft:polished_basalt"
+      }
+    }
+  ]
 }

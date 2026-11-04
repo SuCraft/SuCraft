@@ -5,7 +5,38 @@
     "explosion_resistance": 6.0,
     "instrument": "minecraft:basedrum",
     "map_color": "minecraft:color_gray",
-    "requires_correct_tool_for_drops": true,
     "sound_type": "minecraft:metal"
-  }
+  },
+  "mappings": [
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=up]",
+      "fallback": "minecraft:polished_basalt[axis=y]"
+    },
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=down]",
+      "fallback": "minecraft:polished_basalt[axis=y]"
+    },
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=west]",
+      "fallback": "minecraft:polished_basalt[axis=x]"
+    },
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=east]",
+      "fallback": "minecraft:polished_basalt[axis=x]"
+    },
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=north]",
+      "fallback": "minecraft:polished_basalt[axis=z]"
+    },
+    {
+      "type": "full_block_state",
+      "from": "sucraft:flint_pillar[facing=south]",
+      "fallback": "minecraft:polished_basalt[axis=z]"
+    }
+  ]
 }

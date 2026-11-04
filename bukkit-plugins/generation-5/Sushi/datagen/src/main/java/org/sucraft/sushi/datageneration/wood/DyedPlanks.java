@@ -41,9 +41,9 @@ public final class DyedPlanks {
                 factories.recipes().add(Recipes.start()
                     .addStonecutting(to.fenceGateItemNMS(), from.fenceGateItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.buttonNMS(), from.buttonNMS()));
+                    .addStonecutting(to.buttonNMS(), from.buttonItemNMS()));
                 factories.recipes().add(Recipes.start()
-                    .addStonecutting(to.pressurePlateNMS(), from.pressurePlateNMS()));
+                    .addStonecutting(to.pressurePlateNMS(), from.pressurePlateItemNMS()));
             });
             Stream.of(
                 Pair.of(ItemTags.PLANKS, vibrant.fullBlockItemNMS()),
@@ -52,8 +52,8 @@ public final class DyedPlanks {
                 Pair.of(SuCraftItemTags.WOODEN_WALLS, vibrant.wallItemNMS()),
                 Pair.of(ItemTags.WOODEN_FENCES, vibrant.fenceItemNMS()),
                 Pair.of(ItemTags.FENCE_GATES, vibrant.fenceGateItemNMS()),
-                Pair.of(ItemTags.WOODEN_BUTTONS, vibrant.buttonNMS()),
-                Pair.of(ItemTags.WOODEN_PRESSURE_PLATES, vibrant.pressurePlateNMS())
+                Pair.of(ItemTags.WOODEN_BUTTONS, vibrant.buttonItemNMS()),
+                Pair.of(ItemTags.WOODEN_PRESSURE_PLATES, vibrant.pressurePlateItemNMS())
             ).forEach(inputOutput ->
                 factories.recipes().add(Recipes.start()
                     .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
@@ -61,7 +61,7 @@ public final class DyedPlanks {
                                 .shapeless(RecipeCategory.BUILDING_BLOCKS, inputOutput.right(), 8)
                                 .requires(Ingredient.of(function.registries.lookupOrThrow(Registries.ITEM).getOrThrow(inputOutput.left())), 8)
                                 .requires(Items.DYE.pick(dyeColor)),
-                            "_by_dying"
+                            "_by_dyeing"
                         )
                     )
                 )

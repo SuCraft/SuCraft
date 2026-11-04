@@ -18,16 +18,21 @@ import org.sucraft.sushi.datageneration.glass.Glass;
 import org.sucraft.sushi.datageneration.mineral.Copper;
 import org.sucraft.sushi.datageneration.mineral.Flint;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
+import org.sucraft.sushi.datageneration.organic.hide.Bundles;
+import org.sucraft.sushi.datageneration.organic.shulker.ShulkerBoxes;
+import org.sucraft.sushi.datageneration.organic.wax.Candles;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
 import org.sucraft.sushi.datageneration.soil.SoulSandstone;
 import org.sucraft.sushi.datageneration.stone.StoneWalls;
 import org.sucraft.sushi.datageneration.stone.claybrick.Bricks;
+import org.sucraft.sushi.datageneration.stone.concrete.Concrete;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
 import org.sucraft.sushi.datageneration.stone.regular.DirtyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.InfestedStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.MossyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
+import org.sucraft.sushi.datageneration.stone.terracotta.Terracotta;
 import org.sucraft.sushi.datageneration.wood.Bookshelves;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
@@ -74,6 +79,11 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Mineral / Iron
         Minecarts.add(factories);
 
+        // Organic
+        Bundles.add(factories);
+        Candles.add(factories);
+        ShulkerBoxes.add(factories);
+
         // Redstone
         Dispenser.add(factories);
         Repeater.add(factories);
@@ -84,8 +94,11 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Stone
         StoneWalls.add(factories);
 
-        // Stone / Clay brick
+        // Stone / Clay bricks
         Bricks.add(factories);
+
+        // Stone / Concrete
+        Concrete.add(factories);
 
         // Stone / Deepslate
         Deepslate.add(factories);
@@ -95,6 +108,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         InfestedStoneBricks.add(factories);
         MossyStoneBricks.add(factories);
         SnowyStoneBricks.add(factories);
+
+        // Stone / Terracotta
+        Terracotta.add(factories);
 
         // Wood
         Barrels.add(factories);

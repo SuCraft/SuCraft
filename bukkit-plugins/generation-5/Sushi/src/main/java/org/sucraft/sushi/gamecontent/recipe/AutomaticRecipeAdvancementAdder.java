@@ -144,7 +144,7 @@ public final class AutomaticRecipeAdvancementAdder {
                 }
             });
             if (items[0] != null) {
-                if (items[0].size() == 1 && items[0].iterator().next().is(ItemTags.DYES)) { // Any dying recipe is unlocked with any dye
+                if (items[0].size() == 1 && items[0].iterator().next().is(ItemTags.DYES)) { // Any dyeing recipe is unlocked with any dye
                     items[0] = BuiltInRegistries.ITEM.getOrThrow(ItemTags.DYES);
                 }
                 String key = "has_ingredient_" + (++actuallyAddedIngredientI[0]);

@@ -10,6 +10,7 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -55,6 +56,7 @@ public final class SuCraftBlocks {
         properties.sound(SoundType.METAL);
         properties.mapColor(MapColor.COLOR_GRAY);
         properties.strength(3.5f, 6.0f);
+        PlatformDependent.BlockBehaviourProperties.setRequiresCorrectToolForDrops(properties, false);
     }
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs FLINT_BLOCK =
@@ -306,13 +308,13 @@ public final class SuCraftBlocks {
 
     public static final SuCraftBlockType CHISELED_SOUL_SANDSTONE = blockType("chiseled_soul_sandstone")
         .fullBlock(Blocks.SOUL_SOIL)
-        .dataGenerateModel((factory, block) -> {
+        .dataGenerateModel((factory, block) ->
             factory.addBlockCubeColumn(
                 block,
                 block.builtInRegistryHolder().key().identifier().withPrefix("block/"),
                 SOUL_SANDSTONE.fullBlockType().identifier.withSuffix("_top").withPrefix("block/")
-            );
-        }).mineableWithPickaxe()
+            )
+        ).mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY)
         .dataGenerateTag(BlockItemTags.SOUL_FIRE_BASE_BLOCKS)
         .dataGenerateTag(BlockTags.SOUL_SPEED_BLOCKS);
@@ -1088,14 +1090,14 @@ public final class SuCraftBlocks {
             .fullBlock(vanilla)
             .blockBuild(builder -> builder.factoryNMS(properties -> new InfestedBlock(hostBlock.get(), properties)));
         type.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.otherWhenSilkTouch(type.getNMS(), hostBlockForDataGeneration.get())));
-        type.dataGenerateModel((factory, block) -> {
+        type.dataGenerateModel((factory, block) ->
             factory.addBlock(generators -> {
                 Block host = hostBlockForDataGeneration.get();
                 MultiVariant model = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(host));
                 generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model));
                 generators.itemModelOutput.copy(host.asItem(), block.asItem());
-            });
-        });
+            })
+        );
         return type;
     }
 
@@ -1183,6 +1185,16 @@ public final class SuCraftBlocks {
             .build();
 
     // Stone / Terracotta
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate TERRACOTTA =
+        BlockSet.builder("terracotta").mineableWithPickaxe().nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON).nonVolatileShapeTag(BlockTags.SUPPORTS_DRY_VEGETATION).nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_DRY_VEGETATION_BLOCK_SOUNDS)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.TERRACOTTA)
+            .slab().slabFallback(Blocks.SMOOTH_RED_SANDSTONE_SLAB).slabTag(SuCraftBlockItemTags.TERRACOTTA_SLABS)
+            .stairs().stairsFallback(Blocks.SMOOTH_RED_SANDSTONE_STAIRS).stairsTag(SuCraftBlockItemTags.TERRACOTTA_STAIRS)
+            .stoneWall().wallFallback(Blocks.RED_SANDSTONE_WALL).wallTag(SuCraftBlockItemTags.TERRACOTTA_WALLS)
+            .stoneButton().buttonFallback(Blocks.JUNGLE_BUTTON).buttonTag(SuCraftBlockItemTags.TERRACOTTA_BUTTONS).blockSetType(BlockSetType.STONE)
+            .stonePressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE).pressurePlateTag(SuCraftBlockItemTags.TERRACOTTA_PRESSURE_PLATES)
+            .build();
 
     public static final Family.DyeColor<BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate> DYED_TERRACOTTA =
         new Family.DyeColor<>(dyeColor ->
@@ -1290,7 +1302,7 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
 
-    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_POLISHED_TUFF =
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate STONE_POLISHED_TUFF =
         BlockSet.builder("polished_tuff").mineableWithPickaxe()
             .fullBlock().vanilla(Blocks.POLISHED_TUFF).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY)
             .slab()
@@ -1301,7 +1313,7 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
 
-    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate ROUGH_TUFF_BRICKS =
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate TUFF_STONE_BRICKS =
         BlockSet.builder("tuff_bricks").mineableWithPickaxe()
             .fullBlock().vanilla(Blocks.TUFF_BRICKS).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY)
             .slab()
@@ -1312,7 +1324,7 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
             .build();
 
-    public static final SuCraftBlockType ROUGH_CHISELED_TUFF_BRICKS = blockType("chiseled_tuff_bricks")
+    public static final SuCraftBlockType CHISELED_TUFF_STONE_BRICKS = blockType("chiseled_tuff_bricks")
         .fullBlock(Blocks.CHISELED_TUFF_BRICKS)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
@@ -1324,9 +1336,9 @@ public final class SuCraftBlocks {
         Blocks.POLISHED_TUFF_STAIRS
     );
 
-    // public static final SuCraftBlockType SMOO
+    // public static final SuCraftBlockType BEVELED
     //
-    // public static final BlockSet.WithButtonAndPressurePlate SMOOTH_POLISHED_TUFF =
+    // public static final BlockSet.WithButtonAndPressurePlate BEVELED_POLISHED_TUFF =
     //     BlockSet.builder("polished_tuff").mineableWithPickaxe()
     //         .shapeIdentifierSuffixFunction(suffix -> suffix + "_new")
     //         .vanilla(Blocks.POLISHED_TUFF)
@@ -1334,7 +1346,7 @@ public final class SuCraftBlocks {
     //         .stonePressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
     //         .build();
     //
-    // public static final BlockSet.WithButtonAndPressurePlate SMOOTH_TUFF_BRICKS =
+    // public static final BlockSet.WithButtonAndPressurePlate TUFF_BEVELED_BRICKS =
     //     BlockSet.builder("tuff_bricks").mineableWithPickaxe()
     //         .shapeIdentifierSuffixFunction(suffix -> suffix + "_new")
     //         .vanilla(Blocks.TUFF_BRICKS)
@@ -1579,11 +1591,38 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
     public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
 
+    // Wood / Walls
+
+    public static final Family.WoodType<SuCraftBlockType> VANILLA_PLANK_WALLS =
+        Family.WoodType.forVanillaWoodTypes(woodType ->
+            blockType(woodType.name() + "_wall")
+                .wall(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_fence")), switch (woodType.name()) {
+                    case "acacia" -> Blocks.RED_SANDSTONE_WALL;
+                    case "bamboo" -> Blocks.SULFUR_BRICK_WALL;
+                    case "birch" -> Blocks.SANDSTONE_WALL;
+                    case "cherry" -> Blocks.BRICK_WALL;
+                    case "crimson" -> Blocks.RED_NETHER_BRICK_WALL;
+                    case "dark_oak" -> Blocks.NETHER_BRICK_WALL;
+                    case "jungle" -> Blocks.DIORITE_WALL;
+                    case "mangrove" -> Blocks.CINNABAR_BRICK_WALL;
+                    case "oak" -> Blocks.MUD_BRICK_WALL;
+                    case "pale_oak" -> Blocks.DIORITE_WALL;
+                    case "poplar" -> Blocks.ANDESITE_WALL;
+                    case "spruce" -> Blocks.MUD_BRICK_WALL;
+                    case "warped" -> Blocks.PRISMARINE_WALL;
+                    default -> throw new IllegalArgumentException();
+                }).dataGenerateModel((factory, block) ->
+                    factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addWall(generators, block, Identifier.withDefaultNamespace("block/" + woodType.name() + "_planks")))
+                )
+                .mineableWithAxe()
+                .dataGenerateTag(SuCraftBlockItemTags.WOODEN_WALLS)
+        );
+
     // Wool
 
     public static final Family.DyeColor<BlockSet.WithWallAndButtonAndPressurePlate> WOOL =
         new Family.DyeColor<>(dyeColor ->
-            BlockSet.builder(dyeColor.getSerializedName() + "_wool").tag(BlockItemTags.DAMPENS_VIBRATIONS).nonVolatileShapeTag(BlockTags.SHEARS_MAJOR_BREAKING_SPEED)
+            BlockSet.builder(dyeColor.getSerializedName() + "_wool").tag(BlockItemTags.DAMPENS_VIBRATIONS).tag(BlockTags.SHEARS_MAJOR_BREAKING_SPEED)
                 .fullBlockOnlyForDataGeneration().vanilla(Blocks.WOOL.pick(dyeColor))
                 .wall().wallFallback(wallFallbackForSmoothDyeColor(dyeColor)).wallTag(SuCraftBlockItemTags.WOOL_WALLS)
                 .button().blockSetType(BlockSetType.STONE).buttonFallback(buttonFallbackForSmoothDyeColor(dyeColor)).buttonTag(SuCraftBlockItemTags.WOOL_BUTTONS)

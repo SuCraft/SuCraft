@@ -1,5 +1,186 @@
 --- a/net/minecraft/world/level/block/Blocks.java
 +++ b/net/minecraft/world/level/block/Blocks.java
+@@ -753,12 +_,12 @@
+         BlockBehaviour.Properties.ofLegacyCopy(LAPIS_ORE).mapColor(MapColor.DEEPSLATE).strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE)
+     );
+     public static final Block LAPIS_BLOCK = register(
+-        BlockItemIds.LAPIS_BLOCK, BlockBehaviour.Properties.of().mapColor(MapColor.LAPIS).requiresCorrectToolForDrops().strength(3.0F, 3.0F)
++        BlockItemIds.LAPIS_BLOCK, BlockBehaviour.Properties.of().mapColor(MapColor.LAPIS)/*.requiresCorrectToolForDrops()*/.strength(3.0F, 3.0F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block DISPENSER = register(
+         BlockItemIds.DISPENSER,
+         DispenserBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(3.5F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block SANDSTONE = register(
+         BlockItemIds.SANDSTONE,
+@@ -1165,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.GOLD)
+             .instrument(NoteBlockInstrument.BELL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(3.0F, 6.0F)
+             .sound(SoundType.METAL)
+     );
+@@ -1174,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+             .instrument(NoteBlockInstrument.IRON_XYLOPHONE)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 6.0F)
+             .sound(SoundType.IRON)
+     );
+@@ -1384,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.STONE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F)
+             .sound(SoundType.SPAWNER)
+             .noOcclusion()
+@@ -1415,7 +_,7 @@
+     );
+     public static final Block DIAMOND_BLOCK = register(
+         BlockItemIds.DIAMOND_BLOCK,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)
++        BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND)/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F).sound(SoundType.METAL) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block CRAFTING_TABLE = register(
+         BlockItemIds.CRAFTING_TABLE,
+@@ -1444,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.STONE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .strength(3.5F)
+             .lightLevel(litBlockEmission(13))
+     );
+@@ -2517,26 +_,26 @@
+     public static final Block IRON_BARS = register(
+         BlockItemIds.IRON_BARS,
+         IronBarsBlock::new,
+-        BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.IRON).noOcclusion()
++        BlockBehaviour.Properties.of()/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F).sound(SoundType.IRON).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final WeatheringCopperCollection<Block> COPPER_BARS = WeatheringCopperCollection.registerBlocks(
+         BlockItemIds.COPPER_BARS,
+         Blocks::register,
+         (s, p) -> new IronBarsBlock(p),
+         WeatheringCopperBarsBlock::new,
+-        p -> BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.COPPER).noOcclusion()
++        p -> BlockBehaviour.Properties.of()/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F).sound(SoundType.COPPER).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block IRON_CHAIN = register(
+         BlockItemIds.IRON_CHAIN,
+         ChainBlock::new,
+-        BlockBehaviour.Properties.of().forceSolidOn().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion()
++        BlockBehaviour.Properties.of().forceSolidOn()/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final WeatheringCopperCollection<Block> COPPER_CHAIN = WeatheringCopperCollection.registerBlocks(
+         BlockItemIds.COPPER_CHAIN,
+         Blocks::register,
+         (s, p) -> new ChainBlock(p),
+         WeatheringCopperChainBlock::new,
+-        p -> BlockBehaviour.Properties.of().forceSolidOn().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion()
++        p -> BlockBehaviour.Properties.of().forceSolidOn()/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block GLASS_PANE = register(
+         BlockItemIds.GLASS_PANE,
+@@ -2723,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_RED)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .lightLevel(state -> 7)
+             .strength(5.0F, 1200.0F)
+     );
+@@ -2735,7 +_,7 @@
+     public static final Block CAULDRON = register(
+         BlockItemIds.CAULDRON,
+         CauldronBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2.0F).noOcclusion()
++        BlockBehaviour.Properties.of().mapColor(MapColor.STONE)/*.requiresCorrectToolForDrops()*/.strength(2.0F).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block WATER_CAULDRON = register(
+         BlockIds.WATER_CAULDRON,
+@@ -2847,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.EMERALD)
+             .instrument(NoteBlockInstrument.BIT)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 6.0F)
+             .sound(SoundType.METAL)
+     );
+@@ -2857,7 +_,7 @@
+     public static final Block COMMAND_BLOCK = register(
+         BlockItemIds.COMMAND_BLOCK,
+         p -> new CommandBlock(false, p),
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).requiresCorrectToolForDrops().strength(-1.0F, 3600000.0F).noLootTable()
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN)/*.requiresCorrectToolForDrops()*/.strength(-1.0F, 3600000.0F).noLootTable() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block BEACON = register(
+         BlockItemIds.BEACON,
+@@ -3029,7 +_,7 @@
+         AnvilBlock::new,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 1200.0F)
+             .sound(SoundType.ANVIL)
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -3039,7 +_,7 @@
+         AnvilBlock::new,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 1200.0F)
+             .sound(SoundType.ANVIL)
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -3049,7 +_,7 @@
+         AnvilBlock::new,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 1200.0F)
+             .sound(SoundType.ANVIL)
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -3082,7 +_,7 @@
+         PoweredBlock::new,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.FIRE)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 6.0F)
+             .sound(SoundType.METAL)
+             .isRedstoneConductor(Blocks::never)
+@@ -3100,7 +_,7 @@
+     public static final Block HOPPER = register(
+         BlockItemIds.HOPPER,
+         HopperBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(3.0F, 4.8F).sound(SoundType.METAL).noOcclusion()
++        BlockBehaviour.Properties.of().mapColor(MapColor.STONE)/*.requiresCorrectToolForDrops()*/.strength(3.0F, 4.8F).sound(SoundType.METAL).noOcclusion() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block QUARTZ_BLOCK = register(
+         BlockItemIds.QUARTZ_BLOCK,
+@@ -3122,7 +_,7 @@
+     public static final Block DROPPER = register(
+         BlockItemIds.DROPPER,
+         DropperBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(3.5F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final ColorCollection<Block> DYED_TERRACOTTA = ColorCollection.registerBlocks(
+         BlockItemIds.DYED_TERRACOTTA,
 @@ -3159,7 +_,7 @@
          BlockBehaviour.Properties.of()
              .strength(-1.0F, 3600000.8F)
@@ -9,7 +190,7 @@
              .noOcclusion()
              .isValidSpawn(Blocks::never)
              .noTerrainParticles()
-@@ -3172,7 +_,7 @@
+@@ -3172,14 +_,14 @@
              .replaceable()
              .strength(-1.0F, 3600000.8F)
              .mapColor(waterloggedMapColor(MapColor.NONE))
@@ -18,6 +199,435 @@
              .noOcclusion()
              .lightLevel(LightBlock.LIGHT_EMISSION)
      );
+     public static final Block IRON_TRAPDOOR = register(
+         BlockItemIds.IRON_TRAPDOOR,
+         p -> new TrapDoorBlock(BlockSetType.IRON, p),
+-        BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F).noOcclusion().isValidSpawn(Blocks::never)
++        BlockBehaviour.Properties.of().mapColor(MapColor.METAL)/*.requiresCorrectToolForDrops()*/.strength(5.0F).noOcclusion().isValidSpawn(Blocks::never) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block PRISMARINE = register(
+         BlockItemIds.PRISMARINE,
+@@ -3237,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_BLACK)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 6.0F)
+     );
+     public static final Block PACKED_ICE = register(
+@@ -3375,7 +_,7 @@
+     public static final Block PETRIFIED_OAK_SLAB = register(
+         BlockItemIds.PETRIFIED_OAK_SLAB,
+         SlabBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(2.0F, 6.0F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(2.0F, 6.0F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block COBBLESTONE_SLAB = registerSlab(BlockItemIds.COBBLESTONE_SLAB, COBBLESTONE);
+     public static final Block BRICK_SLAB = registerSlab(BlockItemIds.BRICK_SLAB, BRICKS);
+@@ -3833,12 +_,12 @@
+     public static final Block REPEATING_COMMAND_BLOCK = register(
+         BlockItemIds.REPEATING_COMMAND_BLOCK,
+         p -> new CommandBlock(false, p),
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).requiresCorrectToolForDrops().strength(-1.0F, 3600000.0F).noLootTable()
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE)/*.requiresCorrectToolForDrops()*/.strength(-1.0F, 3600000.0F).noLootTable() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block CHAIN_COMMAND_BLOCK = register(
+         BlockItemIds.CHAIN_COMMAND_BLOCK,
+         p -> new CommandBlock(true, p),
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).requiresCorrectToolForDrops().strength(-1.0F, 3600000.0F).noLootTable()
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN)/*.requiresCorrectToolForDrops()*/.strength(-1.0F, 3600000.0F).noLootTable() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block FROSTED_ICE = register(
+         BlockIds.FROSTED_ICE,
+@@ -3883,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.SAND)
+             .instrument(NoteBlockInstrument.XYLOPHONE)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .strength(2.0F)
+             .sound(SoundType.BONE_BLOCK)
+     );
+@@ -3899,7 +_,7 @@
+             .mapColor(MapColor.STONE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+             .strength(3.0F)
+-            .requiresCorrectToolForDrops()
++            /*.requiresCorrectToolForDrops()*/ // Suki - Valuable blocks don't need the correct tool
+             .isRedstoneConductor(Blocks::never)
+     );
+     public static final Block SHULKER_BOX = register(BlockItemIds.SHULKER_BOX, p -> new ShulkerBoxBlock(null, p), shulkerBoxProperties(MapColor.COLOR_PURPLE));
+@@ -3989,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+     );
+     public static final Block DEAD_BRAIN_CORAL_BLOCK = register(
+@@ -3998,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+     );
+     public static final Block DEAD_BUBBLE_CORAL_BLOCK = register(
+@@ -4007,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+     );
+     public static final Block DEAD_FIRE_CORAL_BLOCK = register(
+@@ -4016,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+     );
+     public static final Block DEAD_HORN_CORAL_BLOCK = register(
+@@ -4025,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+     );
+     public static final Block TUBE_CORAL_BLOCK = register(
+@@ -4034,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_BLUE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+             .sound(SoundType.CORAL_BLOCK)
+     );
+@@ -4044,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_PINK)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+             .sound(SoundType.CORAL_BLOCK)
+     );
+@@ -4054,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_PURPLE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+             .sound(SoundType.CORAL_BLOCK)
+     );
+@@ -4064,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_RED)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+             .sound(SoundType.CORAL_BLOCK)
+     );
+@@ -4074,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_YELLOW)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(1.5F, 6.0F)
+             .sound(SoundType.CORAL_BLOCK)
+     );
+@@ -4085,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4096,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4107,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4118,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4129,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4165,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4176,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4198,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4209,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4245,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4256,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4267,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4278,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4289,7 +_,7 @@
+             .mapColor(MapColor.COLOR_GRAY)
+             .forceSolidOn()
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noCollision()
+             .instabreak()
+     );
+@@ -4483,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.STONE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(3.5F)
+             .lightLevel(litBlockEmission(13))
+     );
+@@ -4493,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.STONE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(3.5F)
+             .lightLevel(litBlockEmission(13))
+     );
+@@ -4511,7 +_,7 @@
+         GrindstoneBlock::new,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(2.0F, 6.0F)
+             .sound(SoundType.STONE)
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -4529,7 +_,7 @@
+     public static final Block STONECUTTER = register(
+         BlockItemIds.STONECUTTER,
+         StonecutterBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(3.5F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block BELL = register(
+         BlockItemIds.BELL,
+@@ -4895,7 +_,7 @@
+     public static final Block JIGSAW = register(
+         BlockItemIds.JIGSAW,
+         JigsawBlock::new,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().strength(-1.0F, 3600000.0F).noLootTable()
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY)/*.requiresCorrectToolForDrops()*/.strength(-1.0F, 3600000.0F).noLootTable() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block TEST_BLOCK = register(
+         BlockItemIds.TEST_BLOCK, TestBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(-1.0F, 3600000.0F).noLootTable()
+@@ -4936,11 +_,11 @@
+     );
+     public static final Block NETHERITE_BLOCK = register(
+         BlockItemIds.NETHERITE_BLOCK,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F).sound(SoundType.NETHERITE_BLOCK)
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)/*.requiresCorrectToolForDrops()*/.strength(50.0F, 1200.0F).sound(SoundType.NETHERITE_BLOCK) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block ANCIENT_DEBRIS = register(
+         BlockItemIds.ANCIENT_DEBRIS,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(30.0F, 1200.0F).sound(SoundType.ANCIENT_DEBRIS)
++        BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)/*.requiresCorrectToolForDrops()*/.strength(30.0F, 1200.0F).sound(SoundType.ANCIENT_DEBRIS) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block CRYING_OBSIDIAN = register(
+         BlockItemIds.CRYING_OBSIDIAN,
+@@ -4959,7 +_,7 @@
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_BLACK)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(50.0F, 1200.0F)
+             .lightLevel(state -> RespawnAnchorBlock.getScaledChargeLevel(state, 15))
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -4974,7 +_,7 @@
+         BlockItemIds.LODESTONE,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.METAL)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(3.5F)
+             .sound(SoundType.LODESTONE)
+             .pushReaction(PushReaction.IMMOVEABLE)
+@@ -5247,7 +_,7 @@
+                 case OXIDIZED -> MapColor.WARPED_NYLIUM;
+             };
+ 
+-            return var10000.mapColor(var10001).requiresCorrectToolForDrops().strength(3.0F, 6.0F).instrument(switch (state) {
++            return var10000.mapColor(var10001)/*.requiresCorrectToolForDrops()*/.strength(3.0F, 6.0F).instrument(switch (state) { // Suki - Valuable blocks don't need the correct tool
+                 case UNAFFECTED -> NoteBlockInstrument.TRUMPET;
+                 case EXPOSED -> NoteBlockInstrument.TRUMPET_EXPOSED;
+                 case WEATHERED -> NoteBlockInstrument.TRUMPET_WEATHERED;
+@@ -5310,7 +_,7 @@
+         state -> BlockBehaviour.Properties.of()
+             .mapColor(var1 -> COPPER_BLOCK.weathering().pick(state).defaultMapColor())
+             .strength(3.0F, 6.0F)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .noOcclusion()
+             .isValidSpawn(Blocks::never)
+     );
+@@ -5324,7 +_,7 @@
+             .sound(SoundType.COPPER_GRATE)
+             .mapColor(var1 -> COPPER_BLOCK.weathering().pick(state).defaultMapColor())
+             .noOcclusion()
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .isValidSpawn(Blocks::never)
+             .isRedstoneConductor(Blocks::never)
+             .isSuffocating(Blocks::never)
+@@ -5339,7 +_,7 @@
+                 .mapColor(var1 -> COPPER_BLOCK.waxed().pick(p).defaultMapColor())
+                 .strength(3.0F, 6.0F)
+                 .sound(SoundType.COPPER_BULB)
+-                .requiresCorrectToolForDrops()
++                // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+                 .isRedstoneConductor(Blocks::never)
+                 .lightLevel(litBlockEmission(switch (p) {
+                     case UNAFFECTED -> 15;
+@@ -5358,7 +_,7 @@
+             .mapColor(var1 -> COPPER_BLOCK.weathering().pick(state).defaultMapColor())
+             .strength(3.0F, 6.0F)
+             .sound(SoundType.COPPER)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final WeatheringCopperCollection<Block> COPPER_GOLEM_STATUE = WeatheringCopperCollection.registerBlocks(
+         BlockItemIds.COPPER_GOLEM_STATUE,
+@@ -5380,7 +_,7 @@
+         state -> BlockBehaviour.Properties.of()
+             .mapColor(var1 -> COPPER_BLOCK.weathering().pick(state).defaultMapColor())
+             .forceSolidOn()
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(3.0F, 6.0F)
+             .sound(SoundType.COPPER)
+             .noOcclusion()
+@@ -5604,19 +_,19 @@
+     public static final Block SMOOTH_BASALT = register(BlockItemIds.SMOOTH_BASALT, BlockBehaviour.Properties.ofLegacyCopy(BASALT));
+     public static final Block RAW_IRON_BLOCK = register(
+         BlockItemIds.RAW_IRON_BLOCK,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(5.0F, 6.0F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block RAW_COPPER_BLOCK = register(
+         BlockItemIds.RAW_COPPER_BLOCK,
+         BlockBehaviour.Properties.of()
+             .mapColor(MapColor.COLOR_ORANGE)
+             .instrument(NoteBlockInstrument.BASEDRUM)
+-            .requiresCorrectToolForDrops()
++            // .requiresCorrectToolForDrops() // Suki - Valuable blocks don't need the correct tool
+             .strength(5.0F, 6.0F)
+     );
+     public static final Block RAW_GOLD_BLOCK = register(
+         BlockItemIds.RAW_GOLD_BLOCK,
+-        BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(5.0F, 6.0F)
++        BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).instrument(NoteBlockInstrument.BASEDRUM)/*.requiresCorrectToolForDrops()*/.strength(5.0F, 6.0F) // Suki - Valuable blocks don't need the correct tool
+     );
+     public static final Block POTTED_AZALEA = register(BlockIds.POTTED_AZALEA_BUSH, p -> new FlowerPotBlock(AZALEA, p), flowerPotProperties());
+     public static final Block POTTED_FLOWERING_AZALEA = register(
 @@ -5855,7 +_,7 @@
              .pushReaction(PushReaction.IMMOVEABLE);
      }

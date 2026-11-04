@@ -12,6 +12,8 @@ public final class CBlockItemTags {
     public static final BlockItemTagId BARRELS = createC("barrels");
     public static final BlockItemTagId BARRELS_WOODEN = createC("barrels/wooden");
     public static final BlockItemTagId BOOKSHELVES = createC("bookshelves");
+    public static final BlockItemTagId GLASS_BLOCKS = createC("glass_blocks");
+    public static final BlockItemTagId GLASS_PANES = createC("glass_panes");
 
     /**
      * Analogous to {@link BlockItemTagId#create(String, String)}.

@@ -1,6 +1,7 @@
 package org.sucraft.sushi.datageneration.common;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -53,9 +54,14 @@ public interface Models {
 
         void addBlockPressurePlate(Block pressurePlate);
 
+        void addItem(ItemModelGenerator generator);
+
     }
 
     interface BlockStateModelGenerator extends Consumer<BlockModelGenerators> {
+    }
+
+    interface ItemModelGenerator extends Consumer<ItemModelGenerators> {
     }
 
 }

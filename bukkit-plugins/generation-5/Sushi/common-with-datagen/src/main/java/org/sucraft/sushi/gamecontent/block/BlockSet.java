@@ -602,7 +602,7 @@ public interface BlockSet {
         private @Nullable SuCraftBlockType button;
         private @Nullable SuCraftBlockType pressurePlate;
 
-        DirectImpl(
+        public DirectImpl(
             @Nullable SuCraftBlockType fullBlock,
             @Nullable SuCraftBlockType slab,
             @Nullable SuCraftBlockType stairs,
@@ -675,7 +675,7 @@ public interface BlockSet {
         private @Nullable Supplier<@Nullable SuCraftBlockType> button;
         private @Nullable Supplier<@Nullable SuCraftBlockType> pressurePlate;
 
-        IndirectImpl(
+        public IndirectImpl(
             @Nullable Supplier<@Nullable SuCraftBlockType> fullBlock,
             @Nullable Supplier<@Nullable SuCraftBlockType> slab,
             @Nullable Supplier<@Nullable SuCraftBlockType> stairs,

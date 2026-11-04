@@ -26,6 +26,11 @@ public final class PlatformDependent {
             return BlockBehaviour.Properties.ofLegacyCopy(properties);
         }
 
+        public static BlockBehaviour.Properties setRequiresCorrectToolForDrops(BlockBehaviour.Properties properties, boolean requiresCorrectToolForDrops) {
+            properties.requiresCorrectToolForDrops = requiresCorrectToolForDrops;
+            return properties;
+        }
+
     }
 
     public static final class BlockModelGenerators {
@@ -47,6 +52,10 @@ public final class PlatformDependent {
         }
 
         public static void addPillar(net.minecraft.client.data.models.BlockModelGenerators generators, Block block) {
+            throw new UnsupportedOperationException();
+        }
+
+        public static void addWall(net.minecraft.client.data.models.BlockModelGenerators generators, Block wall, Identifier texture) {
             throw new UnsupportedOperationException();
         }
 

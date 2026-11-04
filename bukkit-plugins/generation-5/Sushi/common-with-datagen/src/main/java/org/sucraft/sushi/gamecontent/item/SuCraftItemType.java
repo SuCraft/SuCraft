@@ -91,7 +91,7 @@ public final class SuCraftItemType implements ItemLike {
     public Item getNMS() {
         Item value = this.valueNMS;
         if (value == null) {
-            if (DataGenerationFlag.isDataGeneration) {
+            if (DataGenerationFlag.isDataGeneration && this.definedByCode) {
                 var key = ResourceKey.create(Registries.ITEM, this.identifier);
                 var properties = new Item.Properties().setId(key);
                 value = net.minecraft.core.Registry.register(

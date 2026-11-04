@@ -1,15 +1,20 @@
 package org.sucraft.sushi.gamecontent.common;
 
 import it.unimi.dsi.fastutil.booleans.Boolean2ObjectFunction;
-import it.unimi.dsi.fastutil.booleans.BooleanList;import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import org.jspecify.annotations.NonNull;import org.jspecify.annotations.Nullable;
+import it.unimi.dsi.fastutil.booleans.BooleanList;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.Iterator;import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;import java.util.stream.Stream;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * A family of resources, each defined by a particular base value.
@@ -44,6 +49,14 @@ public class Family<K, V> implements Iterable<V> {
 
     public @Nullable V getNullable(K key) {
         return this.map.get(key);
+    }
+
+    public static class Hashed<K, V> extends Family<K, V> {
+
+        public Hashed(List<K> keys, Function<K, V> constructor) {
+            super(new HashMap<>(keys.size()), keys, constructor);
+        }
+
     }
 
     public static class Boolean<V> extends Family<java.lang.Boolean, V> {
@@ -130,6 +143,70 @@ public class Family<K, V> implements Iterable<V> {
 
         public V yellow() {
             return this.get(net.minecraft.world.item.DyeColor.YELLOW);
+        }
+
+    }
+
+    public static class WoodType<V> extends Hashed<net.minecraft.world.level.block.state.properties.WoodType, V> {
+
+        public WoodType(List<net.minecraft.world.level.block.state.properties.WoodType> keys, Function<net.minecraft.world.level.block.state.properties.WoodType, V> constructor) {
+            super(keys, constructor);
+        }
+
+        public static <V> WoodType<V> forVanillaWoodTypes(Function<net.minecraft.world.level.block.state.properties.WoodType, V> constructor) {
+            return new WoodType<>(net.minecraft.world.level.block.state.properties.WoodType.values().toList(), constructor);
+        }
+
+        public V acacia() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.ACACIA);
+        }
+
+        public V bamboo() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.BAMBOO);
+        }
+
+        public V birch() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.BIRCH);
+        }
+
+        public V cherry() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.CHERRY);
+        }
+
+        public V crimson() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.CRIMSON);
+        }
+
+        public V darkOak() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.DARK_OAK);
+        }
+
+        public V jungle() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.JUNGLE);
+        }
+
+        public V mangrove() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.MANGROVE);
+        }
+
+        public V oak() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.OAK);
+        }
+
+        public V spruce() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.SPRUCE);
+        }
+
+        public V warped() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.WARPED);
+        }
+
+        public V paleOak() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.PALE_OAK);
+        }
+
+        public V poplar() {
+            return this.get(net.minecraft.world.level.block.state.properties.WoodType.POPLAR);
         }
 
     }

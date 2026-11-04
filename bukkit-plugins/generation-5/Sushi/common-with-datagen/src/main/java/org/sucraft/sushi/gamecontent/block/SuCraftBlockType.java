@@ -195,7 +195,7 @@ public final class SuCraftBlockType implements ItemLike {
     public Block getNMS() {
         Block value = this.valueNMS;
         if (value == null) {
-            if (DataGenerationFlag.isDataGeneration) {
+            if (DataGenerationFlag.isDataGeneration && this.definedByCode) {
                 var key = ResourceKey.create(Registries.BLOCK, this.identifier);
                 var properties = BlockBehaviour.Properties.of().setId(key);
                 value = net.minecraft.core.Registry.register(

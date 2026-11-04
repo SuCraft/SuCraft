@@ -158,6 +158,26 @@ public final class Recipes {
             };
         }
 
+        static RecipeSupplier withPrefix(Supplier<@Nullable RecipeBuilder> build, String prefix) {
+            return withPrefix(build, () -> prefix);
+        }
+
+        static RecipeSupplier withPrefix(Supplier<@Nullable RecipeBuilder> build, Supplier<String> prefix) {
+            return new RecipeSupplier() {
+
+                @Override
+                public @Nullable RecipeBuilder build() {
+                    return build.get();
+                }
+
+                @Override
+                public Identifier id(RecipeBuilder builder) {
+                    return RecipeSupplier.super.id(builder).withPrefix(prefix.get());
+                }
+
+            };
+        }
+
     }
 
     public static class ProviderFunction implements FabricDataGenerator.Pack.RegistryDependentFactory<OpenProvider> {

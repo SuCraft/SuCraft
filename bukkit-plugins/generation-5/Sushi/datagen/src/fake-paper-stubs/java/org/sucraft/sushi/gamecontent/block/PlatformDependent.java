@@ -38,6 +38,10 @@ public final class PlatformDependent {
             throw new UnsupportedOperationException();
         }
 
+        public static BlockBehaviour.Properties setRequiresCorrectToolForDrops(BlockBehaviour.Properties properties, boolean requiresCorrectToolForDrops) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
     public static final class BlockModelGenerators {
@@ -87,6 +91,22 @@ public final class PlatformDependent {
             var fullBlockVariant = net.minecraft.client.data.models.BlockModelGenerators.plainModel(fullBlockModelTemplate.create(fullBlock, mapping, generators.modelOutput));
             generators.blockStateOutput.accept(net.minecraft.client.data.models.BlockModelGenerators.createSlab(slab, net.minecraft.client.data.models.BlockModelGenerators.plainVariant(bottom), top, net.minecraft.client.data.models.BlockModelGenerators.variant(fullBlockVariant)));
             generators.registerSimpleItemModel(slab, bottom);
+        }
+
+        public static void addWall(net.minecraft.client.data.models.BlockModelGenerators generators, Block block, Identifier texture) {
+            addWall(generators, block, new TextureMapping().put(TextureSlot.WALL, new Material(texture)));
+        }
+
+        /**
+         * @see net.minecraft.client.data.models.BlockModelGenerators.BlockFamilyProvider#wall(Block)
+         */
+        public static void addWall(net.minecraft.client.data.models.BlockModelGenerators generators, Block block, TextureMapping mapping) {
+            MultiVariant post = net.minecraft.client.data.models.BlockModelGenerators.plainVariant(ModelTemplates.WALL_POST.create(block, mapping, generators.modelOutput));
+            MultiVariant low = net.minecraft.client.data.models.BlockModelGenerators.plainVariant(ModelTemplates.WALL_LOW_SIDE.create(block, mapping, generators.modelOutput));
+            MultiVariant high = net.minecraft.client.data.models.BlockModelGenerators.plainVariant(ModelTemplates.WALL_TALL_SIDE.create(block, mapping, generators.modelOutput));
+            generators.blockStateOutput.accept(net.minecraft.client.data.models.BlockModelGenerators.createWall(block, post, low, high));
+            Identifier inventory = ModelTemplates.WALL_INVENTORY.create(block, mapping, generators.modelOutput);
+            generators.registerSimpleItemModel(block, inventory);
         }
 
     }

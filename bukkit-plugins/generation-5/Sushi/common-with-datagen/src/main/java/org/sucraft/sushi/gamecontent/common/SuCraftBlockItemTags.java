@@ -12,6 +12,8 @@ public final class SuCraftBlockItemTags {
     public static final BlockItemTagId BOOKSHELF_SLABS = createSuCraft("bookshelf_slabs");
     public static final BlockItemTagId BOOKSHELF_STAIRS = createSuCraft("bookshelf_stairs");
     public static final BlockItemTagId CONCRETE_BUTTONS = createSuCraft("concrete_buttons");
+    public static final BlockItemTagId CONCRETE_POWDER_SLABS = createSuCraft("concrete_powder_slabs");
+    public static final BlockItemTagId CONCRETE_POWDER_STAIRS = createSuCraft("concrete_powder_stairs");
     public static final BlockItemTagId CONCRETE_PRESSURE_PLATES = createSuCraft("concrete_pressure_plates");
     public static final BlockItemTagId CONCRETE_WALLS = createSuCraft("concrete_walls");
     public static final BlockItemTagId INFESTED_STONE_BRICKS = createSuCraft("infested_stone_bricks");

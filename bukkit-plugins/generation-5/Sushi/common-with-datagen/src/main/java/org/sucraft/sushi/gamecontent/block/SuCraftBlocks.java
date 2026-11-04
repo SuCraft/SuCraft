@@ -18,6 +18,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -37,6 +38,10 @@ import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.common.Family;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
+import spout.gamecontent.builtin.block.ConcretePowderSlabBlock;
+import spout.gamecontent.builtin.block.ConcretePowderStairBlock;
+import spout.gamecontent.builtin.block.SandSlabBlock;
+import spout.gamecontent.builtin.block.SandStairBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -125,6 +130,13 @@ public final class SuCraftBlocks {
 
     // Soil - Red sand
 
+    public static final BlockSet.WithSlabAndStairs RED_SAND =
+        BlockSet.builder("red_sand").mineableWithShovel().nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_DRY_VEGETATION_BLOCK_SOUNDS).nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_SAND_BLOCK_SOUNDS).nonVolatileShapeTag(BlockTags.ARMADILLO_SPAWNABLE_ON).nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON).nonVolatileShapeTag(BlockTags.SUPPORTS_SUGAR_CANE).nonVolatileShapeTag(BlockTags.SUPPORTS_BAMBOO).nonVolatileShapeTag(BlockTags.CAMEL_SAND_STEP_SOUND_BLOCKS).nonVolatileShapeTag(BlockTags.SUPPORTS_DRY_VEGETATION).nonVolatileShapeTag(BlockTags.SUPPORTS_CACTUS)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.RED_SAND)
+            .slab().slabFactoryConstructor(properties -> new SandSlabBlock(((ColoredFallingBlock) Blocks.RED_SAND).dustColor, properties)).slabFallback(Blocks.RED_SANDSTONE_SLAB)
+            .stairs().stairsFactoryConstructor((properties, baseState) -> new SandStairBlock(baseState, ((ColoredFallingBlock) Blocks.RED_SAND).dustColor, properties)).stairsFallback(Blocks.RED_SANDSTONE_STAIRS)
+            .build();
+
     // public static final BlockSet.WithButtonAndPressurePlate RED_SANDSTONE =
     //     BlockSet.builder("red_sandstone").mineableWithPickaxe()
     //         .fullBlockOnlyForDataGeneration().vanilla(Blocks.RED_SANDSTONE)
@@ -177,6 +189,13 @@ public final class SuCraftBlocks {
             .build();
 
     // Soil - Sand
+
+    public static final BlockSet.WithSlabAndStairs SAND =
+        BlockSet.builder("sand").mineableWithShovel().nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_DRY_VEGETATION_BLOCK_SOUNDS).nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_SAND_BLOCK_SOUNDS).nonVolatileShapeTag(BlockTags.ARMADILLO_SPAWNABLE_ON).nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON).nonVolatileShapeTag(BlockTags.SUPPORTS_SUGAR_CANE).nonVolatileShapeTag(BlockTags.SUPPORTS_BAMBOO).nonVolatileShapeTag(BlockTags.CAMEL_SAND_STEP_SOUND_BLOCKS).nonVolatileShapeTag(BlockTags.SUPPORTS_DRY_VEGETATION).nonVolatileShapeTag(BlockTags.SUPPORTS_CACTUS)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SAND)
+            .slab().slabFactoryConstructor(properties -> new SandSlabBlock(((ColoredFallingBlock) Blocks.SAND).dustColor, properties)).slabFallback(Blocks.SANDSTONE_SLAB)
+            .stairs().stairsFactoryConstructor((properties, baseState) -> new SandStairBlock(baseState, ((ColoredFallingBlock) Blocks.SAND).dustColor, properties)).stairsFallback(Blocks.SANDSTONE_STAIRS)
+            .build();
 
     // public static final BlockSet.WithButtonAndPressurePlate SANDSTONE =
     //     BlockSet.builder("sandstone").mineableWithPickaxe()
@@ -513,6 +532,15 @@ public final class SuCraftBlocks {
             .build();
 
     // Stone / Concrete
+
+    public static final Family.DyeColor<BlockSet.WithSlabAndStairs> CONCRETE_POWDER =
+        new Family.DyeColor<>(dyeColor ->
+            BlockSet.builder(dyeColor.getSerializedName() + "_concrete_powder").mineableWithShovel()
+                .fullBlockOnlyForDataGeneration().vanilla(Blocks.CONCRETE_POWDER.pick(dyeColor))
+                .slab().slabFactoryConstructor(properties -> new ConcretePowderSlabBlock(Blocks.CONCRETE_SLAB.pick(dyeColor), properties)).slabFallback(Blocks.WOOL_SLAB.pick(dyeColor)).slabTag(SuCraftBlockItemTags.CONCRETE_POWDER_SLABS)
+                .stairs().stairsFactoryConstructor((properties, baseState) -> new ConcretePowderStairBlock(baseState, Blocks.CONCRETE_STAIRS.pick(dyeColor), properties)).stairsFallback(Blocks.WOOL_STAIRS.pick(dyeColor)).stairsTag(SuCraftBlockItemTags.CONCRETE_POWDER_STAIRS)
+                .build()
+        );
 
     private static Block wallFallbackForSmoothDyeColor(DyeColor dyeColor) {
         return switch (dyeColor) {

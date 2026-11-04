@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;import java.util.function.BiFunction;import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
@@ -755,6 +755,8 @@ public interface BlockSet {
         private boolean button;
         private boolean pressurePlate;
         private Function<String, String> shapeIdentifierSuffixFunction = Function.identity();
+        private @Nullable Consumer<SuCraftBlockType> slabFactory;
+        private @Nullable BiConsumer<SuCraftBlockType, BlockState> stairsFactory;
         private @Nullable Consumer<BlockBehaviour.Properties> propertiesFinalizer;
         private BlockBehaviour.@Nullable Properties properties;
         private @Nullable Block propertiesFrom;
@@ -1003,6 +1005,24 @@ public interface BlockSet {
                 this.fullBlockPath = propertiesFromAndFallback.builtInRegistryHolder().key().identifier().getPath();
             }
             return this;
+        }
+
+        public Builder slabFactory(@Nullable Consumer<SuCraftBlockType> factory) {
+            this.slabFactory = factory;
+            return this;
+        }
+
+        public Builder stairsFactory(@Nullable BiConsumer<SuCraftBlockType, BlockState> factory) {
+            this.stairsFactory = factory;
+            return this;
+        }
+
+        public Builder slabFactoryConstructor(Function<BlockBehaviour.Properties, Block> factory) {
+            return this.slabFactory(type -> type.blockBuild(builder -> builder.factoryNMS(factory)));
+        }
+
+        public Builder stairsFactoryConstructor(BiFunction<BlockBehaviour.Properties, BlockState, Block> factory) {
+            return this.stairsFactory((type, baseState) -> type.blockBuild(builder -> builder.factoryNMS(properties -> factory.apply(properties, baseState))));
         }
 
         public Builder slabPropertiesFrom(Block propertiesFrom) {
@@ -1874,7 +1894,13 @@ public interface BlockSet {
                     .update(this.getFullBlockFinalizer())
                     : null,
                 this.slab ? SuCraftBlockType.create(this.getShapeIdentifier("_slab"))
-                    .slabFactory()
+                    .update(type -> {
+                        if (this.slabFactory == null) {
+                            type.slabFactory();
+                        } else {
+                            this.slabFactory.accept(type);
+                        }
+                    })
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
@@ -1889,7 +1915,13 @@ public interface BlockSet {
                     .update(this.slabFinalizer)
                     : null,
                 this.stairs ? SuCraftBlockType.create(this.getShapeIdentifier("_stairs"))
-                    .stairsFactory(this.getStairsBaseState())
+                    .update(type -> {
+                        if (this.stairsFactory == null) {
+                            type.stairsFactory(this.getStairsBaseState());
+                        } else {
+                            this.stairsFactory.accept(type, this.getStairsBaseState().get());
+                        }
+                    })
                     .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())

@@ -3,10 +3,9 @@ package org.sucraft.sushi.datageneration.stone.terracotta;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.Map;
 import java.util.stream.Stream;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
@@ -23,6 +22,10 @@ public final class Terracotta {
     }
 
     public static void add(CollectedFactories factories) {
+        // Allow vegetation to be placed on terracotta
+        factories.blockTags().add(BlockTags.SUPPORTS_VEGETATION, BlockTags.TERRACOTTA);
+        // Allow sugar cane to be placed on terracotta
+        factories.blockTags().add(BlockTags.SUPPORTS_SUGAR_CANE, BlockTags.TERRACOTTA);
         // Add undyeing recipes
         var uncoloredCustom = SuCraftBlocks.TERRACOTTA;
         Map.of(
@@ -49,7 +52,7 @@ public final class Terracotta {
         // Add dyeing recipes
         for (var dyeColor : DyeColor.values()) {
             var coloredCustom = SuCraftBlocks.DYED_TERRACOTTA.get(dyeColor);
-            var coloredFullBlock = BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(dyeColor + "_terracotta"));
+            var coloredFullBlock = Items.DYED_TERRACOTTA.pick(dyeColor);
             Stream.of(
                 Pair.of(ItemTags.TERRACOTTA, coloredFullBlock),
                 Pair.of(SuCraftBlockItemTags.TERRACOTTA_SLABS.item(), coloredCustom.slabItemNMS()),

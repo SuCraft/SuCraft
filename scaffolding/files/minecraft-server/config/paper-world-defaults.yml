@@ -546,11 +546,11 @@ fishing-time-range:
   minimum: 100
 fixes:
   disable-unloaded-chunk-enderpearl-exploit: true
-  falling-block-height-nerf: 0
+  falling-block-height-nerf: disabled
   fix-items-merging-through-walls: true
   prevent-tnt-from-moving-in-water: false
   split-overstacked-loot: true
-  tnt-entity-height-nerf: 0
+  tnt-entity-height-nerf: disabled
 hopper:
   cooldown-when-full: true
   disable-move-event: false

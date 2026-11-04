@@ -23,6 +23,7 @@ import org.sucraft.sushi.datageneration.organic.shulker.ShulkerBoxes;
 import org.sucraft.sushi.datageneration.organic.wax.Candles;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
+import org.sucraft.sushi.datageneration.soil.Sand;
 import org.sucraft.sushi.datageneration.soil.SoulSandstone;
 import org.sucraft.sushi.datageneration.stone.StoneWalls;
 import org.sucraft.sushi.datageneration.stone.claybrick.Bricks;
@@ -87,6 +88,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Redstone
         Dispenser.add(factories);
         Repeater.add(factories);
+
+        // Soil / Sand
+        Sand.add(factories);
 
         // Soil / Soul
         SoulSandstone.add(factories);

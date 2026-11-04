@@ -1,10 +1,6 @@
 package org.sucraft.sushi.datageneration.wool;
 
-import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.resources.Identifier;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -13,11 +9,9 @@ import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
 import org.sucraft.sushi.gamecontent.block.BlockSet;
 import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
-import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public final class Wool {
 

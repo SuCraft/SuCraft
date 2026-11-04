@@ -12,6 +12,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -59,12 +60,14 @@ public final class Tags {
                     BlockCollectedFactory.this.links.forEach((tag, elements) -> {
                         var builder = this.builder(tag);
                         elements.forEach(element -> {
-                            if (element instanceof BlockItemId blockItemId) {
-                                builder.add(blockItemId);
+                            if (element instanceof BlockItemTagId blockItemTagId) {
+                                builder.addOptionalTag(blockItemTagId.block());
+                            } else if (element instanceof BlockItemId blockItemId) {
+                                builder.addOptional(blockItemId.block());
                             } else if (element instanceof ResourceKey resourceKey) {
-                                builder.add(resourceKey);
+                                builder.addOptional(resourceKey);
                             } else if (element instanceof TagKey tagKey) {
-                                builder.addTag(tagKey);
+                                builder.addOptionalTag(tagKey);
                             }
                         });
                     });

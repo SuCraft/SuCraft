@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.bukkit.block.BlockType;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
@@ -240,6 +241,18 @@ public interface BlockSet {
     interface WithSlabAndStairsAndWall extends WithSlabAndStairs, WithWall {
     }
 
+    interface WithSlabAndStairsAndWallAndFence extends WithSlabAndStairsAndWall, WithFence {
+    }
+
+    interface WithSlabAndStairsAndWallAndFenceAndFenceGate extends WithSlabAndStairsAndWallAndFence, WithFenceGate {
+    }
+
+    interface WithSlabAndStairsAndWallAndFenceAndFenceGateAndButton extends WithSlabAndStairsAndWallAndFenceAndFenceGate, WithButton {
+    }
+
+    interface WithSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate extends WithSlabAndStairsAndWallAndFenceAndFenceGateAndButton, WithPressurePlate {
+    }
+
     interface WithSlabAndStairsAndWallAndButton extends WithSlabAndStairsAndWall, WithButton {
     }
 
@@ -274,6 +287,7 @@ public interface BlockSet {
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndFenceAndButtonAndPressurePlate,
         WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate,
+        WithSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
         WithSlabAndStairsAndWallAndButtonAndPressurePlate,
         WithStairsAndWallAndButtonAndPressurePlate,
         WithWallAndButtonAndPressurePlate,
@@ -757,6 +771,14 @@ public interface BlockSet {
         private Function<String, String> shapeIdentifierSuffixFunction = Function.identity();
         private @Nullable Consumer<SuCraftBlockType> slabFactory;
         private @Nullable BiConsumer<SuCraftBlockType, BlockState> stairsFactory;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> fullBlockPostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> slabPostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> stairsPostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> wallPostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> fencePostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> fenceGatePostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> buttonPostConstruction;
+        private @Nullable BiConsumer<SuCraftBlockType, Block> pressurePlatePostConstruction;
         private @Nullable Consumer<BlockBehaviour.Properties> propertiesFinalizer;
         private BlockBehaviour.@Nullable Properties properties;
         private @Nullable Block propertiesFrom;
@@ -788,20 +810,25 @@ public interface BlockSet {
         private @Nullable List<Object> fenceGateTags;
         private @Nullable List<Object> buttonTags;
         private @Nullable List<Object> pressurePlateTags;
-        private @Nullable Consumer<SuCraftBlockType> fullBlockFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> slabFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> stairsFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> wallFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> fenceFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> fenceGateFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> buttonFinalizer;
-        private @Nullable Consumer<SuCraftBlockType> pressurePlateFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> fullBlockFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> slabFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> stairsFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> wallFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> fenceFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> fenceGateFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> buttonFinalizer;
+        private @Nullable List<Consumer<SuCraftBlockType>> pressurePlateFinalizer;
 
         Builder() {
         }
 
         Builder(String fullBlockPath) {
             this.fullBlockPath = fullBlockPath;
+        }
+
+        public Builder update(@Nullable Consumer<Builder> updater) {
+            if (updater != null) updater.accept(this);
+            return this;
         }
 
         public Builder fullBlockPath(String fullBlockPath) {
@@ -851,14 +878,18 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder fullBlockModelProviderFromCube(Material texture) {
+        public Builder fullBlockModelProviderFromCube(Supplier<Object> texture) {
             return this.fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings ->
-                mappings.put(TextureSlot.ALL, texture)
+                mappings.put(TextureSlot.ALL, (Material) texture.get())
             ));
         }
 
+        public Builder fullBlockModelProviderFromCube(Material texture) {
+            return this.fullBlockModelProviderFromCube(() -> texture);
+        }
+
         public Builder fullBlockModelProviderFromCube(Block blockWithTexture) {
-            return this.fullBlockModelProviderFromCube(TextureMapping.getBlockTexture(blockWithTexture));
+            return this.fullBlockModelProviderFromCube(() -> TextureMapping.getBlockTexture(blockWithTexture));
         }
 
         public Builder slab() {
@@ -868,6 +899,7 @@ public interface BlockSet {
 
         public Builder woodenSlab() {
             this.slab();
+            this.slabFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS));
             return this.slabTag(BlockItemTags.WOODEN_SLABS);
         }
 
@@ -878,6 +910,7 @@ public interface BlockSet {
 
         public Builder woodenStairs() {
             this.stairs();
+            this.stairsFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.stairsTag(BlockItemTags.WOODEN_STAIRS);
         }
 
@@ -888,6 +921,7 @@ public interface BlockSet {
 
         public Builder woodenWall() {
             this.wall();
+            this.wallFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.wallTag(SuCraftBlockItemTags.WOODEN_WALLS);
         }
 
@@ -903,6 +937,7 @@ public interface BlockSet {
 
         public Builder woodenFence() {
             this.fence();
+            this.fenceFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.fenceTag(BlockItemTags.WOODEN_FENCES);
         }
 
@@ -916,7 +951,13 @@ public interface BlockSet {
         }
 
         public Builder woodenFenceGate() {
-            return this.fenceGate();
+            this.fenceGate();
+            return this.fenceGateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+        }
+
+        public Builder woodenFenceGate(WoodType woodType) {
+            this.woodenFenceGate();
+            return this.woodType(woodType);
         }
 
         public Builder stoneFenceGate() {
@@ -940,6 +981,7 @@ public interface BlockSet {
 
         public Builder woodenButton() {
             this.button();
+            this.buttonFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
             return this.buttonTag(BlockItemTags.WOODEN_BUTTONS);
         }
 
@@ -965,6 +1007,7 @@ public interface BlockSet {
 
         public Builder woodenPressurePlate() {
             this.pressurePlate();
+            this.pressurePlateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.pressurePlateTag(BlockItemTags.WOODEN_PRESSURE_PLATES);
         }
 
@@ -1014,6 +1057,46 @@ public interface BlockSet {
 
         public Builder stairsFactory(@Nullable BiConsumer<SuCraftBlockType, BlockState> factory) {
             this.stairsFactory = factory;
+            return this;
+        }
+
+        public Builder fullBlockPostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.fullBlockPostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder slabPostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.slabPostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder stairsPostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.stairsPostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder wallPostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.wallPostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder fencePostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.fencePostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder fenceGatePostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.fenceGatePostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder buttonPostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.buttonPostConstruction = postConstruction;
+            return this;
+        }
+
+        public Builder pressurePlatePostConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+            this.pressurePlatePostConstruction = postConstruction;
             return this;
         }
 
@@ -1407,42 +1490,66 @@ public interface BlockSet {
         }
 
         public Builder fullBlockFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.fullBlockFinalizer = finalizer;
+            if (this.fullBlockFinalizer == null) {
+                this.fullBlockFinalizer = new ArrayList<>(1);
+            }
+            this.fullBlockFinalizer.add(finalizer);
             return this;
         }
 
         public Builder slabFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.slabFinalizer = finalizer;
+            if (this.slabFinalizer == null) {
+                this.slabFinalizer = new ArrayList<>(1);
+            }
+            this.slabFinalizer.add(finalizer);
             return this;
         }
 
         public Builder stairsFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.stairsFinalizer = finalizer;
+            if (this.stairsFinalizer == null) {
+                this.stairsFinalizer = new ArrayList<>(1);
+            }
+            this.stairsFinalizer.add(finalizer);
             return this;
         }
 
         public Builder wallFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.wallFinalizer = finalizer;
+            if (this.wallFinalizer == null) {
+                this.wallFinalizer = new ArrayList<>(1);
+            }
+            this.wallFinalizer.add(finalizer);
             return this;
         }
 
         public Builder fenceFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.fenceFinalizer = finalizer;
+            if (this.fenceFinalizer == null) {
+                this.fenceFinalizer = new ArrayList<>(1);
+            }
+            this.fenceFinalizer.add(finalizer);
             return this;
         }
 
         public Builder fenceGateFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.fenceGateFinalizer = finalizer;
+            if (this.fenceGateFinalizer == null) {
+                this.fenceGateFinalizer = new ArrayList<>(1);
+            }
+            this.fenceGateFinalizer.add(finalizer);
             return this;
         }
 
         public Builder buttonFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.buttonFinalizer = finalizer;
+            if (this.buttonFinalizer == null) {
+                this.buttonFinalizer = new ArrayList<>(1);
+            }
+            this.buttonFinalizer.add(finalizer);
             return this;
         }
 
         public Builder pressurePlateFinalizer(@Nullable Consumer<SuCraftBlockType> finalizer) {
-            this.pressurePlateFinalizer = finalizer;
+            if (this.pressurePlateFinalizer == null) {
+                this.pressurePlateFinalizer = new ArrayList<>(1);
+            }
+            this.pressurePlateFinalizer.add(finalizer);
             return this;
         }
 
@@ -1474,7 +1581,7 @@ public interface BlockSet {
             return properties;
         }
 
-        public @Nullable Consumer<SuCraftBlockType> getFullBlockFinalizer() {
+        public @Nullable List<Consumer<SuCraftBlockType>> getFullBlockFinalizer() {
             if (this.fullBlockFinalizer != null) {
                 return this.fullBlockFinalizer;
             }
@@ -1861,6 +1968,7 @@ public interface BlockSet {
                             this.fullBlockBlockBuilders.forEach(type::blockBuild);
                         }
                     })
+                    .postConstruction(this.fullBlockPostConstruction)
                     .properties(this::getFullBlockProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, this.getFullBlockFallback())
                     .update(type -> {
@@ -1901,6 +2009,7 @@ public interface BlockSet {
                             this.slabFactory.accept(type);
                         }
                     })
+                    .postConstruction(this.slabPostConstruction)
                     .properties(this::getSlabProperties)
                     .slabMacro(BlockStateMappingMacroTypes.SLAB, this.getSlabFallback(), this.getSlabFullBlockFallback())
                     .slabConstructorForDataGeneration()
@@ -1922,6 +2031,7 @@ public interface BlockSet {
                             this.stairsFactory.accept(type, this.getStairsBaseState().get());
                         }
                     })
+                    .postConstruction(this.stairsPostConstruction)
                     .properties(this::getStairsProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.STAIRS, this.getStairsFallback())
                     .stairsConstructorForDataGeneration(this.getStairsBaseState())
@@ -1932,6 +2042,7 @@ public interface BlockSet {
                     : null,
                 this.wall ? SuCraftBlockType.create(this.getShapeIdentifier("_wall"))
                     .wallFactory()
+                    .postConstruction(this.wallPostConstruction)
                     .properties(this::getWallProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.WALL, this.getWallFallback())
                     .wallConstructorForDataGeneration()
@@ -1942,6 +2053,7 @@ public interface BlockSet {
                     : null,
                 this.fence ? SuCraftBlockType.create(this.getShapeIdentifier("_fence"))
                     .fenceFactory()
+                    .postConstruction(this.fencePostConstruction)
                     .properties(this::getFenceProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE, this.getFenceFallback())
                     .fenceConstructorForDataGeneration()
@@ -1952,6 +2064,7 @@ public interface BlockSet {
                     : null,
                 this.fenceGate ? SuCraftBlockType.create(this.getShapeIdentifier("_fence_gate"))
                     .fenceGateFactory(this.getWoodType())
+                    .postConstruction(this.fenceGatePostConstruction)
                     .properties(this::getFenceGateProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.FENCE_GATE, this.getFenceGateFallback())
                     .fenceGateConstructorForDataGeneration()
@@ -1962,6 +2075,7 @@ public interface BlockSet {
                     : null,
                 this.button ? SuCraftBlockType.create(this.getShapeIdentifier("_button"))
                     .buttonFactory(this.getBlockSetType(), this.getButtonTicksToStayPressed())
+                    .postConstruction(this.buttonPostConstruction)
                     .properties(this::getButtonProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.BUTTON, this.getButtonFallback())
                     .buttonConstructorForDataGeneration()
@@ -1972,6 +2086,7 @@ public interface BlockSet {
                     : null,
                 this.pressurePlate ? SuCraftBlockType.create(this.getShapeIdentifier("_pressure_plate"))
                     .pressurePlateFactory(this.getBlockSetType())
+                    .postConstruction(this.pressurePlatePostConstruction)
                     .properties(this::getPressurePlateProperties)
                     .fromToBlockMacro(BlockStateMappingMacroTypes.PRESSURE_PLATE, this.getPressurePlateFallback())
                     .pressurePlateConstructorForDataGeneration()

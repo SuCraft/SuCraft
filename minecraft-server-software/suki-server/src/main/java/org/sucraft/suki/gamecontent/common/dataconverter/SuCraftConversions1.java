@@ -33,6 +33,9 @@ public final class SuCraftConversions1 {
         for (var block : sameBlockPaths) {
             RENAME.put("sucraft:" + block, "minecraft:" + block);
         }
+        RENAME.put("sucraft:pale_birch_leaves", "minecraft:birch_leaves");
+        RENAME.put("sucraft:red_oak_leaves", "sucraft:red_maple_leaves");
+        RENAME.put("sucraft:orange_oak_leaves", "sucraft:orange_maple_leaves");
     }
 
     public static void register() {

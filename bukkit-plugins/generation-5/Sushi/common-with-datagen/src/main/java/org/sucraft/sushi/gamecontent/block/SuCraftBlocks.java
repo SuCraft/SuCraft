@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -38,6 +39,7 @@ import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.gamecontent.common.Family;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
+import org.sucraft.sushi.gamecontent.technical.SuCraftContextIntProviders;
 import spout.gamecontent.builtin.block.ConcretePowderSlabBlock;
 import spout.gamecontent.builtin.block.ConcretePowderStairBlock;
 import spout.gamecontent.builtin.block.SandSlabBlock;
@@ -1421,9 +1423,13 @@ public final class SuCraftBlocks {
         @Nullable Block vanillaFullBlock
     ) {
         return BlockSet.builder(fullBlockPath).mineableWithAxe().tag(BlockTags.ENCHANTMENT_POWER_PROVIDER)
-            .fullBlock(vanillaFullBlock != null).vanilla(Blocks.BOOKSHELF)
-            .slab().slabFallback(slabFallback).slabTag(SuCraftBlockItemTags.BOOKSHELF_SLABS)
-            .stairs().stairsFallback(stairsFallback).stairsTag(SuCraftBlockItemTags.BOOKSHELF_STAIRS)
+            .fullBlock(vanillaFullBlock != null).update(builder -> {
+                if (vanillaFullBlock == null) {
+                    builder.fullBlockFinalizer(SuCraftBlockType::flammableLikeBookshelf);
+                }
+            }).vanilla(Blocks.BOOKSHELF).fullBlockFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS))
+            .slab().slabFinalizer(SuCraftBlockType::flammableLikeBookshelf).slabFallback(slabFallback).slabTag(SuCraftBlockItemTags.BOOKSHELF_SLABS).slabFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS))
+            .stairs().stairsFinalizer(SuCraftBlockType::flammableLikeBookshelf).stairsFallback(stairsFallback).stairsTag(SuCraftBlockItemTags.BOOKSHELF_STAIRS).stairsFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS))
             /*.woodenWall().wallFallback(wallFallback)*/
             .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
                 mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(fullBlockPlanks));
@@ -1555,7 +1561,7 @@ public final class SuCraftBlocks {
             new Family.DyeColor<>(dyeColor ->
                 BlockSet.builder(dyeColor.getSerializedName() + (abraded ? "" : "_vibrant") + "_planks").mineableWithAxe()
                     .shapeIdentifierSuffixFunction(suffix -> "_plank" + suffix)
-                    .fullBlock().fallback(switch (dyeColor) {
+                    .fullBlock().fullBlockFinalizer(SuCraftBlockType::flammableLikePlanks).fullBlockFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)).fallback(switch (dyeColor) {
                         case BLACK -> Blocks.DARK_OAK_PLANKS;
                         case BLUE -> Blocks.WARPED_PLANKS;
                         case BROWN -> Blocks.SPRUCE_PLANKS;
@@ -1572,10 +1578,11 @@ public final class SuCraftBlocks {
                         case RED -> Blocks.MANGROVE_PLANKS;
                         case WHITE -> Blocks.PALE_OAK_PLANKS;
                         case YELLOW -> Blocks.BAMBOO_PLANKS;
+                        // default -> Blocks.WOOL.pick(dyeColor);
                     }).propertiesFrom(Blocks.OAK_PLANKS).fullBlockTag(BlockItemTags.PLANKS)
-                    .woodenSlab()
-                    .woodenStairs()
-                    .woodenWall().wallFallback(switch (dyeColor) {
+                    .woodenSlab().slabFinalizer(SuCraftBlockType::flammableLikePlanks)
+                    .woodenStairs().stairsFinalizer(SuCraftBlockType::flammableLikePlanks)
+                    .woodenWall().wallFinalizer(SuCraftBlockType::flammableLikePlanks).wallFallback(switch (dyeColor) {
                         case BLACK -> Blocks.POLISHED_BLACKSTONE_BRICK_WALL;
                         case BLUE -> Blocks.PRISMARINE_WALL;
                         case BROWN -> Blocks.MUD_BRICK_WALL;
@@ -1593,10 +1600,78 @@ public final class SuCraftBlocks {
                         case WHITE -> Blocks.DIORITE_WALL;
                         case YELLOW -> Blocks.SULFUR_BRICK_WALL;
                     })
-                    .woodenFence()
-                    .woodenFenceGate()
-                    .woodenButton()
-                    .woodenPressurePlate()
+                    .woodenFence().fenceFinalizer(SuCraftBlockType::flammableLikePlanks)/*.fenceFallback(switch (dyeColor) {
+                        case BLACK -> Blocks.DARK_OAK_FENCE;
+                        case BLUE -> Blocks.WARPED_FENCE;
+                        case BROWN -> Blocks.SPRUCE_FENCE;
+                        case CYAN -> Blocks.WARPED_FENCE;
+                        case GRAY -> Blocks.POPLAR_FENCE;
+                        case GREEN -> Blocks.WARPED_FENCE;
+                        case LIGHT_BLUE -> Blocks.WARPED_FENCE;
+                        case LIGHT_GRAY -> Blocks.POPLAR_FENCE;
+                        case LIME -> Blocks.WARPED_FENCE;
+                        case MAGENTA -> Blocks.CRIMSON_FENCE;
+                        case ORANGE -> Blocks.ACACIA_FENCE;
+                        case PINK -> Blocks.CHERRY_FENCE;
+                        case PURPLE -> Blocks.CRIMSON_FENCE;
+                        case RED -> Blocks.MANGROVE_FENCE;
+                        case WHITE -> Blocks.PALE_OAK_FENCE;
+                        case YELLOW -> Blocks.BAMBOO_FENCE;
+                    })*/
+                    .woodenFenceGate().fenceGateFinalizer(SuCraftBlockType::flammableLikePlanks)/*.fenceGateFallback(switch (dyeColor) {
+                        case BLACK -> Blocks.DARK_OAK_FENCE_GATE;
+                        case BLUE -> Blocks.WARPED_FENCE_GATE;
+                        case BROWN -> Blocks.SPRUCE_FENCE_GATE;
+                        case CYAN -> Blocks.WARPED_FENCE_GATE;
+                        case GRAY -> Blocks.POPLAR_FENCE_GATE;
+                        case GREEN -> Blocks.WARPED_FENCE_GATE;
+                        case LIGHT_BLUE -> Blocks.WARPED_FENCE_GATE;
+                        case LIGHT_GRAY -> Blocks.POPLAR_FENCE_GATE;
+                        case LIME -> Blocks.WARPED_FENCE_GATE;
+                        case MAGENTA -> Blocks.CRIMSON_FENCE_GATE;
+                        case ORANGE -> Blocks.ACACIA_FENCE_GATE;
+                        case PINK -> Blocks.CHERRY_FENCE_GATE;
+                        case PURPLE -> Blocks.CRIMSON_FENCE_GATE;
+                        case RED -> Blocks.MANGROVE_FENCE_GATE;
+                        case WHITE -> Blocks.PALE_OAK_FENCE_GATE;
+                        case YELLOW -> Blocks.BAMBOO_FENCE_GATE;
+                    })*/
+                    .woodenButton()/*.buttonFallback(switch (dyeColor) {
+                        case BLACK -> Blocks.DARK_OAK_BUTTON;
+                        case BLUE -> Blocks.WARPED_BUTTON;
+                        case BROWN -> Blocks.SPRUCE_BUTTON;
+                        case CYAN -> Blocks.WARPED_BUTTON;
+                        case GRAY -> Blocks.POPLAR_BUTTON;
+                        case GREEN -> Blocks.WARPED_BUTTON;
+                        case LIGHT_BLUE -> Blocks.WARPED_BUTTON;
+                        case LIGHT_GRAY -> Blocks.POPLAR_BUTTON;
+                        case LIME -> Blocks.WARPED_BUTTON;
+                        case MAGENTA -> Blocks.CRIMSON_BUTTON;
+                        case ORANGE -> Blocks.ACACIA_BUTTON;
+                        case PINK -> Blocks.CHERRY_BUTTON;
+                        case PURPLE -> Blocks.CRIMSON_BUTTON;
+                        case RED -> Blocks.MANGROVE_BUTTON;
+                        case WHITE -> Blocks.PALE_OAK_BUTTON;
+                        case YELLOW -> Blocks.BAMBOO_BUTTON;
+                    })*/
+                    .woodenPressurePlate()/*.pressurePlateFallback(switch (dyeColor) {
+                        case BLACK -> Blocks.DARK_OAK_PRESSURE_PLATE;
+                        case BLUE -> Blocks.WARPED_PRESSURE_PLATE;
+                        case BROWN -> Blocks.SPRUCE_PRESSURE_PLATE;
+                        case CYAN -> Blocks.WARPED_PRESSURE_PLATE;
+                        case GRAY -> Blocks.POPLAR_PRESSURE_PLATE;
+                        case GREEN -> Blocks.WARPED_PRESSURE_PLATE;
+                        case LIGHT_BLUE -> Blocks.WARPED_PRESSURE_PLATE;
+                        case LIGHT_GRAY -> Blocks.POPLAR_PRESSURE_PLATE;
+                        case LIME -> Blocks.WARPED_PRESSURE_PLATE;
+                        case MAGENTA -> Blocks.CRIMSON_PRESSURE_PLATE;
+                        case ORANGE -> Blocks.ACACIA_PRESSURE_PLATE;
+                        case PINK -> Blocks.CHERRY_PRESSURE_PLATE;
+                        case PURPLE -> Blocks.CRIMSON_PRESSURE_PLATE;
+                        case RED -> Blocks.MANGROVE_PRESSURE_PLATE;
+                        case WHITE -> Blocks.PALE_OAK_PRESSURE_PLATE;
+                        case YELLOW -> Blocks.BAMBOO_PRESSURE_PLATE;
+                    })*/
                     .build()
             )
         );
@@ -1619,29 +1694,104 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
     public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
 
-    // Wood / Walls
+    // Wood / Vanilla logs
+
+    public static final class StrippableFamily<V> extends Family.Boolean<V> {
+
+        public StrippableFamily(Boolean2ObjectFunction<V> constructor) {
+            super(constructor);
+        }
+
+        public V unstripped() {
+            return this.get(false);
+        }
+
+        public V stripped() {
+            return this.get(true);
+        }
+
+    }
+
+    private static <V extends BlockSet> Family.WoodType.WithVanillaHasLogOrStem<StrippableFamily<V>> vanillaLogsOrWood(
+        boolean isWood
+    ) {
+        return Family.WoodType.withVanillaHasLogOrStem(woodType -> {
+            var blockSetType = BlockSetType.values().filter(type -> type.name().equals(woodType.name())).findFirst().get();
+            boolean isNether = BuiltInRegistries.BLOCK.getOptional(Identifier.withDefaultNamespace(woodType.name() + "_log")).map(it -> it == Blocks.AIR).orElse(true);
+            return new StrippableFamily(stripped -> {
+                var fullBlock = BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace((stripped ? "stripped_" : "") + woodType.name() + (isNether ? (isWood ? "_hyphae" : "_stem") : (isWood ? "_wood" : "_log"))));
+                var builder = BlockSet.builder(fullBlock.builtInRegistryHolder().key().identifier().getPath()).mineableWithAxe().nonVolatileShapeTag(BlockTags.PARROTS_SPAWNABLE_ON);
+                if (isNether) {
+                    builder.itemNonVolatileShapeTag(ItemTags.NON_FLAMMABLE_WOOD);
+                } else if (!isWood) {
+                    builder.nonVolatileShapeTag(BlockTags.SNAPS_GOAT_HORN);
+                }
+                builder.fullBlockOnlyForDataGeneration().vanilla(fullBlock).fullBlockConstructorForDataGeneration(RotatedPillarBlock::new);
+                if (isWood) {
+                    builder.fullBlockModelProviderFromCube(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace((stripped ? "stripped_" : "") + woodType.name() + (isNether ? "_stem" : "_log"))));
+                } else {
+                    builder.fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                        mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(fullBlock, "_top"));
+                        mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(fullBlock));
+                    }));
+                }
+                builder.woodenSlab().slabFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_slab")))
+                    .woodenStairs().stairsFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_stairs")));
+                if (isWood) {
+                    builder.woodenWall().wallFallback(getVanillaPlankWallFallback(woodType))
+                        .woodenFence().fenceFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_fence")))
+                        .woodenFenceGate(woodType).fenceGateFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_fence_gate")))
+                        .woodenButton(blockSetType).buttonFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_button")))
+                        .woodenPressurePlate().pressurePlateFallback(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_pressure_plate")));
+                }
+                if (!isNether) {
+                    builder.slabFinalizer(SuCraftBlockType::flammableLikeLog)
+                        .stairsFinalizer(SuCraftBlockType::flammableLikeLog);
+                    if (isWood) {
+                        builder.wallFinalizer(SuCraftBlockType::flammableLikeLog)
+                            .fenceFinalizer(SuCraftBlockType::flammableLikeLog)
+                            .fenceGateFinalizer(SuCraftBlockType::flammableLikeLog);
+                    }
+                }
+                builder.propertiesFinalizer(properties -> properties.mapColor(fullBlock.defaultMapColor()));
+                return (V) builder.build();
+            });
+        });
+    }
+
+    public static final Family.WoodType.WithVanillaHasLogOrStem<StrippableFamily<BlockSet.WithSlabAndStairs>> VANILLA_LOGS = vanillaLogsOrWood(false);
+
+    public static final Family.WoodType.WithVanillaHasLogOrStem<StrippableFamily<BlockSet.WithSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate>> VANILLA_WOOD = vanillaLogsOrWood(true);
+
+    // Wood / Vanilla plank walls
+
+    private static Block getVanillaPlankWallFallback(WoodType woodType) {
+        return switch (woodType.name()) {
+            case "acacia" -> Blocks.RED_SANDSTONE_WALL;
+            case "bamboo" -> Blocks.SULFUR_BRICK_WALL;
+            case "birch" -> Blocks.SANDSTONE_WALL;
+            case "cherry" -> Blocks.BRICK_WALL;
+            case "crimson" -> Blocks.RED_NETHER_BRICK_WALL;
+            case "dark_oak" -> Blocks.NETHER_BRICK_WALL;
+            case "jungle" -> Blocks.DIORITE_WALL;
+            case "mangrove" -> Blocks.CINNABAR_BRICK_WALL;
+            case "oak" -> Blocks.MUD_BRICK_WALL;
+            case "pale_oak" -> Blocks.DIORITE_WALL;
+            case "poplar" -> Blocks.ANDESITE_WALL;
+            case "spruce" -> Blocks.MUD_BRICK_WALL;
+            case "warped" -> Blocks.PRISMARINE_WALL;
+            default -> throw new IllegalArgumentException();
+        };
+    }
 
     public static final Family.WoodType<SuCraftBlockType> VANILLA_PLANK_WALLS =
-        Family.WoodType.forVanillaWoodTypes(woodType ->
+        Family.WoodType.withVanilla(woodType ->
             blockType(woodType.name() + "_wall")
-                .wall(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_fence")), switch (woodType.name()) {
-                    case "acacia" -> Blocks.RED_SANDSTONE_WALL;
-                    case "bamboo" -> Blocks.SULFUR_BRICK_WALL;
-                    case "birch" -> Blocks.SANDSTONE_WALL;
-                    case "cherry" -> Blocks.BRICK_WALL;
-                    case "crimson" -> Blocks.RED_NETHER_BRICK_WALL;
-                    case "dark_oak" -> Blocks.NETHER_BRICK_WALL;
-                    case "jungle" -> Blocks.DIORITE_WALL;
-                    case "mangrove" -> Blocks.CINNABAR_BRICK_WALL;
-                    case "oak" -> Blocks.MUD_BRICK_WALL;
-                    case "pale_oak" -> Blocks.DIORITE_WALL;
-                    case "poplar" -> Blocks.ANDESITE_WALL;
-                    case "spruce" -> Blocks.MUD_BRICK_WALL;
-                    case "warped" -> Blocks.PRISMARINE_WALL;
-                    default -> throw new IllegalArgumentException();
-                }).dataGenerateModel((factory, block) ->
+                .wall(BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(woodType.name() + "_fence")), getVanillaPlankWallFallback(woodType)).flammableLikePlanks()
+                .dataGenerateModel((factory, block) ->
                     factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addWall(generators, block, Identifier.withDefaultNamespace("block/" + woodType.name() + "_planks")))
                 )
+                .cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)
                 .mineableWithAxe()
                 .dataGenerateTag(SuCraftBlockItemTags.WOODEN_WALLS)
         );
@@ -1652,9 +1802,9 @@ public final class SuCraftBlocks {
         new Family.DyeColor<>(dyeColor ->
             BlockSet.builder(dyeColor.getSerializedName() + "_wool").tag(BlockItemTags.DAMPENS_VIBRATIONS).tag(BlockTags.SHEARS_MAJOR_BREAKING_SPEED)
                 .fullBlockOnlyForDataGeneration().vanilla(Blocks.WOOL.pick(dyeColor))
-                .wall().wallFallback(wallFallbackForSmoothDyeColor(dyeColor)).wallTag(SuCraftBlockItemTags.WOOL_WALLS)
-                .button().blockSetType(BlockSetType.STONE).buttonFallback(buttonFallbackForSmoothDyeColor(dyeColor)).buttonTag(SuCraftBlockItemTags.WOOL_BUTTONS)
-                .pressurePlate().pressurePlateFallback(pressurePlateFallbackForSmoothDyeColor(dyeColor)).pressurePlateTag(SuCraftBlockItemTags.WOOL_PRESSURE_PLATES)
+                .wall().wallFallback(wallFallbackForSmoothDyeColor(dyeColor)).wallTag(SuCraftBlockItemTags.WOOL_WALLS).wallFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOL))
+                .button().blockSetType(BlockSetType.STONE).buttonFallback(buttonFallbackForSmoothDyeColor(dyeColor)).buttonTag(SuCraftBlockItemTags.WOOL_BUTTONS).buttonFinalizer(block -> block.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_WOOL_ITEMS_EXTRA_SMALL))
+                .pressurePlate().pressurePlateFallback(pressurePlateFallbackForSmoothDyeColor(dyeColor)).pressurePlateTag(SuCraftBlockItemTags.WOOL_PRESSURE_PLATES).pressurePlateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOL))
                 .build()
         );
 

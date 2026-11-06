@@ -392,60 +392,92 @@ public final class AutomaticRecipeAdder {
                 };
             }
 
+            private static boolean isPlankBase(Item item) {
+                return item.builtInRegistryHolder().is(ItemTags.PLANKS);
+            }
+
+            private static boolean isPlankBase(Item input, Item output) {
+                return isPlankBase(input);
+            }
+
+            private static boolean isLogBase(Item item) {
+                return item.builtInRegistryHolder().is(ItemTags.LOGS);
+            }
+
+            private static boolean isLogBase(Item input, Item output) {
+                return isLogBase(input);
+            }
+
+            private static boolean isWoodenBase(Item item) {
+                return isPlankBase(item) || isLogBase(item);
+            }
+
+            private static boolean isWoodenBase(Item input, Item output) {
+                return isWoodenBase(input);
+            }
+
             private BiConsumer<Item, Item> addStairsCrafting() {
-                return this.addShapedCrafting(STAIRS_CRAFTING_OUTPUT_COUNT, null, 3, 3, input -> List.of(input, Items.AIR, Items.AIR, input, input, Items.AIR, input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_stairs" : null);
+                return this.addShapedCrafting(STAIRS_CRAFTING_OUTPUT_COUNT, null, 3, 3, input -> List.of(input, Items.AIR, Items.AIR, input, input, Items.AIR, input, input, input), CraftingBookCategory.BUILDING, (input, _) -> isPlankBase(input) ? "wooden_stairs" : isLogBase(input) ? "log_stairs" : null);
             }
 
             private BiConsumer<Item, Item> addSlabCrafting() {
-                return this.addShapedCrafting(6, null, 3, 1, input -> List.of(input, input, input), CraftingBookCategory.BUILDING, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_slab" : null);
+                return this.addShapedCrafting(6, null, 3, 1, input -> List.of(input, input, input), CraftingBookCategory.BUILDING, (input, _) -> isPlankBase(input) ? "wooden_slab" : isLogBase(input) ? "log_slab" : null);
             }
 
             private BiConsumer<Item, Item> addWoodenFenceCrafting() {
-                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(3, null, 3, 2, input -> List.of(input, Items.STICK, input, input, Items.STICK, input), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence" : null));
+                return conditional((input, _) -> isWoodenBase(input), this.addShapedCrafting(3, null, 3, 2, input -> List.of(input, Items.STICK, input, input, Items.STICK, input), CraftingBookCategory.MISC, (input, _) -> isPlankBase(input) ? "wooden_fence" : isLogBase(input) ? "log_fence" : null));
             }
 
             private BiConsumer<Item, Item> addNetherBrickFenceCrafting() {
-                return conditional(this::isNetherBrickFence, this.addShapedCrafting(6, null, 3, 2, input -> List.of(input, Items.NETHER_BRICK, input, input, Items.NETHER_BRICK, input), CraftingBookCategory.MISC));
+                return conditional(RecipeAdders::isNetherBrickFence, this.addShapedCrafting(6, null, 3, 2, input -> List.of(input, Items.NETHER_BRICK, input, input, Items.NETHER_BRICK, input), CraftingBookCategory.MISC));
             }
 
-            public boolean isNetherBrickFence(Item input, Item output) {
-                return input == Items.NETHER_BRICKS || input == Items.RED_NETHER_BRICKS;
+            public static boolean isNetherBrickFence(Item item) {
+                return item == Items.NETHER_BRICKS || item == Items.RED_NETHER_BRICKS;
             }
 
-            public boolean isNonPlankNewFence(Item input, Item output) {
-                return !isNetherBrickFence(input, output) && !input.builtInRegistryHolder().is(ItemTags.PLANKS);
+            public static boolean isNetherBrickFence(Item input, Item output) {
+                return isNetherBrickFence(input);
+            }
+
+            public static boolean isNonWoodenNewFence(Item item) {
+                return !isNetherBrickFence(item) && !isWoodenBase(item);
+            }
+
+            public static boolean isNonWoodenNewFence(Item input, Item output) {
+                return isNonWoodenNewFence(input);
             }
 
             private BiConsumer<Item, Item> addNewNonWoodenFenceStonecutting() {
-                return conditional(this::isNonPlankNewFence, this.addStonecutting(1, null));
+                return conditional(RecipeAdders::isNonWoodenNewFence, this.addStonecutting(1, null));
             }
 
             private BiConsumer<Item, Item> addReverseNewNonWoodenFenceStonecutting() {
-                return conditional(this::isNonPlankNewFence, invert(this.addStonecutting(1, null)));
+                return conditional(RecipeAdders::isNonWoodenNewFence, invert(this.addStonecutting(1, null)));
             }
 
             private BiConsumer<Item, Item> addFenceGateCrafting() {
-                return conditional((input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS), this.addShapedCrafting(1, null, 3, 2, input -> List.of(Items.STICK, input, Items.STICK, Items.STICK, input, Items.STICK), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_fence_gate" : null));
+                return conditional((input, _) -> isWoodenBase(input), this.addShapedCrafting(1, null, 3, 2, input -> List.of(Items.STICK, input, Items.STICK, Items.STICK, input, Items.STICK), CraftingBookCategory.REDSTONE, (input, _) -> isPlankBase(input) ? "wooden_fence_gate" : isLogBase(input) ? "log_fence_gate" : null));
             }
 
             private BiConsumer<Item, Item> addSignCrafting() {
-                return this.addShapedCrafting(3, null, 3, 3, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.STICK, Items.AIR), CraftingBookCategory.MISC, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_sign" : null);
+                return this.addShapedCrafting(3, null, 3, 3, input -> List.of(input, input, input, input, input, input, Items.AIR, Items.STICK, Items.AIR), CraftingBookCategory.MISC, (input, _) -> isPlankBase(input) ? "wooden_sign" : isLogBase(input) ? "log_sign" : null);
             }
 
             private BiConsumer<Item, Item> addButtonCrafting() {
-                return this.addShapelessCrafting(1, null, input -> List.of(input), CraftingBookCategory.REDSTONE, input -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_button" : null);
+                return this.addShapelessCrafting(1, null, input -> List.of(input), CraftingBookCategory.REDSTONE, input -> isPlankBase(input) ? "wooden_button" : isLogBase(input) ? "log_button" : null);
             }
 
             private BiConsumer<Item, Item> addDoorCrafting() {
-                return this.addShapedCrafting(3, null, 2, 3, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_door" : null);
+                return this.addShapedCrafting(3, null, 2, 3, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> isPlankBase(input) ? "wooden_door" : isLogBase(input) ? "log_door" : null);
             }
 
             private BiConsumer<Item, Item> addPressurePlateCrafting() {
-                return this.addShapedCrafting(1, null, 2, 1, input -> List.of(input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_pressure_plate" : null);
+                return this.addShapedCrafting(1, null, 2, 1, input -> List.of(input, input), CraftingBookCategory.REDSTONE, (input, _) -> isPlankBase(input) ? "wooden_pressure_plate" : isLogBase(input) ? "log_pressure_plate" : null);
             }
 
             private BiConsumer<Item, Item> addTrapdoorCrafting() {
-                return this.addShapedCrafting(2, null, 3, 2, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> input.builtInRegistryHolder().is(ItemTags.PLANKS) ? "wooden_trapdoor" : null);
+                return this.addShapedCrafting(2, null, 3, 2, input -> List.of(input, input, input, input, input, input), CraftingBookCategory.REDSTONE, (input, _) -> isPlankBase(input) ? "wooden_trapdoor" : isLogBase(input) ? "log_trapdoor" : null);
             }
 
             private BiConsumer<Item, Item> addStonecutting(int outputCount, @Nullable String reason) {
@@ -554,9 +586,8 @@ public final class AutomaticRecipeAdder {
             adders.addRecipes(
                 item,
                 filterOut(getSuffixBase(item, "_button"), STORAGE_BLOCKS),
-                adders.addButtonCrafting()
-                // adders.addStonecutting(1)
-                // invert(adders.addStonecutting(1, "from_button"))
+                adders.addButtonCrafting(),
+                conditional(RecipeAdders::isLogBase, adders.addStonecutting(1))
             );
             adders.addRecipes(
                 item,

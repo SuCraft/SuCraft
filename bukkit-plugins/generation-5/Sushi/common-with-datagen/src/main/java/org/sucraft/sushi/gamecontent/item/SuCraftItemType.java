@@ -2,23 +2,35 @@ package org.sucraft.sushi.gamecontent.item;
 
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockItemTagId;import net.minecraft.tags.TagKey;import net.minecraft.world.item.BlockItem;
+import net.minecraft.tags.BlockItemTagId;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.component.CookingFuel;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
-import org.sucraft.sushi.datageneration.common.CollectedFactories;import org.sucraft.sushi.datageneration.common.DataGenerationFlag;import spout.api.SpoutRegistryKey;
+import org.sucraft.sushi.datageneration.common.CollectedFactories;
+import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
+import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.itemstack.ItemStackMapping;
 import spout.api.gamecontent.datadriven.item.registry.ItemTypeRegistryEntryBuilderNMS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,6 +44,7 @@ public final class SuCraftItemType implements ItemLike {
 
     public final boolean definedByCode;
     private List<Consumer<ItemTypeRegistryEntryBuilderNMS>> itemBuilding = new ArrayList<>();
+    public @Nullable BiConsumer<SuCraftItemType, Item> postConstruction;
     private @Nullable Function<Item.Properties, Item> constructorForDataGeneration = Item::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
     private @Nullable List<TagKey<Item>> dataGeneratingTags;
@@ -122,7 +135,7 @@ public final class SuCraftItemType implements ItemLike {
         this.dataGenerating.forEach(it -> it.accept(factories));
         this.dataGenerating = null;
         if (this.dataGeneratingTags != null) {
-            for (var tag : this.dataGeneratingTags){
+            for (var tag : this.dataGeneratingTags) {
                 factories.itemTags().add(tag, this.getNMS());
             }
             this.dataGeneratingTags = null;
@@ -137,6 +150,14 @@ public final class SuCraftItemType implements ItemLike {
         return this;
     }
 
+    public SuCraftItemType update(@Nullable List<Consumer<SuCraftItemType>> updater) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        if (updater != null) updater.forEach(consumer -> consumer.accept(this));
+        return this;
+    }
+
     public SuCraftItemType itemBuild(Consumer<ItemTypeRegistryEntryBuilderNMS> builderConsumer) {
         if (!this.definedByCode) {
             throw new IllegalStateException();
@@ -147,6 +168,27 @@ public final class SuCraftItemType implements ItemLike {
 
     public SuCraftItemType blockFactory() {
         return this.itemBuild(ItemTypeRegistryEntryBuilderNMS::inheritsFromBlock);
+    }
+
+    public SuCraftItemType postConstruction(@Nullable BiConsumer<SuCraftItemType, Item> postConstruction) {
+        this.postConstruction = postConstruction;
+        return this;
+    }
+
+    public SuCraftItemType properties(Supplier<Item.Properties> properties) {
+        return this.itemBuild(builder -> builder.propertiesNMS(properties.get()));
+    }
+
+    public SuCraftItemType properties(Consumer<Item.Properties> properties) {
+        return this.itemBuild(builder -> builder.propertiesNMS(properties));
+    }
+
+    public SuCraftItemType cookingFuel(ResourceKey<ContextIntProvider> burnTime) {
+        return this.properties(properties -> properties.cookingFuel(burnTime));
+    }
+
+    public SuCraftItemType cookingFuel(ResolvableInt burnTime) {
+        return this.properties(properties -> properties.component(DataComponents.COOKING_FUEL, new CookingFuel(burnTime, ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))));
     }
 
     public SuCraftItemType constructorForDataGeneration(Function<Item.Properties, Item> constructor) {

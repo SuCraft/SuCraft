@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.LadderBlock;import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -28,6 +29,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
@@ -68,6 +72,7 @@ public final class SuCraftBlockType implements ItemLike {
 
     public final boolean definedByCode;
     private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
+    public @Nullable BiConsumer<SuCraftBlockType, Block> postConstruction;
     private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
     private @Nullable Function<BlockBehaviour.Properties, Block> constructorForDataGeneration = Block::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
@@ -330,6 +335,24 @@ public final class SuCraftBlockType implements ItemLike {
         return this;
     }
 
+    public SuCraftBlockType update(@Nullable List<Consumer<SuCraftBlockType>> updater) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        if (updater != null) updater.forEach(consumer -> consumer.accept(this));
+        return this;
+    }
+
+    public SuCraftBlockType updateItem(@Nullable Consumer<SuCraftItemType> updater) {
+        if (this.item != null) this.item.update(updater);
+        return this;
+    }
+
+    public SuCraftBlockType updateItem(@Nullable List<Consumer<SuCraftItemType>> updater) {
+        if (this.item != null) this.item.update(updater);
+        return this;
+    }
+
     public SuCraftBlockType blockBuild(Consumer<BlockTypeRegistryEntryBuilderNMS> builderConsumer) {
         if (!this.definedByCode) {
             throw new IllegalStateException();
@@ -364,6 +387,27 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType pressurePlateFactory(Supplier<BlockSetType> blockSetType) {
         return this.blockBuild(builder -> builder.factoryNMS(properties -> new PressurePlateBlock(blockSetType.get(), properties)));
+    }
+
+    public SuCraftBlockType postConstruction(@Nullable BiConsumer<SuCraftBlockType, Block> postConstruction) {
+        this.postConstruction = postConstruction;
+        return this;
+    }
+
+    public SuCraftBlockType flammable(int igniteOdds, int burnOdds) {
+        return this.postConstruction((_, block) -> ((FireBlock) Blocks.FIRE).setFlammable(block, igniteOdds, burnOdds));
+    }
+
+    public SuCraftBlockType flammableLikeBookshelf() {
+        return this.flammable(30, 20);
+    }
+
+    public SuCraftBlockType flammableLikeLog() {
+        return this.flammable(5, 5);
+    }
+
+    public SuCraftBlockType flammableLikePlanks() {
+        return this.flammable(5, 20);
     }
 
     public SuCraftBlockType properties(Supplier<BlockBehaviour.Properties> properties) {
@@ -729,6 +773,22 @@ public final class SuCraftBlockType implements ItemLike {
         return this;
     }
 
+    public SuCraftBlockType itemProperties(Supplier<Item.Properties> properties) {
+        return this.updateItem(item -> item.properties(properties));
+    }
+
+    public SuCraftBlockType itemProperties(Consumer<Item.Properties> properties) {
+        return this.updateItem(item -> item.properties(properties));
+    }
+
+    public SuCraftBlockType cookingFuel(ResourceKey<ContextIntProvider> burnTime) {
+        return this.updateItem(item -> item.cookingFuel(burnTime));
+    }
+
+    public SuCraftBlockType cookingFuel(ResolvableInt burnTime) {
+        return this.updateItem(item -> item.cookingFuel(burnTime));
+    }
+
     public SuCraftBlockType fullBlock(Block propertiesFrom, Block fallback) {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
@@ -758,6 +818,7 @@ public final class SuCraftBlockType implements ItemLike {
     public SuCraftBlockType woodenBarrel(Block planks) {
         this.barrel(planks);
         this.mineableWithAxe();
+        this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
         return this.dataGenerateTag(CBlockItemTags.BARRELS_WOODEN);
     }
 
@@ -776,6 +837,7 @@ public final class SuCraftBlockType implements ItemLike {
     public SuCraftBlockType woodenLadder(Block planks) {
         this.ladder(planks);
         this.mineableWithAxe();
+        this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
         return this.dataGenerateTag(SpoutBlockItemTags.LADDERS_WOODEN);
     }
 

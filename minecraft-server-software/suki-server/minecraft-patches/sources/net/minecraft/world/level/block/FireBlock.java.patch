@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/block/FireBlock.java
++++ b/net/minecraft/world/level/block/FireBlock.java
+@@ -345,7 +_,7 @@
+         builder.add(AGE, NORTH, EAST, SOUTH, WEST, UP);
+     }
+ 
+-    private void setFlammable(final Block block, final int igniteOdds, final int burnOdds) {
++    public void setFlammable(final Block block, final int igniteOdds, final int burnOdds) { // Suki - Common class tweakers - Make accessible
+         this.igniteOdds.put(block, igniteOdds);
+         this.burnOdds.put(block, burnOdds);
+     }

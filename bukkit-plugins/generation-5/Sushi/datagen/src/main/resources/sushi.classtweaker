@@ -4,6 +4,7 @@ accessible class net/minecraft/client/data/models/BlockModelGenerators$BlockStat
 accessible field net/minecraft/client/data/models/BlockModelGenerators FULL_BLOCK_MODEL_CUSTOM_GENERATORS Ljava/util/Map;
 accessible field net/minecraft/client/data/models/BlockModelGenerators TEXTURED_MODELS Ljava/util/Map;
 accessible field net/minecraft/client/data/models/BlockModelGenerators$BlockFamilyProvider skipGeneratingModelsFor Ljava/util/Set;
+accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_SAPLING_CHANCES [F
 accessible field net/minecraft/data/recipes/ShapedRecipeBuilder key Ljava/util/Map;
 accessible field net/minecraft/data/recipes/ShapedRecipeBuilder result Lnet/minecraft/world/item/ItemStackTemplate;
 accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder ingredients Ljava/util/List;
@@ -23,6 +24,7 @@ accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties instrument Lnet/minecraft/world/level/block/state/properties/NoteBlockInstrument;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties mapColor Ljava/util/function/Function;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
+accessible method net/minecraft/data/loot/BlockLootSubProvider createLeavesDrops (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;[F)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
 accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
 mutable field net/minecraft/client/data/models/BlockModelGenerators FULL_BLOCK_MODEL_CUSTOM_GENERATORS Ljava/util/Map;

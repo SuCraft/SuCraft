@@ -2,6 +2,8 @@ package org.sucraft.sushi.gamecontent.block;
 
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -20,15 +22,20 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.LadderBlock;import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
@@ -42,13 +49,15 @@ import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.datageneration.common.Models;
 import org.sucraft.sushi.gamecontent.common.CBlockItemTags;
-import org.sucraft.sushi.gamecontent.common.SpoutBlockItemTags;import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
+import org.sucraft.sushi.gamecontent.common.SpoutBlockItemTags;
+import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
 import spout.api.clientview.packetmapping.blockstate.macro.registry.BlockStateMappingMacroRegistryEntryBuilderNMS;
 import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;
 import spout.clientview.packetmapping.blockstate.macro.BlockStateMappingMacro;
 import spout.clientview.packetmapping.blockstate.macro.FromToBlockMacro;
+import spout.clientview.packetmapping.blockstate.macro.LeavesMacro;
 import spout.clientview.packetmapping.blockstate.macro.SlabMacro;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
@@ -462,6 +471,23 @@ public final class SuCraftBlockType implements ItemLike {
         ));
     }
 
+    public SuCraftBlockType leavesMacro(Block fallback) {
+        return this.macro(() -> new LeavesMacro(
+            BlockStateMappingMacroTypes.LEAVES,
+            true,
+            true,
+            true,
+            true,
+            true,
+            null,
+            null,
+            null,
+            SuCraftBlockType.this.getNMS(),
+            fallback,
+            null
+        ));
+    }
+
     public SuCraftBlockType slabMacro(BlockStateMappingMacroType type, Block fallback, @Nullable BlockState fullBlockFallbackBlockState) {
         return this.macro(() -> new SlabMacro(
             type,
@@ -839,6 +865,25 @@ public final class SuCraftBlockType implements ItemLike {
         this.mineableWithAxe();
         this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
         return this.dataGenerateTag(SpoutBlockItemTags.LADDERS_WOODEN);
+    }
+
+    public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+        this.blockBuild(builder -> builder.factoryNMS(constructor));
+        this.propertiesFull(propertiesFrom);
+        this.properties(properties -> {
+            properties.mapColor(mapColor);
+            properties.sound(soundType != null ? soundType : SoundType.GRASS);
+        });
+        this.leavesMacro(fallback);
+        this.constructorForDataGeneration(constructor);
+        this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getNMS()));
+        this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getNMS(), block -> provider.createLeavesDrops(block, sapling.get(), saplingChances != null ? saplingChances : FabricBlockLootSubProvider.NORMAL_LEAVES_SAPLING_CHANCES))));
+        this.dataGenerateTag(BlockItemTags.LEAVES);
+        return this;
+    }
+
+    public SuCraftBlockType untintedLeaves(@Nullable Block propertiesFrom, Block fallback, @Nullable Float leafParticleChance, ParticleOptions leafParticle, @Nullable AmbientLeavesBlockSoundPlayer ambientLeavesBlockSoundPlayer, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+        return this.leaves(properties -> new UntintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, leafParticle, ambientLeavesBlockSoundPlayer != null ? ambientLeavesBlockSoundPlayer : AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
     }
 
     public SuCraftBlockType slab(Block propertiesFrom, Block fallback, @Nullable BlockState fallbackBlockState) {

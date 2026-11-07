@@ -8,6 +8,7 @@ public interface BlockStateMappingMacroTypes {
     BlockStateMappingMacroType FENCE_GATE = null;
     BlockStateMappingMacroType FULL_BLOCK = null;
     BlockStateMappingMacroType LADDER = null;
+    BlockStateMappingMacroType LEAVES = null;
     BlockStateMappingMacroType PRESSURE_PLATE = null;
     BlockStateMappingMacroType SLAB = null;
     BlockStateMappingMacroType STAIRS = null;

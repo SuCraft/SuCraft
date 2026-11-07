@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/item/crafting/RecipeManager.java
 +++ b/net/minecraft/world/item/crafting/RecipeManager.java
-@@ -234,6 +_,55 @@
+@@ -231,6 +_,55 @@
              Recipe<?> recipe = recipeHolder.value();
              OptionalInt groupId;
              if (recipe.group().isEmpty()) {

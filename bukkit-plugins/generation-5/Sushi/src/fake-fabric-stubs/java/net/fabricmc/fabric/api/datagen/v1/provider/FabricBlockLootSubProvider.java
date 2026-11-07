@@ -14,6 +14,8 @@ import java.util.function.Function;
 
 public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
 
+    public static float[] NORMAL_LEAVES_SAPLING_CHANCES;
+
     private FabricBlockLootSubProvider(Set<Item> explosionResistant, FeatureFlagSet enabledFeatures, Context output) {
         super(explosionResistant, enabledFeatures, output);
         throw new UnsupportedOperationException();
@@ -36,6 +38,11 @@ public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
 
     @Override
     public LootTable.Builder createSlabItemTable(Block slab) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public LootTable.Builder createLeavesDrops(final Block original, final Block sapling, final float... saplingChances) {
         throw new UnsupportedOperationException();
     }
 

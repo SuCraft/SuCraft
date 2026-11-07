@@ -1,5 +1,10 @@
 package org.sucraft.sushi.gamecontent.recipe;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -40,9 +45,12 @@ import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.block.OldReplacedBlocks;
 import org.sucraft.sushi.main.SushiPlugin;
 import spout.gamecontent.builtin.recipe.MissingTransitiveStonecuttingRecipeAdder;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -52,11 +60,14 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class AutomaticRecipeAdder {
+
+    private static int VERSION = 1;
 
     public static final int STAIRS_CRAFTING_OUTPUT_COUNT = 6;
 
@@ -155,6 +166,28 @@ public final class AutomaticRecipeAdder {
         }
     }
 
+    private static ShapedRecipePattern createShapedRecipePattern(final int width, final int height, final List<Optional<Ingredient>> ingredients) {
+        var key = new HashMap<Character, Ingredient>(width * height);
+        char nextKey = 'A';
+        var pattern = new ArrayList<String>(height);
+        for (int y = 0; y < height; y++) {
+            var line = new StringBuilder();
+            for (int x = 0; x < width; x++) {
+                int i = y * width + x;
+                var ingredient = ingredients.get(i);
+                if (ingredient.isEmpty()) {
+                    line.append(' ');
+                } else {
+                    line.append(nextKey);
+                    key.put(nextKey, ingredient.get());
+                    nextKey++;
+                }
+            }
+            pattern.add(line.toString());
+        }
+        return new ShapedRecipePattern(width, height, ingredients, Optional.of(new ShapedRecipePattern.Data(key, pattern)));
+    }
+
     private static @Nullable Item firstNotNullOf(@Nullable Item... items) {
         if (items == null) return null;
         for (var item : items) {
@@ -184,6 +217,51 @@ public final class AutomaticRecipeAdder {
     public static void run() {
 
         SushiPlugin.getPluginLogger().info("Automatically adding recipes...");
+
+        // Check if we have a valid cache
+        var keyCodec = ResourceKey.codec(Registries.RECIPE);
+        MapCodec<RecipeHolder<?>> recipeHolderCodec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            keyCodec.fieldOf("key").forGetter(RecipeHolder::id),
+            Recipe.DIRECT_CODEC.fieldOf("recipe").forGetter(RecipeHolder::value)
+        ).apply(instance, (key, recipe) -> new RecipeHolder<>(key, recipe, true)));
+        var cacheInputFile = SushiPlugin.get().getDataFolder().toPath().resolve("automatic_recipe_cache/input.txt");
+        var cacheOutputRemovedFile = SushiPlugin.get().getDataFolder().toPath().resolve("automatic_recipe_cache/output_removed.txt");
+        var cacheOutputAddedFile = SushiPlugin.get().getDataFolder().toPath().resolve("automatic_recipe_cache/output_added.txt");
+        var expectedCacheInput = Stream.concat(Stream.of("" + VERSION), BuiltInRegistries.ITEM.stream().map(item -> item.keyInItemRegistry.toString()).sorted()).toList();
+        try {
+            if (Files.exists(cacheInputFile) && Files.readAllLines(cacheInputFile).equals(expectedCacheInput)) {
+                if (Files.exists(cacheOutputRemovedFile) && Files.exists(cacheOutputAddedFile)) {
+                    // Do the same as the last time
+                    MissingTransitiveStonecuttingRecipeAdder.startQueue();
+                    var removedRecipeLines = Files.readAllLines(cacheOutputRemovedFile);
+                    SushiPlugin.getPluginLogger().info("Removing " + removedRecipeLines.size() + " recipes based on cache...");
+                    if (!removedRecipeLines.isEmpty()) {
+                        removedRecipeLines.stream().map(JsonParser::parseString).map(json ->
+                            keyCodec.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst()
+                        ).forEach(MinecraftServer.getServer().getRecipeManager().recipes::removeRecipe);
+                    }
+                    var addedRecipeLines = Files.readAllLines(cacheOutputAddedFile);
+                    SushiPlugin.getPluginLogger().info("Adding " + addedRecipeLines.size() + " recipes based on cache...");
+                    if (!addedRecipeLines.isEmpty()) {
+                        addedRecipeLines.stream().map(JsonParser::parseString).map(json ->
+                            recipeHolderCodec.decoder().decode(JsonOps.INSTANCE, json).getOrThrow().getFirst()
+                        ).forEach(MinecraftServer.getServer().getRecipeManager().recipes::addRecipe);
+                    }
+                    if (!removedRecipeLines.isEmpty() || !addedRecipeLines.isEmpty()) {
+                        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
+                        SushiPlugin.getPluginLogger().info("Flushing transitive stonecutting recipe queue...");
+                        MissingTransitiveStonecuttingRecipeAdder.flushQueue();
+                    }
+                    SushiPlugin.getPluginLogger().info("Finished automatically adding recipes from cache");
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            SushiPlugin.getPluginLogger().log(Level.WARNING, "Exception while reading automatic recipe cache:", e);
+        }
+        // Prepare to write the cache later
+        var removedRecipes = new ArrayList<ResourceKey<Recipe<?>>>();
+        var addedRecipes = new ArrayList<RecipeHolder<?>>();
 
         // Collect ignored items
         var ignoredItems = new HashSet<>(OldReplacedBlocks.LIST.stream()
@@ -296,12 +374,14 @@ public final class AutomaticRecipeAdder {
             private void removeRecipeFromServer(SimpleRecipeDescription recipe) {
                 MinecraftServer.getServer().getRecipeManager().removeRecipe(recipe.id());
                 this.unmapRecipeByInputOutput(recipe);
+                removedRecipes.add(recipe.id());
             }
 
             private void addRecipeToServer(Identifier key, @Nullable String reason, Recipe<?> recipe) {
-                var holder = new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, key.withSuffix(reason != null ? "_" + reason : "")), recipe);
-                MinecraftServer.getServer().getRecipeManager().addRecipe(holder);
-                this.recomputeRecipesByInputByOutput();
+                var holder = new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, key.withSuffix(reason != null ? "_" + reason : "")), recipe, true);
+                MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(holder);
+                this.mapRecipeByInputOutput(holder);
+                addedRecipes.add(holder);
             }
 
             private void addShapelessCraftingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, List<Item> inputs, CraftingBookCategory category, @Nullable Function<Item, @Nullable String> group) {
@@ -319,7 +399,7 @@ public final class AutomaticRecipeAdder {
                 if (ignoredItems.contains(output) || inputs.stream().filter(Objects::nonNull).anyMatch(ignoredItems::contains)) {
                     return;
                 }
-                this.addRecipeToServer(key, reason, new ShapedRecipe(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(category, group != null ? Optional.ofNullable(group.apply(output)).orElse("") : ""), new ShapedRecipePattern(width, height, inputs.stream().map(input -> input == Items.AIR ? Optional.<Ingredient>empty() : Optional.of(Ingredient.of(input))).toList(), Optional.empty()), new ItemStackTemplate(output.builtInRegistryHolder(), outputCount, DataComponentPatch.EMPTY)));
+                this.addRecipeToServer(key, reason, new ShapedRecipe(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(category, group != null ? Optional.ofNullable(group.apply(output)).orElse("") : ""), createShapedRecipePattern(width, height, inputs.stream().map(input -> input == Items.AIR ? Optional.<Ingredient>empty() : Optional.of(Ingredient.of(input))).toList()), new ItemStackTemplate(output.builtInRegistryHolder(), outputCount, DataComponentPatch.EMPTY)));
             }
 
             private void addStonecuttingRecipeToServer(Identifier key, @Nullable String reason, Item output, int outputCount, Item input) {
@@ -756,7 +836,21 @@ public final class AutomaticRecipeAdder {
         });
 
         // Flush the queued transitive recipe additions
+        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
         MissingTransitiveStonecuttingRecipeAdder.flushQueue();
+
+        // Write the cache
+        try {
+            SushiPlugin.getPluginLogger().info("Writing automatic recipes to cache...");
+            cacheInputFile.getParent().toFile().mkdirs();
+            Files.write(cacheInputFile, expectedCacheInput);
+            cacheOutputRemovedFile.getParent().toFile().mkdirs();
+            Files.write(cacheOutputRemovedFile, removedRecipes.stream().map(removed -> keyCodec.encodeStart(JsonOps.INSTANCE, removed).getOrThrow()).map(JsonElement::toString).toList());
+            cacheOutputAddedFile.getParent().toFile().mkdirs();
+            Files.write(cacheOutputAddedFile, addedRecipes.stream().map(added -> recipeHolderCodec.encoder().encodeStart(JsonOps.INSTANCE, added).getOrThrow()).map(JsonElement::toString).toList());
+        } catch (IOException e) {
+            SushiPlugin.getPluginLogger().log(Level.WARNING, "Exception while writing automatic recipe cache:", e);
+        }
 
     }
 

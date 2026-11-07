@@ -9,8 +9,11 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -23,6 +26,7 @@ import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -1693,6 +1697,68 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType PALE_OAK_LADDER = woodenLadder("pale_oak_ladder", Blocks.PALE_OAK_PLANKS);
     public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
     public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
+
+    // Wood / Trees / Maple
+
+    private static SuCraftBlockType leaves(
+        String path,
+        @Nullable Block propertiesFrom,
+        Block fallback,
+        @Nullable Float leafParticleChance,
+        int leavesParticleColor,
+        @Nullable AmbientLeavesBlockSoundPlayer ambientSoundPlayer,
+        MapColor mapColor,
+        @Nullable SoundType soundType,
+        Supplier<Block> sapling
+    ) {
+        return blockType(path).untintedLeaves(
+            propertiesFrom,
+            fallback,
+            leafParticleChance,
+            ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, leavesParticleColor),
+            ambientSoundPlayer,
+            mapColor,
+            soundType,
+            sapling,
+            null
+        );
+    }
+
+    public static final SuCraftBlockType YELLOW_MAPLE_LEAVES = leaves(
+        "yellow_maple_leaves",
+        Blocks.YELLOW_POPLAR_LEAVES,
+        Blocks.YELLOW_POPLAR_LEAVES,
+        null,
+        0xb97e00,
+        AmbientLeavesBlockSoundPlayer.of(SoundEvents.POPLAR_LEAVES_AMBIENT, BlockTags.REQUIRED_FOR_POPLAR_LEAF_AMBIENCE),
+        MapColor.TERRACOTTA_YELLOW,
+        SoundType.POPLAR_LEAVES,
+        () -> Blocks.OAK_SAPLING/*YELLOW_MAPLE_SAPLING.getNMS()*/
+    );
+
+    public static final SuCraftBlockType ORANGE_MAPLE_LEAVES = leaves(
+        "orange_maple_leaves",
+        Blocks.ORANGE_POPLAR_LEAVES,
+        Blocks.ORANGE_POPLAR_LEAVES,
+        null,
+        0x9f4c21,
+        AmbientLeavesBlockSoundPlayer.of(SoundEvents.POPLAR_LEAVES_AMBIENT, BlockTags.REQUIRED_FOR_POPLAR_LEAF_AMBIENCE),
+        MapColor.TERRACOTTA_ORANGE,
+        SoundType.POPLAR_LEAVES,
+        () -> Blocks.OAK_SAPLING/*ORANGE_MAPLE_SAPLING.getNMS()*/
+    );
+
+    public static final SuCraftBlockType RED_MAPLE_LEAVES = leaves(
+        "red_maple_leaves",
+        Blocks.RED_POPLAR_LEAVES,
+        Blocks.RED_POPLAR_LEAVES,
+        null,
+        0x933a38,
+        AmbientLeavesBlockSoundPlayer.of(SoundEvents.POPLAR_LEAVES_AMBIENT, BlockTags.REQUIRED_FOR_POPLAR_LEAF_AMBIENCE),
+        MapColor.COLOR_RED,
+        SoundType.POPLAR_LEAVES,
+        () -> Blocks.OAK_SAPLING/*RED_MAPLE_SAPLING.getNMS()*/
+    );
 
     // Wood / Vanilla logs
 

@@ -352,6 +352,11 @@ tasks {
             inputFile = parametrizedLangFile("nl_nl")
             outputFile = generatedLangFile("nl_nl")
         }
+    val generateTrTr =
+        register<GenerateLangFileFromParametrizedLangFileTask>("generateTrTr") {
+            inputFile = parametrizedLangFile("tr_tr")
+            outputFile = generatedLangFile("tr_tr")
+        }
     val generateZhTw =
         register<GenerateLangFileFromParametrizedLangFileTask>("generateZhTw") {
             inputFile = parametrizedLangFile("zh_tw")
@@ -450,6 +455,7 @@ tasks {
             generateLolUs,
             generateNlBe,
             generateNlNl,
+            generateTrTr,
             generateZhCn,
             generateZhHk,
             generateZhTw,

@@ -1,0 +1,11 @@
+--- a/net/minecraft/gametest/framework/GameTestServer.java
++++ b/net/minecraft/gametest/framework/GameTestServer.java
+@@ -90,7 +_,7 @@
+     private final int repeatCount;
+     private List<GameTestBatch> testBatches = new ArrayList<>();
+     private final Stopwatch stopwatch = Stopwatch.createUnstarted();
+-    private static final WorldOptions WORLD_OPTIONS = new WorldOptions(0L, false, false);
++    private static final WorldOptions WORLD_OPTIONS = new WorldOptions(0L, new long[16], false, false); // Suki - Leaf - Matter - Secure seed
+     private @Nullable MultipleTestTracker testTracker;
+ 
+     public static GameTestServer create(

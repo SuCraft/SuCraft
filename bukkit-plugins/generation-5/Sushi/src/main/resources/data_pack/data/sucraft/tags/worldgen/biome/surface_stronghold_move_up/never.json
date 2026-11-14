@@ -1,0 +1,16 @@
+{
+  "values": [
+    "#minecraft:is_river",
+    "#minecraft:is_beach",
+    "#minecraft:is_ocean",
+    "#minecraft:is_deep_ocean",
+    "#minecraft:is_nether",
+    "#minecraft:is_end",
+    "#minecraft:has_structure/shipwreck",
+    "#minecraft:has_structure/shipwreck_beached",
+    "#minecraft:has_structure/ocean_monument",
+    "#minecraft:has_structure/ocean_ruin_cold",
+    "#minecraft:has_structure/ocean_ruin_warm",
+    "#minecraft:has_structure/ruined_portal_ocean"
+  ]
+}

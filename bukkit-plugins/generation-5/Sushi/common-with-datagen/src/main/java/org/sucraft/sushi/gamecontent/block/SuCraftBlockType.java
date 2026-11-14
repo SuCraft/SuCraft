@@ -3,6 +3,7 @@ package org.sucraft.sushi.gamecontent.block;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
+import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -25,11 +26,13 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,6 +69,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
@@ -409,6 +413,10 @@ public final class SuCraftBlockType implements ItemLike {
 
     public SuCraftBlockType flammableLikeBookshelf() {
         return this.flammable(30, 20);
+    }
+
+    public SuCraftBlockType flammableLikeLeaves() {
+        return this.flammable(30, 60);
     }
 
     public SuCraftBlockType flammableLikeLog() {
@@ -815,6 +823,14 @@ public final class SuCraftBlockType implements ItemLike {
         return this.updateItem(item -> item.cookingFuel(burnTime));
     }
 
+    public SuCraftBlockType compostable(ResourceKey<ContextIntProvider> layers) {
+        return this.updateItem(item -> item.compostable(layers));
+    }
+
+    public SuCraftBlockType compostable(ResolvableInt layers) {
+        return this.updateItem(item -> item.compostable(layers));
+    }
+
     public SuCraftBlockType fullBlock(Block propertiesFrom, Block fallback) {
         this.propertiesFull(propertiesFrom);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.FULL_BLOCK, fallback);
@@ -867,7 +883,7 @@ public final class SuCraftBlockType implements ItemLike {
         return this.dataGenerateTag(SpoutBlockItemTags.LADDERS_WOODEN);
     }
 
-    public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+    public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, Block> constructorForDataGeneration, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
         this.blockBuild(builder -> builder.factoryNMS(constructor));
         this.propertiesFull(propertiesFrom);
         this.properties(properties -> {
@@ -875,15 +891,37 @@ public final class SuCraftBlockType implements ItemLike {
             properties.sound(soundType != null ? soundType : SoundType.GRASS);
         });
         this.leavesMacro(fallback);
-        this.constructorForDataGeneration(constructor);
+        this.constructorForDataGeneration(constructorForDataGeneration);
         this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getNMS()));
         this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getNMS(), block -> provider.createLeavesDrops(block, sapling.get(), saplingChances != null ? saplingChances : FabricBlockLootSubProvider.NORMAL_LEAVES_SAPLING_CHANCES))));
         this.dataGenerateTag(BlockItemTags.LEAVES);
+        this.flammableLikeLeaves();
+        this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
         return this;
     }
 
-    public SuCraftBlockType untintedLeaves(@Nullable Block propertiesFrom, Block fallback, @Nullable Float leafParticleChance, ParticleOptions leafParticle, @Nullable AmbientLeavesBlockSoundPlayer ambientLeavesBlockSoundPlayer, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
-        return this.leaves(properties -> new UntintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, leafParticle, ambientLeavesBlockSoundPlayer != null ? ambientLeavesBlockSoundPlayer : AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
+    public SuCraftBlockType untintedLeaves(@Nullable Block propertiesFrom, Block fallback, @Nullable Float leafParticleChance, ParticleOptions leafParticle, @Nullable Supplier<AmbientLeavesBlockSoundPlayer> ambientLeavesBlockSoundPlayer, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+        return this.leaves(properties -> new UntintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, leafParticle, ambientLeavesBlockSoundPlayer != null ? ambientLeavesBlockSoundPlayer.get() : AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), properties -> new UntintedParticleLeavesBlock(0, null, AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
+    }
+
+    public SuCraftBlockType sapling(@Nullable BiFunction<TreeGrower, BlockBehaviour.Properties, Block> constructor, Supplier<TreeGrower> treeGrower, Block fallback, boolean fuel) {
+        this.blockBuild(builder -> builder.factoryNMS(properties -> constructor != null ? constructor.apply(treeGrower.get(), properties) : new SaplingBlock(treeGrower.get(), properties)));
+        this.propertiesFull(Blocks.OAK_SAPLING);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.SAPLING, fallback);
+        this.constructorForDataGeneration(properties -> new SaplingBlock(null, properties));
+        this.dataGenerateModel(factory -> {
+            factory.addBlockCrossNotTinted(this.getNMS());
+            factory.addBlock(generators ->
+                generators.registerSimpleItemModel(this.itemNMS(), BlockModelGenerators.PlantType.NOT_TINTED.createItemModelUsingBlockTexture(generators, this.getNMS()))
+            );
+        });
+        this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateTag(BlockItemTags.SAPLINGS);
+        this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
+        if (fuel) {
+            this.cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS);
+        }
+        return this;
     }
 
     public SuCraftBlockType slab(Block propertiesFrom, Block fallback, @Nullable BlockState fallbackBlockState) {

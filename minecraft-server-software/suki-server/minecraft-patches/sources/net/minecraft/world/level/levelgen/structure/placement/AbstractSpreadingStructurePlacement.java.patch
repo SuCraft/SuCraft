@@ -1,0 +1,12 @@
+--- a/net/minecraft/world/level/levelgen/structure/placement/AbstractSpreadingStructurePlacement.java
++++ b/net/minecraft/world/level/levelgen/structure/placement/AbstractSpreadingStructurePlacement.java
+@@ -109,8 +_,7 @@
+     protected abstract boolean isPlacementChunk(final ChunkGeneratorStructureState state, final int sourceX, final int sourceZ);
+ 
+     private static boolean probabilityReducer(final long seed, final int salt, final int sourceX, final int sourceZ, final float probability, final @org.jspecify.annotations.Nullable Integer saltOverride) { // Paper - Add missing structure set seed configs; ignore here
+-        WorldgenRandom random = new WorldgenRandom(new LegacyRandomSource(0L));
+-        random.setLargeFeatureWithSalt(seed, salt, sourceX, sourceZ);
++        WorldgenRandom random = new su.plo.matter.WorldgenCryptoRandom(sourceX, sourceZ, su.plo.matter.Globals.Salt.UNDEFINED, salt); // Suki end - Leaf - Matter - Secure seed
+         return random.nextFloat() < probability;
+     }
+ 

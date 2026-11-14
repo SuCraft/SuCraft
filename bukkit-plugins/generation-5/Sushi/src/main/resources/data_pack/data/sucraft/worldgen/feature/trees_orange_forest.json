@@ -1,0 +1,61 @@
+{
+  "type": "minecraft:weighted_random_selector",
+  "features": [
+    {
+      "data": "minecraft:red_poplar_leaf_litter",
+      "weight": 120
+    },
+    {
+      "data": "sucraft:fancy_red_maple",
+      "weight": 80
+    },
+    {
+      "data": "minecraft:orange_poplar_leaf_litter",
+      "weight": 150
+    },
+    {
+      "data": "sucraft:fancy_orange_maple",
+      "weight": 90
+    },
+    {
+      "data": "minecraft:yellow_poplar_leaf_litter",
+      "weight": 110
+    },
+    {
+      "data": "sucraft:fancy_yellow_maple",
+      "weight": 70
+    },
+    {
+      "data": "minecraft:spruce_checked",
+      "weight": 200
+    },
+    {
+      "data": "minecraft:fallen_poplar_tree",
+      "weight": 140
+    },
+    {
+      "data": "minecraft:fallen_birch_tree",
+      "weight": 100
+    },
+    {
+      "data": "minecraft:birch_bees_0002_leaf_litter",
+      "weight": 80
+    },
+    {
+      "data": "minecraft:fancy_oak_bees_0002_leaf_litter",
+      "weight": 120
+    },
+    {
+      "data": "minecraft:fallen_oak_tree",
+      "weight": 40
+    },
+    {
+      "data": "minecraft:fallen_super_birch_tree",
+      "weight": 40
+    },
+    {
+      "data": "minecraft:super_birch_bees_0002",
+      "weight": 90
+    }
+  ]
+}

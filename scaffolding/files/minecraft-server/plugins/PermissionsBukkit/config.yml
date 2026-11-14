@@ -47,6 +47,7 @@ groups:
       - gold_donator
   default:
     permissions:
+      minecraft.command.seed: false
       bukkit.seeplugin.asyncworldedit: true
       bukkit.seeplugin.coloredbooks: true
       bukkit.seeplugin.coloredsigns: true

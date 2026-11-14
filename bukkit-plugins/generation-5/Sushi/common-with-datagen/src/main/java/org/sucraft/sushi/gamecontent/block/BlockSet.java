@@ -259,6 +259,12 @@ public interface BlockSet {
     interface WithSlabAndStairsAndWallAndButtonAndPressurePlate extends WithSlabAndStairsAndWallAndButton, WithPressurePlate {
     }
 
+    interface WithSlabAndStairsAndButton extends WithSlabAndStairs, WithButton {
+    }
+
+    interface WithSlabAndStairsAndButtonAndPressurePlate extends WithSlabAndStairsAndButton, WithPressurePlate {
+    }
+
     interface WithStairsAndWall extends WithStairs, WithWall {
     }
 
@@ -289,6 +295,7 @@ public interface BlockSet {
         WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate,
         WithSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate,
         WithSlabAndStairsAndWallAndButtonAndPressurePlate,
+        WithSlabAndStairsAndButtonAndPressurePlate,
         WithStairsAndWallAndButtonAndPressurePlate,
         WithWallAndButtonAndPressurePlate,
         WithFenceAndButtonAndPressurePlate,
@@ -897,10 +904,14 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder woodenSlab() {
+        public Builder woodenSlab(boolean fuel) {
             this.slab();
-            this.slabFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS));
+            if (fuel) this.slabFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS));
             return this.slabTag(BlockItemTags.WOODEN_SLABS);
+        }
+
+        public Builder woodenSlab() {
+            return this.woodenSlab(true);
         }
 
         public Builder stairs() {
@@ -908,10 +919,14 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder woodenStairs() {
+        public Builder woodenStairs(boolean fuel) {
             this.stairs();
-            this.stairsFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            if (fuel) this.stairsFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.stairsTag(BlockItemTags.WOODEN_STAIRS);
+        }
+
+        public Builder woodenStairs() {
+            return this.woodenStairs(true);
         }
 
         public Builder wall() {
@@ -919,10 +934,14 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder woodenWall() {
+        public Builder woodenWall(boolean fuel) {
             this.wall();
-            this.wallFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            if (fuel) this.wallFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.wallTag(SuCraftBlockItemTags.WOODEN_WALLS);
+        }
+
+        public Builder woodenWall() {
+            return this.woodenWall(true);
         }
 
         public Builder stoneWall() {
@@ -935,10 +954,14 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder woodenFence() {
+        public Builder woodenFence(boolean fuel) {
             this.fence();
-            this.fenceFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            if (fuel) this.fenceFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.fenceTag(BlockItemTags.WOODEN_FENCES);
+        }
+
+        public Builder woodenFence() {
+            return this.woodenFence(true);
         }
 
         public Builder stoneFence() {
@@ -950,9 +973,19 @@ public interface BlockSet {
             return this;
         }
 
-        public Builder woodenFenceGate() {
+        public Builder woodenFenceGate(boolean fuel) {
             this.fenceGate();
-            return this.fenceGateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            if (fuel) this.fenceGateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            return this;
+        }
+
+        public Builder woodenFenceGate() {
+            return this.woodenFenceGate(true);
+        }
+
+        public Builder woodenFenceGate(WoodType woodType, boolean fuel) {
+            this.woodenFenceGate(fuel);
+            return this.woodType(woodType);
         }
 
         public Builder woodenFenceGate(WoodType woodType) {
@@ -979,10 +1012,19 @@ public interface BlockSet {
             return this.blockSetType(blockSetType);
         }
 
-        public Builder woodenButton() {
+        public Builder woodenButton(boolean fuel) {
             this.button();
-            this.buttonFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
+            if (fuel) this.buttonFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
             return this.buttonTag(BlockItemTags.WOODEN_BUTTONS);
+        }
+
+        public Builder woodenButton() {
+            return this.woodenButton(true);
+        }
+
+        public Builder woodenButton(BlockSetType blockSetType, boolean fuel) {
+            this.woodenButton(fuel);
+            return this.blockSetType(blockSetType);
         }
 
         public Builder woodenButton(BlockSetType blockSetType) {
@@ -1005,10 +1047,19 @@ public interface BlockSet {
             return this.blockSetType(blockSetType);
         }
 
-        public Builder woodenPressurePlate() {
+        public Builder woodenPressurePlate(boolean fuel) {
             this.pressurePlate();
-            this.pressurePlateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
+            if (fuel) this.pressurePlateFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
             return this.pressurePlateTag(BlockItemTags.WOODEN_PRESSURE_PLATES);
+        }
+
+        public Builder woodenPressurePlate() {
+            return this.woodenPressurePlate(true);
+        }
+
+        public Builder woodenPressurePlate(BlockSetType blockSetType, boolean fuel) {
+            this.woodenPressurePlate(fuel);
+            return this.blockSetType(blockSetType);
         }
 
         public Builder woodenPressurePlate(BlockSetType blockSetType) {

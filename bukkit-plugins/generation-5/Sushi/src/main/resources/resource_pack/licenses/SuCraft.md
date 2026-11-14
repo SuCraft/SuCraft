@@ -1,5 +1,9 @@
 The following files (referenced relative to the parent folder of the folder this file is in)
 were specifically made for SuCraft:
+* `assets/sucraft/textures/block/frost_leaves.png`
+* `assets/sucraft/textures/block/frost_log.png`
+* `assets/sucraft/textures/block/frost_log_top.png`
+* `assets/sucraft/textures/block/frost_sapling.png`
 * `assets/sucraft/textures/block/soul_sandstone_bricks.png`
 
 These files are provided under an `Attribution-NonCommercial-ShareAlike 4.0 International` license, which is included below.

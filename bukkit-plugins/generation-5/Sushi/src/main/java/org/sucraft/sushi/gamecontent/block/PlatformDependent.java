@@ -1,6 +1,7 @@
 package org.sucraft.sushi.gamecontent.block;
 
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.sucraft.sushi.main.SushiPlugin;
@@ -69,6 +70,18 @@ public final class PlatformDependent {
 
         public static boolean hasEnablingStarted() {
             return org.sucraft.sushi.main.SushiPlugin.hasEnablingStarted();
+        }
+
+    }
+
+    public static final class MinecraftServer {
+
+        private MinecraftServer() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static net.minecraft.server.MinecraftServer getServer() {
+            return net.minecraft.server.MinecraftServer.getServer();
         }
 
     }

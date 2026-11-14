@@ -1,0 +1,21 @@
+--- a/net/minecraft/server/dedicated/DedicatedServerProperties.java
++++ b/net/minecraft/server/dedicated/DedicatedServerProperties.java
+@@ -139,7 +_,17 @@
+         String levelSeed = this.get("level-seed", "");
+         boolean generateStructures = this.get("generate-structures", true);
+         long seed = WorldOptions.parseSeed(levelSeed).orElse(WorldOptions.randomSeed());
+-        this.worldOptions = new WorldOptions(seed, generateStructures, false);
++        // Suki start - Leaf - Matter - Secure seed
++        String matter$featureSeedStr = null;
++        // Read from a separate file, so it is easier to keep secret
++        try (var stream = new java.io.FileInputStream("feature_seed.json")) {
++            matter$featureSeedStr = new String(stream.readAllBytes());
++        } catch (Exception _) {
++        }
++        long[] matter$featureSeed = su.plo.matter.Globals.parseSeed(matter$featureSeedStr)
++                .orElse(su.plo.matter.Globals.createRandomWorldSeed());
++        this.worldOptions = new WorldOptions(seed, matter$featureSeed, generateStructures, false);
++        // Suki end - Leaf - Matter - Secure seed
+         this.worldDimensionData = new DedicatedServerProperties.WorldDimensionData(
+             this.get("generator-settings", s -> GsonHelper.parse(!s.isEmpty() ? s : "{}"), new JsonObject()),
+             this.get("level-type", v -> v.toLowerCase(Locale.ROOT), WorldPresets.NORMAL.identifier().toString())

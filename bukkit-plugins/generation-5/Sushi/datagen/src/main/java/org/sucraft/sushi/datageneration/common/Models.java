@@ -136,6 +136,14 @@ public final class Models {
             })));
         }
 
+        public void addBlockCrossNotTinted(Block block) {
+            this.addBlockCross(block, BlockModelGenerators.PlantType.NOT_TINTED);
+        }
+
+        public void addBlockCross(Block block, BlockModelGenerators.PlantType plantType) {
+            this.addBlock(generators -> generators.createCrossBlock(block, plantType));
+        }
+
         public void addBlockSlab(Block slab) {
             // TODO
         }

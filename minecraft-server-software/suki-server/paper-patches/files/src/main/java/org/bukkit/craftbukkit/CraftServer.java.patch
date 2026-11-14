@@ -1,0 +1,11 @@
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1209,7 +_,7 @@
+             .orElse(null);
+         RegistryAccess contextRegistryAccess = registryAccess;
+         if (worldGenSettings == null) {
+-            WorldOptions worldOptions = new WorldOptions(creator.seed(), creator.generateStructures(), creator.bonusChest());
++            WorldOptions worldOptions = new WorldOptions(creator.seed(), su.plo.matter.Globals.createRandomWorldSeed(), creator.generateStructures(), creator.bonusChest()); // Suki - Leaf - Matter - Secure seed
+ 
+             String flatGenSettings = creator.generatorSettings();
+             if (flatGenSettings.isEmpty()) {

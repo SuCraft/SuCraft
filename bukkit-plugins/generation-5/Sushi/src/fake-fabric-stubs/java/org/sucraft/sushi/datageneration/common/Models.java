@@ -40,6 +40,10 @@ public interface Models {
 
         void addBlockCubeBottomTop(Block block, @Nullable Identifier side, @Nullable Identifier bottom, @Nullable Identifier top);
 
+        void addBlockCrossNotTinted(Block block);
+
+        void addBlockCross(Block block, BlockModelGenerators.PlantType plantType);
+
         void addBlockSlab(Block slab);
 
         void addBlockStairs(Block stairs);

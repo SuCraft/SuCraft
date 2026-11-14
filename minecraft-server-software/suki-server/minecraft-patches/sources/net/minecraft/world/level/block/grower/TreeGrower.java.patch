@@ -1,0 +1,39 @@
+--- a/net/minecraft/world/level/block/grower/TreeGrower.java
++++ b/net/minecraft/world/level/block/grower/TreeGrower.java
+@@ -81,6 +_,36 @@
+         WeightedList.of(),
+         TreeFeatures.RED_POPLAR
+     );
++    // Suki start - Add custom trees
++    public static final TreeGrower FROST = new TreeGrower(
++        "frost",
++        WeightedList.of(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.CHERRY_FROST_TREE),
++        WeightedList.of(),
++        WeightedList.of(),
++        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.CHERRY_FROST_TREE
++    );
++    public static final TreeGrower YELLOW_MAPLE = new TreeGrower(
++        "yellow_maple",
++        WeightedList.of(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_YELLOW_MAPLE),
++        WeightedList.of(),
++        WeightedList.of(),
++        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_YELLOW_MAPLE
++    );
++    public static final TreeGrower ORANGE_MAPLE = new TreeGrower(
++        "orange_maple",
++        WeightedList.of(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_ORANGE_MAPLE),
++        WeightedList.of(),
++        WeightedList.of(),
++        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_ORANGE_MAPLE
++    );
++    public static final TreeGrower RED_MAPLE = new TreeGrower(
++        "red_maple",
++        WeightedList.of(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_RED_MAPLE),
++        WeightedList.of(),
++        WeightedList.of(),
++        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_RED_MAPLE
++    );
++    // Suki end - Add custom trees
+     private final String name;
+     private final WeightedList<ResourceKey<Feature>> trees;
+     private final WeightedList<ResourceKey<Feature>> megaTrees;

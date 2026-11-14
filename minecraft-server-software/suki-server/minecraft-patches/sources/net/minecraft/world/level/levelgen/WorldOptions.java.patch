@@ -1,0 +1,85 @@
+--- a/net/minecraft/world/level/levelgen/WorldOptions.java
++++ b/net/minecraft/world/level/levelgen/WorldOptions.java
+@@ -10,34 +_,55 @@
+ import org.apache.commons.lang3.StringUtils;
+ 
+ public class WorldOptions {
++    private static final com.google.gson.Gson matter$GSON = new com.google.gson.Gson(); // Suki - Leaf - Matter - Secure seed
+     public static final MapCodec<WorldOptions> CODEC = RecordCodecBuilder.mapCodec(
+         i -> i.group(
+                 Codec.LONG.fieldOf("seed").stable().forGetter(WorldOptions::seed),
++                Codec.STRING.fieldOf("feature_seed").orElse(matter$GSON.toJson(su.plo.matter.Globals.createRandomWorldSeed())).stable().forGetter(WorldOptions::matter$featureSeedSerialize), // Suki - Leaf - Matter - Secure seed
+                 ExtraCodecs.optionalAlwaysPresentFieldOf(Codec.BOOL, "generate_structures", true).stable().forGetter(WorldOptions::generateStructures),
+                 ExtraCodecs.optionalAlwaysPresentFieldOf(Codec.BOOL, "bonus_chest", false).stable().forGetter(WorldOptions::generateBonusChest),
+                 Codec.STRING.lenientOptionalFieldOf("legacy_custom_options").stable().forGetter(s -> s.legacyCustomOptions)
+             )
+             .apply(i, i.stable(WorldOptions::new))
+     );
+-    public static final WorldOptions DEMO_OPTIONS = new WorldOptions("North Carolina".hashCode(), true, true);
++    public static final WorldOptions DEMO_OPTIONS = new WorldOptions("North Carolina".hashCode(), su.plo.matter.Globals.createRandomWorldSeed(), true, true); // Suki - Leaf - Matter - Secure seed
+     private final long seed;
+     private final boolean generateStructures;
+     private final boolean generateBonusChest;
+     private final Optional<String> legacyCustomOptions;
+ 
+-    public WorldOptions(final long seed, final boolean generateStructures, final boolean generateBonusChest) {
+-        this(seed, generateStructures, generateBonusChest, Optional.empty());
++    // Suki start - Leaf - Matter - Secure seed
++    private final long[] matter$featureSeed;
++
++    public long[] matter$featureSeed() {
++        return this.matter$featureSeed;
++    }
++
++    private String matter$featureSeedSerialize() {
++        return matter$GSON.toJson(this.matter$featureSeed);
++    }
++
++    public WorldOptions(final long seed, final long[] matter$featureSeed, final boolean generateStructures, final boolean generateBonusChest) {
++        this(seed, matter$featureSeed, generateStructures, generateBonusChest, Optional.empty());
++        // Suki end - Leaf - Matter - Secure seed
+     }
+ 
+     public static WorldOptions defaultWithRandomSeed() {
+-        return new WorldOptions(randomSeed(), true, false);
++        return new WorldOptions(randomSeed(), su.plo.matter.Globals.createRandomWorldSeed(), true, false); // Suki - Leaf - Matter - Secure seed
+     }
+ 
+     public static WorldOptions testWorldWithRandomSeed() {
+-        return new WorldOptions(randomSeed(), false, false);
+-    }
+-
+-    private WorldOptions(final long seed, final boolean generateStructures, final boolean generateBonusChest, final Optional<String> legacyCustomOptions) {
++        return new WorldOptions(randomSeed(), su.plo.matter.Globals.createRandomWorldSeed(), false, false); // Suki - Leaf - Matter - Secure seed
++    }
++
++    // Suki start - Leaf - Matter - Secure seed
++    private WorldOptions(final long seed, final String matter$featureSeed, final boolean generateStructures, final boolean generateBonusChest, final Optional<String> legacyCustomOptions) {
++        this(seed, matter$GSON.fromJson(matter$featureSeed, long[].class), generateStructures, generateBonusChest, legacyCustomOptions);
++    }
++
++    private WorldOptions(final long seed, final long[] matter$featureSeed, final boolean generateStructures, final boolean generateBonusChest, final Optional<String> legacyCustomOptions) {
++        this.matter$featureSeed = matter$featureSeed;
++        // Suki end - Leaf - Matter - Secure seed
+         this.seed = seed;
+         this.generateStructures = generateStructures;
+         this.generateBonusChest = generateBonusChest;
+@@ -61,15 +_,15 @@
+     }
+ 
+     public WorldOptions withBonusChest(final boolean generateBonusChest) {
+-        return new WorldOptions(this.seed, this.generateStructures, generateBonusChest, this.legacyCustomOptions);
++        return new WorldOptions(this.seed, this.matter$featureSeed, this.generateStructures, generateBonusChest, this.legacyCustomOptions); // Suki - Leaf - Matter - Secure seed
+     }
+ 
+     public WorldOptions withStructures(final boolean generateStructures) {
+-        return new WorldOptions(this.seed, generateStructures, this.generateBonusChest, this.legacyCustomOptions);
++        return new WorldOptions(this.seed, this.matter$featureSeed, generateStructures, this.generateBonusChest, this.legacyCustomOptions); // Suki - Leaf - Matter - Secure seed
+     }
+ 
+     public WorldOptions withSeed(final OptionalLong seed) {
+-        return new WorldOptions(seed.orElse(randomSeed()), this.generateStructures, this.generateBonusChest, this.legacyCustomOptions);
++        return new WorldOptions(seed.orElse(randomSeed()), su.plo.matter.Globals.createRandomWorldSeed(), this.generateStructures, this.generateBonusChest, this.legacyCustomOptions); // Suki - Leaf - Matter - Secure seed
+     }
+ 
+     public static OptionalLong parseSeed(String seedString) {

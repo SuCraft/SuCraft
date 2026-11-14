@@ -1,0 +1,18 @@
+--- a/net/minecraft/network/protocol/game/CommonPlayerSpawnInfo.java
++++ b/net/minecraft/network/protocol/game/CommonPlayerSpawnInfo.java
+@@ -24,13 +_,14 @@
+     int portalCooldown,
+     int seaLevel
+ ) {
++    private static final long suki$sessionFakeSeed = new java.security.SecureRandom().nextLong(); // Suki - Make biome seed useless
+     public static final StreamCodec<RegistryFriendlyByteBuf, CommonPlayerSpawnInfo> STREAM_CODEC = StreamCodec.composite(
+         DimensionType.STREAM_CODEC,
+         CommonPlayerSpawnInfo::dimensionType,
+         ResourceKey.streamCodec(Registries.DIMENSION),
+         CommonPlayerSpawnInfo::dimension,
+         ByteBufCodecs.LONG,
+-        CommonPlayerSpawnInfo::seed,
++        _ -> suki$sessionFakeSeed, // Suki - Make biome seed useless
+         GameType.STREAM_CODEC,
+         CommonPlayerSpawnInfo::gameType,
+         GameType.OPTIONAL_STREAM_CODEC,

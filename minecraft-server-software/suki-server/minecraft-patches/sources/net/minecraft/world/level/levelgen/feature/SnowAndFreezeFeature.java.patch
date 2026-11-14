@@ -1,0 +1,39 @@
+--- a/net/minecraft/world/level/levelgen/feature/SnowAndFreezeFeature.java
++++ b/net/minecraft/world/level/levelgen/feature/SnowAndFreezeFeature.java
+@@ -33,6 +_,7 @@
+                 int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+                 topPos.set(x, y, z);
+                 belowPos.set(topPos).move(Direction.DOWN, 1);
++                while (true) { // Suki - Also place snow beneath foliage
+                 Biome biome = level.getBiome(topPos).value();
+                 if (biome.shouldFreeze(level, belowPos, false)) {
+                     level.setBlock(belowPos, Blocks.ICE.defaultBlockState(), Block.UPDATE_CLIENTS);
+@@ -45,6 +_,28 @@
+                         level.setBlock(belowPos, belowState.setValue(SnowyBlock.SNOWY, true), Block.UPDATE_CLIENTS);
+                     }
+                 }
++                // Suki start - Also place snow beneath foliage
++                boolean doAgain = false;
++                BlockState belowState = level.getBlockState(belowPos);
++                while (belowPos.getY() > 0) {
++                    boolean air = belowState.isAir();
++                    if (air || belowState.getBlock().builtInRegistryHolder().is(net.minecraft.tags.BlockTags.LEAVES)) {
++                        topPos.move(Direction.DOWN, 1);
++                        belowPos.move(Direction.DOWN, 1);
++                    } else {
++                        break;
++                    }
++                    belowState = level.getBlockState(belowPos);
++                    if (air && !belowState.isAir()) {
++                        doAgain = true;
++                        break;
++                    }
++                }
++                if (!doAgain) {
++                    break;
++                }
++                }
++                // Suki end - Also place snow beneath foliage
+             }
+         }
+ 

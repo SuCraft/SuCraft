@@ -4,12 +4,14 @@ import it.unimi.dsi.fastutil.Pair;
 import java.util.stream.Stream;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlockTags;
 import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 
@@ -20,6 +22,10 @@ public final class Concrete {
     }
 
     public static void add(CollectedFactories factories) {
+        // Allow vegetation to be placed on concrete and concrete powder
+        factories.blockTags().add(SuCraftBlockTags.SUPPORTS_VEGETATION_MANUAL, BlockTags.CONCRETE);
+        factories.blockTags().add(SuCraftBlockTags.SUPPORTS_VEGETATION_MANUAL, BlockTags.CONCRETE_POWDERS);
+        // Add dyeing recipes
         for (var dyeColor : DyeColor.values()) {
             var custom = SuCraftBlocks.CONCRETE.get(dyeColor);
             var fullBlock = Items.CONCRETE.pick(dyeColor);

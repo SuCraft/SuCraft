@@ -11,6 +11,7 @@ import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.Compostable;
 import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +25,7 @@ import org.bukkit.inventory.ItemType;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
+import org.sucraft.sushi.datageneration.common.Models;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.itemstack.ItemStackMapping;
 import spout.api.gamecontent.datadriven.item.registry.ItemTypeRegistryEntryBuilderNMS;
@@ -47,6 +49,7 @@ public final class SuCraftItemType implements ItemLike {
     public @Nullable BiConsumer<SuCraftItemType, Item> postConstruction;
     private @Nullable Function<Item.Properties, Item> constructorForDataGeneration = Item::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
+    private @Nullable Consumer<Models.CollectedFactory> dataGeneratingModel;
     private @Nullable List<TagKey<Item>> dataGeneratingTags;
 
     private SuCraftItemType(Identifier identifier, boolean definedByCode) {
@@ -134,6 +137,10 @@ public final class SuCraftItemType implements ItemLike {
         }
         this.dataGenerating.forEach(it -> it.accept(factories));
         this.dataGenerating = null;
+        if (this.dataGeneratingModel != null) {
+            this.dataGeneratingModel.accept(factories.models());
+            this.dataGeneratingModel = null;
+        }
         if (this.dataGeneratingTags != null) {
             for (var tag : this.dataGeneratingTags) {
                 factories.itemTags().add(tag, this.getNMS());
@@ -191,6 +198,14 @@ public final class SuCraftItemType implements ItemLike {
         return this.properties(properties -> properties.component(DataComponents.COOKING_FUEL, new CookingFuel(burnTime, ResolvableFloat.fromKey(ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))));
     }
 
+    public SuCraftItemType compostable(ResourceKey<ContextIntProvider> layers) {
+        return this.properties(properties -> properties.compostable(layers));
+    }
+
+    public SuCraftItemType compostable(ResolvableInt layers) {
+        return this.properties(properties -> properties.component(DataComponents.COMPOSTABLE, new Compostable(layers)));
+    }
+
     public SuCraftItemType constructorForDataGeneration(Function<Item.Properties, Item> constructor) {
         if (!this.definedByCode) {
             throw new IllegalStateException();
@@ -213,6 +228,18 @@ public final class SuCraftItemType implements ItemLike {
         }
         this.dataGenerating.add(factoriesConsumer);
         return this;
+    }
+
+    public SuCraftItemType dataGenerateModel(@Nullable Consumer<Models.CollectedFactory> factoryConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        this.dataGeneratingModel = factoryConsumer;
+        return this;
+    }
+
+    public SuCraftItemType dataGenerateModel(@Nullable BiConsumer<Models.CollectedFactory, Item> factoryAndItemConsumer) {
+        return this.dataGenerateModel(factory -> factoryAndItemConsumer.accept(factory, this.getNMS()));
     }
 
     public SuCraftItemType dataGenerateTag(TagKey<Item> tag) {

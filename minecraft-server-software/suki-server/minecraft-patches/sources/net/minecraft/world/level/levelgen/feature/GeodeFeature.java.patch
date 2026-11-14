@@ -1,0 +1,14 @@
+--- a/net/minecraft/world/level/levelgen/feature/GeodeFeature.java
++++ b/net/minecraft/world/level/levelgen/feature/GeodeFeature.java
+@@ -78,7 +_,10 @@
+     public boolean place(final WorldGenLevel level, final ChunkGenerator chunkGenerator, final RandomSource random, final BlockPos origin) {
+         List<Pair<BlockPos, Integer>> points = Lists.newLinkedList();
+         int numPoints = this.distributionPoints.sample(random);
+-        Noise noise = NOISE_PARAMETERS.create(new WorldgenRandom(new LegacyRandomSource(level.getSeed())));
++        // Suki start - Leaf - Matter - Secure seed
++        WorldgenRandom matter$noiseRandom =  new su.plo.matter.WorldgenCryptoRandom(0, 0, su.plo.matter.Globals.Salt.GEODE_FEATURE, 0);
++        Noise noise = NOISE_PARAMETERS.create(matter$noiseRandom);
++        // Suki end - Leaf - Matter - Secure seed
+         List<BlockPos> crackPoints = Lists.newLinkedList();
+         double crackSizeAdjustment = (double)numPoints / this.outerWallDistance.maxInclusive();
+         double innerAir = 1.0 / Math.sqrt(this.layerSettings.filling);

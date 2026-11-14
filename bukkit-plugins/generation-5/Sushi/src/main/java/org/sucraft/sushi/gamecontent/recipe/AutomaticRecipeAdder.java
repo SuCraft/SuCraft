@@ -60,6 +60,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -200,6 +201,10 @@ public final class AutomaticRecipeAdder {
 
     private static @Nullable Item filterOut(@Nullable Item item, Set<Item> filter) {
         return item == null ? null : filter.contains(item) ? null : item;
+    }
+
+    private static @Nullable Item filterOut(@Nullable Item item, Predicate<Item> filter) {
+        return item == null ? null : filter.test(item) ? null : item;
     }
 
     private static BiConsumer<Item, Item> invert(BiConsumer<Item, Item> adder) {
@@ -545,7 +550,7 @@ public final class AutomaticRecipeAdder {
             }
 
             private BiConsumer<Item, Item> addButtonCrafting() {
-                return this.addShapelessCrafting(1, null, input -> List.of(input), CraftingBookCategory.REDSTONE, input -> isPlankBase(input) ? "wooden_button" : isLogBase(input) ? "log_button" : null);
+                return this.addShapelessCrafting(1, null, List::of, CraftingBookCategory.REDSTONE, input -> isPlankBase(input) ? "wooden_button" : isLogBase(input) ? "log_button" : null);
             }
 
             private BiConsumer<Item, Item> addDoorCrafting() {
@@ -665,7 +670,7 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_button"), STORAGE_BLOCKS),
+                filterOut(filterOut(getSuffixBase(item, "_button"), STORAGE_BLOCKS), it -> it.builtInRegistryHolder().is(ItemTags.LOGS) && (it.keyInItemRegistry.getPath().endsWith("_wood") || it.keyInItemRegistry.getPath().endsWith("_hyphae")) ),
                 adders.addButtonCrafting(),
                 conditional(RecipeAdders::isLogBase, adders.addStonecutting(1))
             );
@@ -810,23 +815,40 @@ public final class AutomaticRecipeAdder {
             adders.addRecipes(
                 item,
                 getSuffixBase(item, "_log", List.of("_wood")),
-                adders.addStonecutting(1, "from_wood")
+                adders.addStonecutting(1, "from_wood"),
+                invert(adders.add2x2RectangleCrafting(null, 3, CraftingBookCategory.BUILDING))
             );
             adders.addRecipes(
                 item,
                 getSuffixBase(item, "_stem", List.of("_hyphae")),
-                adders.addStonecutting(1, "from_hyphae")
+                adders.addStonecutting(1, "from_hyphae"),
+                invert(adders.add2x2RectangleCrafting(null, 3, CraftingBookCategory.BUILDING))
             );
             @Nullable Item log = getSuffixBase(item, "_planks", List.of("_log", "_stem"));
             adders.addRecipes(
                 item,
                 log,
-                adders.addStonecutting(4, "from_log")
+                adders.addStonecutting(4, "from_log"),
+                adders.addShapelessCrafting(4, "from_log", List::of, CraftingBookCategory.BUILDING, null)
             );
             adders.addRecipes(
                 item,
                 getPrefixShape(getSpecialNamespaceIfPresent(item, log), log, "stripped_"),
-                adders.addStonecutting(4, "from_stripped_log")
+                adders.addStonecutting(4, "from_stripped_log"),
+                adders.addShapelessCrafting(4, "from_stripped_log", List::of, CraftingBookCategory.BUILDING, null)
+            );
+            @Nullable Item wood = getSuffixBase(item, "_planks", List.of("_wood", "_hyphae"));
+            adders.addRecipes(
+                item,
+                wood,
+                adders.addStonecutting(4, "from_wood"),
+                adders.addShapelessCrafting(4, "from_wood", List::of, CraftingBookCategory.BUILDING, null)
+            );
+            adders.addRecipes(
+                item,
+                getPrefixShape(getSpecialNamespaceIfPresent(item, wood), wood, "stripped_"),
+                adders.addStonecutting(4, "from_stripped_wood"),
+                adders.addShapelessCrafting(4, "from_stripped_wood", List::of, CraftingBookCategory.BUILDING, null)
             );
             adders.addRecipes(
                 item,

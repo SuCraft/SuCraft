@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java
++++ b/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java
+@@ -65,7 +_,7 @@
+         ChunkGenerator chunkGenerator = context.chunkGenerator();
+         StructureTemplateManager structureTemplateManager = context.structureTemplateManager();
+         LevelHeightAccessor heightAccessor = context.heightAccessor();
+-        WorldgenRandom random = context.random();
++        WorldgenRandom random = new su.plo.matter.WorldgenCryptoRandom(context.chunkPos().x(), context.chunkPos().z(), su.plo.matter.Globals.Salt.JIGSAW_PLACEMENT, 0); // Suki - Leaf - Matter - Secure seed
+         Registry<StructureTemplatePool> pools = registryAccess.lookupOrThrow(Registries.TEMPLATE_POOL);
+         Rotation centerRotation = Rotation.getRandom(random);
+         StructureTemplatePool centerPool = startPool.unwrapKey()

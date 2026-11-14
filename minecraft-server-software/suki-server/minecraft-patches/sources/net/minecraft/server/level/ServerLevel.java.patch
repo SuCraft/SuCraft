@@ -1,0 +1,10 @@
+--- a/net/minecraft/server/level/ServerLevel.java
++++ b/net/minecraft/server/level/ServerLevel.java
+@@ -675,6 +_,7 @@
+             generator = new org.bukkit.craftbukkit.generator.CustomChunkGenerator(this, generator, gen);
+         }
+         // CraftBukkit end
++        su.plo.matter.Globals.setupGlobals(this); // Suki - Leaf - Matter - Secure seed
+         boolean syncWrites = server.forceSynchronousWrites();
+         DataFixer fixerUpper = server.getFixerUpper();
+         // Paper - rewrite chunk system

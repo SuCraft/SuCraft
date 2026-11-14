@@ -15,6 +15,7 @@ import org.sucraft.sushi.datageneration.creative.Barrier;
 import org.sucraft.sushi.datageneration.creative.Light;
 import org.sucraft.sushi.datageneration.flora.Coral;
 import org.sucraft.sushi.datageneration.glass.Glass;
+import org.sucraft.sushi.datageneration.ice.Ice;
 import org.sucraft.sushi.datageneration.mineral.Copper;
 import org.sucraft.sushi.datageneration.mineral.Flint;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
@@ -23,9 +24,13 @@ import org.sucraft.sushi.datageneration.organic.shulker.ShulkerBoxes;
 import org.sucraft.sushi.datageneration.organic.wax.Candles;
 import org.sucraft.sushi.datageneration.redstone.Dispenser;
 import org.sucraft.sushi.datageneration.redstone.Repeater;
+import org.sucraft.sushi.datageneration.soil.CoarseDirt;
+import org.sucraft.sushi.datageneration.soil.Dirt;
+import org.sucraft.sushi.datageneration.soil.Gravel;
 import org.sucraft.sushi.datageneration.soil.Sand;
 import org.sucraft.sushi.datageneration.soil.SoulSandstone;
 import org.sucraft.sushi.datageneration.stone.StoneWalls;
+import org.sucraft.sushi.datageneration.stone.VegetationOnStone;
 import org.sucraft.sushi.datageneration.stone.claybrick.Bricks;
 import org.sucraft.sushi.datageneration.stone.concrete.Concrete;
 import org.sucraft.sushi.datageneration.stone.deepslate.Deepslate;
@@ -38,6 +43,7 @@ import org.sucraft.sushi.datageneration.wood.Bookshelves;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
 import org.sucraft.sushi.datageneration.wood.Barrels;
+import org.sucraft.sushi.datageneration.wood.Frost;
 import org.sucraft.sushi.datageneration.wood.Ladders;
 import org.sucraft.sushi.datageneration.wool.Wool;
 
@@ -71,6 +77,9 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Glass
         Glass.add(factories);
 
+        // Ice
+        Ice.add(factories);
+
         // Mineral / Copper
         Copper.add(factories);
 
@@ -89,7 +98,10 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         Dispenser.add(factories);
         Repeater.add(factories);
 
-        // Soil / Sand
+        // Soil / Dirt
+        CoarseDirt.add(factories);
+        Dirt.add(factories);
+        Gravel.add(factories);
         Sand.add(factories);
 
         // Soil / Soul
@@ -116,11 +128,15 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Stone / Terracotta
         Terracotta.add(factories);
 
+        // Stone / Vegetation
+        VegetationOnStone.add(factories);
+
         // Wood
         Barrels.add(factories);
         Bookshelves.add(factories);
         Chests.add(factories);
         DyedPlanks.add(factories);
+        Frost.add(factories);
         Ladders.add(factories);
 
         // Wool

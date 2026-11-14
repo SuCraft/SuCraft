@@ -36,6 +36,8 @@ public final class SuCraftConversions1 {
         RENAME.put("sucraft:pale_birch_leaves", "minecraft:birch_leaves");
         RENAME.put("sucraft:red_oak_leaves", "sucraft:red_maple_leaves");
         RENAME.put("sucraft:orange_oak_leaves", "sucraft:orange_maple_leaves");
+        RENAME.put("sucraft:mud_slab", "minecraft:mud_brick_slab");
+        RENAME.put("sucraft:mud_stairs", "minecraft:mud_brick_stairs");
     }
 
     public static void register() {

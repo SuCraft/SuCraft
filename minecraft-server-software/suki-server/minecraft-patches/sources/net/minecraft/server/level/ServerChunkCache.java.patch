@@ -1,0 +1,10 @@
+--- a/net/minecraft/server/level/ServerChunkCache.java
++++ b/net/minecraft/server/level/ServerChunkCache.java
+@@ -653,6 +_,7 @@
+     }
+ 
+     public ChunkGenerator getGenerator() {
++        su.plo.matter.Globals.setupGlobals(level); // Suki - Leaf - Matter - Secure seed
+         return this.chunkMap.generator();
+     }
+ 

@@ -5,13 +5,17 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.commons.lang3.tuple.Triple;
 import org.sucraft.sushi.datageneration.common.CollectedFactories;
 import org.sucraft.sushi.datageneration.common.Recipes;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlockTags;
 import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import org.sucraft.sushi.gamecontent.common.SuCraftBlockItemTags;
 
@@ -23,7 +27,7 @@ public final class Terracotta {
 
     public static void add(CollectedFactories factories) {
         // Allow vegetation to be placed on terracotta
-        factories.blockTags().add(BlockTags.SUPPORTS_VEGETATION, BlockTags.TERRACOTTA);
+        factories.blockTags().add(SuCraftBlockTags.SUPPORTS_VEGETATION_MANUAL, BlockTags.TERRACOTTA);
         // Allow sugar cane to be placed on terracotta
         factories.blockTags().add(BlockTags.SUPPORTS_SUGAR_CANE, BlockTags.TERRACOTTA);
         // Add undyeing recipes
@@ -71,6 +75,24 @@ public final class Terracotta {
                 )
             );
         }
+        // Add smelting recipes
+        Stream.of(
+            Triple.of(SuCraftBlocks.CLAY.slabItemNMS(), SuCraftBlocks.TERRACOTTA.slabItemNMS(), 0.5f),
+            Triple.of(SuCraftBlocks.CLAY.stairsItemNMS(), SuCraftBlocks.TERRACOTTA.stairsItemNMS(), 1f),
+            Triple.of(SuCraftBlocks.CLAY.wallItemNMS(), SuCraftBlocks.TERRACOTTA.wallItemNMS(), 1f),
+            Triple.of(SuCraftBlocks.CLAY.buttonItemNMS(), SuCraftBlocks.TERRACOTTA.buttonItemNMS(), 1f),
+            Triple.of(SuCraftBlocks.CLAY.pressurePlateItemNMS(), SuCraftBlocks.TERRACOTTA.pressurePlateItemNMS(), 2f)
+        ).forEach(triple -> {
+            var clay = triple.getLeft();
+            var terracotta = triple.getMiddle();
+            float factor = triple.getRight();
+            factories.recipes().add(Recipes.start()
+                .addRecipeSupplier(_ -> Recipes.RecipeSupplier.withSuffix(() ->
+                        SimpleCookingRecipeBuilder.smelting(Ingredient.of(clay), RecipeCategory.BUILDING_BLOCKS, CookingBookCategory.BLOCKS, terracotta, 0.35f * factor, (int) (200 * factor)),
+                    "_smelting"
+                ))
+            );
+        });
     }
 
 }

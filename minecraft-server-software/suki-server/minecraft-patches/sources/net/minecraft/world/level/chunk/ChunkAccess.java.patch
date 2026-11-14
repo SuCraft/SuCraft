@@ -1,0 +1,22 @@
+--- a/net/minecraft/world/level/chunk/ChunkAccess.java
++++ b/net/minecraft/world/level/chunk/ChunkAccess.java
+@@ -82,6 +_,19 @@
+     public org.bukkit.craftbukkit.persistence.DirtyCraftPersistentDataContainer persistentDataContainer = new org.bukkit.craftbukkit.persistence.DirtyCraftPersistentDataContainer(ChunkAccess.DATA_TYPE_REGISTRY);
+     // CraftBukkit end
+ 
++    // Suki start - Leaf - Matter - Secure seed
++    private boolean matter$slimeChunk;
++    private boolean matter$hasComputedSlimeChunk;
++
++    public boolean matter$isSlimeChunk() {
++        if (!this.matter$hasComputedSlimeChunk) {
++            this.matter$hasComputedSlimeChunk = true;
++            this.matter$slimeChunk = su.plo.matter.WorldgenCryptoRandom.seedSlimeChunk(this.chunkPos.x(), this.chunkPos.z()).nextInt(10) == 0;
++        }
++        return this.matter$slimeChunk;
++    }
++    // Suki end - Leaf - Matter - Secure seed
++
+     // Paper start - rewrite chunk system
+     private volatile ca.spottedleaf.moonrise.patches.starlight.light.SWMRNibbleArray[] blockNibbles;
+     private volatile ca.spottedleaf.moonrise.patches.starlight.light.SWMRNibbleArray[] skyNibbles;

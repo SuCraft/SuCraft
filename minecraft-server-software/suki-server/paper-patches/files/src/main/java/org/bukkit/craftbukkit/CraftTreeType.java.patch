@@ -1,0 +1,29 @@
+--- a/src/main/java/org/bukkit/craftbukkit/CraftTreeType.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftTreeType.java
+@@ -45,6 +_,13 @@
+         Map.entry(TreeFeatures.RED_POPLAR, TreeType.RED_POPLAR),
+         Map.entry(TreeFeatures.ORANGE_POPLAR, TreeType.ORANGE_POPLAR),
+         Map.entry(TreeFeatures.YELLOW_POPLAR, TreeType.YELLOW_POPLAR)
++        // Suki start - Add custom trees
++        ,
++        Map.entry(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.CHERRY_FROST_TREE, TreeType.CHERRY_FROST_TREE),
++        Map.entry(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_YELLOW_MAPLE, TreeType.FANCY_YELLOW_MAPLE),
++        Map.entry(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_ORANGE_MAPLE, TreeType.FANCY_ORANGE_MAPLE),
++        Map.entry(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_RED_MAPLE, TreeType.FANCY_RED_MAPLE)
++        // Suki end - Add custom trees
+     );
+ 
+     private CraftTreeType() {
+@@ -93,6 +_,12 @@
+             case RED_POPLAR -> TreeFeatures.RED_POPLAR;
+             case ORANGE_POPLAR -> TreeFeatures.ORANGE_POPLAR;
+             case YELLOW_POPLAR -> TreeFeatures.YELLOW_POPLAR;
++            // Suki start - Add custom trees
++            case CHERRY_FROST_TREE -> org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.CHERRY_FROST_TREE;
++            case FANCY_YELLOW_MAPLE -> org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_YELLOW_MAPLE;
++            case FANCY_ORANGE_MAPLE -> org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_ORANGE_MAPLE;
++            case FANCY_RED_MAPLE -> org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_RED_MAPLE;
++            // Suki end - Add custom trees
+         };
+     }
+ }

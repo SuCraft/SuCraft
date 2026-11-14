@@ -1,0 +1,193 @@
+--- a/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
++++ b/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
+@@ -9,26 +_,112 @@
+ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
+ 
+ public class StrongholdStructure extends Structure {
+-    public static final MapCodec<StrongholdStructure> CODEC = simpleCodec(StrongholdStructure::new);
++    // Suki start - Custom strongholds - Surface strongholds
++    public static final MapCodec<StrongholdStructure> CODEC = com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance ->
++        instance.group(
++            settingsCodec(instance),
++            com.mojang.serialization.Codec.BOOL.optionalFieldOf("is_surface", false).forGetter(structure -> structure.isSurface)
++        ).apply(instance, StrongholdStructure::new)
++    );
++    // Suki end - Custom strongholds - Surface strongholds
++
++    public final boolean isSurface; // Suki - Custom strongholds - Surface strongholds
+ 
+     public StrongholdStructure(final Structure.StructureSettings settings) {
++        this(settings, false);
++    }
++
++    public StrongholdStructure(final Structure.StructureSettings settings, final boolean isSurface) {
+         super(settings);
++        this.isSurface = isSurface; // Suki - Custom strongholds - Surface strongholds
+     }
+ 
+     @Override
+     public Optional<Structure.GenerationStub> findGenerationPoint(final Structure.GenerationContext context) {
+-        return Optional.of(new Structure.GenerationStub(context.chunkPos().getWorldPosition(), builder -> generatePieces(builder, context)));
++        // Suki start - Custom strongholds - Surface strongholds
++        return Optional.of(new Structure.GenerationStub(context.chunkPos().getWorldPosition(), builder -> {
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setSurface(this.isSurface);
++            generatePieces(builder, context);
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetSurface();
++        }));
++        // Suki end - Custom strongholds - Surface strongholds
+     }
+ 
+     private static synchronized void generatePieces(final StructurePiecesBuilder builder, final Structure.GenerationContext context) { // Paper - Synchronize structure generation; StrongholdPieces has mutable static state shared by all worlds
+         int tries = 0;
+ 
++        // Suki start - Custom strongholds - Surface strongholds
++        boolean surface = org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface();
++        // We determine a possible block amount to vertically raise the stronghold by
++        // (or null if we do not move this stronghold to the surface)
++        Integer potentialExtraIncreasedY = 0;
++        net.minecraft.util.RandomSource surfaceStrongholdRandom = context.random().fork();
++        boolean cold = false; // Suki - Custom strongholds - Cold strongholds
++        boolean grassy = false; // Suki - Custom strongholds - Grassy strongholds
++        if (surface) {
++            net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome> biome = org.sucraft.suki.gamecontent.world.structure.StructureGenerationUtils.approximateSeaLeveBiome(context);
++            // Only move strongholds to the surface in some biomes (particularly excluding otherworldly or watery biomes)
++            if (biome != null) {
++                // Suki start - Custom strongholds - Cold strongholds
++                if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_COLD_BLOCKS)) {
++                    cold = true;
++                }
++                // Suki end - Custom strongholds - Cold strongholds
++                // Suki start - Custom strongholds - Grassy strongholds
++                if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_GREEN_GRASSY_BLOCKS)) {
++                    grassy = true;
++                }
++                // Suki end - Custom strongholds - Grassy strongholds
++                if (!biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_NEVER)) {
++                    potentialExtraIncreasedY = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.ALL;
++                    // Potentially move the stronghold vertically up some extra
++                    if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_BADLANDS)) {
++                        potentialExtraIncreasedY = Math.max(potentialExtraIncreasedY, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.BADLANDS);
++                    }
++                    if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_HILL)) {
++                        potentialExtraIncreasedY = Math.max(potentialExtraIncreasedY, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.HILL);
++                    }
++                    if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_MOUNTAIN)) {
++                        potentialExtraIncreasedY = Math.max(potentialExtraIncreasedY, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.MOUNTAIN);
++                    }
++                    if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_PLATEAU)) {
++                        potentialExtraIncreasedY = Math.max(potentialExtraIncreasedY, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.PLATEAU);
++                    }
++                    if (biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.SURFACE_STRONGHOLD_MOVE_UP_WINDSWEPT)) {
++                        potentialExtraIncreasedY = Math.max(potentialExtraIncreasedY, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.PotentialExtraIncreasedY.WINDSWEPT);
++                    }
++                }
++            }
++        }
++        // Suki end - Custom strongholds - Surface strongholds
++
++        // Suki start - Custom strongholds - Place portal room nicely
++        final int minYDifferenceBetweenPortalRoomAndStartPiece = context.random().nextIntBetweenInclusive(
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.MinimumPortalRoomYDifference.MIN,
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.MinimumPortalRoomYDifference.MAX
++        );
++
++        int maxCyclesBeforeAllowEndPortalInWrongBiome = 1000;
++        int maxCyclesBeforeAllowHighEndPortal = 2000;
++        int maxCyclesBeforeAllowAboveSeaLevelEndPortal = 3000;
++
++        int cycle = -1;
++        // Suki end - Custom strongholds - Place portal room nicely
++
+         StrongholdPieces.StartPiece startRoom;
++        // Suki - Custom strongholds - Place portal room nicely
++        boolean failed;
+         do {
++            failed = false;
++            cycle++;
++            // Suki - Custom strongholds - Place portal room nicely
++            org.bukkit.Bukkit.getLogger().info("Generating stronghold (surface = " + surface + ") at " + context.chunkPos().x() + " , " + context.chunkPos().z() + " (attempt " + (cycle + 1) + ")");
+             builder.clear();
+             context.random().setLargeFeatureSeed(context.seed() + tries++, context.chunkPos().x(), context.chunkPos().z());
+             StrongholdPieces.resetPieces();
+             startRoom = new StrongholdPieces.StartPiece(context.random(), context.chunkPos().getBlockX(2), context.chunkPos().getBlockZ(2));
++            if (cold) startRoom.cold = true; // Suki - Custom strongholds - Cold strongholds
++            if (grassy) startRoom.grassy = true; // Suki - Custom strongholds - Grassy strongholds
+             builder.addPiece(startRoom);
+             startRoom.addChildren(startRoom, builder, context.random());
+             List<StructurePiece> pendingChildren = startRoom.pendingChildren;
+@@ -36,11 +_,74 @@
+             while (!pendingChildren.isEmpty()) {
+                 int pos = context.random().nextInt(pendingChildren.size());
+                 StructurePiece structurePiece = pendingChildren.remove(pos);
++                if (cold) structurePiece.cold = true; // Suki - Custom strongholds - Cold strongholds
++                if (grassy) structurePiece.grassy = true; // Suki - Custom strongholds - Grassy strongholds
+                 structurePiece.addChildren(startRoom, builder, context.random());
+             }
+ 
++            // Suki start - Custom strongholds - Place portal room nicely
++            if (builder.isEmpty()) {
++                org.bukkit.Bukkit.getLogger().info("Failed a stronghold generation (surface = " + surface + "): pieces empty");
++                failed = true;
++                continue;
++            } else if (startRoom.portalRoomPiece == null) {
++                org.bukkit.Bukkit.getLogger().info("Failed a stronghold generation (surface = " + surface + "): no end portal");
++                failed = true;
++                continue;
++            } else if (cycle < maxCyclesBeforeAllowHighEndPortal && surface && startRoom.portalRoomPiece.getBoundingBox().getCenter().getY() >= startRoom.getBoundingBox().getCenter().getY() - minYDifferenceBetweenPortalRoomAndStartPiece) {
++                org.bukkit.Bukkit.getLogger().info("Failed a stronghold generation (surface = " + surface + "): end portal not low enough");
++                failed = true;
++                continue;
++            } else if (cycle < maxCyclesBeforeAllowAboveSeaLevelEndPortal && surface && startRoom.portalRoomPiece.getBoundingBox().maxY() >= context.chunkGenerator().getSeaLevel() - org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.MinimumPortalRoomYDifference.MIN_Y_BELOW_SEA_LEVEL) {
++                org.bukkit.Bukkit.getLogger().info("Failed a stronghold generation (surface = " + surface + "): end portal above sea level");
++                failed = true;
++                continue;
++            }
++
++            boolean isPortalRoomValidBiome;
++            if (surface) {
++                boolean[] areAllPortalRoomCornersValidBiome = {true}; // Use an array so we can modify it inside the lambda function below
++                final net.minecraft.world.level.levelgen.structure.BoundingBox portalRoomBoundingBox = startRoom.portalRoomPiece.getBoundingBox();
++                portalRoomBoundingBox.forAllCorners(cornerPos -> {
++                    if (!areAllPortalRoomCornersValidBiome[0]) { // Skip the other corners if we already know another corner is in an invalid biome
++                        return;
++                    }
++                    net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome> biome = org.sucraft.suki.gamecontent.world.structure.StructureGenerationUtils.biome(context, cornerPos);
++                    if (biome == null) {
++                        return; // We don't know, and we probably won't ever find out, so we just have to assume it will be fine
++                    }
++                    if (!biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_STRONGHOLD_SURFACE)) {
++                        areAllPortalRoomCornersValidBiome[0] = false;
++                    }
++                });
++                isPortalRoomValidBiome = areAllPortalRoomCornersValidBiome[0];
++            } else {
++                isPortalRoomValidBiome = true;
++            }
++            if (!isPortalRoomValidBiome) {
++                if (cycle < maxCyclesBeforeAllowEndPortalInWrongBiome) {
++                    org.bukkit.Bukkit.getLogger().info("Failed a stronghold generation (surface = " + surface + "): end portal not in right biome");
++                    failed = true;
++                    continue;
++                }
++                potentialExtraIncreasedY = null; // Move the stronghold down after all
++            }
++            // Suki end - Custom strongholds - Place portal room nicely
++
++            // Suki start - Custom strongholds - Surface strongholds
++            if (surface && potentialExtraIncreasedY != null) {
++                int standardDecreasedY = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.DecreasedY.ALWAYS;
++                int potentialExtraDecreasedY = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.DecreasedY.POTENTIAL_EXTRA;
++                int extraIncreasedY = surfaceStrongholdRandom.nextInt(potentialExtraIncreasedY + 1) - standardDecreasedY - surfaceStrongholdRandom.nextInt(potentialExtraDecreasedY + 1);
++                org.bukkit.Bukkit.getLogger().info("To create more surface strongholds, vertically offsetting stronghold at block " + context.chunkPos().getBlockX(2) + " , " + context.chunkPos().getBlockZ(2) + " by " + extraIncreasedY + " and not moving it downwards on purpose");
++                builder.offsetPiecesVertically(extraIncreasedY);
++            } else {
++            // Suki end - Custom strongholds - Surface strongholds
+             builder.moveBelowSeaLevel(context.chunkGenerator().getSeaLevel(), context.chunkGenerator().getMinY(), context.random(), 10);
+-        } while (builder.isEmpty() || startRoom.portalRoomPiece == null);
++            }
++        } while (failed || builder.isEmpty() || startRoom.portalRoomPiece == null);
++        // Suki - Custom strongholds - Surface strongholds
++        org.bukkit.Bukkit.getLogger().info("Finished generating a stronghold (surface = " + surface + ") at " + context.chunkPos().x() + " , " + context.chunkPos().z());
+     }
+ 
+     @Override

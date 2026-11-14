@@ -1,0 +1,18 @@
+--- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
++++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
+@@ -182,14 +_,7 @@
+         List<CompletableFuture<ChunkPos>> tasks = new ArrayList<>(count);
+         int spread = placement.spread();
+         HolderSet<Biome> preferredBiomes = placement.preferredBiomes();
+-        RandomSource random = RandomSource.create();
+-        // Paper start - Add missing structure set seed configs
+-        if (this.config.strongholdSeed != null && structureSet.is(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.STRONGHOLDS)) {
+-            random.setSeed(this.config.strongholdSeed);
+-        } else {
+-        // Paper end - Add missing structure set seed configs
+-        random.setSeed(this.concentricRingsSeed);
+-        } // Paper - Add missing structure set seed configs
++        RandomSource random = new su.plo.matter.WorldgenCryptoRandom(0, 0, su.plo.matter.Globals.Salt.STRONGHOLDS, 0); // Suki - Leaf - Matter - Secure seed
+         double angle = random.nextDouble() * Math.PI * 2.0;
+         int positionInCircle = 0;
+         int circle = 0;

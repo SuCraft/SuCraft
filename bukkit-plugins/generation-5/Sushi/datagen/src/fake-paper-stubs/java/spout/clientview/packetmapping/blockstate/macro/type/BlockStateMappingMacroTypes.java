@@ -10,6 +10,7 @@ public interface BlockStateMappingMacroTypes {
     BlockStateMappingMacroType LADDER = null;
     BlockStateMappingMacroType LEAVES = null;
     BlockStateMappingMacroType PRESSURE_PLATE = null;
+    BlockStateMappingMacroType SAPLING = null;
     BlockStateMappingMacroType SLAB = null;
     BlockStateMappingMacroType STAIRS = null;
     BlockStateMappingMacroType WALL = null;

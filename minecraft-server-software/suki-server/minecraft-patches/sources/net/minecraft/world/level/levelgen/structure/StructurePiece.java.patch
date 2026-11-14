@@ -1,0 +1,92 @@
+--- a/net/minecraft/world/level/levelgen/structure/StructurePiece.java
++++ b/net/minecraft/world/level/levelgen/structure/StructurePiece.java
+@@ -42,6 +_,8 @@
+     private Rotation rotation;
+     protected int genDepth;
+     private final StructurePieceType type;
++    public boolean cold; // Suki - Custom strongholds - Cold strongholds
++    public boolean grassy; // Suki - Custom strongholds - Grassy strongholds
+     public static final Set<Block> SHAPE_CHECK_BLOCKS = ImmutableSet.<Block>builder()
+         .add(Blocks.NETHER_BRICK_FENCE)
+         .add(Blocks.TORCH)
+@@ -67,6 +_,8 @@
+         this(type, tag.getIntOr("GD", 0), tag.read("BB", BoundingBox.CODEC).orElseThrow());
+         int orientation = tag.getIntOr("O", 0);
+         this.setOrientation(orientation == -1 ? null : Direction.from2DDataValue(orientation));
++        this.cold = tag.getBooleanOr("Cold", false); // Suki - Custom strongholds - Cold strongholds
++        this.grassy = tag.getBooleanOr("Grassy", false); // Suki - Custom strongholds - Grassy strongholds
+     }
+ 
+     protected static BoundingBox makeBoundingBox(
+@@ -88,6 +_,8 @@
+         Direction orientation = this.getOrientation();
+         tag.putInt("O", orientation == null ? -1 : orientation.get2DDataValue());
+         tag.putInt("GD", this.genDepth);
++        if (this.cold) tag.putBoolean("Cold", true); // Suki - Custom strongholds - Cold strongholds
++        if (this.grassy) tag.putBoolean("Grassy", true); // Suki - Custom strongholds - Grassy strongholds
+         this.addAdditionalSaveData(context, tag);
+         return tag;
+     }
+@@ -107,6 +_,19 @@
+         final BlockPos referencePos
+     );
+ 
++    // Suki start - Structure generation - Add additional post-processing step
++    public void postPostProcess(
++        final WorldGenLevel level,
++        final StructureManager structureManager,
++        final ChunkGenerator generator,
++        final RandomSource random,
++        final BoundingBox chunkBB,
++        final ChunkPos chunkPos,
++        final BlockPos referencePos
++    ) {
++    }
++    // Suki end - Structure generation - Add additional post-processing step
++
+     public BoundingBox getBoundingBox() {
+         return this.boundingBox;
+     }
+@@ -169,6 +_,7 @@
+         BlockPos pos = this.getWorldPos(x, y, z);
+         if (chunkBB.isInside(pos)) {
+             if (this.canBeReplaced(level, x, y, z, chunkBB)) {
++
+                 if (this.mirror != Mirror.NONE) {
+                     blockState = blockState.mirror(this.mirror);
+                 }
+@@ -177,6 +_,12 @@
+                     blockState = blockState.rotate(this.rotation);
+                 }
+ 
++                // Suki start - Custom strongholds - Surface strongholds
++                if (!org.sucraft.suki.gamecontent.world.structure.stronghold.PlaceSurfaceStrongholdsWithinTerrain.canPlace(level, blockState, pos)) {
++                    return;
++                }
++                // Suki end - Custom strongholds - Surface strongholds
++
+                 level.setBlock(pos, blockState, Block.UPDATE_CLIENTS);
+                 // CraftBukkit start - fluid handling is already done if we have a transformer level accessor
+                 if (level instanceof org.bukkit.craftbukkit.util.TransformerLevelAccessor transformerAccessor && transformerAccessor.canTransformBlocks()) {
+@@ -198,6 +_,12 @@
+     // CraftBukkit start
+     private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
+     protected boolean placeCraftBlockEntity(ServerLevelAccessor level, BlockPos pos, org.bukkit.craftbukkit.block.CraftBlockEntityState<?> craftBlockEntityState, @Block.UpdateFlags int updateFlags) {
++        // Suki start - Custom strongholds - Surface strongholds
++        if (!org.sucraft.suki.gamecontent.world.structure.stronghold.PlaceSurfaceStrongholdsWithinTerrain.canPlace(level, craftBlockEntityState.getHandle(), pos)) {
++            return false;
++        }
++        // Suki end - Custom strongholds - Surface strongholds
++
+         if (level instanceof org.bukkit.craftbukkit.util.TransformerLevelAccessor transformerAccessor && transformerAccessor.canTransformBlocks()) {
+             return transformerAccessor.setCraftBlock(pos, craftBlockEntityState, updateFlags);
+         }
+@@ -241,7 +_,7 @@
+         return true;
+     }
+ 
+-    protected BlockState getBlock(final BlockGetter level, final int x, final int y, final int z, final BoundingBox chunkBB) {
++    public BlockState getBlock(final BlockGetter level, final int x, final int y, final int z, final BoundingBox chunkBB) { // Suki - Custom strongholds - Surface strongholds - Make accessible
+         BlockPos blockPos = this.getWorldPos(x, y, z);
+         return !chunkBB.isInside(blockPos) ? Blocks.AIR.defaultBlockState() : level.getBlockState(blockPos);
+     }

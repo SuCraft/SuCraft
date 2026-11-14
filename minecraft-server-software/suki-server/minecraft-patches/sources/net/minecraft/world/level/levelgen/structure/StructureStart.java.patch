@@ -1,0 +1,41 @@
+--- a/net/minecraft/world/level/levelgen/structure/StructureStart.java
++++ b/net/minecraft/world/level/levelgen/structure/StructureStart.java
+@@ -90,6 +_,15 @@
+         final BoundingBox chunkBB,
+         final ChunkPos chunkPos
+     ) {
++        // Suki start - Custom strongholds - Surface strongholds, cold strongholds, grassy strongholds
++        var stronghold = this.structure instanceof net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure strongholdStructure ? strongholdStructure : null;
++        if (stronghold != null) {
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setSurface(stronghold.isSurface);
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setCold(this.pieceContainer.pieces().stream().anyMatch(it -> it.cold));
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setGrassy(this.pieceContainer.pieces().stream().anyMatch(it -> it.grassy));
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setRandom(random);
++        }
++        // Suki end - Custom strongholds - Surface strongholds, cold strongholds, grassy strongholds
+         List<StructurePiece> pieces = this.pieceContainer.pieces();
+         if (!pieces.isEmpty()) {
+             BoundingBox centerBB = pieces.get(0).boundingBox;
+@@ -109,6 +_,7 @@
+                 transformerAccessor.setStructureTransformer(new org.bukkit.craftbukkit.util.CraftStructureTransformer(this.generationEventCause, level, structureManager, this.structure, chunkBB, chunkPos));
+                 for (StructurePiece piece : intersectingPieces) {
+                     piece.postProcess(transformerAccessor, structureManager, generator, random, chunkBB, chunkPos, referencePos);
++                    piece.postPostProcess(transformerAccessor, structureManager, generator, random, chunkBB, chunkPos, referencePos); // Suki - Structure generation - Add additional post-processing step
+                 }
+                 transformerAccessor.getStructureTransformer().discard();
+             }
+@@ -116,6 +_,14 @@
+ 
+             this.structure.afterPlace(level, structureManager, generator, random, chunkBB, chunkPos, this.pieceContainer);
+         }
++        // Suki start - Custom strongholds - Surface strongholds, cold strongholds, grassy strongholds
++        if (stronghold != null) {
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetSurface();
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetCold();
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetGrassy();
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetRandom();
++        }
++        // Suki end - Custom strongholds - Surface strongholds, cold strongholds, grassy strongholds
+     }
+ 
+     public CompoundTag createTag(final StructurePieceSerializationContext context, final ChunkPos chunkPos) {

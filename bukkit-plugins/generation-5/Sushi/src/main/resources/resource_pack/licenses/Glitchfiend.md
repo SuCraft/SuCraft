@@ -1,7 +1,10 @@
 The following files (referenced relative to the parent folder of the folder this file is in) are/were part of [Biomes O' Plenty](https://modrinth.com/mod/biomes-o-plenty), which is/was maintained by [Glitchfiend](https://github.com/Glitchfiend):
 * `assets/sucraft/textures/block/orange_maple_leaves.png`
+* `assets/sucraft/textures/block/orange_maple_sapling.png`
 * `assets/sucraft/textures/block/red_maple_leaves.png`
+* `assets/sucraft/textures/block/red_maple_sapling.png`
 * `assets/sucraft/textures/block/yellow_maple_leaves.png`
+* `assets/sucraft/textures/block/yellow_maple_sapling.png`
 
 These files are provided under "all rights reserved"
 as the original resource pack does not come with a license to redistribute.

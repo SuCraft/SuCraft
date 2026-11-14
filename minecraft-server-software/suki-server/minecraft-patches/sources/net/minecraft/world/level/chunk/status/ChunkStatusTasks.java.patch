@@ -1,0 +1,12 @@
+--- a/net/minecraft/world/level/chunk/status/ChunkStatusTasks.java
++++ b/net/minecraft/world/level/chunk/status/ChunkStatusTasks.java
+@@ -147,7 +_,9 @@
+         ServerLevel level = context.level();
+         WorldGenRegion region = new WorldGenRegion(level, chunks, step, chunk);
+         if (!SharedConstants.DEBUG_DISABLE_FEATURES) {
++            org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.setDoing(); // Suki - Different checks during feature generation
+             context.generator().applyBiomeDecoration(region, chunk, level.structureManager().forWorldGenRegion(region));
++            org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.unsetDoing(); // Suki - Different checks during feature generation
+         }
+ 
+         Blender.generateBorderTicks(region, chunk);

@@ -1,4 +1,10 @@
 import com.github.houbb.opencc4j.util.ZhConverterUtil
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import java.net.URL
@@ -8,12 +14,26 @@ import java.util.TreeMap
 import java.util.zip.ZipFile
 import kotlin.collections.filter
 
+fun JsonArray.insert(index: Int, element: JsonElement) {
+    if (index == size()) {
+        add(element)
+        return
+    }
+    val oldSize = size()
+    add(get(oldSize - 1))
+    for (i in oldSize - 1 downTo index + 1) {
+        set(i, get(i - 1))
+    }
+    set(index, element)
+}
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath("com.github.houbb:opencc4j:1.14.0")
+        classpath("com.google.code.gson:gson:2.13.2")
     }
 }
 
@@ -452,14 +472,15 @@ tasks {
 
 }
 
-// Include some vanilla client assets
+// Include some vanilla client files, potentially modified
 val vanillaClientURL = providers.gradleProperty("vanillaClientURL").get()
 val vanillaClientDownloadFolder = layout.buildDirectory.dir("vanilla-client/downloads").get()
 val vanillaClientDownloadFile = vanillaClientDownloadFolder.file("${providers.gradleProperty("apiVersion").get()}.jar")
-val vanillaClientExtractsFolder = layout.buildDirectory.dir("resources/main/resource_pack/assets").get()
+val vanillaClientAssetsOutputFolder = layout.buildDirectory.dir("resources/main/resource_pack/assets").get()
+val vanillaClientDataOutputFolder = layout.buildDirectory.dir("resources/main/data_pack/data").get()
 
 val downloadMinecraftClient: TaskProvider<Task> = tasks.register("downloadMinecraftClient") {
-    group = "vanilla client assets"
+    group = "vanilla client files"
 
     outputs.dir(vanillaClientDownloadFolder)
     doLast {
@@ -486,64 +507,90 @@ sourceSets {
     }
 }
 
-val includedVanillaAssets =
-    (listOf(
-        "black",
-        "blue",
-        "brown",
-        "cyan",
-        "gray",
-        "green",
-        "light_blue",
-        "light_gray",
-        "lime",
-        "magenta",
-        "orange",
-        "pink",
-        "purple",
-        "red",
-        "white",
-        "yellow"
-    ).flatMap { listOf("${it}_concrete", "${it}_wool") } + listOf(
-        "tuff"
-    )).flatMap { listOf("${it}_slab", "${it}_stairs") }
-        .flatMap {
-            listOf(
-                "minecraft/blockstates/$it.json" to "sucraft/blockstates/$it.json",
-                "minecraft/items/$it.json" to "sucraft/items/$it.json"
-            )
-        }.toMap()
+data class IncludedVanillaFile(
+    val inputPath: String,
+    val outputPath: String = inputPath,
+    val contentFunction: ((String) -> String)? = null
+)
 
-val extractVanillaAssets: TaskProvider<Task> = tasks.register("extractVanillaAssets") {
-    group = "vanilla client assets"
+fun includedVanillaJSONFile(
+    inputPath: String,
+    outputPath: String = inputPath,
+    contentFunction: (JsonElement) -> JsonElement
+) = IncludedVanillaFile(inputPath, outputPath) {
+    GsonBuilder().setPrettyPrinting().create().toJson(contentFunction(JsonParser.parseString(it)))
+}
 
-    dependsOn(downloadMinecraftClient, "processResources")
-    outputs.dir(vanillaClientExtractsFolder)
+fun includedVanillaJSONObjectFile(
+    inputPath: String,
+    outputPath: String = inputPath,
+    contentFunction: (JsonObject) -> JsonObject
+) = includedVanillaJSONFile(inputPath, outputPath) {
+    contentFunction(it.asJsonObject)
+}
 
-    doLast {
-        val folder = vanillaClientExtractsFolder.asFile
-        folder.mkdirs()
-        val sourceJar: File = vanillaClientDownloadFile.asFile
+fun includedVanillaJSONObjectFileMutated(
+    inputPath: String,
+    outputPath: String = inputPath,
+    contentFunction: JsonObject.() -> Unit
+) = includedVanillaJSONObjectFile(inputPath, outputPath, { it: JsonObject ->
+    it.apply {
+        contentFunction()
+    }
+})
 
-        logger.lifecycle("Extracting assets from ${sourceJar.absolutePath}")
+fun includedVanillaJSONArrayFile(
+    inputPath: String,
+    outputPath: String = inputPath,
+    contentFunction: (JsonArray) -> JsonArray
+) = includedVanillaJSONFile(inputPath, outputPath) {
+    contentFunction(it.asJsonArray)
+}
 
-        ZipFile(sourceJar).use { zip ->
-            val entries = zip.entries()
-            while (entries.hasMoreElements()) {
-                val entry = entries.nextElement()
+fun includedVanillaJSONArrayFileMutated(
+    inputPath: String,
+    outputPath: String = inputPath,
+    contentFunction: JsonArray.() -> Unit
+) = includedVanillaJSONArrayFile(inputPath, outputPath, { it: JsonArray ->
+    it.apply {
+        contentFunction()
+    }
+})
 
-                // We only want specific entries
-                if (!entry.name.startsWith("assets/")) continue
-                val outName = includedVanillaAssets.get(entry.name.removePrefix("assets/"))
-                if (outName == null) continue
+fun extractVanillaFiles(
+    folderName: String,
+    outputFolder: File,
+    files: List<IncludedVanillaFile>
+) {
+    outputFolder.mkdirs()
+    val sourceJar: File = vanillaClientDownloadFile.asFile
 
-                val outFile = folder.resolve(outName)
+    logger.lifecycle("Extracting $folderName from ${sourceJar.absolutePath}")
+
+    val filesByInputName = files.groupBy { file -> file.inputPath }
+
+    ZipFile(sourceJar).use { zip ->
+        val entries = zip.entries()
+        while (entries.hasMoreElements()) {
+            val entry = entries.nextElement()
+
+            // We only want specific entries
+            if (!entry.name.startsWith("$folderName/")) continue
+            val filesForInputName = filesByInputName[entry.name.removePrefix("$folderName/")]
+            if (filesForInputName.isNullOrEmpty()) continue
+
+            for (file in filesForInputName) {
+                val outFile = outputFolder.resolve(file.outputPath)
                 if (entry.isDirectory) {
                     outFile.mkdirs()
                 } else {
                     outFile.parentFile?.mkdirs()
                     zip.getInputStream(entry).use { input ->
-                        Files.copy(input, outFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        if (file.contentFunction == null) {
+                            Files.copy(input, outFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        } else {
+                            outFile.writeText(file.contentFunction(String(input.readAllBytes())))
+                        }
                     }
                 }
             }
@@ -551,9 +598,451 @@ val extractVanillaAssets: TaskProvider<Task> = tasks.register("extractVanillaAss
     }
 }
 
+val extractVanillaAssets: TaskProvider<Task> = tasks.register("extractVanillaAssets") {
+    group = "vanilla client files"
+
+    dependsOn(downloadMinecraftClient, "processResources")
+    outputs.dir(vanillaClientAssetsOutputFolder)
+
+    doLast {
+        extractVanillaFiles(
+            "assets",
+            vanillaClientAssetsOutputFolder.asFile,
+            (listOf(
+                "black",
+                "blue",
+                "brown",
+                "cyan",
+                "gray",
+                "green",
+                "light_blue",
+                "light_gray",
+                "lime",
+                "magenta",
+                "orange",
+                "pink",
+                "purple",
+                "red",
+                "white",
+                "yellow"
+            ).flatMap { listOf("${it}_concrete", "${it}_wool") } + listOf(
+                "tuff"
+            )).flatMap { listOf("${it}_slab", "${it}_stairs") }
+                .flatMap {
+                    listOf(
+                        IncludedVanillaFile("minecraft/blockstates/$it.json", "sucraft/blockstates/$it.json"),
+                        IncludedVanillaFile("minecraft/items/$it.json", "sucraft/items/$it.json")
+                    )
+                }
+        )
+    }
+}
+
+data class StructureSet(
+    val name: String,
+    val separationDelta: Int = 0,
+    val spacingDelta: Int = 0
+)
+
+val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData") {
+    group = "vanilla client files"
+
+    dependsOn(downloadMinecraftClient, "processResources")
+    outputs.dir(vanillaClientDataOutputFolder)
+
+    doLast {
+        extractVanillaFiles(
+            "data",
+            vanillaClientDataOutputFolder.asFile,
+            listOf(
+                includedVanillaJSONArrayFileMutated("minecraft/block_transformer/axe.json") {
+                    add(JsonObject().apply {
+                        addProperty("item_damage_per_use", 1)
+                        addProperty("sound", "minecraft:item.axe.strip")
+                        add("block_state_provider", JsonObject().apply {
+                            addProperty("type", "minecraft:rule_based")
+                            add("rules", JsonArray().apply {
+                                listOf(
+                                    Triple("acacia", false, true),
+                                    Triple("birch", false, true),
+                                    Triple("cherry", false, true),
+                                    Triple("crimson", true, true),
+                                    Triple("dark_oak", false, true),
+                                    Triple("jungle", false, true),
+                                    Triple("mangrove", false, true),
+                                    Triple("oak", false, true),
+                                    Triple("pale_oak", false, true),
+                                    Triple("poplar", false, true),
+                                    Triple("spruce", false, true),
+                                    Triple("warped", true, true),
+                                    Triple("frost", false, false)
+                                ).forEach { (woodType, nether, vanilla) ->
+                                    listOf(false, true).forEach { wood ->
+                                        listOfNotNull(
+                                            ("" to JsonObject().apply {
+                                                addProperty("axis", "y")
+                                            }).takeIf { !vanilla },
+                                            ("_slab" to JsonObject().apply {
+                                                addProperty("type", "bottom")
+                                                addProperty("waterlogged", "false")
+                                            }),
+                                            ("_stairs" to JsonObject().apply {
+                                                addProperty("facing", "north")
+                                                addProperty("half", "bottom")
+                                                addProperty("shape", "straight")
+                                                addProperty("waterlogged", "false")
+                                            }),
+                                            ("_wall" to JsonObject().apply {
+                                                addProperty("up", "true")
+                                                addProperty("north", "none")
+                                                addProperty("east", "none")
+                                                addProperty("south", "none")
+                                                addProperty("west", "none")
+                                                addProperty("waterlogged", "false")
+                                            }).takeIf { wood },
+                                            ("_fence" to JsonObject().apply {
+                                                addProperty("north", "false")
+                                                addProperty("east", "false")
+                                                addProperty("south", "false")
+                                                addProperty("west", "false")
+                                                addProperty("waterlogged", "false")
+                                            }).takeIf { wood },
+                                            ("_fence_gate" to JsonObject().apply {
+                                                addProperty("facing", "north")
+                                                addProperty("open", "false")
+                                                addProperty("powered", "false")
+                                                addProperty("in_wall", "false")
+                                            }).takeIf { wood },
+                                            ("_button" to JsonObject().apply {
+                                                addProperty("facing", "north")
+                                                addProperty("powered", "false")
+                                                addProperty("face", "wall")
+                                            }).takeIf { wood },
+                                            ("_pressure_plate" to JsonObject().apply {
+                                                addProperty("powered", "false")
+                                            }).takeIf { wood }
+                                        ).forEach { (shape, properties) ->
+                                            val unstrippedPath =
+                                                "${woodType}_${if (wood) (if (nether) "hyphae" else "wood") else (if (nether) "stem" else "log")}$shape"
+                                            val strippedPath = "stripped_$unstrippedPath"
+                                            add(JsonObject().apply {
+                                                add("if_true", JsonObject().apply {
+                                                    addProperty("type", "minecraft:matching_blocks")
+                                                    addProperty(
+                                                        "blocks",
+                                                        "sucraft:$unstrippedPath"
+                                                    )
+                                                })
+                                                add("then", JsonObject().apply {
+                                                    addProperty("type", "minecraft:copy_properties")
+                                                    add("source", JsonObject().apply {
+                                                        addProperty("id", "sucraft:$strippedPath")
+                                                        add("properties", properties)
+                                                    })
+                                                })
+                                            })
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                    })
+                }
+            ) + listOf(
+                StructureSet("abandoned_camp", -1, -10),
+                StructureSet("ancient_cities", -1, -6),
+                StructureSet("buried_treasures", 0, 0),
+                StructureSet("desert_pyramids", -1, -3),
+                StructureSet("end_cities", -2, -3),
+                StructureSet("igloos", -2, -14),
+                StructureSet("jungle_temples", -1, -9),
+                StructureSet("mineshafts", 0, 0),
+                StructureSet("nether_complexes", 0, -7),
+                StructureSet("nether_fossils", 0, 0),
+                StructureSet("ocean_monuments", 0, -5),
+                StructureSet("ocean_ruins", -2, -6),
+                StructureSet("pillager_outposts", -1, -6),
+                StructureSet("ruined_portals", -4, -10),
+                StructureSet("shipwrecks", 0, -5),
+                StructureSet("strongholds", 0, 0),
+                StructureSet("swamp_huts", -2, -8),
+                StructureSet("trail_ruins", -3, -22),
+                StructureSet("trial_chambers", -2, -10),
+                StructureSet("villages", -7, -6),
+                StructureSet("woodland_mansions", -4, -48)
+            ).map { (name, separationDelta, spacingDelta) ->
+                includedVanillaJSONObjectFileMutated("minecraft/worldgen/structure_set/$name.json") {
+                    getAsJsonObject("placement").apply {
+                        // Change salt to make seed cracking more difficult
+                        addProperty("salt", get("salt").asInt + name.chars().sum())
+                        // Make structures more common
+                        if (separationDelta != 0) {
+                            addProperty("separation", get("separation").asInt + separationDelta)
+                        }
+                        if (spacingDelta != 0) {
+                            addProperty("spacing", get("spacing").asInt + spacingDelta)
+                        }
+                        if (name == "strongholds") {
+                            addProperty("separation", 24)
+                            addProperty("spacing", 36)
+                            // Change strongholds to generate everywhere
+                            addProperty("type", "minecraft:random_spread")
+                        }
+                    }
+                    // Add surface strongholds
+                    if (name == "strongholds") {
+                        getAsJsonArray("structures").add(JsonObject().apply {
+                            addProperty("structure", "sucraft:stronghold_surface")
+                            addProperty("weight", 1)
+                        })
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/structure/stronghold.json",
+                "sucraft/worldgen/structure/stronghold_surface.json"
+            ) {
+                addProperty("biomes", "#sucraft:has_structure/stronghold_surface")
+                addProperty("terrain_adaptation", "none")
+                addProperty("is_surface", true)
+            } + includedVanillaJSONObjectFileMutated("minecraft/advancement/story/follow_ender_eye.json") {
+                getAsJsonObject("criteria").getAsJsonObject("in_stronghold")
+                    .getAsJsonObject("conditions").getAsJsonObject("player")
+                    .getAsJsonObject("predicate").getAsJsonObject("minecraft:location").apply {
+                        val existing = get("structures").asString
+                        add("structures", JsonArray().apply {
+                            add(existing)
+                            add("sucraft:stronghold_surface")
+                        })
+                    }
+            } + listOf("stronghold_corridor", "stronghold_crossing").map { source ->
+                includedVanillaJSONObjectFileMutated("minecraft/loot_table/chests/$source.json") {
+                    getAsJsonArray("pools").add(JsonObject().apply {
+                        add("entries", JsonArray().apply {
+                            add(JsonObject().apply {
+                                addProperty("type", "minecraft:empty")
+                                addProperty("weight", 4)
+                            })
+                            add(JsonObject().apply {
+                                addProperty("type", "minecraft:item")
+                                addProperty("name", "minecraft:ender_pearl")
+                            })
+                        })
+                        addProperty("rolls", 3)
+                    })
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/monster_room.json") {
+                getAsJsonArray("placement").first().asJsonObject.addProperty("count", 16)
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/monster_room_deep.json") {
+                getAsJsonArray("placement").first().asJsonObject.addProperty("count", 10)
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/amethyst_geode.json") {
+                getAsJsonArray("placement").first().asJsonObject.addProperty("chance", 15)
+            } + listOf(
+                "frozen_peaks",
+                "jagged_peaks",
+                "snowy_slopes"
+            ).map { name ->
+                includedVanillaJSONObjectFileMutated("minecraft/worldgen/biome/$name.json") {
+                    getAsJsonArray("features").get(4).asJsonArray
+                        .insert(0, JsonPrimitive("sucraft:trees_frost_high_elevation"))
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/biome/ice_spikes.json") {
+                getAsJsonArray("features").apply {
+                    forEach {
+                        it.takeIf { it.isJsonArray }?.asJsonArray?.run {
+                            if (contains(JsonPrimitive("minecraft:ice_spike"))) {
+                                insert(0, JsonPrimitive("sucraft:trees_frost_ice_spikes"))
+                            }
+                        }
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/biome/ice_spikes.json",
+                "sucraft/worldgen/biome/frost_forest.json"
+            ) {
+                getAsJsonArray("features").apply {
+                    forEach {
+                        it.takeIf { it.isJsonArray }?.asJsonArray?.run {
+                            if (contains(JsonPrimitive("minecraft:ice_spike"))) {
+                                set(
+                                    indexOf(JsonPrimitive("minecraft:ice_spike")),
+                                    JsonPrimitive("sucraft:ice_spike_frost_forest")
+                                )
+                                insert(0, JsonPrimitive("sucraft:trees_frost_forest"))
+                            } else if (contains(JsonPrimitive("minecraft:monster_room"))) {
+                                insert(0, JsonPrimitive("minecraft:fossil_upper"))
+                                insert(1, JsonPrimitive("minecraft:fossil_lower"))
+                            }
+                        }
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/ice_spike.json",
+                "sucraft/worldgen/placed_feature/ice_spike_frost_forest.json"
+            ) {
+                getAsJsonArray("placement").add(JsonObject().apply {
+                    addProperty("type", "minecraft:rarity_filter")
+                    addProperty("chance", 32)
+                })
+            } + IncludedVanillaFile(
+                "minecraft/worldgen/material_rule/overworld/biome_surface/ice_spikes.json",
+                "sucraft/worldgen/material_rule/overworld/biome_surface/frost_forest.json"
+            ) + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/biome/dappled_forest.json",
+                "sucraft/worldgen/biome/orange_forest.json"
+            ) {
+                addProperty("temperature", get("temperature").asDouble + 0.1)
+                getAsJsonObject("effects").apply {
+                    remove("foliage_color")
+                    addProperty("grass_color", "#a34d0f")
+                }
+                getAsJsonArray("features").apply {
+                    forEach {
+                        it.takeIf { it.isJsonArray }?.asJsonArray?.run {
+                            if (contains(JsonPrimitive("minecraft:trees_dappled_forest"))) {
+                                set(
+                                    indexOf(JsonPrimitive("minecraft:trees_dappled_forest")),
+                                    JsonPrimitive("sucraft:trees_orange_forest")
+                                )
+                            }
+                            if (contains(JsonPrimitive("minecraft:patch_grass_forest"))) {
+                                set(
+                                    indexOf(JsonPrimitive("minecraft:patch_grass_forest")),
+                                    JsonPrimitive("sucraft:patch_grass_orange_forest")
+                                )
+                                add("minecraft:patch_tall_grass_2")
+                                add("minecraft:patch_large_fern")
+                                add("minecraft:patch_pumpkin")
+                                add("minecraft:patch_berry_rare")
+                                add("sucraft:patch_dead_bush_orange_forest")
+                                add("sucraft:patch_fern_orange_forest")
+                            }
+                        }
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_grass_forest.json",
+                "sucraft/worldgen/placed_feature/patch_grass_orange_forest.json"
+            ) {
+                getAsJsonArray("placement")
+                    .first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                    .asJsonObject.addProperty("count", 12)
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_grass_forest.json",
+                "sucraft/worldgen/placed_feature/patch_fern_orange_forest.json"
+            ) {
+                addProperty("feature", "sucraft:fern")
+                getAsJsonArray("placement")
+                    .first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                    .asJsonObject.addProperty("count", 4)
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_dead_bush_2.json",
+                "sucraft/worldgen/placed_feature/patch_dead_bush_orange_forest.json"
+            ) {
+                getAsJsonArray("placement")
+                    .first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                    .asJsonObject.addProperty("count", 8)
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/trees_dappled_forest.json",
+                "sucraft/worldgen/placed_feature/trees_orange_forest.json"
+            ) {
+                addProperty("feature", "sucraft:trees_orange_forest")
+                getAsJsonArray("placement")
+                    .first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                    .asJsonObject.addProperty("count", 13)
+            } + listOf(
+                "red", "orange", "yellow"
+            ).flatMap { color ->
+                listOf(
+                    includedVanillaJSONObjectFileMutated(
+                        "minecraft/worldgen/feature/fancy_oak_bees_0002_leaf_litter.json",
+                        "sucraft/worldgen/feature/fancy_${color}_maple.json"
+                    ) {
+                        getAsJsonObject("foliage_provider").apply {
+                            addProperty("id", "sucraft:${color}_maple_leaves")
+                        }
+                    },
+                    includedVanillaJSONObjectFileMutated(
+                        "minecraft/worldgen/placed_feature/fancy_oak_bees_0002_leaf_litter.json",
+                        "sucraft/worldgen/placed_feature/fancy_${color}_maple.json"
+                    ) {
+                        addProperty("feature", "sucraft:fancy_${color}_maple")
+                        getAsJsonArray("placement").apply {
+                            first().asJsonObject.getAsJsonObject("predicate").apply {
+                                addProperty("state", "sucraft:${color}_maple_sapling")
+                            }
+                        }
+                    }
+                )
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/material_rule/overworld/biome_surface.json") {
+                getAsJsonArray("sequence").apply {
+                    insert(0, JsonObject().apply {
+                        addProperty("type", "minecraft:condition")
+                        add("if_true", JsonObject().apply {
+                            addProperty("type", "minecraft:biome")
+                            addProperty("biome_is", "sucraft:frost_forest")
+                        })
+                        addProperty("then_run", "sucraft:overworld/biome_surface/frost_forest")
+                    })
+                    insert(0, JsonObject().apply {
+                        addProperty("type", "minecraft:condition")
+                        add("if_true", JsonObject().apply {
+                            addProperty("type", "minecraft:biome")
+                            addProperty("biome_is", "sucraft:orange_forest")
+                        })
+                        addProperty("then_run", "sucraft:overworld/biome_surface/orange_forest")
+                    })
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/density_function/overworld/preliminary_surface_level.json") {
+                getAsJsonObject("density").getAsJsonObject("left").apply {
+                    getAsJsonObject("second").getAsJsonObject("alpha").apply {
+                        addProperty("from_coordinate", 270)
+                        addProperty("to_coordinate", 296)
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/density_function/overworld/final_density.json") {
+                getAsJsonObject("left").getAsJsonObject("left")
+                    .getAsJsonObject("input").getAsJsonObject("input")
+                    .getAsJsonObject("left").getAsJsonObject("input")
+                    .getAsJsonObject("second").getAsJsonObject("alpha").apply {
+                        addProperty("from_coordinate", 270)
+                        addProperty("to_coordinate", 296)
+                    }
+            }/* + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/density_function/overworld/factor.json"
+            ) {
+                fun multiplyValues(obj: JsonElement, factor: Double) {
+                    if (obj.isJsonObject) {
+                        obj.asJsonObject.keySet().forEach { key ->
+                            val value = obj.asJsonObject.get(key)
+                            if (value.isJsonObject) {
+                                multiplyValues(value, factor)
+                            } else if (value.isJsonArray) {
+                                multiplyValues(value, factor)
+                            } else if (value.isJsonPrimitive && key == "value") {
+                                if (value.asJsonPrimitive.isNumber) {
+                                    obj.asJsonObject.addProperty(key, value.asJsonPrimitive.asDouble * factor)
+                                }
+                            }
+                        }
+                    } else if (obj.isJsonArray) {
+                        obj.asJsonArray.forEach { multiplyValues(it, factor) }
+                    }
+                }
+
+                val points = getAsJsonObject("input").getAsJsonObject("second")
+                    .getAsJsonObject("spline").getAsJsonArray("points")
+                for (i in 2 until points.size()) {
+                    multiplyValues(points[i], 0.85)
+                }
+            }*/
+        )
+    }
+}
+
 tasks.named("jar") {
     dependsOn(extractVanillaAssets)
+    dependsOn(extractVanillaData)
 }
 tasks.named("shadowJar") {
-    dependsOn(extractVanillaAssets)
+    dependsOn(extractVanillaData)
 }

@@ -1,0 +1,14 @@
+--- a/net/minecraft/world/level/block/VegetationBlock.java
++++ b/net/minecraft/world/level/block/VegetationBlock.java
+@@ -17,6 +_,11 @@
+     }
+ 
+     protected boolean mayPlaceOn(final BlockState state, final BlockGetter level, final BlockPos pos) {
++        // Suki start - Allow vegetation to be placed on more blocks, but not by terrain generation
++        if (!org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.getDoing() && state.is(org.sucraft.suki.gamecontent.block.tag.SukiBlockTags.SUPPORTS_VEGETATION_MANUAL)) {
++            return true;
++        }
++        // Suki end - Allow vegetation to be placed on more blocks, but not by terrain generation
+         return state.is(BlockTags.SUPPORTS_VEGETATION);
+     }
+ 

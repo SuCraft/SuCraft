@@ -123,4 +123,16 @@ public final class PlatformDependent {
 
     }
 
+    public static final class MinecraftServer {
+
+        private MinecraftServer() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static net.minecraft.server.MinecraftServer getServer() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
 }

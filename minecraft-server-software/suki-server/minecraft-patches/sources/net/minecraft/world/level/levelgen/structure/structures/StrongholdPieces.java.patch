@@ -1,0 +1,686 @@
+--- a/net/minecraft/world/level/levelgen/structure/structures/StrongholdPieces.java
++++ b/net/minecraft/world/level/levelgen/structure/structures/StrongholdPieces.java
+@@ -39,7 +_,7 @@
+ public class StrongholdPieces {
+     private static final int SMALL_DOOR_WIDTH = 3;
+     private static final int SMALL_DOOR_HEIGHT = 3;
+-    private static final int MAX_DEPTH = 50;
++    // private static final int MAX_DEPTH = 50; // Suki - Custom strongholds - Bigger strongholds
+     private static final int LOWEST_Y_POSITION = 10;
+     private static final boolean CHECK_AIR = true;
+     public static final int MAGIC_START_Y = 64;
+@@ -48,21 +_,21 @@
+         new StrongholdPieces.PieceWeight(StrongholdPieces.PrisonHall.class, 5, 5),
+         new StrongholdPieces.PieceWeight(StrongholdPieces.LeftTurn.class, 20, 0),
+         new StrongholdPieces.PieceWeight(StrongholdPieces.RightTurn.class, 20, 0),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.RoomCrossing.class, 10, 6),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.StraightStairsDown.class, 5, 5),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.StairsDown.class, 5, 5),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.FiveCrossing.class, 5, 4),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.ChestCorridor.class, 5, 4),
+-        new StrongholdPieces.PieceWeight(StrongholdPieces.Library.class, 10, 2) {
++        new StrongholdPieces.PieceWeight(StrongholdPieces.RoomCrossing.class, 10, 6, 10, 20), // Suki - Custom strongholds - Bigger strongholds
++        new StrongholdPieces.PieceWeight(StrongholdPieces.StraightStairsDown.class, 5, 5, 10, 0), // Suki - Custom strongholds - Bigger strongholds
++        new StrongholdPieces.PieceWeight(StrongholdPieces.StairsDown.class, 5, 5, 8, 0), // Suki - Custom strongholds - Bigger strongholds
++        new StrongholdPieces.PieceWeight(StrongholdPieces.FiveCrossing.class, 5, 4, 5, 6), // Suki - Custom strongholds - Bigger strongholds
++        new StrongholdPieces.PieceWeight(StrongholdPieces.ChestCorridor.class, 5, 4, 6, 10), // Suki - Custom strongholds - Bigger strongholds
++        new StrongholdPieces.PieceWeight(StrongholdPieces.Library.class, 10, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.LIBRARY_MAX_AMOUNT, 10, org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.LIBRARY_MAX_AMOUNT_SURFACE) { // Suki - Custom strongholds - Bigger strongholds
+             @Override
+             public boolean doPlace(final int depth) {
+-                return super.doPlace(depth) && depth > 4;
++                return super.doPlace(depth) && depth > 4 && depth > (org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.LIBRARY_MIN_DEPTH_SURFACE : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.LIBRARY_MIN_DEPTH); // Suki - Custom strongholds - Bigger strongholds
+             }
+         },
+         new StrongholdPieces.PieceWeight(StrongholdPieces.PortalRoom.class, 20, 1) {
+             @Override
+             public boolean doPlace(final int depth) {
+-                return super.doPlace(depth) && depth > 5;
++                return super.doPlace(depth) && depth > 5 && depth > (org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.PORTAL_ROOM_MIN_DEPTH_SURFACE : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.PORTAL_ROOM_MIN_DEPTH);
+             }
+         }
+     };
+@@ -87,11 +_,11 @@
+         totalWeight = 0;
+ 
+         for (StrongholdPieces.PieceWeight piece : currentPieces) {
+-            if (piece.maxPlaceCount > 0 && piece.placeCount < piece.maxPlaceCount) {
++            if (piece.getMaxPlaceCount() > 0 && piece.placeCount < piece.getMaxPlaceCount()) { // Suki - Custom strongholds - Bigger strongholds
+                 hasAnyPieces = true;
+             }
+ 
+-            totalWeight = totalWeight + piece.weight;
++            totalWeight = totalWeight + piece.getWeight(); // Suki - Custom strongholds - Bigger strongholds
+         }
+ 
+         return hasAnyPieces;
+@@ -164,7 +_,7 @@
+             int weightSelection = random.nextInt(totalWeight);
+ 
+             for (StrongholdPieces.PieceWeight piece : currentPieces) {
+-                weightSelection -= piece.weight;
++                weightSelection -= piece.getWeight(); // Suki - Custom strongholds - Bigger strongholds
+                 if (weightSelection < 0) {
+                     if (!piece.doPlace(depth) || piece == startPiece.previousPiece) {
+                         break;
+@@ -200,11 +_,14 @@
+         final Direction direction,
+         final int depth
+     ) {
+-        if (depth > 50) {
++        if (depth > (org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.MAX_DEPTH_SURFACE : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.MAX_DEPTH)) { // Suki - Custom strongholds - Bigger strongholds
+             return null;
+         }
+ 
+-        if (Math.abs(footX - startPiece.getBoundingBox().minX()) <= 112 && Math.abs(footZ - startPiece.getBoundingBox().minZ()) <= 112) {
++        // Suki start - Custom strongholds - Bigger strongholds
++        int maxPlanarDistance = org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.MAX_PLANAR_DISTANCE_SURFACE : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Size.MAX_PLANAR_DISTANCE;
++        if (Math.abs(footX - startPiece.getBoundingBox().minX()) <= maxPlanarDistance && Math.abs(footZ - startPiece.getBoundingBox().minZ()) <= maxPlanarDistance) {
++            // Suki end - Custom strongholds - Bigger strongholds
+             StructurePiece newPiece = generatePieceFromSmallDoor(startPiece, builder, random, footX, footY, footZ, direction, depth + 1);
+             if (newPiece != null) {
+                 builder.addPiece(newPiece);
+@@ -572,23 +_,33 @@
+         protected static final int TALL_HEIGHT = 11;
+         protected static final int DEPTH = 15;
+         private final boolean isTall;
++        private final org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.LibraryWoodTypes.Type suki$woodType; // Suki - Custom strongholds - Modified libraries
+ 
+         public Library(final int genDepth, final RandomSource random, final BoundingBox boundingBox, final Direction direction) {
+             super(StructurePieceType.STRONGHOLD_LIBRARY, genDepth, boundingBox);
+             this.setOrientation(direction);
+             this.entryDoor = this.randomSmallDoor(random);
+             this.isTall = boundingBox.getYSpan() > 6;
++            // Suki start - Custom strongholds - Modified libraries
++            int suki$woodTypeI = random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.LibraryWoodTypes.PICKABLE_TYPES.size());
++            this.suki$woodType = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.LibraryWoodTypes.PICKABLE_TYPES.get(suki$woodTypeI);
++            // Suki end - Custom strongholds - Modified libraries
+         }
+ 
+         public Library(final CompoundTag tag) {
+             super(StructurePieceType.STRONGHOLD_LIBRARY, tag);
+             this.isTall = tag.getBooleanOr("Tall", false);
++            // Suki start - Custom strongholds - Modified libraries
++            var suki$woodTypeString = tag.getStringOr("WoodType", "");
++            this.suki$woodType = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.LibraryWoodTypes.PICKABLE_TYPES.stream().filter(it -> it.planks().keyInBlockRegistry.toString().equals(suki$woodTypeString)).findFirst().orElse(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.LibraryWoodTypes.OAK);
++            // Suki end - Custom strongholds - Modified libraries
+         }
+ 
+         @Override
+         protected void addAdditionalSaveData(final StructurePieceSerializationContext context, final CompoundTag tag) {
+             super.addAdditionalSaveData(context, tag);
+             tag.putBoolean("Tall", this.isTall);
++            tag.putString("WoodType", this.suki$woodType.planks().keyInBlockRegistry.toString()); // Suki - Custom strongholds - Modified libraries
+         }
+ 
+         public static StrongholdPieces.@Nullable Library createPiece(
+@@ -634,60 +_,61 @@
+             int bookLeft = 1;
+             int bookRight = 12;
+ 
++            // Suki start - Custom strongholds - Modified libraries
+             for (int d = 1; d <= 13; d++) {
+                 if ((d - 1) % 4 == 0) {
+-                    this.generateBox(level, chunkBB, 1, 1, d, 1, 4, d, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
+-                    this.generateBox(level, chunkBB, 12, 1, d, 12, 4, d, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
++                    this.generateBox(level, chunkBB, 1, 1, d, 1, 4, d, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
++                    this.generateBox(level, chunkBB, 12, 1, d, 12, 4, d, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
+                     this.placeBlock(level, Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, Direction.EAST), 2, 3, d, chunkBB);
+                     this.placeBlock(level, Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, Direction.WEST), 11, 3, d, chunkBB);
+                     if (this.isTall) {
+-                        this.generateBox(level, chunkBB, 1, 6, d, 1, 9, d, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
++                        this.generateBox(level, chunkBB, 1, 6, d, 1, 9, d, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
+                         this.generateBox(
+-                            level, chunkBB, 12, 6, d, 12, 9, d, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false
++                            level, chunkBB, 12, 6, d, 12, 9, d, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false
+                         );
+                     }
+                 } else {
+-                    this.generateBox(level, chunkBB, 1, 1, d, 1, 4, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
+-                    this.generateBox(level, chunkBB, 12, 1, d, 12, 4, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
++                    this.generateBox(level, chunkBB, 1, 1, d, 1, 4, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
++                    this.generateBox(level, chunkBB, 12, 1, d, 12, 4, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
+                     if (this.isTall) {
+-                        this.generateBox(level, chunkBB, 1, 6, d, 1, 9, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
+-                        this.generateBox(level, chunkBB, 12, 6, d, 12, 9, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
++                        this.generateBox(level, chunkBB, 1, 6, d, 1, 9, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
++                        this.generateBox(level, chunkBB, 12, 6, d, 12, 9, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
+                     }
+                 }
+             }
+ 
+             for (int d = 3; d < 12; d += 2) {
+-                this.generateBox(level, chunkBB, 3, 1, d, 4, 3, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
+-                this.generateBox(level, chunkBB, 6, 1, d, 7, 3, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
+-                this.generateBox(level, chunkBB, 9, 1, d, 10, 3, d, Blocks.BOOKSHELF.defaultBlockState(), Blocks.BOOKSHELF.defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 3, 1, d, 4, 3, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 6, 1, d, 7, 3, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 9, 1, d, 10, 3, d, this.suki$woodType.bookshelf().defaultBlockState(), this.suki$woodType.bookshelf().defaultBlockState(), false);
+             }
+ 
+             if (this.isTall) {
+-                this.generateBox(level, chunkBB, 1, 5, 1, 3, 5, 13, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
+-                this.generateBox(level, chunkBB, 10, 5, 1, 12, 5, 13, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
+-                this.generateBox(level, chunkBB, 4, 5, 1, 9, 5, 2, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
+-                this.generateBox(level, chunkBB, 4, 5, 12, 9, 5, 13, Blocks.OAK_PLANKS.defaultBlockState(), Blocks.OAK_PLANKS.defaultBlockState(), false);
+-                this.placeBlock(level, Blocks.OAK_PLANKS.defaultBlockState(), 9, 5, 11, chunkBB);
+-                this.placeBlock(level, Blocks.OAK_PLANKS.defaultBlockState(), 8, 5, 11, chunkBB);
+-                this.placeBlock(level, Blocks.OAK_PLANKS.defaultBlockState(), 9, 5, 10, chunkBB);
+-                BlockState weFence = Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.WEST, true).setValue(FenceBlock.EAST, true);
+-                BlockState nsFence = Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.SOUTH, true);
++                this.generateBox(level, chunkBB, 1, 5, 1, 3, 5, 13, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 10, 5, 1, 12, 5, 13, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 4, 5, 1, 9, 5, 2, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
++                this.generateBox(level, chunkBB, 4, 5, 12, 9, 5, 13, this.suki$woodType.planks().defaultBlockState(), this.suki$woodType.planks().defaultBlockState(), false);
++                this.placeBlock(level, this.suki$woodType.planks().defaultBlockState(), 9, 5, 11, chunkBB);
++                this.placeBlock(level, this.suki$woodType.planks().defaultBlockState(), 8, 5, 11, chunkBB);
++                this.placeBlock(level, this.suki$woodType.planks().defaultBlockState(), 9, 5, 10, chunkBB);
++                BlockState weFence = this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.WEST, true).setValue(FenceBlock.EAST, true);
++                BlockState nsFence = this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.SOUTH, true);
+                 this.generateBox(level, chunkBB, 3, 6, 3, 3, 6, 11, nsFence, nsFence, false);
+                 this.generateBox(level, chunkBB, 10, 6, 3, 10, 6, 9, nsFence, nsFence, false);
+                 this.generateBox(level, chunkBB, 4, 6, 2, 9, 6, 2, weFence, weFence, false);
+                 this.generateBox(level, chunkBB, 4, 6, 12, 7, 6, 12, weFence, weFence, false);
+-                this.placeBlock(level, Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.EAST, true), 3, 6, 2, chunkBB);
+-                this.placeBlock(level, Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.SOUTH, true).setValue(FenceBlock.EAST, true), 3, 6, 12, chunkBB);
+-                this.placeBlock(level, Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.WEST, true), 10, 6, 2, chunkBB);
++                this.placeBlock(level, this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.EAST, true), 3, 6, 2, chunkBB);
++                this.placeBlock(level, this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.SOUTH, true).setValue(FenceBlock.EAST, true), 3, 6, 12, chunkBB);
++                this.placeBlock(level, this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.WEST, true), 10, 6, 2, chunkBB);
+ 
+                 for (int i = 0; i <= 2; i++) {
+                     this.placeBlock(
+-                        level, Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.SOUTH, true).setValue(FenceBlock.WEST, true), 8 + i, 6, 12 - i, chunkBB
++                        level, this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.SOUTH, true).setValue(FenceBlock.WEST, true), 8 + i, 6, 12 - i, chunkBB
+                     );
+                     if (i != 2) {
+                         this.placeBlock(
+                             level,
+-                            Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.EAST, true),
++                            this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.NORTH, true).setValue(FenceBlock.EAST, true),
+                             8 + i,
+                             6,
+                             11 - i,
+@@ -696,7 +_,7 @@
+                     }
+                 }
+ 
+-                BlockState ladder = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, Direction.SOUTH);
++                BlockState ladder = this.suki$woodType.ladder().defaultBlockState().setValue(LadderBlock.FACING, Direction.SOUTH);
+                 this.placeBlock(level, ladder, 10, 1, 13, chunkBB);
+                 this.placeBlock(level, ladder, 10, 2, 13, chunkBB);
+                 this.placeBlock(level, ladder, 10, 3, 13, chunkBB);
+@@ -706,9 +_,9 @@
+                 this.placeBlock(level, ladder, 10, 7, 13, chunkBB);
+                 int x = 7;
+                 int z = 7;
+-                BlockState eFence = Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.EAST, true);
++                BlockState eFence = this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.EAST, true);
+                 this.placeBlock(level, eFence, 6, 9, 7, chunkBB);
+-                BlockState wFence = Blocks.OAK_FENCE.defaultBlockState().setValue(FenceBlock.WEST, true);
++                BlockState wFence = this.suki$woodType.fence().defaultBlockState().setValue(FenceBlock.WEST, true);
+                 this.placeBlock(level, wFence, 7, 9, 7, chunkBB);
+                 this.placeBlock(level, eFence, 6, 8, 7, chunkBB);
+                 this.placeBlock(level, wFence, 7, 8, 7, chunkBB);
+@@ -729,6 +_,7 @@
+                 this.placeBlock(level, torch, 7, 8, 6, chunkBB);
+                 this.placeBlock(level, torch, 7, 8, 8, chunkBB);
+             }
++            // Suki end - Custom strongholds - Modified libraries
+ 
+             this.createChest(level, chunkBB, random, 3, 3, 5, BuiltInLootTables.STRONGHOLD_LIBRARY);
+             if (this.isTall) {
+@@ -740,22 +_,42 @@
+ 
+     private static class PieceWeight {
+         public final Class<? extends StrongholdPieces.StrongholdPiece> pieceClass;
+-        public final int weight;
++        // Suki start - Custom strongholds - Bigger strongholds
++        private final int weight;
+         public int placeCount;
+-        public final int maxPlaceCount;
++        private final int maxPlaceCount;
++        private final int weightSurface;
++        private final int maxPlaceCountSurface;
++
++        public int getWeight() {
++            return org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? this.weightSurface : this.weight;
++        }
++
++        public int getMaxPlaceCount() {
++            return org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface() ? this.maxPlaceCountSurface : this.maxPlaceCount;
++        }
++        // Suki end - Custom strongholds - Bigger strongholds
+ 
+         public PieceWeight(final Class<? extends StrongholdPieces.StrongholdPiece> pieceClass, final int weight, final int maxPlaceCount) {
++            // Suki start - Custom strongholds - Bigger strongholds
++            this(pieceClass, weight, maxPlaceCount, weight, maxPlaceCount);
++        }
++
++        public PieceWeight(final Class<? extends StrongholdPieces.StrongholdPiece> pieceClass, final int weight, final int maxPlaceCount, final int weightSurface, final int maxPlaceCountSurface) {
++            this.weightSurface = weightSurface;
++            this.maxPlaceCountSurface = maxPlaceCountSurface;
++            // Suki end - Custom strongholds - Bigger strongholds
+             this.pieceClass = pieceClass;
+             this.weight = weight;
+             this.maxPlaceCount = maxPlaceCount;
+         }
+ 
+         public boolean doPlace(final int depth) {
+-            return this.maxPlaceCount == 0 || this.placeCount < this.maxPlaceCount;
++            return this.getMaxPlaceCount() == 0 || this.placeCount < this.getMaxPlaceCount(); // Suki - Custom strongholds - Bigger strongholds
+         }
+ 
+         public boolean isValid() {
+-            return this.maxPlaceCount == 0 || this.placeCount < this.maxPlaceCount;
++            return this.getMaxPlaceCount() == 0 || this.placeCount < this.getMaxPlaceCount(); // Suki - Custom strongholds - Bigger strongholds
+         }
+     }
+ 
+@@ -805,6 +_,7 @@
+             final ChunkPos chunkPos,
+             final BlockPos referencePos
+         ) {
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setPortalRoom(true); // Suki - Custom strongholds - Surface strongholds
+             this.generateBox(level, chunkBB, 0, 0, 0, 10, 7, 15, false, random, StrongholdPieces.SMOOTH_STONE_SELECTOR);
+             this.generateSmallDoor(level, random, chunkBB, StrongholdPieces.StrongholdPiece.SmallDoorType.GRATES, 4, 1, 0);
+             int y = 6;
+@@ -852,6 +_,20 @@
+                 eyes[i] = random.nextFloat() > 0.9F;
+                 allEyes &= eyes[i];
+             }
++            // Suki start - Custom strongholds - Never fill no eyes or all eyes
++            if (allEyes) {
++                eyes[random.nextInt(eyes.length)] = false;
++                allEyes = false;
++            } else {
++                boolean anyEyes = false;
++                for (int i = 0; i < eyes.length; i++) {
++                    anyEyes |= eyes[i];
++                }
++                if (!anyEyes) {
++                    eyes[random.nextInt(eyes.length)] = true;
++                }
++            }
++            // Suki end - Custom strongholds - Never fill no eyes all eyes
+ 
+             this.placeBlock(level, northFrame.setValue(EndPortalFrameBlock.HAS_EYE, eyes[0]), 4, 3, 8, chunkBB);
+             this.placeBlock(level, northFrame.setValue(EndPortalFrameBlock.HAS_EYE, eyes[1]), 5, 3, 8, chunkBB);
+@@ -891,6 +_,7 @@
+                     // CraftBukkit end
+                 }
+             }
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetPortalRoom(); // Suki - Custom strongholds - Surface strongholds
+         }
+     }
+ 
+@@ -1136,7 +_,7 @@
+                     this.placeBlock(level, Blocks.STONE_BRICKS.defaultBlockState(), 5, 1, 5, chunkBB);
+                     this.placeBlock(level, Blocks.STONE_BRICKS.defaultBlockState(), 5, 2, 5, chunkBB);
+                     this.placeBlock(level, Blocks.STONE_BRICKS.defaultBlockState(), 5, 3, 5, chunkBB);
+-                    this.placeBlock(level, Blocks.WATER.defaultBlockState(), 5, 4, 5, chunkBB);
++                    this.placeBlock(level, (random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Fountain.LAVA_RARITY) == 0 ? Blocks.LAVA : Blocks.WATER).defaultBlockState(), 5, 4, 5, chunkBB); // Suki - Custom strongholds - Lava fountains
+                     break;
+                 case 2:
+                     for (int z = 1; z <= 9; z++) {
+@@ -1187,6 +_,28 @@
+                     this.createChest(level, chunkBB, random, 3, 4, 8, BuiltInLootTables.STRONGHOLD_CROSSING);
+             }
+         }
++
++        // Suki start - Structure generation - Add additional post-processing step
++        protected boolean suki$canChip(BlockPos pos) {
++            BlockPos fountainWaterPos = this.getWorldPos(5, 4, 5);
++            return !pos.equals(fountainWaterPos.below());
++        }
++        // Suki end - Structure generation - Add additional post-processing step
++
++        // Suki start - Custom strongholds - Strongholds in water, lava fountains
++        @Override
++        public void spreadWater(WorldGenLevel world) {
++            BlockPos fountainWaterPos = this.getWorldPos(5, 4, 5);
++            BlockState original = world.getBlockState(fountainWaterPos);
++            if (original.is(Blocks.WATER) || original.is(Blocks.LAVA)) {
++                this.placeBlock(world, Blocks.CAVE_AIR.defaultBlockState(), 5, 4, 5, boundingBox);
++            }
++            super.spreadWater(world);
++            if (world.getBlockState(fountainWaterPos).is(Blocks.CAVE_AIR)) {
++                this.placeBlock(world, original, 5, 4, 5, boundingBox);
++            }
++        }
++        // Suki end - Custom strongholds - Strongholds in water, lava fountains
+     }
+ 
+     private static class SmoothStoneSelector extends StructurePiece.BlockSelector {
+@@ -1194,15 +_,43 @@
+         public void next(final RandomSource random, final int worldX, final int worldY, final int worldZ, final boolean isEdge) {
+             if (isEdge) {
+                 float selection = random.nextFloat();
+-                if (selection < 0.2F) {
+-                    this.next = Blocks.CRACKED_STONE_BRICKS.defaultBlockState();
+-                } else if (selection < 0.5F) {
+-                    this.next = Blocks.MOSSY_STONE_BRICKS.defaultBlockState();
+-                } else if (selection < 0.55F) {
+-                    this.next = Blocks.INFESTED_STONE_BRICKS.defaultBlockState();
++                // Suki start - Custom strongholds - Use more brick types
++                if (org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getCold()) {
++                    if (selection < 0.27F) {
++                        this.next = Blocks.CRACKED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.29F) {
++                        this.next = Blocks.INFESTED_CRACKED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.31F) {
++                        this.next = Blocks.INFESTED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.35F) {
++                        this.next = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("sucraft", "infested_snowy_stone_bricks")).defaultBlockState();
++                    } else if (selection < 0.62F) {
++                        this.next = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_bricks")).defaultBlockState();
++                    } else {
++                        this.next = Blocks.STONE_BRICKS.defaultBlockState();
++                    }
+                 } else {
+-                    this.next = Blocks.STONE_BRICKS.defaultBlockState();
++                    if (selection < 0.16F) {
++                        this.next = Blocks.CRACKED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.26F) {
++                        this.next = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("sucraft", "mossy_cracked_stone_bricks")).defaultBlockState();
++                    } else if (selection < 0.28F) {
++                        this.next = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("sucraft", "dirty_stone_bricks")).defaultBlockState();
++                    } else if (selection < 0.42F) {
++                        this.next = Blocks.MOSSY_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.44F) {
++                        this.next = Blocks.INFESTED_CRACKED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.46F) {
++                        this.next = Blocks.INFESTED_MOSSY_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.48F) {
++                        this.next = Blocks.INFESTED_STONE_BRICKS.defaultBlockState();
++                    } else if (selection < 0.49F) {
++                        this.next = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("sucraft", "infested_dirty_stone_bricks")).defaultBlockState();
++                    } else {
++                        this.next = Blocks.STONE_BRICKS.defaultBlockState();
++                    }
+                 }
++                // Suki end - Custom strongholds - Use more brick types
+             } else {
+                 this.next = Blocks.CAVE_AIR.defaultBlockState();
+             }
+@@ -1297,6 +_,7 @@
+             this.placeBlock(level, Blocks.STONE_BRICKS.defaultBlockState(), 1, 1, 2, chunkBB);
+             this.placeBlock(level, Blocks.SMOOTH_STONE_SLAB.defaultBlockState(), 1, 1, 3, chunkBB);
+         }
++
+     }
+ 
+     public static class StartPiece extends StrongholdPieces.StairsDown {
+@@ -1463,20 +_,272 @@
+ 
+     private abstract static class StrongholdPiece extends StructurePiece {
+         protected StrongholdPieces.StrongholdPiece.SmallDoorType entryDoor = StrongholdPieces.StrongholdPiece.SmallDoorType.OPENING;
++        public final boolean suki$surface; // Suki - Custom strongholds - Surface strongholds
+ 
+         protected StrongholdPiece(final StructurePieceType type, final int genDepth, final BoundingBox boundingBox) {
+             super(type, genDepth, boundingBox);
++            this.suki$surface = org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.getSurface(); // Suki - Custom strongholds - Surface strongholds
+         }
+ 
+         public StrongholdPiece(final StructurePieceType type, final CompoundTag tag) {
+             super(type, tag);
+             this.entryDoor = tag.read("EntryDoor", StrongholdPieces.StrongholdPiece.SmallDoorType.LEGACY_CODEC).orElseThrow();
++            this.suki$surface = tag.getBooleanOr("IsSurface", false); // Suki - Custom strongholds - Surface strongholds
+         }
+ 
+         @Override
+         protected void addAdditionalSaveData(final StructurePieceSerializationContext context, final CompoundTag tag) {
+             tag.store("EntryDoor", StrongholdPieces.StrongholdPiece.SmallDoorType.LEGACY_CODEC, this.entryDoor);
+-        }
++            tag.putBoolean("IsSurface", this.suki$surface); // Suki - Custom strongholds - Surface strongholds
++        }
++
++        // Suki start - Structure generation - Add additional post-processing step
++        public void postPostProcess(WorldGenLevel world, StructureManager structureAccessor, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox chunkBox, ChunkPos chunkPos, BlockPos pivot) {
++            // Fix blocks being invalid in their location (for example grass unsupported by a block below)
++            int minX = Math.max(this.boundingBox.minX(), chunkBox.minX());
++            int maxX = Math.min(this.boundingBox.maxX(), chunkBox.maxX());
++            int minY = Math.max(world.getMinY(), Math.max(this.boundingBox.minY(), chunkBox.minY()));
++            int maxY = Math.min(world.getMaxY(), Math.min(this.boundingBox.maxY(), chunkBox.maxY()));
++            int maxYPlusMargin = Math.min(world.getMaxY(), Math.min(this.boundingBox.maxY() + 4, chunkBox.maxY())); /* should need only 2 but taking 4 as extra margin just in case */
++            int minZ = Math.max(this.boundingBox.minZ(), chunkBox.minZ());
++            int maxZ = Math.min(this.boundingBox.maxZ(), chunkBox.maxZ());
++            var pos = new BlockPos.MutableBlockPos();
++            for (int x = minX; x <= maxX; x++) {
++                for (int y = minY; y <= maxYPlusMargin; y++) {
++                    for (int z = minZ; z <= maxZ; z++) {
++                        pos.set(x, y, z);
++                        BlockState block = world.getBlockState(pos);
++                        BlockState newBlock = null;
++                        boolean isUnstableAndMustBeRemoved = false;
++                        if (y <= maxY) {
++                            // Remove single door pieces
++                            if (block.is(net.minecraft.tags.BlockTags.DOORS)) {
++                                BlockState blockAbove = world.getBlockState(pos.above());
++                                if (!(world.getBlockState(pos.below()).is(net.minecraft.tags.BlockTags.DOORS) || blockAbove.is(net.minecraft.tags.BlockTags.DOORS))) {
++                                    java.util.Optional<Boolean> waterlogged = block.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
++                                    java.util.Optional<Boolean> waterloggedAbove = blockAbove.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
++                                    if ((waterlogged.isPresent() && waterlogged.get()) || blockAbove.is(Blocks.WATER) || (waterloggedAbove.isPresent() && waterloggedAbove.get())) {
++                                        newBlock = Blocks.WATER.defaultBlockState();
++                                    } else if (blockAbove.is(Blocks.LAVA)) {
++                                        newBlock = Blocks.LAVA.defaultBlockState();
++                                    } else {
++                                        newBlock = Blocks.CAVE_AIR.defaultBlockState();
++                                    }
++                                }
++                            }
++                        }
++                        // Fix floating grass and similar blocks that rely on a supporting solid block on a specific side
++                        if (block.getBlock() instanceof net.minecraft.world.level.block.DoublePlantBlock || block.is(Blocks.TALL_GRASS) || block.is(Blocks.TALL_SEAGRASS) || block.is(Blocks.LARGE_FERN) || block.is(net.minecraft.tags.BlockTags.FLOWERS) || block.is(Blocks.SHORT_GRASS) || block.is(Blocks.SEAGRASS) || block.is(Blocks.FERN) || block.is(Blocks.KELP_PLANT) || block.is(Blocks.KELP) || block.is(Blocks.RED_MUSHROOM) || block.is(Blocks.BROWN_MUSHROOM) || block.is(Blocks.DEAD_BUSH)) {
++                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.DOWN)) {
++                                isUnstableAndMustBeRemoved = true;
++                            }
++                        } else if (block.is(Blocks.VINE) || block.is(Blocks.GLOW_LICHEN) || block.is(Blocks.SCULK_VEIN)) {
++                            if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.UP)) {
++                                isUnstableAndMustBeRemoved = true;
++                            } else if (!block.is(Blocks.VINE) && block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOWN) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.DOWN)) {
++                                isUnstableAndMustBeRemoved = true;
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.EAST)) {
++                                isUnstableAndMustBeRemoved = true;
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.WEST)) {
++                                isUnstableAndMustBeRemoved = true;
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.NORTH)) {
++                                isUnstableAndMustBeRemoved = true;
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.SOUTH)) {
++                                isUnstableAndMustBeRemoved = true;
++                            }
++                        } else if (block.is(Blocks.LADDER) || block.is(Blocks.WALL_TORCH)) {
++                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING))) {
++                                isUnstableAndMustBeRemoved = true;
++                            }
++                        }
++                        if (isUnstableAndMustBeRemoved) {
++                            BlockState blockAbove = world.getBlockState(pos.above());
++                            java.util.Optional<Boolean> waterlogged = block.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
++                            java.util.Optional<Boolean> waterloggedAbove = blockAbove.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
++                            if ((waterlogged.isPresent() && waterlogged.get()) || blockAbove.is(Blocks.WATER) || (waterloggedAbove.isPresent() && waterloggedAbove.get())) {
++                                newBlock = Blocks.WATER.defaultBlockState();
++                            } else if (blockAbove.is(Blocks.LAVA)) {
++                                newBlock = Blocks.LAVA.defaultBlockState();
++                            } else if (y > boundingBox.maxY()) {
++                                newBlock = Blocks.AIR.defaultBlockState();
++                            } else {
++                                newBlock = Blocks.CAVE_AIR.defaultBlockState();
++                            }
++                        }
++                        // Replace the state if needed
++                        if (newBlock != null) {
++                            world.setBlock(pos, newBlock, 2);
++                            net.minecraft.world.level.material.FluidState fluidState = world.getFluidState(pos);
++                            if (!fluidState.isEmpty()) {
++                                world.scheduleTick(pos, fluidState.getType(), 0);
++                            }
++
++                            if (StructurePiece.SHAPE_CHECK_BLOCKS.contains(block.getBlock())) {
++                                world.getChunk(pos).markPosForPostProcessing(pos);
++                            }
++                        }
++                    }
++                }
++            }
++            // Spread water
++            this.spreadWater(world); // Suki - Strongholds in water
++            // Replace some stairs with other types
++            for (int x = minX; x <= maxX; x++) {
++                for (int y = minY; y <= maxY; y++) {
++                    for (int z = minZ; z <= maxZ; z++) {
++                        pos.set(x, y, z);
++                        BlockState state = world.getBlockState(pos);
++                        if (org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.INPUTS.contains(state.getBlock())) {
++                            var outputs = this.cold ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.OUTPUTS_COLD : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.OUTPUTS;
++                            Block newBlock = outputs.get(random.nextInt(outputs.size()));
++                            if (!newBlock.equals(state.getBlock())) {
++                                world.setBlock(pos, newBlock.defaultBlockState().withPropertiesOf(state), Block.UPDATE_CLIENTS);
++                            }
++                        }
++                    }
++                }
++            }
++            // Add moss carpets on top of open strongholds
++            for (int x = minX; x <= maxX; x++) {
++                for (int z = minZ; z <= maxZ; z++) {
++                    for (int y = world.getMaxY() - 1; y >= minY; y--) {
++                        pos.set(x, y, z);
++                        var state = world.getBlockState(pos);
++                        if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
++                            continue;
++                        }
++                        if (y <= maxY && org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.countsAsSolid(world, pos, state, Direction.UP)) {
++                            if (!(state.getBlock() instanceof SlabBlock || state.getBlock() instanceof StairBlock || state.getBlock() instanceof FenceBlock || state.getBlock() instanceof net.minecraft.world.level.block.CarpetBlock)) {
++                                var above = pos.above();
++                                if (world.getBlockState(above).isAir()) {
++                                    var biome = world.getBiome(above);
++                                    boolean greenGrassy = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_GREEN_GRASSY_BLOCKS);
++                                    boolean paleGrassy = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_PALE_GRASSY_BLOCKS);
++                                    boolean leafLitter = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_LEAF_LITTER_OFTEN);
++                                    BlockState newState = null;
++                                    if (greenGrassy || paleGrassy || leafLitter) {
++                                        if (random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.CoverWithFoliage.GAP_RARITY) != 0) {
++                                            if (random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.CoverWithFoliage.SHORT_GRASS_RARITY) == 0) {
++                                                newState = Blocks.SHORT_GRASS.defaultBlockState();
++                                            } else if (leafLitter && random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.CoverWithFoliage.LEAF_LITTER_RARITY) == 0) {
++                                                newState = net.minecraft.world.level.block.Blocks.LEAF_LITTER.defaultBlockState()
++                                                    .setValue(net.minecraft.world.level.block.LeafLitterBlock.AMOUNT, net.minecraft.world.level.block.LeafLitterBlock.AMOUNT.getPossibleValues().get(random.nextInt(net.minecraft.world.level.block.LeafLitterBlock.AMOUNT.getPossibleValues().size())))
++                                                    .setValue(net.minecraft.world.level.block.LeafLitterBlock.FACING, net.minecraft.world.level.block.LeafLitterBlock.FACING.getPossibleValues().get(random.nextInt(net.minecraft.world.level.block.LeafLitterBlock.FACING.getPossibleValues().size())));
++                                            } else if (greenGrassy) {
++                                                newState = Blocks.MOSS_CARPET.defaultBlockState();
++                                            } else if (paleGrassy) {
++                                                newState = Blocks.PALE_MOSS_CARPET.defaultBlockState();
++                                            }
++                                        }
++                                    }
++                                    if (newState != null) {
++                                        world.setBlock(above, newState, Block.UPDATE_CLIENTS);
++                                    }
++                                }
++                            }
++                        }
++                        break;
++                    }
++                }
++            }
++            // Replace some full blocks with stairs or slabs
++            for (int x = minX; x <= maxX; x++) {
++                for (int y = minY; y <= maxY; y++) {
++                    for (int z = minZ; z <= maxZ; z++) {
++                        pos.set(x, y, z);
++                        if (!this.suki$canChip(pos)) continue;
++                        BlockState state = world.getBlockState(pos);
++                        org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.Chippable chippable;
++                        if (state.getBlock() instanceof StairBlock) {
++                            chippable = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.BY_STAIRS.get(state.getBlock());
++                        } else {
++                            chippable = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.BY_FULL_BLOCK.get(state.getBlock());
++                        }
++                        if (chippable != null) {
++                            BlockState above = y >= world.getMaxY() ? Blocks.STONE.defaultBlockState() : world.getBlockState(pos.above());
++                            BlockState below = y <= world.getMinY() ? Blocks.STONE.defaultBlockState() : world.getBlockState(pos.below());
++                            boolean emptyAbove = above.isAir() || above.is(Blocks.WATER);
++                            boolean emptyBelow = below.isAir() || below.is(Blocks.WATER);
++                            boolean chipFromAbove = emptyAbove && random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_ABOVE_RARITY) == 0;
++                            boolean chipFromBelow = emptyBelow && random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_BELOW_RARITY) == 0;
++                            if (chipFromAbove && chipFromBelow) {
++                                if (above.isAir() && below.isAir()) {
++                                    world.setBlock(pos, Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
++                                } else if (above.is(Blocks.WATER) && below.is(Blocks.WATER)) {
++                                    world.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_CLIENTS);
++                                }
++                            } else if (chipFromAbove || chipFromBelow) {
++                                boolean becomesSlab;
++                                if (state.getBlock() instanceof StairBlock) {
++                                    becomesSlab = true;
++                                } else {
++                                    becomesSlab = random.nextInt(chipFromAbove ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_ABOVE_SLAB_RARITY : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_BELOW_SLAB_RARITY) == 0;
++                                }
++                                BlockState newState;
++                                if (becomesSlab) {
++                                    newState = chippable.slab().defaultBlockState().setValue(SlabBlock.TYPE, chipFromAbove ? SlabType.BOTTOM : SlabType.TOP);
++                                } else {
++                                    newState = chippable.stairs().defaultBlockState().setValue(StairBlock.HALF, chipFromAbove ? net.minecraft.world.level.block.state.properties.Half.BOTTOM : net.minecraft.world.level.block.state.properties.Half.TOP);
++                                    newState = newState.setValue(StairBlock.SHAPE, StairBlock.SHAPE.getPossibleValues().get(random.nextInt(StairBlock.SHAPE.getPossibleValues().size())));
++                                    newState = newState.setValue(StairBlock.FACING, StairBlock.FACING.getPossibleValues().get(random.nextInt(StairBlock.FACING.getPossibleValues().size())));
++                                }
++                                newState = newState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, (chipFromAbove ? above : below).is(Blocks.WATER));
++                                world.setBlock(pos, newState, Block.UPDATE_CLIENTS);
++                            }
++                        }
++                    }
++                }
++            }
++            // Maybe replace some air with cobwebs
++            for (var opportunity : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Cobwebs.ALL) {
++                if (random.nextFloat() < opportunity.chance()) {
++                    org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.replace(world, this.boundingBox, chunkBox, BlockState::isAir, Blocks.COBWEB.defaultBlockState(), random, opportunity.ratio(), false, false, true, null);
++                    break;
++                }
++            }
++        }
++
++        protected boolean suki$canChip(BlockPos pos) {
++            return true;
++        }
++        // Suki end - Structure generation - Add additional post-processing step
++
++        // Suki start - Custom strongholds - Strongholds in water
++        public void spreadWater(WorldGenLevel world) {
++            // Spread water horizontally and downwards
++            int maxCycles = 100;
++            while (maxCycles-->0) {
++                boolean changesThisCycle = false;
++                for (int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); x++) {
++                    for (int y = this.boundingBox.minY(); y <= this.boundingBox.maxY(); y++) {
++                        for (int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); z++) {
++                            BlockPos pos = new BlockPos(x, y, z);
++                            BlockState block = world.getBlockState(pos);
++                            java.util.Optional<Boolean> waterlogged = block.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
++                            if (org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.canBeFilledUpByWaterSourceIfWaterFlowsIn(block) || (waterlogged.isPresent() && !waterlogged.get())) {
++                                BlockState newBlock = org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.getAnyRelativeLiquidDefaultBlockState(world, pos, org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.BESIDE_OR_ABOVE_DIRECTIONS);
++                                if (newBlock != null && !newBlock.equals(block)) {
++                                    changesThisCycle = true;
++                                    world.setBlock(pos, newBlock, 2);
++                                    net.minecraft.world.level.material.FluidState fluidState = world.getFluidState(pos);
++                                    if (!fluidState.isEmpty()) {
++                                        world.scheduleTick(pos, fluidState.getType(), 0);
++                                    }
++
++                                    if (StructurePiece.SHAPE_CHECK_BLOCKS.contains(block.getBlock())) {
++                                        world.getChunk(pos).markPosForPostProcessing(pos);
++                                    }
++                                }
++                            }
++                        }
++                    }
++                }
++                if (!changesThisCycle) {
++                    break;
++                }
++            }
++        }
++        // Suki end - Custom strongholds - Strongholds in water
+ 
+         protected void generateSmallDoor(
+             final WorldGenLevel level,

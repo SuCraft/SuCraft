@@ -1,0 +1,22 @@
+--- a/net/minecraft/world/level/biome/OverworldBiomeBuilder.java
++++ b/net/minecraft/world/level/biome/OverworldBiomeBuilder.java
+@@ -86,8 +_,8 @@
+         {Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT}
+     };
+     private final ResourceKey<Biome>[][] MIDDLE_BIOMES_VARIANT = new ResourceKey[][]{
+-        {Biomes.ICE_SPIKES, null, Biomes.SNOWY_TAIGA, null, null},
+-        {Biomes.DAPPLED_FOREST, null, null, null, Biomes.OLD_GROWTH_PINE_TAIGA},
++        {Biomes.ICE_SPIKES, org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.FROST_FOREST, null, null, Biomes.SNOWY_TAIGA}, // Suki - Modify biome choice
++        {Biomes.DAPPLED_FOREST, Biomes.DAPPLED_FOREST, org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.ORANGE_FOREST, null, Biomes.OLD_GROWTH_PINE_TAIGA}, // Suki - Modify biome choice
+         {Biomes.SUNFLOWER_PLAINS, null, null, Biomes.OLD_GROWTH_BIRCH_FOREST, null},
+         {null, null, Biomes.PLAINS, Biomes.SPARSE_JUNGLE, Biomes.BAMBOO_JUNGLE},
+         {null, null, null, null, null}
+@@ -102,7 +_,7 @@
+     private final ResourceKey<Biome>[][] PLATEAU_BIOMES_VARIANT = new ResourceKey[][]{
+         {Biomes.ICE_SPIKES, null, null, null, null},
+         {Biomes.CHERRY_GROVE, null, Biomes.MEADOW, Biomes.MEADOW, Biomes.OLD_GROWTH_PINE_TAIGA},
+-        {Biomes.CHERRY_GROVE, Biomes.CHERRY_GROVE, Biomes.FOREST, Biomes.BIRCH_FOREST, null},
++        {Biomes.CHERRY_GROVE, Biomes.CHERRY_GROVE, Biomes.FOREST, Biomes.BIRCH_FOREST, Biomes.PALE_GARDEN}, // Suki - Modify biome choice
+         {null, null, null, null, null},
+         {Biomes.ERODED_BADLANDS, Biomes.ERODED_BADLANDS, null, null, null}
+     };

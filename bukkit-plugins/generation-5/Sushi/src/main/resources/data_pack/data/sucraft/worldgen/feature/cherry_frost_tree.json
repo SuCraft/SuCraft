@@ -1,0 +1,71 @@
+{
+  "type": "minecraft:tree",
+  "below_trunk_provider": "sucraft:turn_dirtlike_into_dirt_beneath_tree",
+  "decorators": [],
+  "foliage_placer": {
+    "type": "minecraft:cherry_foliage_placer",
+    "corner_hole_chance": 0.25,
+    "hanging_leaves_chance": 0.4,
+    "hanging_leaves_extension_chance": 0.8,
+    "height": 5,
+    "offset": 0,
+    "radius": 3,
+    "wide_bottom_layer_hole_chance": 0.25
+  },
+  "foliage_provider": {
+    "id": "sucraft:frost_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "ignore_vines": true,
+  "minimum_size": {
+    "type": "minecraft:two_layers_feature_size",
+    "upper_size": 2
+  },
+  "trunk_placer": {
+    "type": "minecraft:cherry_trunk_placer",
+    "base_height": 8,
+    "branch_count": {
+      "type": "minecraft:weighted_list",
+      "distribution": [
+        {
+          "data": 1,
+          "weight": 1
+        },
+        {
+          "data": 2,
+          "weight": 3
+        },
+        {
+          "data": 3,
+          "weight": 4
+        }
+      ]
+    },
+    "branch_end_offset_from_top": {
+      "type": "minecraft:uniform",
+      "max_inclusive": -2,
+      "min_inclusive": -3
+    },
+    "branch_horizontal_length": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 3,
+      "min_inclusive": 2
+    },
+    "branch_start_offset_from_top": {
+      "max_inclusive": -4,
+      "min_inclusive": -5
+    },
+    "height_rand_a": 2,
+    "height_rand_b": 0
+  },
+  "trunk_provider": {
+    "id": "sucraft:frost_log",
+    "properties": {
+      "axis": "y"
+    }
+  }
+}

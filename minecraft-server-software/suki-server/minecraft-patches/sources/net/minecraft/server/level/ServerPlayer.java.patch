@@ -1,0 +1,23 @@
+--- a/net/minecraft/server/level/ServerPlayer.java
++++ b/net/minecraft/server/level/ServerPlayer.java
+@@ -212,6 +_,7 @@
+ import spout.clientview.packetmapping.blockstate.apply.breakspeed.BlockBreakSpeedFactorHistory;
+ 
+ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patches.chunk_system.player.ChunkSystemServerPlayer { // Paper - rewrite chunk system
++    private final java.util.Random suki$enchantmentSeedRandom = new java.security.SecureRandom(); // Suki - Hide enchantment seed
+     private static final Logger LOGGER = LogUtils.getLogger();
+     public long lastSave = MinecraftServer.currentTick; // Paper - Incremental chunk and player saving
+     private static final int NEUTRAL_MOB_DEATH_NOTIFICATION_RADII_XZ = 32;
+@@ -352,6 +_,12 @@
+         }
+ 
+         private void broadcastDataValue(final AbstractContainerMenu container, final int id, final int value) {
++            // Suki start - Hide enchantment seed
++            if (container instanceof net.minecraft.world.inventory.EnchantmentMenu && id == 3) {
++                ServerPlayer.this.connection.send(new ClientboundContainerSetDataPacket(container.containerId, id, ServerPlayer.this.suki$enchantmentSeedRandom.nextInt() & 0xFFFFFFF0));
++                return;
++            }
++            // Suki end - Hide enchantment seed
+             ServerPlayer.this.connection.send(new ClientboundContainerSetDataPacket(container.containerId, id, value));
+         }
+ 

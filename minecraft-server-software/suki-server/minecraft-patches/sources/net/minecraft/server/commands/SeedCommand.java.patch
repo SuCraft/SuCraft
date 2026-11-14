@@ -1,0 +1,15 @@
+--- a/net/minecraft/server/commands/SeedCommand.java
++++ b/net/minecraft/server/commands/SeedCommand.java
+@@ -7,10 +_,11 @@
+ import net.minecraft.network.chat.ComponentUtils;
+ 
+ public class SeedCommand {
++    private static final long suki$sessionFakeSeed = new java.security.SecureRandom().nextLong(); // Suki - Make seed command useless
+     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher, final boolean checkPermissions) {
+         dispatcher.register(
+             Commands.literal("seed").requires(Commands.hasPermission(checkPermissions ? Commands.LEVEL_GAMEMASTERS : Commands.LEVEL_ALL)).executes(c -> {
+-                long seed = c.getSource().getLevel().getSeed();
++                long seed = suki$sessionFakeSeed; // Suki - Make seed command useless
+                 Component seedText = ComponentUtils.copyOnClickText(String.valueOf(seed));
+                 c.getSource().sendSuccess(() -> Component.translatable("commands.seed.success", seedText), false);
+                 return (int)seed;

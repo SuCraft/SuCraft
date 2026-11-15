@@ -76,9 +76,9 @@ public final class AutomaticRecipeAdder {
      * Blocks that have a block item with a path similar to them, but without some suffix (like "s" or "_block"),
      * which may accidentally get picked up as the base block for some shaped block.
      */
-    public static final Set<Item> STORAGE_BLOCKS = Stream.of(
+    public static final Set<Item> MULTI_BLOCK_STORAGE_BLOCKS = Stream.of(
         Items.BAMBOO_BLOCK,
-        // Items.BONE_BLOCK, // Bone is not a block
+        // Items.BONE_BLOCK, // Bone meal is not a block
         // Items.BRICKS, // Brick is not a block
         // Items.CLAY, // Clay ball is not a block
         // Items.COAL_BLOCK, // Coal is not a block
@@ -98,6 +98,27 @@ public final class AutomaticRecipeAdder {
         // Items.RESIN_BLOCK, // Resin is not a block
         // Items.SLIME_BLOCK, // Slimeball is not a block
         Items.SNOW_BLOCK
+    ).collect(Collectors.toSet());
+
+    public static final Set<Item> UNPACKABLE_BLOCK_OR_ITEM_STORAGE_BLOCKS = Stream.of(
+        Items.BONE_BLOCK,
+        Items.BRICKS, // Not in vanilla, but unpacking is added by SuCraft
+        Items.CLAY, // Not in vanilla, but unpacking is added by SuCraft
+        Items.COAL_BLOCK,
+        Items.COPPER_BLOCK.weathering().unaffected(),
+        Items.DIAMOND_BLOCK,
+        Items.DRIED_KELP_BLOCK,
+        Items.EMERALD_BLOCK,
+        Items.GOLD_BLOCK,
+        Items.HAY_BLOCK,
+        Items.IRON_BLOCK,
+        Items.LAPIS_BLOCK,
+        Items.NETHERITE_BLOCK,
+        Items.NETHER_BRICKS, // Not in vanilla, but unpacking is added by SuCraft
+        Items.REDSTONE_BLOCK,
+        Items.RESIN_BLOCK,
+        Items.SLIME_BLOCK,
+        Items.SNOW_BLOCK // Not in vanilla, but unpacking is added by SuCraft
     ).collect(Collectors.toSet());
 
     private AutomaticRecipeAdder() {
@@ -654,39 +675,44 @@ public final class AutomaticRecipeAdder {
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_fence"), STORAGE_BLOCKS),
+                filterOut(getSuffixBase(item, "_fence"), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addWoodenFenceCrafting(),
                 adders.addNetherBrickFenceCrafting()
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_fence_gate"), STORAGE_BLOCKS),
+                filterOut(getSuffixBase(item, "_fence_gate"), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addFenceGateCrafting()
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_sign", List.of("_planks")), STORAGE_BLOCKS),
+                filterOut(getSuffixBase(item, "_sign", List.of("_planks")), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addSignCrafting()
             );
+            Predicate<Item> getsButtonViaStonecutting = it -> UNPACKABLE_BLOCK_OR_ITEM_STORAGE_BLOCKS.contains(it) || (it.builtInRegistryHolder().is(ItemTags.LOGS) && (it.keyInItemRegistry.getPath().endsWith("_wood") || it.keyInItemRegistry.getPath().endsWith("_hyphae")));
             adders.addRecipes(
                 item,
-                filterOut(filterOut(getSuffixBase(item, "_button"), STORAGE_BLOCKS), it -> it.builtInRegistryHolder().is(ItemTags.LOGS) && (it.keyInItemRegistry.getPath().endsWith("_wood") || it.keyInItemRegistry.getPath().endsWith("_hyphae")) ),
-                adders.addButtonCrafting(),
-                conditional(RecipeAdders::isLogBase, adders.addStonecutting(1))
+                filterOut(filterOut(getSuffixBase(item, "_button"), MULTI_BLOCK_STORAGE_BLOCKS), getsButtonViaStonecutting),
+                adders.addButtonCrafting()
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_door", List.of("_planks")), STORAGE_BLOCKS),
+                filterOut(filterOut(getSuffixBase(item, "_button"), MULTI_BLOCK_STORAGE_BLOCKS), getsButtonViaStonecutting.negate()),
+                adders.addStonecutting(1)
+            );
+            adders.addRecipes(
+                item,
+                filterOut(getSuffixBase(item, "_door", List.of("_planks")), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addDoorCrafting()
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_pressure_plate"), STORAGE_BLOCKS),
+                filterOut(getSuffixBase(item, "_pressure_plate"), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addPressurePlateCrafting()
             );
             adders.addRecipes(
                 item,
-                filterOut(getSuffixBase(item, "_trapdoor", List.of("_planks")), STORAGE_BLOCKS),
+                filterOut(getSuffixBase(item, "_trapdoor", List.of("_planks")), MULTI_BLOCK_STORAGE_BLOCKS),
                 adders.addTrapdoorCrafting()
             );
             adders.addRecipes(

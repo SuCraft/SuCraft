@@ -18,6 +18,7 @@ import org.sucraft.sushi.datageneration.glass.Glass;
 import org.sucraft.sushi.datageneration.ice.Ice;
 import org.sucraft.sushi.datageneration.mineral.Copper;
 import org.sucraft.sushi.datageneration.mineral.Flint;
+import org.sucraft.sushi.datageneration.mineral.UnpackingStorageBlocks;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
 import org.sucraft.sushi.datageneration.organic.hide.Bundles;
 import org.sucraft.sushi.datageneration.organic.shulker.ShulkerBoxes;
@@ -66,6 +67,8 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
         CommonBlockAdder.add(factories);
         CommonItemAdder.add(factories);
+
+        UnpackingStorageBlocks.add(factories);
 
         // Creative
         Barrier.add(factories);

@@ -16,6 +16,8 @@ public final class SuCraftContextIntProviders {
     }
 
     public static final ResourceKey<ContextIntProvider> COOKING_TIME_WOOL_ITEMS_EXTRA_SMALL = createKey("cooking/time_wool_items_extra_small");
+    public static final ResourceKey<ContextIntProvider> COOKING_TIME_COAL_SLABS = createKey("cooking/time_coal_slabs");
+    public static final ResourceKey<ContextIntProvider> COOKING_TIME_COAL_ITEMS_EXTRA_SMALL = createKey("cooking/time_coal_items_extra_small");
 
     private static ResourceKey<ContextIntProvider> createKey(final String location) {
         return ResourceKey.create(Registries.CONTEXT_INT_PROVIDER, Identifier.fromNamespaceAndPath("sucraft", location));

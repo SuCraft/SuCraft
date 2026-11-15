@@ -82,6 +82,18 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.CRIMSON_PRESSURE_PLATE)
             .build();
 
+    // Mineral / Coal
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate COAL_BLOCK =
+        BlockSet.builder("coal_block").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.COAL_BLOCK)
+            .slab().slabFallback(Blocks.BLACKSTONE_SLAB).slabFinalizer(SuCraftBlockType::flammableLikeLog).slabFinalizer(type -> type.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_COAL_SLABS))
+            .stairs().stairsFallback(Blocks.BLACKSTONE_STAIRS).stairsFinalizer(SuCraftBlockType::flammableLikeLog).stairsFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .stoneWall().wallFallback(Blocks.BLACKSTONE_WALL).wallFinalizer(SuCraftBlockType::flammableLikeLog).wallFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.POLISHED_BLACKSTONE_BUTTON).buttonFinalizer(type -> type.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_COAL_ITEMS_EXTRA_SMALL))
+            .stonePressurePlate().pressurePlateFallback(Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE).pressurePlateFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .build();
+
     // Mineral / Flint
 
     private static void finalizeFlintBlockProperties(BlockBehaviour.Properties properties) {

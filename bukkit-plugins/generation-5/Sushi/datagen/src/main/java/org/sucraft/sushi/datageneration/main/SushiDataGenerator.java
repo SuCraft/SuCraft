@@ -41,6 +41,7 @@ import org.sucraft.sushi.datageneration.stone.regular.MossyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.regular.SnowyStoneBricks;
 import org.sucraft.sushi.datageneration.stone.terracotta.Terracotta;
 import org.sucraft.sushi.datageneration.wood.Bookshelves;
+import org.sucraft.sushi.datageneration.wood.Campfires;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
 import org.sucraft.sushi.datageneration.wood.Barrels;
@@ -137,6 +138,7 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Wood
         Barrels.add(factories);
         Bookshelves.add(factories);
+        Campfires.add(factories);
         Chests.add(factories);
         DyedPlanks.add(factories);
         Frost.add(factories);

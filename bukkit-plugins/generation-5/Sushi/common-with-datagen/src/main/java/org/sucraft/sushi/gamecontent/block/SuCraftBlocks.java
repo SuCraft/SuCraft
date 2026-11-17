@@ -70,6 +70,26 @@ public final class SuCraftBlocks {
         throw new UnsupportedOperationException();
     }
 
+    // Flora / Lavender
+
+    public static final SuCraftBlockType FRINGED_LAVENDER = blockType("fringed_lavender")
+        .flower(Blocks.ALLIUM, true);
+
+    public static final SuCraftBlockType TWISTED_LAVENDER = blockType("twisted_lavender")
+        .flower(Blocks.PINK_TULIP, true);
+
+    public static final SuCraftBlockType TALL_LAVENDER = blockType("tall_lavender")
+        .doubleFlower(Blocks.LILAC);
+
+    public static final SuCraftBlockType WHITE_FRINGED_LAVENDER = blockType("white_fringed_lavender")
+        .flower(Blocks.LILY_OF_THE_VALLEY, true);
+
+    public static final SuCraftBlockType WHITE_TWISTED_LAVENDER = blockType("white_twisted_lavender")
+        .flower(Blocks.WHITE_TULIP, true);
+
+    public static final SuCraftBlockType WHITE_TALL_LAVENDER = blockType("white_tall_lavender")
+        .doubleFlower(Blocks.PEONY);
+
     // Mineral / Amethyst
 
     public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate AMETHYST_BLOCK =

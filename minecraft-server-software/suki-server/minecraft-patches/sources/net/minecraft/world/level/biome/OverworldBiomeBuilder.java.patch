@@ -1,6 +1,12 @@
 --- a/net/minecraft/world/level/biome/OverworldBiomeBuilder.java
 +++ b/net/minecraft/world/level/biome/OverworldBiomeBuilder.java
-@@ -86,8 +_,8 @@
+@@ -81,13 +_,13 @@
+     private final ResourceKey<Biome>[][] MIDDLE_BIOMES = new ResourceKey[][]{
+         {Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_TAIGA, Biomes.TAIGA},
+         {Biomes.PLAINS, Biomes.PLAINS, Biomes.FOREST, Biomes.TAIGA, Biomes.OLD_GROWTH_SPRUCE_TAIGA},
+-        {Biomes.FLOWER_FOREST, Biomes.PLAINS, Biomes.FOREST, Biomes.BIRCH_FOREST, Biomes.DARK_FOREST},
++        {org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.LAVENDER_PLAINS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.BIRCH_FOREST, Biomes.DARK_FOREST}, // Suki - Modify biome choice
+         {Biomes.SAVANNA, Biomes.SAVANNA, Biomes.FOREST, Biomes.JUNGLE, Biomes.JUNGLE},
          {Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT}
      };
      private final ResourceKey<Biome>[][] MIDDLE_BIOMES_VARIANT = new ResourceKey[][]{

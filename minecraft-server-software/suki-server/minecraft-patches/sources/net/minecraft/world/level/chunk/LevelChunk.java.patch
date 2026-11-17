@@ -1,0 +1,18 @@
+--- a/net/minecraft/world/level/chunk/LevelChunk.java
++++ b/net/minecraft/world/level/chunk/LevelChunk.java
+@@ -774,6 +_,7 @@
+     }
+ 
+     public void postProcessGeneration(final ServerLevel level) {
++        org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.setDoing(); // Suki - Different checks during feature generation
+         ChunkPos chunkPos = this.getPos();
+ 
+         for (int sectionIndex = 0; sectionIndex < this.postProcessing.length; sectionIndex++) {
+@@ -808,6 +_,7 @@
+         this.pendingBlockEntities.clear();
+         this.upgradeData.upgrade(this);
+         this.postProcessingDone = true; // Paper - rewrite chunk system
++        org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.unsetDoing(); // Suki - Different checks during feature generation
+     }
+ 
+     private @Nullable BlockEntity promotePendingBlockEntity(final BlockPos pos, final CompoundTag tag) {

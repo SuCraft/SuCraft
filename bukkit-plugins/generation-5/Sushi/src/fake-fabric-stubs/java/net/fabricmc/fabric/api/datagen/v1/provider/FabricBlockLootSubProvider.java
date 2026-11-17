@@ -2,10 +2,12 @@ package net.fabricmc.fabric.api.datagen.v1.provider;
 
 import net.minecraft.core.Holder;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
@@ -43,6 +45,13 @@ public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
 
     @Override
     public LootTable.Builder createLeavesDrops(final Block original, final Block sapling, final float... saplingChances) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T extends Comparable<T> & StringRepresentable> LootTable.Builder createSinglePropConditionTable(
+        final Block drop, final Property<T> property, final T value
+    ) {
         throw new UnsupportedOperationException();
     }
 

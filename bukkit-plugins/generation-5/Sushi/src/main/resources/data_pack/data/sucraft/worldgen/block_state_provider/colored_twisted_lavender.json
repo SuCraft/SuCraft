@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:dual_noise",
+  "noise": {
+    "base_amplitude": 0.955388882960065,
+    "base_octave": -3
+  },
+  "scale": 1.0,
+  "seed": 9001,
+  "slow_noise": {
+    "base_amplitude": 0.955388882960065,
+    "base_octave": -9
+  },
+  "slow_scale": 1.0,
+  "states": [
+    "sucraft:twisted_lavender",
+    "sucraft:white_twisted_lavender"
+  ],
+  "variety": [
+    1,
+    3
+  ]
+}

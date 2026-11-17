@@ -4,6 +4,7 @@ import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
 import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,17 +13,22 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -30,6 +36,7 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
@@ -37,6 +44,7 @@ import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
@@ -64,6 +72,7 @@ import spout.clientview.packetmapping.blockstate.macro.LeavesMacro;
 import spout.clientview.packetmapping.blockstate.macro.SlabMacro;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroType;
 import spout.clientview.packetmapping.blockstate.macro.type.BlockStateMappingMacroTypes;
+import spout.gamecontent.builtin.block.BroadFlowerBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -862,6 +871,67 @@ public final class SuCraftBlockType implements ItemLike {
         this.mineableWithAxe();
         this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
         return this.dataGenerateTag(CBlockItemTags.BARRELS_WOODEN);
+    }
+
+    public SuCraftBlockType flower(Function<BlockBehaviour.Properties, Block> constructor, Block fallback) {
+        this.blockBuild(builder -> builder.factoryNMS(constructor));
+        this.propertiesFull(Blocks.ALLIUM);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.SUGAR_CANE, fallback);
+        this.constructorForDataGeneration(properties -> new FlowerBlock(null, properties));
+        this.dataGenerateModel(factory -> {
+            factory.addBlockCrossNotTinted(this.getNMS());
+            factory.addBlock(generators ->
+                generators.registerSimpleItemModel(this.itemNMS(), BlockModelGenerators.PlantType.NOT_TINTED.createItemModelUsingBlockTexture(generators, this.getNMS()))
+            );
+        });
+        this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateTag(BlockItemTags.SMALL_FLOWERS);
+        this.dataGenerateTag(BlockTags.BEE_ATTRACTIVE);
+        this.dataGenerateTag(BlockTags.WASHED_AWAY_BY_FLUIDS);
+        this.dataGenerateItemTag(ItemTags.BEE_FOOD);
+        this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
+        return this;
+    }
+
+    public SuCraftBlockType flower(Holder<MobEffect> suspiciousStewEffect, float effectSeconds, Block fallback, boolean broad) {
+        return this.flower(properties -> broad ? new BroadFlowerBlock(suspiciousStewEffect, effectSeconds, properties) : new FlowerBlock(suspiciousStewEffect, effectSeconds, properties), fallback);
+    }
+
+    public SuCraftBlockType flower(SuspiciousStewEffects suspiciousStewEffects, Block fallback, boolean broad) {
+        return this.flower(properties -> broad ? new BroadFlowerBlock(suspiciousStewEffects, properties) : new FlowerBlock(suspiciousStewEffects, properties), fallback);
+    }
+
+    public SuCraftBlockType flower(Block fallback, boolean broad) {
+        return this.flower(((FlowerBlock) fallback).getSuspiciousEffects(), fallback, broad);
+    }
+
+    public SuCraftBlockType doubleFlower(Function<BlockBehaviour.Properties, Block> constructor, Block fallback) {
+        this.blockBuild(builder -> builder.factoryNMS(constructor));
+        this.propertiesFull(Blocks.LILAC);
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.SUGAR_CANE, fallback);
+        this.constructorForDataGeneration(TallFlowerBlock::new);
+        this.dataGenerateModel(factory -> {
+            factory.addBlock(generators ->
+                generators.createDoublePlantWithDefaultItem(this.getNMS(), BlockModelGenerators.PlantType.NOT_TINTED)
+            );
+        });
+        this.dataGenerateBlockLootTable(factory ->
+            factory.add(provider ->
+                provider.add(this.getNMS(), block -> provider.createSinglePropConditionTable(block, DoublePlantBlock.HALF, DoubleBlockHalf.LOWER))
+            )
+        );
+        this.dataGenerateTag(BlockItemTags.FLOWERS);
+        this.dataGenerateTag(BlockTags.REPLACEABLE_BY_TREES);
+        this.dataGenerateTag(BlockTags.REPLACEABLE_BY_MUSHROOMS);
+        this.dataGenerateTag(BlockTags.BEE_ATTRACTIVE);
+        this.dataGenerateTag(BlockTags.WASHED_AWAY_BY_FLUIDS);
+        this.dataGenerateItemTag(ItemTags.BEE_FOOD);
+        this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
+        return this;
+    }
+
+    public SuCraftBlockType doubleFlower(Block fallback) {
+        return this.doubleFlower(TallFlowerBlock::new, fallback);
     }
 
     public SuCraftBlockType ladder(Block base) {

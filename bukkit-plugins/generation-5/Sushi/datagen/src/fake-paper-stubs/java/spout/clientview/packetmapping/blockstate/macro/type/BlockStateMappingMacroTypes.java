@@ -13,6 +13,7 @@ public interface BlockStateMappingMacroTypes {
     BlockStateMappingMacroType SAPLING = null;
     BlockStateMappingMacroType SLAB = null;
     BlockStateMappingMacroType STAIRS = null;
+    BlockStateMappingMacroType SUGAR_CANE = null;
     BlockStateMappingMacroType WALL = null;
 
 }

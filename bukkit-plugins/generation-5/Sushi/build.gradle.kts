@@ -574,6 +574,7 @@ fun extractVanillaFiles(
     logger.lifecycle("Extracting $folderName from ${sourceJar.absolutePath}")
 
     val filesByInputName = files.groupBy { file -> file.inputPath }
+    val inputNamesYetToSee = filesByInputName.keys.toMutableSet()
 
     ZipFile(sourceJar).use { zip ->
         val entries = zip.entries()
@@ -582,8 +583,10 @@ fun extractVanillaFiles(
 
             // We only want specific entries
             if (!entry.name.startsWith("$folderName/")) continue
-            val filesForInputName = filesByInputName[entry.name.removePrefix("$folderName/")]
+            val inputName = entry.name.removePrefix("$folderName/")
+            val filesForInputName = filesByInputName[inputName]
             if (filesForInputName.isNullOrEmpty()) continue
+            inputNamesYetToSee.remove(inputName)
 
             for (file in filesForInputName) {
                 val outFile = outputFolder.resolve(file.outputPath)
@@ -601,6 +604,10 @@ fun extractVanillaFiles(
                 }
             }
         }
+    }
+
+    if (!inputNamesYetToSee.isEmpty()) {
+        throw IllegalStateException("Did not encounter all input names: $folderName / $inputNamesYetToSee")
     }
 }
 
@@ -979,6 +986,106 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                         }
                     }
                 )
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/biome/sunflower_plains.json") {
+                getAsJsonArray("features").map { it.asJsonArray }
+                    .first { it.contains(JsonPrimitive("minecraft:patch_sunflower")) }.apply {
+                        add(JsonPrimitive("sucraft:patch_sunflower_very_sparse"))
+                        add(JsonPrimitive("sucraft:patch_sunflower_sparse"))
+                        add(JsonPrimitive("sucraft:patch_sunflower_mid_dense"))
+                        add(JsonPrimitive("sucraft:patch_sunflower_dense"))
+                    }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/patch_sunflower.json") {
+                getAsJsonArray("placement").apply {
+                    first { it.asJsonObject.get("type").asString == "minecraft:rarity_filter" }
+                        .asJsonObject.addProperty("chance", 2)
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_sunflower.json",
+                "sucraft/worldgen/placed_feature/patch_sunflower_sparse.json"
+            ) {
+                getAsJsonArray("placement").apply {
+                    first { it.asJsonObject.get("type").asString == "minecraft:rarity_filter" }
+                        .asJsonObject.addProperty("chance", 1)
+                    first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                        .asJsonObject.addProperty("count", 28)
+                    first { it.asJsonObject.get("type").asString == "minecraft:offset" }
+                        .asJsonObject.apply {
+                            listOf("x", "y", "z").forEach { dimension ->
+                                getAsJsonObject(dimension).apply {
+                                    addProperty("min", (get("min").asInt * 5 / 4).coerceAtLeast(-16))
+                                    addProperty("max", (get("max").asInt * 5 / 4).coerceAtMost(16))
+                                }
+                            }
+                        }
+                    removeAll { it.asJsonObject.get("type").asString == "minecraft:biome" }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_sunflower.json",
+                "sucraft/worldgen/placed_feature/patch_sunflower_very_sparse.json"
+            ) {
+                getAsJsonArray("placement").apply {
+                    first { it.asJsonObject.get("type").asString == "minecraft:rarity_filter" }
+                        .asJsonObject.addProperty("chance", 1)
+                    first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                        .asJsonObject.addProperty("count", 13)
+                    first { it.asJsonObject.get("type").asString == "minecraft:offset" }
+                        .asJsonObject.apply {
+                            listOf("x", "y", "z").forEach { dimension ->
+                                getAsJsonObject(dimension).apply {
+                                    addProperty("min", (get("min").asInt * 5 / 2).coerceAtLeast(-16))
+                                    addProperty("max", (get("max").asInt * 5 / 2).coerceAtMost(16))
+                                }
+                            }
+                        }
+                    removeAll { it.asJsonObject.get("type").asString == "minecraft:biome" }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_sunflower.json",
+                "sucraft/worldgen/placed_feature/patch_sunflower_mid_dense.json"
+            ) {
+                getAsJsonArray("placement").apply {
+                    first { it.asJsonObject.get("type").asString == "minecraft:rarity_filter" }
+                        .asJsonObject.addProperty("chance", 3)
+                    first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                        .asJsonObject.addProperty("count", 44)
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/patch_sunflower.json",
+                "sucraft/worldgen/placed_feature/patch_sunflower_dense.json"
+            ) {
+                getAsJsonArray("placement").apply {
+                    first { it.asJsonObject.get("type").asString == "minecraft:rarity_filter" }
+                        .asJsonObject.addProperty("chance", 3)
+                    first { it.asJsonObject.get("type").asString == "minecraft:count" }
+                        .asJsonObject.addProperty("count", 95)
+                    first { it.asJsonObject.get("type").asString == "minecraft:offset" }
+                        .asJsonObject.apply {
+                            listOf("x", "y", "z").forEach { dimension ->
+                                getAsJsonObject(dimension).apply {
+                                    addProperty("min", (get("min").asInt * 4 / 5).coerceAtLeast(-16))
+                                    addProperty("max", (get("max").asInt * 4 / 5).coerceAtMost(16))
+                                }
+                            }
+                        }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/biome/plains.json",
+                "sucraft/worldgen/biome/lavender_plains.json"
+            ) {
+                addProperty("temperature", get("temperature").asDouble + 0.05)
+                getAsJsonArray("features").map { it.asJsonArray }.apply {
+                    forEach {
+                        it.remove(JsonPrimitive("minecraft:lake_lava_surface"))
+                        if (it.contains(JsonPrimitive("minecraft:flower_plains"))) {
+                            it.removeAll { true }
+                            it.add("minecraft:glow_lichen")
+                            it.add("minecraft:patch_firefly_bush_near_water")
+                            it.add("sucraft:lavender_flowers_tall_patch")
+                            it.add("sucraft:lavender_flowers_dense_cover")
+                            it.add("sucraft:lavender_flowers_sparse_cover")
+                        }
+                    }
+                }
             } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/material_rule/overworld/biome_surface.json") {
                 getAsJsonArray("sequence").apply {
                     insert(0, JsonObject().apply {
@@ -1050,5 +1157,6 @@ tasks.named("jar") {
     dependsOn(extractVanillaData)
 }
 tasks.named("shadowJar") {
+    dependsOn(extractVanillaAssets)
     dependsOn(extractVanillaData)
 }

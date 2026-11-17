@@ -6,7 +6,7 @@
       "if_true": {
         "type": "minecraft:noise_threshold",
         "max_threshold": 1.7976931348623157E308,
-        "min_threshold": 0.51212121212121213,
+        "min_threshold": 0.61212121212121213,
         "noise": "minecraft:small_patch"
       },
       "then_run": {

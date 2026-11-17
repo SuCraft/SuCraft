@@ -14,6 +14,7 @@ import org.sucraft.sushi.datageneration.common.Tags;
 import org.sucraft.sushi.datageneration.creative.Barrier;
 import org.sucraft.sushi.datageneration.creative.Light;
 import org.sucraft.sushi.datageneration.flora.Coral;
+import org.sucraft.sushi.datageneration.flora.Flowers;
 import org.sucraft.sushi.datageneration.glass.Glass;
 import org.sucraft.sushi.datageneration.ice.Ice;
 import org.sucraft.sushi.datageneration.mineral.Copper;
@@ -77,6 +78,7 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
 
         // Flora
         Coral.add(factories);
+        Flowers.add(factories);
 
         // Glass
         Glass.add(factories);

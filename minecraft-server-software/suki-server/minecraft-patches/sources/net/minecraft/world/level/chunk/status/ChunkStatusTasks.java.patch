@@ -1,12 +1,18 @@
 --- a/net/minecraft/world/level/chunk/status/ChunkStatusTasks.java
 +++ b/net/minecraft/world/level/chunk/status/ChunkStatusTasks.java
-@@ -147,7 +_,9 @@
+@@ -144,6 +_,7 @@
+     public static CompletableFuture<ChunkAccess> generateFeatures(
+         final WorldGenContext context, final ChunkStep step, final StaticCache2D<GenerationChunkHolder> chunks, final ChunkAccess chunk
+     ) {
++        org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.setDoing(); // Suki - Different checks during feature generation
          ServerLevel level = context.level();
          WorldGenRegion region = new WorldGenRegion(level, chunks, step, chunk);
          if (!SharedConstants.DEBUG_DISABLE_FEATURES) {
-+            org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.setDoing(); // Suki - Different checks during feature generation
-             context.generator().applyBiomeDecoration(region, chunk, level.structureManager().forWorldGenRegion(region));
-+            org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.unsetDoing(); // Suki - Different checks during feature generation
+@@ -151,6 +_,7 @@
          }
  
          Blender.generateBorderTicks(region, chunk);
++        org.sucraft.suki.gamecontent.world.feature.CurrentFeatureGeneration.unsetDoing(); // Suki - Different checks during feature generation
+         return CompletableFuture.completedFuture(chunk);
+     }
+ 

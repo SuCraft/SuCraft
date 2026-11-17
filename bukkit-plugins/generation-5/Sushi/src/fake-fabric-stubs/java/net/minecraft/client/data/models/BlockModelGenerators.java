@@ -27,6 +27,14 @@ public abstract class BlockModelGenerators {
             throw new UnsupportedOperationException();
         }
 
+        public Identifier createItemModelUsingBlockTexture(final BlockModelGenerators generator, final Block block, final String suffix) {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    public void createDoublePlantWithDefaultItem(final Block block, final PlantType plantType) {
+        throw new UnsupportedOperationException();
     }
 
 }

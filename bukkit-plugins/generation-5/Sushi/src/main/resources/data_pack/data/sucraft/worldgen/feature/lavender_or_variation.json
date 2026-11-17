@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:weighted_random_selector",
+  "features": [
+    {
+      "data": "sucraft:colored_fringed_lavender",
+      "weight": 460
+    },
+    {
+      "data": "sucraft:colored_twisted_lavender",
+      "weight": 90
+    },
+    {
+      "data": "sucraft:grass",
+      "weight": 500
+    },
+    {
+      "data": "sucraft:tall_grass",
+      "weight": 1
+    },
+    {
+      "data": "sucraft:colored_tall_lavender",
+      "weight": 3
+    },
+    {
+      "data": "sucraft:colored_non_lavender",
+      "weight": 35
+    }
+  ]
+}

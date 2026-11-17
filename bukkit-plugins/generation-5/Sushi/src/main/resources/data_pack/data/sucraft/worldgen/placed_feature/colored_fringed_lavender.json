@@ -1,0 +1,12 @@
+{
+  "feature": "sucraft:colored_fringed_lavender",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": "sucraft:fringed_lavender"
+      }
+    }
+  ]
+}

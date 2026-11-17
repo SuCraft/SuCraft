@@ -1,5 +1,7 @@
 {
   "values": [
-    "minecraft:cherry_grove"
+    "minecraft:cherry_grove",
+    "minecraft:sunflower_plains",
+    "sucraft:lavender_plains"
   ]
 }

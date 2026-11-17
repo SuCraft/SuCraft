@@ -35,7 +35,7 @@
     },
     {
       "data": "minecraft:fallen_birch_tree",
-      "weight": 100
+      "weight": 55
     },
     {
       "data": "minecraft:birch_bees_0002_leaf_litter",
@@ -47,11 +47,11 @@
     },
     {
       "data": "minecraft:fallen_oak_tree",
-      "weight": 40
+      "weight": 55
     },
     {
       "data": "minecraft:fallen_super_birch_tree",
-      "weight": 40
+      "weight": 35
     },
     {
       "data": "minecraft:super_birch_bees_0002",

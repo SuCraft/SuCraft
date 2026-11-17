@@ -1,0 +1,61 @@
+{
+  "feature": "sucraft:lavender_or_variation",
+  "placement": [
+    {
+      "type": "minecraft:cuboid",
+      "xz_size": 16,
+      "y_size": 1
+    },
+    {
+      "type": "minecraft:count",
+      "count": 11
+    },
+    {
+      "type": "minecraft:offset",
+      "x": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 2,
+        "min_inclusive": -2
+      },
+      "y": {
+        "type": "minecraft:constant",
+        "value": 0
+      },
+      "z": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 2,
+        "min_inclusive": -2
+      }
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:offset",
+      "x": {
+        "type": "minecraft:constant",
+        "value": 0
+      },
+      "y": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 3,
+        "min_inclusive": -3
+      },
+      "z": {
+        "type": "minecraft:constant",
+        "value": 0
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_block_tag",
+        "tag": "minecraft:air"
+      }
+    }
+  ]
+}

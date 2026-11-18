@@ -410,7 +410,7 @@
      }
  
      public static class StartPiece extends StrongholdPieces.StairsDown {
-@@ -1463,20 +_,272 @@
+@@ -1463,20 +_,273 @@
  
      private abstract static class StrongholdPiece extends StructurePiece {
          protected StrongholdPieces.StrongholdPiece.SmallDoorType entryDoor = StrongholdPieces.StrongholdPiece.SmallDoorType.OPENING;
@@ -435,28 +435,29 @@
 +        }
 +
 +        // Suki start - Structure generation - Add additional post-processing step
-+        public void postPostProcess(WorldGenLevel world, StructureManager structureAccessor, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox chunkBox, ChunkPos chunkPos, BlockPos pivot) {
++        public void postPostProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random, BoundingBox chunkBB, ChunkPos chunkPos, BlockPos referencePos) {
++            super.postPostProcess(level, structureManager, generator, random, chunkBB, chunkPos, referencePos);
 +            // Fix blocks being invalid in their location (for example grass unsupported by a block below)
-+            int minX = Math.max(this.boundingBox.minX(), chunkBox.minX());
-+            int maxX = Math.min(this.boundingBox.maxX(), chunkBox.maxX());
-+            int minY = Math.max(world.getMinY(), Math.max(this.boundingBox.minY(), chunkBox.minY()));
-+            int maxY = Math.min(world.getMaxY(), Math.min(this.boundingBox.maxY(), chunkBox.maxY()));
-+            int maxYPlusMargin = Math.min(world.getMaxY(), Math.min(this.boundingBox.maxY() + 4, chunkBox.maxY())); /* should need only 2 but taking 4 as extra margin just in case */
-+            int minZ = Math.max(this.boundingBox.minZ(), chunkBox.minZ());
-+            int maxZ = Math.min(this.boundingBox.maxZ(), chunkBox.maxZ());
++            int minX = Math.max(this.boundingBox.minX(), chunkBB.minX());
++            int maxX = Math.min(this.boundingBox.maxX(), chunkBB.maxX());
++            int minY = Math.max(level.getMinY(), Math.max(this.boundingBox.minY(), chunkBB.minY()));
++            int maxY = Math.min(level.getMaxY(), Math.min(this.boundingBox.maxY(), chunkBB.maxY()));
++            int maxYPlusMargin = Math.min(level.getMaxY(), Math.min(this.boundingBox.maxY() + 4, chunkBB.maxY())); /* should need only 2 but taking 4 as extra margin just in case */
++            int minZ = Math.max(this.boundingBox.minZ(), chunkBB.minZ());
++            int maxZ = Math.min(this.boundingBox.maxZ(), chunkBB.maxZ());
 +            var pos = new BlockPos.MutableBlockPos();
 +            for (int x = minX; x <= maxX; x++) {
 +                for (int y = minY; y <= maxYPlusMargin; y++) {
 +                    for (int z = minZ; z <= maxZ; z++) {
 +                        pos.set(x, y, z);
-+                        BlockState block = world.getBlockState(pos);
++                        BlockState block = level.getBlockState(pos);
 +                        BlockState newBlock = null;
 +                        boolean isUnstableAndMustBeRemoved = false;
 +                        if (y <= maxY) {
 +                            // Remove single door pieces
 +                            if (block.is(net.minecraft.tags.BlockTags.DOORS)) {
-+                                BlockState blockAbove = world.getBlockState(pos.above());
-+                                if (!(world.getBlockState(pos.below()).is(net.minecraft.tags.BlockTags.DOORS) || blockAbove.is(net.minecraft.tags.BlockTags.DOORS))) {
++                                BlockState blockAbove = level.getBlockState(pos.above());
++                                if (!(level.getBlockState(pos.below()).is(net.minecraft.tags.BlockTags.DOORS) || blockAbove.is(net.minecraft.tags.BlockTags.DOORS))) {
 +                                    java.util.Optional<Boolean> waterlogged = block.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
 +                                    java.util.Optional<Boolean> waterloggedAbove = blockAbove.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
 +                                    if ((waterlogged.isPresent() && waterlogged.get()) || blockAbove.is(Blocks.WATER) || (waterloggedAbove.isPresent() && waterloggedAbove.get())) {
@@ -471,30 +472,30 @@
 +                        }
 +                        // Fix floating grass and similar blocks that rely on a supporting solid block on a specific side
 +                        if (block.getBlock() instanceof net.minecraft.world.level.block.DoublePlantBlock || block.is(Blocks.TALL_GRASS) || block.is(Blocks.TALL_SEAGRASS) || block.is(Blocks.LARGE_FERN) || block.is(net.minecraft.tags.BlockTags.FLOWERS) || block.is(Blocks.SHORT_GRASS) || block.is(Blocks.SEAGRASS) || block.is(Blocks.FERN) || block.is(Blocks.KELP_PLANT) || block.is(Blocks.KELP) || block.is(Blocks.RED_MUSHROOM) || block.is(Blocks.BROWN_MUSHROOM) || block.is(Blocks.DEAD_BUSH)) {
-+                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.DOWN)) {
++                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.DOWN)) {
 +                                isUnstableAndMustBeRemoved = true;
 +                            }
 +                        } else if (block.is(Blocks.VINE) || block.is(Blocks.GLOW_LICHEN) || block.is(Blocks.SCULK_VEIN)) {
-+                            if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.UP)) {
++                            if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.UP)) {
 +                                isUnstableAndMustBeRemoved = true;
-+                            } else if (!block.is(Blocks.VINE) && block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOWN) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.DOWN)) {
++                            } else if (!block.is(Blocks.VINE) && block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOWN) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.DOWN)) {
 +                                isUnstableAndMustBeRemoved = true;
-+                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.EAST)) {
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.EAST)) {
 +                                isUnstableAndMustBeRemoved = true;
-+                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.WEST)) {
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.WEST)) {
 +                                isUnstableAndMustBeRemoved = true;
-+                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.NORTH)) {
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.NORTH)) {
 +                                isUnstableAndMustBeRemoved = true;
-+                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, Direction.SOUTH)) {
++                            } else if (block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH) && !org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, Direction.SOUTH)) {
 +                                isUnstableAndMustBeRemoved = true;
 +                            }
 +                        } else if (block.is(Blocks.LADDER) || block.is(Blocks.WALL_TORCH)) {
-+                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(world, pos, block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING))) {
++                            if (!org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.hasRelativeSolid(level, pos, block.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING))) {
 +                                isUnstableAndMustBeRemoved = true;
 +                            }
 +                        }
 +                        if (isUnstableAndMustBeRemoved) {
-+                            BlockState blockAbove = world.getBlockState(pos.above());
++                            BlockState blockAbove = level.getBlockState(pos.above());
 +                            java.util.Optional<Boolean> waterlogged = block.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
 +                            java.util.Optional<Boolean> waterloggedAbove = blockAbove.getOptionalValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED);
 +                            if ((waterlogged.isPresent() && waterlogged.get()) || blockAbove.is(Blocks.WATER) || (waterloggedAbove.isPresent() && waterloggedAbove.get())) {
@@ -509,32 +510,32 @@
 +                        }
 +                        // Replace the state if needed
 +                        if (newBlock != null) {
-+                            world.setBlock(pos, newBlock, 2);
-+                            net.minecraft.world.level.material.FluidState fluidState = world.getFluidState(pos);
++                            level.setBlock(pos, newBlock, 2);
++                            net.minecraft.world.level.material.FluidState fluidState = level.getFluidState(pos);
 +                            if (!fluidState.isEmpty()) {
-+                                world.scheduleTick(pos, fluidState.getType(), 0);
++                                level.scheduleTick(pos, fluidState.getType(), 0);
 +                            }
 +
 +                            if (StructurePiece.SHAPE_CHECK_BLOCKS.contains(block.getBlock())) {
-+                                world.getChunk(pos).markPosForPostProcessing(pos);
++                                level.getChunk(pos).markPosForPostProcessing(pos);
 +                            }
 +                        }
 +                    }
 +                }
 +            }
 +            // Spread water
-+            this.spreadWater(world); // Suki - Strongholds in water
++            this.spreadWater(level); // Suki - Strongholds in water
 +            // Replace some stairs with other types
 +            for (int x = minX; x <= maxX; x++) {
 +                for (int y = minY; y <= maxY; y++) {
 +                    for (int z = minZ; z <= maxZ; z++) {
 +                        pos.set(x, y, z);
-+                        BlockState state = world.getBlockState(pos);
++                        BlockState state = level.getBlockState(pos);
 +                        if (org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.INPUTS.contains(state.getBlock())) {
 +                            var outputs = this.cold ? org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.OUTPUTS_COLD : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.StairsReplacements.OUTPUTS;
 +                            Block newBlock = outputs.get(random.nextInt(outputs.size()));
 +                            if (!newBlock.equals(state.getBlock())) {
-+                                world.setBlock(pos, newBlock.defaultBlockState().withPropertiesOf(state), Block.UPDATE_CLIENTS);
++                                level.setBlock(pos, newBlock.defaultBlockState().withPropertiesOf(state), Block.UPDATE_CLIENTS);
 +                            }
 +                        }
 +                    }
@@ -543,17 +544,17 @@
 +            // Add moss carpets on top of open strongholds
 +            for (int x = minX; x <= maxX; x++) {
 +                for (int z = minZ; z <= maxZ; z++) {
-+                    for (int y = world.getMaxY() - 1; y >= minY; y--) {
++                    for (int y = level.getMaxY() - 1; y >= minY; y--) {
 +                        pos.set(x, y, z);
-+                        var state = world.getBlockState(pos);
++                        var state = level.getBlockState(pos);
 +                        if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
 +                            continue;
 +                        }
-+                        if (y <= maxY && org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.countsAsSolid(world, pos, state, Direction.UP)) {
++                        if (y <= maxY && org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.countsAsSolid(level, pos, state, Direction.UP)) {
 +                            if (!(state.getBlock() instanceof SlabBlock || state.getBlock() instanceof StairBlock || state.getBlock() instanceof FenceBlock || state.getBlock() instanceof net.minecraft.world.level.block.CarpetBlock)) {
 +                                var above = pos.above();
-+                                if (world.getBlockState(above).isAir()) {
-+                                    var biome = world.getBiome(above);
++                                if (level.getBlockState(above).isAir()) {
++                                    var biome = level.getBiome(above);
 +                                    boolean greenGrassy = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_GREEN_GRASSY_BLOCKS);
 +                                    boolean paleGrassy = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_PALE_GRASSY_BLOCKS);
 +                                    boolean leafLitter = biome.is(org.sucraft.suki.gamecontent.world.biome.tag.SukiBiomeTags.HAS_LEAF_LITTER_OFTEN);
@@ -574,7 +575,7 @@
 +                                        }
 +                                    }
 +                                    if (newState != null) {
-+                                        world.setBlock(above, newState, Block.UPDATE_CLIENTS);
++                                        level.setBlock(above, newState, Block.UPDATE_CLIENTS);
 +                                    }
 +                                }
 +                            }
@@ -589,7 +590,7 @@
 +                    for (int z = minZ; z <= maxZ; z++) {
 +                        pos.set(x, y, z);
 +                        if (!this.suki$canChip(pos)) continue;
-+                        BlockState state = world.getBlockState(pos);
++                        BlockState state = level.getBlockState(pos);
 +                        org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.Chippable chippable;
 +                        if (state.getBlock() instanceof StairBlock) {
 +                            chippable = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.BY_STAIRS.get(state.getBlock());
@@ -597,17 +598,17 @@
 +                            chippable = org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.BY_FULL_BLOCK.get(state.getBlock());
 +                        }
 +                        if (chippable != null) {
-+                            BlockState above = y >= world.getMaxY() ? Blocks.STONE.defaultBlockState() : world.getBlockState(pos.above());
-+                            BlockState below = y <= world.getMinY() ? Blocks.STONE.defaultBlockState() : world.getBlockState(pos.below());
++                            BlockState above = y >= level.getMaxY() ? Blocks.STONE.defaultBlockState() : level.getBlockState(pos.above());
++                            BlockState below = y <= level.getMinY() ? Blocks.STONE.defaultBlockState() : level.getBlockState(pos.below());
 +                            boolean emptyAbove = above.isAir() || above.is(Blocks.WATER);
 +                            boolean emptyBelow = below.isAir() || below.is(Blocks.WATER);
 +                            boolean chipFromAbove = emptyAbove && random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_ABOVE_RARITY) == 0;
 +                            boolean chipFromBelow = emptyBelow && random.nextInt(org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.ChipBlocks.FROM_BELOW_RARITY) == 0;
 +                            if (chipFromAbove && chipFromBelow) {
 +                                if (above.isAir() && below.isAir()) {
-+                                    world.setBlock(pos, Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
++                                    level.setBlock(pos, Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
 +                                } else if (above.is(Blocks.WATER) && below.is(Blocks.WATER)) {
-+                                    world.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_CLIENTS);
++                                    level.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_CLIENTS);
 +                                }
 +                            } else if (chipFromAbove || chipFromBelow) {
 +                                boolean becomesSlab;
@@ -625,7 +626,7 @@
 +                                    newState = newState.setValue(StairBlock.FACING, StairBlock.FACING.getPossibleValues().get(random.nextInt(StairBlock.FACING.getPossibleValues().size())));
 +                                }
 +                                newState = newState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, (chipFromAbove ? above : below).is(Blocks.WATER));
-+                                world.setBlock(pos, newState, Block.UPDATE_CLIENTS);
++                                level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
 +                            }
 +                        }
 +                    }
@@ -634,7 +635,7 @@
 +            // Maybe replace some air with cobwebs
 +            for (var opportunity : org.sucraft.suki.gamecontent.world.structure.stronghold.CustomStrongholdGenerationSettings.Cobwebs.ALL) {
 +                if (random.nextFloat() < opportunity.chance()) {
-+                    org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.replace(world, this.boundingBox, chunkBox, BlockState::isAir, Blocks.COBWEB.defaultBlockState(), random, opportunity.ratio(), false, false, true, null);
++                    org.sucraft.suki.gamecontent.world.structure.stronghold.StrongholdPostProcessing.replace(level, this.boundingBox, chunkBB, BlockState::isAir, Blocks.COBWEB.defaultBlockState(), random, opportunity.ratio(), false, false, true, null);
 +                    break;
 +                }
 +            }

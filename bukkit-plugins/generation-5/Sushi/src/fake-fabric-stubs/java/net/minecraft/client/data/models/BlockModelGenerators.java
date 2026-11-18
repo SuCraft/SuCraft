@@ -17,6 +17,8 @@ public abstract class BlockModelGenerators {
 
     public abstract void registerSimpleItemModel(final Item item, final Identifier model);
 
+    public abstract void registerSimpleFlatItemModel(final Block block, final String suffix);
+
     public enum PlantType {
 
         TINTED,
@@ -33,8 +35,12 @@ public abstract class BlockModelGenerators {
 
     }
 
-    public void createDoublePlantWithDefaultItem(final Block block, final PlantType plantType) {
-        throw new UnsupportedOperationException();
-    }
+    public abstract void createDoublePlantWithDefaultItem(final Block block, final PlantType plantType);
+
+    public abstract void createDoublePlant(final Block block, final PlantType plantType);
+
+    public abstract void createDoor(final Block door);
+
+    public abstract void createTrapdoor(final Block trapdoor);
 
 }

@@ -8,12 +8,54 @@
   "seed": 9001,
   "slow_noise": {
     "base_amplitude": 0.955388882960065,
-    "base_octave": -9
+    "base_octave": -10
   },
   "slow_scale": 1.0,
   "states": [
     {
       "id": "sucraft:tall_lavender",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:tall_astilbe",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:white_tall_lavender",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:tall_lavender",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:tall_astilbe",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:white_tall_lavender",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:tall_lavender",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "id": "sucraft:tall_astilbe",
       "properties": {
         "half": "lower"
       }

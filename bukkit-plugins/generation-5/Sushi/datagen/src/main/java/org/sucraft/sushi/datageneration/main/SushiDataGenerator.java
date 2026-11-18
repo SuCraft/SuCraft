@@ -49,7 +49,6 @@ import org.sucraft.sushi.datageneration.wood.Campfires;
 import org.sucraft.sushi.datageneration.wood.Chests;
 import org.sucraft.sushi.datageneration.wood.DyedPlanks;
 import org.sucraft.sushi.datageneration.wood.Barrels;
-import org.sucraft.sushi.datageneration.wood.Frost;
 import org.sucraft.sushi.datageneration.wood.Ladders;
 import org.sucraft.sushi.datageneration.wool.Wool;
 
@@ -153,7 +152,6 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         Campfires.add(factories);
         Chests.add(factories);
         DyedPlanks.add(factories);
-        Frost.add(factories);
         Ladders.add(factories);
 
         // Wool

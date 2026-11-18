@@ -8,11 +8,18 @@
   "seed": 9001,
   "slow_noise": {
     "base_amplitude": 0.955388882960065,
-    "base_octave": -9
+    "base_octave": -10
   },
   "slow_scale": 1.0,
   "states": [
     "sucraft:fringed_lavender",
+    "sucraft:astilbe",
+    "sucraft:white_fringed_lavender",
+    "sucraft:fringed_lavender",
+    "sucraft:astilbe",
+    "sucraft:white_fringed_lavender",
+    "sucraft:fringed_lavender",
+    "sucraft:astilbe",
     "sucraft:white_fringed_lavender"
   ],
   "variety": [

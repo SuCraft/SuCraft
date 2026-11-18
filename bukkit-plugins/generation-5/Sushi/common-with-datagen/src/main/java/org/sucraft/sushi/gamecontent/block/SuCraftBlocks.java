@@ -81,6 +81,21 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType TALL_LAVENDER = blockType("tall_lavender")
         .doubleFlower(Blocks.LILAC);
 
+    public static final SuCraftBlockType SHORT_ASTILBE = blockType("short_astilbe")
+        .flower(Blocks.ALLIUM, true);
+
+    public static final SuCraftBlockType ASTILBE = blockType("astilbe")
+        .flower(Blocks.ALLIUM, true);
+
+    public static final SuCraftBlockType TALL_ASTILBE = blockType("tall_astilbe")
+        .doubleFlower(Blocks.LILAC)
+        .dataGenerateModel((factory, block) ->
+            factory.addBlock(generators -> {
+                generators.registerSimpleFlatItemModel(block, "_bottom");
+                generators.createDoublePlant(block, BlockModelGenerators.PlantType.NOT_TINTED);
+            })
+        );
+
     public static final SuCraftBlockType WHITE_FRINGED_LAVENDER = blockType("white_fringed_lavender")
         .flower(Blocks.LILY_OF_THE_VALLEY, true);
 
@@ -1746,11 +1761,68 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType PALE_OAK_BARREL = woodenBarrel("pale_oak_barrel", Blocks.PALE_OAK_PLANKS);
     public static final SuCraftBlockType WARPED_BARREL = woodenBarrel("warped_barrel", Blocks.WARPED_PLANKS);
 
+    // Wood / Trees / Azalea
+
+    private static <V extends BlockSet> StrippableFamily<V> azaleaLogsOrWood(
+        boolean isWood
+    ) {
+        return logsOrWood(
+            isWood,
+            false,
+            "azalea",
+            false,
+            true,
+            null,
+            null,
+            () -> isWood ? Blocks.OAK_WOOD : Blocks.OAK_LOG,
+            () -> Blocks.BIRCH_SLAB,
+            () -> Blocks.BIRCH_STAIRS,
+            () -> Blocks.SANDSTONE_WALL,
+            () -> Blocks.BIRCH_FENCE,
+            () -> Blocks.BIRCH_FENCE_GATE,
+            () -> Blocks.BIRCH_BUTTON,
+            () -> Blocks.BIRCH_PRESSURE_PLATE,
+            WoodType.BIRCH,
+            null,
+            MapColor.COLOR_LIGHT_GREEN,
+            MapColor.COLOR_BROWN
+        );
+    }
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairs> AZALEA_LOG = azaleaLogsOrWood(false);
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate> AZALEA_WOOD = azaleaLogsOrWood(true);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate AZALEA_PLANKS =
+        BlockSet.builder("azalea_planks").mineableWithAxe()
+            .fullBlock().vanilla(Blocks.BIRCH_PLANKS).fullBlockTag(BlockItemTags.PLANKS)
+            .woodenSlab()
+            .woodenStairs()
+            .woodenWall().wallFallback(Blocks.SANDSTONE_WALL)
+            .woodenFence()
+            .woodenFenceGate()
+            .woodenButton()
+            .woodenPressurePlate()
+            .build();
+
+    public static final SuCraftBlockType AZALEA_DOOR = blockType("azalea_door")
+        .woodenDoor(AZALEA_PLANKS::fullBlockNMS, () -> BlockSetType.BIRCH, Blocks.BIRCH_DOOR);
+
+    public static final SuCraftBlockType AZALEA_TRAPDOOR = blockType("azalea_trapdoor")
+        .woodenTrapdoor(AZALEA_PLANKS::fullBlockNMS, () -> BlockSetType.BIRCH, Blocks.BIRCH_TRAPDOOR);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs AZALEA_BOOKSHELF = bookshelf(
+        "azalea_bookshelf",
+        AZALEA_PLANKS::fullBlockNMS, Blocks.BIRCH_SLAB, Blocks.BIRCH_STAIRS, Blocks.SANDSTONE_WALL
+    );
+
+    public static final SuCraftBlockType AZALEA_LADDER = woodenLadder("azalea_ladder", AZALEA_PLANKS::fullBlockNMS);
+
     // Wood / Bookshelves
 
     private static BlockSet.WithFullBlockAndSlabAndStairs bookshelf(
         String fullBlockPath,
-        Block fullBlockPlanks,
+        Supplier<Block> fullBlockPlanks,
         Block slabFallback,
         Block stairsFallback,
         Block wallFallback
@@ -1760,7 +1832,7 @@ public final class SuCraftBlocks {
 
     private static BlockSet.DirectImpl bookshelf(
         String fullBlockPath,
-        Block fullBlockPlanks,
+        Supplier<Block> fullBlockPlanks,
         Block slabFallback,
         Block stairsFallback,
         Block wallFallback,
@@ -1776,10 +1848,10 @@ public final class SuCraftBlocks {
             .stairs().stairsFinalizer(SuCraftBlockType::flammableLikeBookshelf).stairsFallback(stairsFallback).stairsTag(SuCraftBlockItemTags.BOOKSHELF_STAIRS).stairsFinalizer(block -> block.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS))
             /*.woodenWall().wallFallback(wallFallback)*/
             .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
-                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(fullBlockPlanks));
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(fullBlockPlanks.get()));
                 mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(vanillaFullBlock != null ? vanillaFullBlock : block));
             }))
-            .propertiesFinalizer(properties -> properties.mapColor(fullBlockPlanks.defaultMapColor()))
+            .propertiesFinalizer(properties -> properties.mapColor(fullBlockPlanks.get().defaultMapColor()))
             .fullBlockFinalizer(type -> type.dataGenerateBlockLootTable(factory -> {
                 if (vanillaFullBlock == null) {
                     factory.add(provider -> provider.add(type.getNMS(),
@@ -1829,57 +1901,57 @@ public final class SuCraftBlocks {
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs ACACIA_BOOKSHELF = bookshelf(
         "acacia_bookshelf",
-        Blocks.ACACIA_PLANKS, Blocks.ACACIA_SLAB, Blocks.ACACIA_STAIRS, Blocks.RED_SANDSTONE_WALL
+        () -> Blocks.ACACIA_PLANKS, Blocks.ACACIA_SLAB, Blocks.ACACIA_STAIRS, Blocks.RED_SANDSTONE_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs BAMBOO_BOOKSHELF = bookshelf(
         "bamboo_bookshelf",
-        Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_STAIRS, Blocks.SULFUR_BRICK_WALL
+        () -> Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_STAIRS, Blocks.SULFUR_BRICK_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs BIRCH_BOOKSHELF = bookshelf(
         "birch_bookshelf",
-        Blocks.BIRCH_PLANKS, Blocks.BIRCH_SLAB, Blocks.BIRCH_STAIRS, Blocks.SANDSTONE_WALL
+        () -> Blocks.BIRCH_PLANKS, Blocks.BIRCH_SLAB, Blocks.BIRCH_STAIRS, Blocks.SANDSTONE_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs CHERRY_BOOKSHELF = bookshelf(
         "cherry_bookshelf",
-        Blocks.CHERRY_PLANKS, Blocks.CHERRY_SLAB, Blocks.CHERRY_STAIRS, Blocks.GRANITE_WALL
+        () -> Blocks.CHERRY_PLANKS, Blocks.CHERRY_SLAB, Blocks.CHERRY_STAIRS, Blocks.GRANITE_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs CRIMSON_BOOKSHELF = bookshelf(
         "crimson_bookshelf",
-        Blocks.CRIMSON_PLANKS, Blocks.CRIMSON_SLAB, Blocks.CRIMSON_STAIRS, Blocks.NETHER_BRICK_WALL
+        () -> Blocks.CRIMSON_PLANKS, Blocks.CRIMSON_SLAB, Blocks.CRIMSON_STAIRS, Blocks.NETHER_BRICK_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs DARK_OAK_BOOKSHELF = bookshelf(
         "dark_oak_bookshelf",
-        Blocks.DARK_OAK_PLANKS, Blocks.DARK_OAK_SLAB, Blocks.DARK_OAK_STAIRS, Blocks.MUD_BRICK_WALL
+        () -> Blocks.DARK_OAK_PLANKS, Blocks.DARK_OAK_SLAB, Blocks.DARK_OAK_STAIRS, Blocks.MUD_BRICK_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs JUNGLE_BOOKSHELF = bookshelf(
         "jungle_bookshelf",
-        Blocks.JUNGLE_PLANKS, Blocks.JUNGLE_SLAB, Blocks.JUNGLE_STAIRS, Blocks.GRANITE_WALL
+        () -> Blocks.JUNGLE_PLANKS, Blocks.JUNGLE_SLAB, Blocks.JUNGLE_STAIRS, Blocks.GRANITE_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs MANGROVE_BOOKSHELF = bookshelf(
         "mangrove_bookshelf",
-        Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_SLAB, Blocks.MANGROVE_STAIRS, Blocks.CINNABAR_BRICK_WALL
+        () -> Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_SLAB, Blocks.MANGROVE_STAIRS, Blocks.CINNABAR_BRICK_WALL
     );
 
     public static final BlockSet.WithSlabAndStairs OAK_BOOKSHELF = bookshelf(
         "oak_bookshelf",
-        Blocks.OAK_PLANKS, Blocks.OAK_SLAB, Blocks.OAK_STAIRS, Blocks.MUD_BRICK_WALL, Blocks.BOOKSHELF
+        () -> Blocks.OAK_PLANKS, Blocks.OAK_SLAB, Blocks.OAK_STAIRS, Blocks.MUD_BRICK_WALL, Blocks.BOOKSHELF
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs SPRUCE_BOOKSHELF = bookshelf(
         "spruce_bookshelf",
-        Blocks.SPRUCE_PLANKS, Blocks.SPRUCE_SLAB, Blocks.SPRUCE_STAIRS, Blocks.MUD_BRICK_WALL
+        () -> Blocks.SPRUCE_PLANKS, Blocks.SPRUCE_SLAB, Blocks.SPRUCE_STAIRS, Blocks.MUD_BRICK_WALL
     );
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs WARPED_BOOKSHELF = bookshelf(
         "warped_bookshelf",
-        Blocks.WARPED_PLANKS, Blocks.WARPED_SLAB, Blocks.WARPED_STAIRS, Blocks.PRISMARINE_WALL
+        () -> Blocks.WARPED_PLANKS, Blocks.WARPED_SLAB, Blocks.WARPED_STAIRS, Blocks.PRISMARINE_WALL
     );
 
     // Wood / Dyed planks
@@ -2022,21 +2094,21 @@ public final class SuCraftBlocks {
 
     // Wood / Ladders
 
-    private static SuCraftBlockType woodenLadder(String path, Block planks) {
+    private static SuCraftBlockType woodenLadder(String path, Supplier<Block> planks) {
         return blockType(path).woodenLadder(planks);
     }
 
-    public static final SuCraftBlockType ACACIA_LADDER = woodenLadder("acacia_ladder", Blocks.ACACIA_PLANKS);
-    public static final SuCraftBlockType BAMBOO_LADDER = woodenLadder("bamboo_ladder", Blocks.BAMBOO_PLANKS);
-    public static final SuCraftBlockType BIRCH_LADDER = woodenLadder("birch_ladder", Blocks.BIRCH_PLANKS);
-    public static final SuCraftBlockType CHERRY_LADDER = woodenLadder("cherry_ladder", Blocks.CHERRY_PLANKS);
-    public static final SuCraftBlockType CRIMSON_LADDER = woodenLadder("crimson_ladder", Blocks.CRIMSON_PLANKS);
-    public static final SuCraftBlockType DARK_OAK_LADDER = woodenLadder("dark_oak_ladder", Blocks.DARK_OAK_PLANKS);
-    public static final SuCraftBlockType JUNGLE_LADDER = woodenLadder("jungle_ladder", Blocks.JUNGLE_PLANKS);
-    public static final SuCraftBlockType MANGROVE_LADDER = woodenLadder("mangrove_ladder", Blocks.MANGROVE_PLANKS);
-    public static final SuCraftBlockType PALE_OAK_LADDER = woodenLadder("pale_oak_ladder", Blocks.PALE_OAK_PLANKS);
-    public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", Blocks.SPRUCE_PLANKS);
-    public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", Blocks.WARPED_PLANKS);
+    public static final SuCraftBlockType ACACIA_LADDER = woodenLadder("acacia_ladder", () -> Blocks.ACACIA_PLANKS);
+    public static final SuCraftBlockType BAMBOO_LADDER = woodenLadder("bamboo_ladder", () -> Blocks.BAMBOO_PLANKS);
+    public static final SuCraftBlockType BIRCH_LADDER = woodenLadder("birch_ladder", () -> Blocks.BIRCH_PLANKS);
+    public static final SuCraftBlockType CHERRY_LADDER = woodenLadder("cherry_ladder", () -> Blocks.CHERRY_PLANKS);
+    public static final SuCraftBlockType CRIMSON_LADDER = woodenLadder("crimson_ladder", () -> Blocks.CRIMSON_PLANKS);
+    public static final SuCraftBlockType DARK_OAK_LADDER = woodenLadder("dark_oak_ladder", () -> Blocks.DARK_OAK_PLANKS);
+    public static final SuCraftBlockType JUNGLE_LADDER = woodenLadder("jungle_ladder", () -> Blocks.JUNGLE_PLANKS);
+    public static final SuCraftBlockType MANGROVE_LADDER = woodenLadder("mangrove_ladder", () -> Blocks.MANGROVE_PLANKS);
+    public static final SuCraftBlockType PALE_OAK_LADDER = woodenLadder("pale_oak_ladder", () -> Blocks.PALE_OAK_PLANKS);
+    public static final SuCraftBlockType SPRUCE_LADDER = woodenLadder("spruce_ladder", () -> Blocks.SPRUCE_PLANKS);
+    public static final SuCraftBlockType WARPED_LADDER = woodenLadder("warped_ladder", () -> Blocks.WARPED_PLANKS);
 
     // Wood / Trees / Frost
 
@@ -2127,7 +2199,43 @@ public final class SuCraftBlocks {
             .woodenPressurePlate(false)
             .build();
 
+    public static final SuCraftBlockType FROST_DOOR = blockType("frost_door")
+        .woodenDoor(FROST_PLANKS::fullBlockNMS, () -> BlockSetType.OAK, Blocks.PALE_OAK_DOOR, false);
+
+    public static final SuCraftBlockType FROST_TRAPDOOR = blockType("frost_trapdoor")
+        .woodenTrapdoor(FROST_PLANKS::fullBlockNMS, () -> BlockSetType.OAK, Blocks.PALE_OAK_TRAPDOOR, false);
+
     // Wood / Trees / Maple
+
+    private static <V extends BlockSet> StrippableFamily<V> mapleLogsOrWood(
+        boolean isWood
+    ) {
+        return logsOrWood(
+            isWood,
+            false,
+            "maple",
+            false,
+            true,
+            null,
+            null,
+            () -> isWood ? Blocks.ACACIA_WOOD : Blocks.ACACIA_LOG,
+            () -> Blocks.ACACIA_SLAB,
+            () -> Blocks.ACACIA_STAIRS,
+            () -> Blocks.RED_SANDSTONE_WALL,
+            () -> Blocks.ACACIA_FENCE,
+            () -> Blocks.ACACIA_FENCE_GATE,
+            () -> Blocks.ACACIA_BUTTON,
+            () -> Blocks.ACACIA_PRESSURE_PLATE,
+            WoodType.ACACIA,
+            null,
+            MapColor.COLOR_ORANGE,
+            MapColor.PODZOL
+        );
+    }
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairs> MAPLE_LOG = mapleLogsOrWood(false);
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate> MAPLE_WOOD = mapleLogsOrWood(true);
 
     public static final SuCraftBlockType YELLOW_MAPLE_SAPLING = blockType("yellow_maple_sapling")
         .sapling(null, () -> SuCraftTreeGrowers.YELLOW_MAPLE, Blocks.POPLAR_SAPLING, false);
@@ -2172,6 +2280,29 @@ public final class SuCraftBlocks {
         MapColor.COLOR_RED,
         SoundType.POPLAR_LEAVES,
         RED_MAPLE_SAPLING::getNMS
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate MAPLE_PLANKS =
+        BlockSet.builder("maple_planks").mineableWithAxe()
+            .fullBlock().vanilla(Blocks.ACACIA_PLANKS).fullBlockTag(BlockItemTags.PLANKS)
+            .woodenSlab()
+            .woodenStairs()
+            .woodenWall().wallFallback(Blocks.RED_SANDSTONE_WALL)
+            .woodenFence()
+            .woodenFenceGate()
+            .woodenButton()
+            .woodenPressurePlate()
+            .build();
+
+    public static final SuCraftBlockType MAPLE_DOOR = blockType("maple_door")
+        .woodenDoor(MAPLE_PLANKS::fullBlockNMS, () -> BlockSetType.ACACIA, Blocks.ACACIA_DOOR);
+
+    public static final SuCraftBlockType MAPLE_TRAPDOOR = blockType("maple_trapdoor")
+        .woodenTrapdoor(MAPLE_PLANKS::fullBlockNMS, () -> BlockSetType.ACACIA, Blocks.ACACIA_TRAPDOOR);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs MAPLE_BOOKSHELF = bookshelf(
+        "maple_bookshelf",
+        MAPLE_PLANKS::fullBlockNMS, Blocks.ACACIA_SLAB, Blocks.ACACIA_STAIRS, Blocks.RED_SANDSTONE_WALL
     );
 
     // Wood / Vanilla logs

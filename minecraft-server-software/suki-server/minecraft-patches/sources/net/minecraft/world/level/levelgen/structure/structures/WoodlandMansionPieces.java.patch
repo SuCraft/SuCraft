@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/structure/structures/WoodlandMansionPieces.java
 +++ b/net/minecraft/world/level/levelgen/structure/structures/WoodlandMansionPieces.java
-@@ -1328,5 +_,99 @@
+@@ -1328,5 +_,174 @@
                  }
              }
          }
@@ -9,12 +9,18 @@
 +        @Override
 +        public void postPostProcess(final net.minecraft.world.level.WorldGenLevel level, final net.minecraft.world.level.StructureManager structureManager, final net.minecraft.world.level.chunk.ChunkGenerator generator, final net.minecraft.util.RandomSource random, final net.minecraft.world.level.levelgen.structure.BoundingBox chunkBB, final net.minecraft.world.level.ChunkPos chunkPos, final net.minecraft.core.BlockPos referencePos) {
 +            super.postPostProcess(level, structureManager, generator, random, chunkBB, chunkPos, referencePos);
-+            int minX = Math.max(this.boundingBox.minX(), chunkBB.minX());
-+            int maxX = Math.min(this.boundingBox.maxX(), chunkBB.maxX());
-+            int minY = Math.max(level.getMinY(), Math.max(this.boundingBox.minY(), chunkBB.minY()));
-+            int maxY = Math.min(level.getMaxY(), Math.min(this.boundingBox.maxY(), chunkBB.maxY()));
-+            int minZ = Math.max(this.boundingBox.minZ(), chunkBB.minZ());
-+            int maxZ = Math.min(this.boundingBox.maxZ(), chunkBB.maxZ());
++            int minBBX = this.boundingBox.minX();
++            int maxBBX = this.boundingBox.maxX();
++            int minBBY = Math.max(level.getMinY(), this.boundingBox.minY());
++            int maxBBY = Math.min(level.getMaxY(), this.boundingBox.maxY());
++            int minBBZ = this.boundingBox.minZ();
++            int maxBBZ = this.boundingBox.maxZ();
++            int minX = Math.max(minBBX, chunkBB.minX());
++            int maxX = Math.min(maxBBX, chunkBB.maxX());
++            int minY = Math.max(minBBY, chunkBB.minY());
++            int maxY = Math.min(maxBBY, chunkBB.maxY());
++            int minZ = Math.max(minBBZ, chunkBB.minZ());
++            int maxZ = Math.min(maxBBZ, chunkBB.maxZ());
 +            var pos = new BlockPos.MutableBlockPos();
 +            // Suki start - Structure generation - Woodland mansions - Modified bookshelves
 +            var positionRandom = new net.minecraft.world.level.levelgen.XoroshiroRandomSource(BlockPos.asLong(this.boundingBox.minX(), this.boundingBox.minY(), this.boundingBox.minZ()));
@@ -22,9 +28,9 @@
 +            var suki$bookshelfType = org.sucraft.suki.gamecontent.world.structure.woodlandmansion.CustomWoodlandMansionGenerationSettings.BookshelfWoodTypes.PICKABLE_TYPES.get(suki$bookshelfTypeI);
 +            if (suki$bookshelfType != org.sucraft.suki.gamecontent.world.structure.woodlandmansion.CustomWoodlandMansionGenerationSettings.BookshelfWoodTypes.OAK) {
 +                int bookshelfCount = 0;
-+                checkBookshelf: for (int x = minX; x <= maxX; x++) {
-+                    for (int y = minY; y <= maxY; y++) {
-+                        for (int z = minZ; z <= maxZ; z++) {
++                checkBookshelf: for (int x = minBBX; x <= maxBBX; x++) {
++                    for (int y = minBBY; y <= maxBBY; y++) {
++                        for (int z = minBBZ; z <= maxBBZ; z++) {
 +                            pos.set(x, y, z);
 +                            BlockState block = level.getBlockState(pos);
 +                            if (block.is(Blocks.BOOKSHELF)) {
@@ -62,20 +68,89 @@
 +            int suki$treeTypeI = positionRandom.nextInt(org.sucraft.suki.gamecontent.world.structure.woodlandmansion.CustomWoodlandMansionGenerationSettings.TreeTypes.PICKABLE_TYPES.size());
 +            var suki$treeType = org.sucraft.suki.gamecontent.world.structure.woodlandmansion.CustomWoodlandMansionGenerationSettings.TreeTypes.PICKABLE_TYPES.get(suki$treeTypeI);
 +            if (suki$treeType != org.sucraft.suki.gamecontent.world.structure.woodlandmansion.CustomWoodlandMansionGenerationSettings.TreeTypes.DARK_OAK) {
-+                boolean hasLeaves = false;
-+                checkLeaves: for (int x = minX; x <= maxX; x++) {
-+                    for (int y = minY; y <= maxY; y++) {
-+                        for (int z = minZ; z <= maxZ; z++) {
++                boolean isTransformable = false;
++                int bedFlags = 0;
++                int growFlags = 0;
++                int waterFlags = 0;
++                checkTransformable: for (int x = minBBX; x <= maxBBX; x++) {
++                    for (int y = minBBY; y <= maxBBY; y++) {
++                        for (int z = minBBZ; z <= maxBBZ; z++) {
 +                            pos.set(x, y, z);
 +                            BlockState block = level.getBlockState(pos);
 +                            if (block.is(Blocks.DARK_OAK_LEAVES)) {
-+                                hasLeaves = true;
-+                                break checkLeaves;
++                                bedFlags |= 1;
++                                if (bedFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                                growFlags |= 1;
++                                if (growFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                                waterFlags |= 1;
++                                if (waterFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.WOOL.white())) {
++                                bedFlags |= 2;
++                                if (bedFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.WOOL.red())) {
++                                bedFlags |= 4;
++                                if (bedFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.DARK_OAK_FENCE)) {
++                                bedFlags |= 8;
++                                if (bedFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.DIRT)) {
++                                growFlags |= 2;
++                                if (growFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                                waterFlags |= 2;
++                                if (waterFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.DARK_OAK_PLANKS)) {
++                                growFlags |= 4;
++                                if (growFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.CHEST)) {
++                                growFlags |= 8;
++                                if (growFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.POLISHED_ANDESITE)) {
++                                waterFlags |= 4;
++                                if (waterFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
++                            } else if (block.is(Blocks.SMOOTH_STONE_SLAB)) {
++                                waterFlags |= 8;
++                                if (waterFlags == 0xF) {
++                                    isTransformable = true;
++                                    break checkTransformable;
++                                }
 +                            }
 +                        }
 +                    }
 +                }
-+                if (hasLeaves) {
++                if (isTransformable) {
 +                    for (int x = minX; x <= maxX; x++) {
 +                        for (int y = minY; y <= maxY; y++) {
 +                            for (int z = minZ; z <= maxZ; z++) {

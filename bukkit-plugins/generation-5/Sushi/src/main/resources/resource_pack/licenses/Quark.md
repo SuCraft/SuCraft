@@ -4,6 +4,14 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/andesite_bricks.png`
 * `assets/sucraft/textures/block/andesite_pillar.png`
 * `assets/sucraft/textures/block/andesite_pillar_top.png`
+* `assets/sucraft/textures/block/azalea_bookshelf.png`
+* `assets/sucraft/textures/block/azalea_door_bottom.png`
+* `assets/sucraft/textures/block/azalea_door_top.png`
+* `assets/sucraft/textures/block/azalea_ladder.png`
+* `assets/sucraft/textures/block/azalea_log.png`
+* `assets/sucraft/textures/block/azalea_log_top.png`
+* `assets/sucraft/textures/block/azalea_planks.png`
+* `assets/sucraft/textures/block/azalea_trapdoor.png`
 * `assets/sucraft/textures/block/bamboo_bookshelf.png`
 * `assets/sucraft/textures/block/bamboo_ladder.png`
 * `assets/sucraft/textures/block/birch_bookshelf.png`
@@ -44,11 +52,14 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/sandstone_bricks.png`
 * `assets/sucraft/textures/block/spruce_bookshelf.png`
 * `assets/sucraft/textures/block/spruce_ladder.png`
+* `assets/sucraft/textures/block/stripped_azalea_log_top.png`
+* `assets/sucraft/textures/block/stripped_azalea_log.png`
 * `assets/sucraft/textures/block/tuff_bricks.png`
 * `assets/sucraft/textures/block/tuff_pillar.png`
 * `assets/sucraft/textures/block/tuff_pillar_top.png`
 * `assets/sucraft/textures/block/warped_bookshelf.png`
 * `assets/sucraft/textures/block/warped_ladder.png`
+* `assets/sucraft/textures/item/azalea_door.png`
 
 These files are provided under an `Attribution-NonCommercial-ShareAlike 3.0 Unported` license, which is included below.
 

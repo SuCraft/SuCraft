@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -37,7 +38,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TallFlowerBlock;
-import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
@@ -873,6 +874,68 @@ public final class SuCraftBlockType implements ItemLike {
         return this.dataGenerateTag(CBlockItemTags.BARRELS_WOODEN);
     }
 
+    public SuCraftBlockType door(Supplier<Block> base, Supplier<BlockSetType> blockSetType, Block propertiesFrom, Block fallback) {
+        this.blockBuild(builder -> builder.factoryNMS(properties -> new DoorBlock(blockSetType.get(), properties)));
+        this.propertiesFull(propertiesFrom);
+        this.properties(properties -> properties.mapColor(base.get().defaultMapColor()));
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.DOOR, fallback);
+        this.constructorForDataGeneration(properties -> new DoorBlock(BlockSetType.OAK, properties));
+        this.dataGenerateModel(factory ->
+            factory.addBlock(generators ->
+                generators.createDoor(this.getNMS())
+            )
+        );
+        this.dataGenerateBlockLootTable(factory ->
+            factory.add(provider ->
+                provider.add(this.getNMS(), provider::createDoorTable)
+            )
+        );
+        this.dataGenerateTag(BlockItemTags.DOORS);
+        return this;
+    }
+
+    public SuCraftBlockType woodenDoor(Supplier<Block> planks, Supplier<BlockSetType> blockSetType, Block fallback, boolean fuel) {
+        this.door(planks, blockSetType, Blocks.OAK_DOOR, fallback);
+        this.mineableWithAxe();
+        if (fuel) {
+            this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE);
+        }
+        return this.dataGenerateTag(BlockItemTags.WOODEN_DOORS);
+    }
+
+    public SuCraftBlockType woodenDoor(Supplier<Block> planks, Supplier<BlockSetType> blockSetType, Block fallback) {
+        return this.woodenDoor(planks, blockSetType, fallback, true);
+    }
+
+    public SuCraftBlockType trapdoor(Supplier<Block> base, Supplier<BlockSetType> blockSetType, Block propertiesFrom, Block fallback) {
+        this.blockBuild(builder -> builder.factoryNMS(properties -> new TrapDoorBlock(blockSetType.get(), properties)));
+        this.propertiesFull(propertiesFrom);
+        this.properties(properties -> properties.mapColor(base.get().defaultMapColor()));
+        this.fromToBlockMacro(BlockStateMappingMacroTypes.TRAPDOOR, fallback);
+        this.constructorForDataGeneration(properties -> new TrapDoorBlock(BlockSetType.OAK, properties));
+        this.dataGenerateModel(factory ->
+            factory.addBlock(generators ->
+                generators.createTrapdoor(this.getNMS())
+            )
+        );
+        this.dataGenerateBlockLootTableForDropSelf();
+        this.dataGenerateTag(BlockItemTags.TRAPDOORS);
+        return this;
+    }
+
+    public SuCraftBlockType woodenTrapdoor(Supplier<Block> planks, Supplier<BlockSetType> blockSetType, Block fallback, boolean fuel) {
+        this.trapdoor(planks, blockSetType, Blocks.OAK_TRAPDOOR, fallback);
+        this.mineableWithAxe();
+        if (fuel) {
+            this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+        }
+        return this.dataGenerateTag(BlockItemTags.WOODEN_TRAPDOORS);
+    }
+
+    public SuCraftBlockType woodenTrapdoor(Supplier<Block> planks, Supplier<BlockSetType> blockSetType, Block fallback) {
+        return this.woodenTrapdoor(planks, blockSetType, fallback, true);
+    }
+
     public SuCraftBlockType flower(Function<BlockBehaviour.Properties, Block> constructor, Block fallback) {
         this.blockBuild(builder -> builder.factoryNMS(constructor));
         this.propertiesFull(Blocks.ALLIUM);
@@ -910,11 +973,11 @@ public final class SuCraftBlockType implements ItemLike {
         this.propertiesFull(Blocks.LILAC);
         this.fromToBlockMacro(BlockStateMappingMacroTypes.SUGAR_CANE, fallback);
         this.constructorForDataGeneration(TallFlowerBlock::new);
-        this.dataGenerateModel(factory -> {
+        this.dataGenerateModel((factory, block) ->
             factory.addBlock(generators ->
-                generators.createDoublePlantWithDefaultItem(this.getNMS(), BlockModelGenerators.PlantType.NOT_TINTED)
-            );
-        });
+                generators.createDoublePlantWithDefaultItem(block, BlockModelGenerators.PlantType.NOT_TINTED)
+            )
+        );
         this.dataGenerateBlockLootTable(factory ->
             factory.add(provider ->
                 provider.add(this.getNMS(), block -> provider.createSinglePropConditionTable(block, DoublePlantBlock.HALF, DoubleBlockHalf.LOWER))
@@ -934,10 +997,10 @@ public final class SuCraftBlockType implements ItemLike {
         return this.doubleFlower(TallFlowerBlock::new, fallback);
     }
 
-    public SuCraftBlockType ladder(Block base) {
+    public SuCraftBlockType ladder(Supplier<Block> base) {
         this.blockBuild(builder -> builder.factoryNMS(LadderBlock::new));
         this.propertiesFull(Blocks.LADDER);
-        this.properties(properties -> properties.mapColor(base.defaultMapColor()));
+        this.properties(properties -> properties.mapColor(base.get().defaultMapColor()));
         this.fromToBlockMacro(BlockStateMappingMacroTypes.LADDER, Blocks.LADDER);
         this.constructorForDataGeneration(LadderBlock::new);
         this.dataGenerateModel((factory, block) -> factory.addBlock(generators -> PlatformDependent.BlockModelGenerators.addLadder(generators, block)));
@@ -946,11 +1009,17 @@ public final class SuCraftBlockType implements ItemLike {
         return this.tryAutomaticFullBlockTags();
     }
 
-    public SuCraftBlockType woodenLadder(Block planks) {
+    public SuCraftBlockType woodenLadder(Supplier<Block> planks, boolean fuel) {
         this.ladder(planks);
         this.mineableWithAxe();
-        this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+        if (fuel) {
+            this.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+        }
         return this.dataGenerateTag(SpoutBlockItemTags.LADDERS_WOODEN);
+    }
+
+    public SuCraftBlockType woodenLadder(Supplier<Block> planks) {
+        return this.woodenLadder(planks, true);
     }
 
     public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, Block> constructorForDataGeneration, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {

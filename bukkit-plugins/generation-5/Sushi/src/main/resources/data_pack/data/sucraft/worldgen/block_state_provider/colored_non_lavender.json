@@ -8,11 +8,18 @@
   "seed": 9001,
   "slow_noise": {
     "base_amplitude": 0.955388882960065,
-    "base_octave": -9
+    "base_octave": -10
   },
   "slow_scale": 1.0,
   "states": [
     "minecraft:allium",
+    "minecraft:pink_tulip",
+    "minecraft:white_tulip",
+    "minecraft:allium",
+    "minecraft:pink_tulip",
+    "minecraft:white_tulip",
+    "minecraft:allium",
+    "minecraft:pink_tulip",
     "minecraft:white_tulip"
   ],
   "variety": [

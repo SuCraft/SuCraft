@@ -4,6 +4,7 @@ public interface BlockStateMappingMacroTypes {
 
     BlockStateMappingMacroType BARREL = null;
     BlockStateMappingMacroType BUTTON = null;
+    BlockStateMappingMacroType DOOR = null;
     BlockStateMappingMacroType FENCE = null;
     BlockStateMappingMacroType FENCE_GATE = null;
     BlockStateMappingMacroType FULL_BLOCK = null;
@@ -14,6 +15,7 @@ public interface BlockStateMappingMacroTypes {
     BlockStateMappingMacroType SLAB = null;
     BlockStateMappingMacroType STAIRS = null;
     BlockStateMappingMacroType SUGAR_CANE = null;
+    BlockStateMappingMacroType TRAPDOOR = null;
     BlockStateMappingMacroType WALL = null;
 
 }

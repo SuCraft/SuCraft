@@ -56,6 +56,11 @@ public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
+    public LootTable.Builder createDoorTable(final Block block) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void otherWhenSilkTouch(Block block, Block other) {
         throw new UnsupportedOperationException();
     }

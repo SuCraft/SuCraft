@@ -1,10 +1,16 @@
 The following files (referenced relative to the parent folder of the folder this file is in)
 were specifically made for SuCraft:
+* `assets/sucraft/textures/block/frost_door_bottom.png`
+* `assets/sucraft/textures/block/frost_door_top.png`
 * `assets/sucraft/textures/block/frost_leaves.png`
 * `assets/sucraft/textures/block/frost_log.png`
 * `assets/sucraft/textures/block/frost_log_top.png`
 * `assets/sucraft/textures/block/frost_sapling.png`
+* `assets/sucraft/textures/block/frost_trapdoor.png`
 * `assets/sucraft/textures/block/soul_sandstone_bricks.png`
+* `assets/sucraft/textures/block/stripped_frost_log.png`
+* `assets/sucraft/textures/block/stripped_frost_log_top.png`
+* `assets/sucraft/textures/item/frost_door.png`
 
 These files are provided under an `Attribution-NonCommercial-ShareAlike 4.0 International` license, which is included below.
 

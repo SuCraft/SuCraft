@@ -688,7 +688,9 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                                     Triple("poplar", false, true),
                                     Triple("spruce", false, true),
                                     Triple("warped", true, true),
-                                    Triple("frost", false, false)
+                                    Triple("azalea", false, false),
+                                    Triple("frost", false, false),
+                                    Triple("maple", false, false)
                                 ).forEach { (woodType, nether, vanilla) ->
                                     listOf(false, true).forEach { wood ->
                                         listOfNotNull(
@@ -973,6 +975,9 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                         getAsJsonObject("foliage_provider").apply {
                             addProperty("id", "sucraft:${color}_maple_leaves")
                         }
+                        getAsJsonObject("trunk_provider").apply {
+                            addProperty("id", "sucraft:maple_log")
+                        }
                     },
                     includedVanillaJSONObjectFileMutated(
                         "minecraft/worldgen/placed_feature/fancy_oak_bees_0002_leaf_litter.json",
@@ -1104,6 +1109,10 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                         })
                         addProperty("then_run", "sucraft:overworld/biome_surface/orange_forest")
                     })
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/feature/azalea_tree.json") {
+                getAsJsonObject("trunk_provider").apply {
+                    addProperty("id", "sucraft:azalea_log")
                 }
             } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/density_function/overworld/preliminary_surface_level.json") {
                 getAsJsonObject("density").getAsJsonObject("left").apply {

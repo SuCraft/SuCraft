@@ -43,6 +43,7 @@ import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import org.jspecify.annotations.Nullable;
 import org.sucraft.sushi.gamecontent.block.OldReplacedBlocks;
+import org.sucraft.sushi.gamecontent.block.SuCraftBlocks;
 import org.sucraft.sushi.main.SushiPlugin;
 import spout.gamecontent.builtin.recipe.MissingTransitiveStonecuttingRecipeAdder;
 import java.io.IOException;
@@ -94,10 +95,15 @@ public final class AutomaticRecipeAdder {
         // Items.NETHERITE_BLOCK, // Netherite ingot is not a block
         // Items.NETHER_BRICKS, // Nether brick is not a block
         Items.NETHER_WART_BLOCK,
+        // Items.RAW_COPPER_BLOCK, // Raw copper is not a block
+        // Items.RAW_GOLD_BLOCK, // Raw gold is not a block
+        // Items.RAW_IRON_BLOCK, // Raw iron is not a block
         Items.REDSTONE_BLOCK,
         // Items.RESIN_BLOCK, // Resin is not a block
         // Items.SLIME_BLOCK, // Slimeball is not a block
         Items.SNOW_BLOCK
+        // SuCraftBlocks.CHARCOAL_BLOCK.fullBlockItemNMS() // Charcoal is not a block
+        // SuCraftBlocks.GUNPOWDER_BLOCK.fullBlockItemNMS() // Gunpowder is not a block
     ).collect(Collectors.toSet());
 
     public static final Set<Item> UNPACKABLE_BLOCK_OR_ITEM_STORAGE_BLOCKS = Stream.of(
@@ -115,10 +121,15 @@ public final class AutomaticRecipeAdder {
         Items.LAPIS_BLOCK,
         Items.NETHERITE_BLOCK,
         Items.NETHER_BRICKS, // Not in vanilla, but unpacking is added by SuCraft
+        Items.RAW_COPPER_BLOCK,
+        Items.RAW_GOLD_BLOCK,
+        Items.RAW_IRON_BLOCK,
         Items.REDSTONE_BLOCK,
         Items.RESIN_BLOCK,
         Items.SLIME_BLOCK,
-        Items.SNOW_BLOCK // Not in vanilla, but unpacking is added by SuCraft
+        Items.SNOW_BLOCK, // Not in vanilla, but unpacking is added by SuCraft
+        SuCraftBlocks.CHARCOAL_BLOCK.fullBlockItemNMS(),
+        SuCraftBlocks.GUNPOWDER_BLOCK.fullBlockItemNMS()
     ).collect(Collectors.toSet());
 
     private AutomaticRecipeAdder() {

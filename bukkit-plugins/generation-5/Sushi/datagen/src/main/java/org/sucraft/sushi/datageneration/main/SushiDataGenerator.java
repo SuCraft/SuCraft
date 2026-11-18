@@ -17,10 +17,13 @@ import org.sucraft.sushi.datageneration.flora.Coral;
 import org.sucraft.sushi.datageneration.flora.Flowers;
 import org.sucraft.sushi.datageneration.glass.Glass;
 import org.sucraft.sushi.datageneration.ice.Ice;
+import org.sucraft.sushi.datageneration.mineral.Coal;
 import org.sucraft.sushi.datageneration.mineral.Copper;
 import org.sucraft.sushi.datageneration.mineral.Flint;
+import org.sucraft.sushi.datageneration.mineral.Gunpowder;
 import org.sucraft.sushi.datageneration.mineral.UnpackingStorageBlocks;
 import org.sucraft.sushi.datageneration.mineral.iron.Minecarts;
+import org.sucraft.sushi.datageneration.organic.Bone;
 import org.sucraft.sushi.datageneration.organic.hide.Bundles;
 import org.sucraft.sushi.datageneration.organic.shulker.ShulkerBoxes;
 import org.sucraft.sushi.datageneration.organic.wax.Candles;
@@ -86,16 +89,23 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         // Ice
         Ice.add(factories);
 
+        // Mineral / Coal
+        Coal.add(factories);
+
         // Mineral / Copper
         Copper.add(factories);
 
         // Mineral / Flint
         Flint.add(factories);
 
+        // Mineral / Gunpowder
+        Gunpowder.add(factories);
+
         // Mineral / Iron
         Minecarts.add(factories);
 
         // Organic
+        Bone.add(factories);
         Bundles.add(factories);
         Candles.add(factories);
         ShulkerBoxes.add(factories);

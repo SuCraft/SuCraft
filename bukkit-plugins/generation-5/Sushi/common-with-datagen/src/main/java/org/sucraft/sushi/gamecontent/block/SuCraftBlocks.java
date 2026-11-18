@@ -114,6 +114,28 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE).pressurePlateFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
             .build();
 
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate CHARCOAL_BLOCK =
+        BlockSet.builder("charcoal_block").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.COAL_BLOCK).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_REGULAR)
+            .slab().slabFallback(Blocks.BLACKSTONE_SLAB).slabFinalizer(SuCraftBlockType::flammableLikeLog).slabFinalizer(type -> type.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_COAL_SLABS))
+            .stairs().stairsFallback(Blocks.BLACKSTONE_STAIRS).stairsFinalizer(SuCraftBlockType::flammableLikeLog).stairsFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .stoneWall().wallFallback(Blocks.BLACKSTONE_WALL).wallFinalizer(SuCraftBlockType::flammableLikeLog).wallFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.POLISHED_BLACKSTONE_BUTTON).buttonFinalizer(type -> type.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_COAL_ITEMS_EXTRA_SMALL))
+            .stonePressurePlate().pressurePlateFallback(Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE).pressurePlateFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
+            .build();
+
+    // Mineral - Copper
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate RAW_COPPER_BLOCK =
+        BlockSet.builder("raw_copper_block").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.RAW_COPPER_BLOCK)
+            .slab().slabFallback(Blocks.CUT_COPPER_SLAB.waxed().exposed())
+            .stairs().stairsFallback(Blocks.CUT_COPPER_STAIRS.waxed().exposed())
+            .stoneWall().wallFallback(Blocks.RED_SANDSTONE_WALL)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.ACACIA_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
+            .build();
+
     // Mineral / Flint
 
     private static void finalizeFlintBlockProperties(BlockBehaviour.Properties properties) {
@@ -166,6 +188,83 @@ public final class SuCraftBlocks {
             null
         );
     }
+
+    // Mineral - Gold
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate RAW_GOLD_BLOCK =
+        BlockSet.builder("raw_gold_block").mineableWithPickaxe().tag(BlockTags.GUARDED_BY_PIGLINS).itemTag(ItemTags.PIGLIN_LOVED)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.RAW_GOLD_BLOCK)
+            .slab().slabFallback(Blocks.SULFUR_SLAB)
+            .stairs().stairsFallback(Blocks.SULFUR_STAIRS)
+            .stoneWall().wallFallback(Blocks.SULFUR_WALL)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.OAK_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.OAK_PRESSURE_PLATE)
+            .build();
+
+    // Mineral - Gunpowder
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate GUNPOWDER_BLOCK =
+        BlockSet.builder("gunpowder_block").mineableWithShovel()
+            .fullBlock().vanilla(Blocks.CONCRETE_POWDER.lightGray())
+            .slab().slabFallback(Blocks.ANDESITE_SLAB)
+            .stairs().stairsFallback(Blocks.ANDESITE_STAIRS)
+            .wall().wallFallback(Blocks.ANDESITE_WALL)
+            .button().blockSetType(BlockSetType.STONE).buttonFallback(Blocks.STONE_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.STONE_PRESSURE_PLATE)
+            .build();
+
+    // Mineral - Iron
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate RAW_IRON_BLOCK =
+        BlockSet.builder("raw_iron_block").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.RAW_IRON_BLOCK)
+            .slab().slabFallback(Blocks.GRANITE_SLAB)
+            .stairs().stairsFallback(Blocks.GRANITE_STAIRS)
+            .stoneWall().wallFallback(Blocks.GRANITE_WALL)
+            .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.JUNGLE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE)
+            .build();
+
+    // Mineral - Netherite
+
+    public static final BlockSet.WithSlabAndStairs ANCIENT_DEBRIS =
+        BlockSet.builder("ancient_debris").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.ANCIENT_DEBRIS)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(Blocks.ANCIENT_DEBRIS, "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.ANCIENT_DEBRIS, "_side"));
+            }))
+            .shapeIdentifierSuffixFunction(suffix -> "s" + suffix)
+            .slab().slabFallback(Blocks.NETHER_BRICK_SLAB)
+            .stairs().stairsFallback(Blocks.NETHER_BRICK_STAIRS)
+            // .stoneWall().wallFallback(Blocks.NETHER_BRICK_WALL)
+            // .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.MANGROVE_BUTTON)
+            // .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
+            .build();
+
+    // Organic - Bone
+
+    public static final BlockSet.WithSlabAndStairs BONE_BLOCK =
+        BlockSet.builder("bone_block").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.BONE_BLOCK)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(Blocks.BONE_BLOCK, "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.BONE_BLOCK, "_side"));
+            }))
+            .slab().slabFallback(Blocks.SMOOTH_QUARTZ_SLAB)
+            .stairs().stairsFallback(Blocks.SMOOTH_QUARTZ_STAIRS)
+            .build();
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs WITHER_BONE_BLOCK =
+        BlockSet.builder("wither_bone_block").mineableWithPickaxe()
+            .fullBlock().vanilla(Blocks.BONE_BLOCK).fallback(Blocks.CONCRETE.gray()).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_REGULAR)
+            .fullBlockBlockBuild(builder -> builder.factoryNMS(RotatedPillarBlock::new))
+            .fullBlockConstructorForDataGeneration(RotatedPillarBlock::new)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block))
+            .fullBlockModelCustomGenerator(PlatformDependent.BlockModelGenerators::createColumnGenerator)
+            .slab().slabFallback(Blocks.CONCRETE_SLAB.gray())
+            .stairs().stairsFallback(Blocks.CONCRETE_STAIRS.gray())
+            .build();
 
     // Soil / Clay
 
@@ -278,6 +377,18 @@ public final class SuCraftBlocks {
         .fullBlock(Blocks.MUD_BRICKS)
         .mineableWithPickaxe()
         .dataGenerateItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+
+    // Soil - Netherrack
+
+    public static final BlockSet.WithSlabAndStairs NETHERRACK =
+        BlockSet.builder("netherrack").mineableWithPickaxe().nonVolatileShapeTag(BlockTags.SUPPORTS_WITHER_ROSE).nonVolatileShapeTag(BlockTags.INFINIBURN_OVERWORLD)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.NETHERRACK)
+            .slab().slabFallback(Blocks.RED_NETHER_BRICK_SLAB)
+            .stairs().stairsFallback(Blocks.RED_NETHER_BRICK_STAIRS)
+            .stoneWall().wallFallback(Blocks.RED_NETHER_BRICK_WALL)
+            .stoneButton(BlockSetType.POLISHED_BLACKSTONE).buttonFallback(Blocks.MANGROVE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
+            .build();
 
     // Soil - Red sand
 
@@ -400,6 +511,19 @@ public final class SuCraftBlocks {
             .build();
 
     // Soil - Soul
+
+    public static final BlockSet.WithSlabAndStairs SOUL_SOIL =
+        BlockSet.builder("soul_soil").mineableWithShovel().nonVolatileShapeTag(BlockTags.SUPPORTS_WITHER_ROSE).nonVolatileShapeTag(BlockTags.INFINIBURN_OVERWORLD)
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.NETHERRACK)
+            .nonVolatileShapeTag(BlockItemTags.SOUL_FIRE_BASE_BLOCKS).nonVolatileShapeTag(BlockTags.SOUL_SPEED_BLOCKS)
+            .nonVolatileShapeTag(BlockTags.SUPPORTS_NETHER_SPROUTS).nonVolatileShapeTag(BlockTags.SUPPORTS_WARPED_FUNGUS).nonVolatileShapeTag(BlockTags.SUPPORTS_WARPED_ROOTS).nonVolatileShapeTag(BlockTags.SUPPORTS_WITHER_ROSE)
+            .nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DRIED_GHAST_BLOCK_SOUNDS)
+            .slab().slabFallback(Blocks.DARK_OAK_SLAB)
+            .stairs().stairsFallback(Blocks.DARK_OAK_STAIRS)
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL)
+            .button().blockSetType(BlockSetType.POLISHED_BLACKSTONE).buttonFallback(Blocks.DARK_OAK_BUTTON)
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE)
+            .build();
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWall SOUL_SANDSTONE =
         BlockSet.builder("soul_sandstone").mineableWithPickaxe()
@@ -560,6 +684,40 @@ public final class SuCraftBlocks {
         Blocks.POLISHED_ANDESITE_SLAB,
         Blocks.POLISHED_ANDESITE_STAIRS
     );
+
+    // Stone - Basalt
+
+    public static final BlockSet.WithSlabAndStairs BASALT =
+        BlockSet.builder("basalt").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.BASALT)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(Blocks.BASALT, "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.BASALT, "_side"));
+            }))
+            .slab().slabFallback(Blocks.COBBLED_DEEPSLATE_SLAB)
+            .stairs().stairsFallback(Blocks.COBBLED_DEEPSLATE_STAIRS)
+            .build();
+
+    public static final BlockSet.WithSlabAndStairs POLISHED_BASALT =
+        BlockSet.builder("polished_basalt").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.POLISHED_BASALT)
+            .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
+                mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(Blocks.POLISHED_BASALT, "_top"));
+                mappings.put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.POLISHED_BASALT, "_side"));
+            }))
+            .slab().slabFallback(Blocks.STONE_SLAB)
+            .stairs().stairsFallback(Blocks.STONE_STAIRS)
+            .build();
+
+    public static final BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate SMOOTH_BASALT =
+        BlockSet.builder("smooth_basalt").mineableWithPickaxe()
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_BASALT)
+            .slab().slabFallback(Blocks.BLACKSTONE_SLAB)
+            .stairs().stairsFallback(Blocks.BLACKSTONE_STAIRS)
+            .stoneWall().wallFallback(Blocks.BLACKSTONE_WALL)
+            .stoneButton(BlockSetType.POLISHED_BLACKSTONE).buttonFallback(Blocks.POLISHED_BLACKSTONE_BUTTON)
+            .stonePressurePlate().pressurePlateFallback(Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE)
+            .build();
 
     // Stone / Blackstone
 

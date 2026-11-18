@@ -2,10 +2,12 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/black_planks.png`
 * `assets/sucraft/textures/block/blue_planks.png`
 * `assets/sucraft/textures/block/brown_planks.png`
+* `assets/sucraft/textures/block/charcoal_block.png`
 * `assets/sucraft/textures/block/chiseled_prismarine_bricks.png`
 * `assets/sucraft/textures/block/cyan_planks.png`
 * `assets/sucraft/textures/block/gray_planks.png`
 * `assets/sucraft/textures/block/green_planks.png`
+* `assets/sucraft/textures/block/gunpowder_block.png`
 * `assets/sucraft/textures/block/light_blue_planks.png`
 * `assets/sucraft/textures/block/light_gray_planks.png`
 * `assets/sucraft/textures/block/lime_planks.png`

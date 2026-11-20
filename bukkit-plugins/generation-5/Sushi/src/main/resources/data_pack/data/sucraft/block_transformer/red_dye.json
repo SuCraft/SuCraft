@@ -1,0 +1,22 @@
+[
+  {
+    "block_state_provider": {
+      "type": "minecraft:rule_based",
+      "rules": [
+        {
+          "if_true": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:soul_fire"
+          },
+          "then": {
+            "type": "minecraft:copy_properties",
+            "source": {
+              "id": "minecraft:fire"
+            }
+          }
+        }
+      ]
+    },
+    "sound": "entity.blaze.burn"
+  }
+]

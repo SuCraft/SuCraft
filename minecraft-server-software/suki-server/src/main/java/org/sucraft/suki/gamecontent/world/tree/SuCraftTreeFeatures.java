@@ -19,6 +19,8 @@ public final class SuCraftTreeFeatures {
     public static final ResourceKey<Feature> FANCY_YELLOW_MAPLE = createKey("fancy_yellow_maple");
     public static final ResourceKey<Feature> FANCY_ORANGE_MAPLE = createKey("fancy_orange_maple");
     public static final ResourceKey<Feature> FANCY_RED_MAPLE = createKey("fancy_red_maple");
+    public static final ResourceKey<Feature> SWAMP_WOOD_SWAMP_TREE = createKey("swamp_wood_swamp_tree");
+    public static final ResourceKey<Feature> WEEPING_SWAMP_TREE = createKey("weeping_swamp_tree");
 
     private static ResourceKey<Feature> createKey(String path) {
         return ResourceKey.create(Registries.FEATURE, Identifier.fromNamespaceAndPath("sucraft", path));

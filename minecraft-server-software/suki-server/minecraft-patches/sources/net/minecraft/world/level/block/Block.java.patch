@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/level/block/Block.java
++++ b/net/minecraft/world/level/block/Block.java
+@@ -762,6 +_,12 @@
+     }
+     // CraftBukkit end
+ 
++    // Suki start - Allow some blocks to survive on top of water
++    public boolean suki$maySurviveBecauseOfWater(BlockState below) {
++        return this.builtInRegistryHolder().is(org.sucraft.suki.gamecontent.block.tag.SukiBlockTags.MAY_PLACE_ON_WATER) && below.getFluidState().is(net.minecraft.tags.FluidTags.WATER);
++    }
++    // Suki end - Allow some blocks to survive on top of water
++
+     private record ShapePairKey(VoxelShape first, VoxelShape second) {
+         @Override
+         public boolean equals(final Object o) {

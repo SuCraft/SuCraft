@@ -29,7 +29,8 @@ public final class Bookshelves {
             Pair.of(SuCraftBlocks.SPRUCE_BOOKSHELF.fullBlockItemNMS(), Items.SPRUCE_PLANKS),
             Pair.of(SuCraftBlocks.WARPED_BOOKSHELF.fullBlockItemNMS(), Items.WARPED_PLANKS),
             Pair.of(SuCraftBlocks.AZALEA_BOOKSHELF.fullBlockItemNMS(), SuCraftBlocks.AZALEA_PLANKS.fullBlockItemNMS()),
-            Pair.of(SuCraftBlocks.MAPLE_BOOKSHELF.fullBlockItemNMS(), SuCraftBlocks.MAPLE_PLANKS.fullBlockItemNMS())
+            Pair.of(SuCraftBlocks.MAPLE_BOOKSHELF.fullBlockItemNMS(), SuCraftBlocks.MAPLE_PLANKS.fullBlockItemNMS()),
+            Pair.of(SuCraftBlocks.SWAMP_BOOKSHELF.fullBlockItemNMS(), SuCraftBlocks.SWAMP_PLANKS.fullBlockItemNMS())
         ).forEach(pair -> {
             Item bookshelf = pair.left();
             Item planks = pair.right();

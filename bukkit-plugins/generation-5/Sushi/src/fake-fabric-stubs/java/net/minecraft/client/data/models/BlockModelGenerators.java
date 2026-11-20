@@ -1,6 +1,7 @@
 package net.minecraft.client.data.models;
 
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -42,5 +43,9 @@ public abstract class BlockModelGenerators {
     public abstract void createDoor(final Block door);
 
     public abstract void createTrapdoor(final Block trapdoor);
+
+    public static MultiVariantGenerator createSimpleBlock(final Block block, final MultiVariant variant) {
+        throw new UnsupportedOperationException();
+    }
 
 }

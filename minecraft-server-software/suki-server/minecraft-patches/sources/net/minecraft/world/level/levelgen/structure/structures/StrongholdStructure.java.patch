@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
 +++ b/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
-@@ -9,26 +_,112 @@
+@@ -9,26 +_,113 @@
  import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
  
  public class StrongholdStructure extends Structure {
@@ -30,9 +30,10 @@
 -        return Optional.of(new Structure.GenerationStub(context.chunkPos().getWorldPosition(), builder -> generatePieces(builder, context)));
 +        // Suki start - Custom strongholds - Surface strongholds
 +        return Optional.of(new Structure.GenerationStub(context.chunkPos().getWorldPosition(), builder -> {
-+            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setSurface(this.isSurface);
++            boolean surface = this.isSurface;
++            if (surface) org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setSurface();
 +            generatePieces(builder, context);
-+            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetSurface();
++            if (surface) org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.unsetSurface();
 +        }));
 +        // Suki end - Custom strongholds - Surface strongholds
      }

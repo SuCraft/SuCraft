@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:weighted_random_selector",
+  "features": [
+    {
+      "data": "sucraft:super_birch_bees_004",
+      "weight": 50
+    },
+    {
+      "data": "sucraft:fancy_oak_bees_004",
+      "weight": 200
+    }
+  ]
+}

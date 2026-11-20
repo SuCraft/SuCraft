@@ -38,7 +38,9 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TallFlowerBlock;
-import net.minecraft.world.level.block.TrapDoorBlock;import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
+import net.minecraft.world.level.block.TintedParticleLeavesBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
@@ -66,6 +68,7 @@ import org.sucraft.sushi.gamecontent.item.SuCraftItemType;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.blockstate.BlockStateMapping;
 import spout.api.clientview.packetmapping.blockstate.macro.registry.BlockStateMappingMacroRegistryEntryBuilderNMS;
+import spout.api.clientview.packetmapping.blockstate.registry.BlockStateMappingRegistryEntryNMS;
 import spout.api.gamecontent.datadriven.block.registry.BlockTypeRegistryEntryBuilderNMS;
 import spout.clientview.packetmapping.blockstate.macro.BlockStateMappingMacro;
 import spout.clientview.packetmapping.blockstate.macro.FromToBlockMacro;
@@ -96,7 +99,8 @@ public final class SuCraftBlockType implements ItemLike {
     public final boolean definedByCode;
     private List<Consumer<BlockTypeRegistryEntryBuilderNMS>> blockBuilding = new ArrayList<>();
     public @Nullable BiConsumer<SuCraftBlockType, Block> postConstruction;
-    private List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>();
+    public List<Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS>> blockStateMappingMacroBuilding = new ArrayList<>(1);
+    public List<Consumer<BlockStateMappingRegistryEntryNMS.Builder>> blockStateMappingBuilding = new ArrayList<>(0);
     private @Nullable Function<BlockBehaviour.Properties, Block> constructorForDataGeneration = Block::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
     private @Nullable Consumer<Models.CollectedFactory> dataGeneratingModel;
@@ -425,6 +429,10 @@ public final class SuCraftBlockType implements ItemLike {
         return this.flammable(30, 20);
     }
 
+    public SuCraftBlockType flammableLikeFlower() {
+        return this.flammable(60, 100);
+    }
+
     public SuCraftBlockType flammableLikeLeaves() {
         return this.flammable(30, 60);
     }
@@ -459,6 +467,14 @@ public final class SuCraftBlockType implements ItemLike {
         }
         this.blockStateMappingMacroBuilding.forEach(it -> it.accept(builder));
         this.blockStateMappingMacroBuilding = null;
+    }
+
+    public void applyToBlockStateMappingBuilder(BlockStateMappingRegistryEntryNMS.Builder builder) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        this.blockStateMappingBuilding.forEach(it -> it.accept(builder));
+        this.blockStateMappingBuilding = null;
     }
 
     public SuCraftBlockType blockStateMappingMacroBuild(Consumer<BlockStateMappingMacroRegistryEntryBuilderNMS> builderConsumer) {
@@ -521,6 +537,18 @@ public final class SuCraftBlockType implements ItemLike {
             fallback,
             fullBlockFallbackBlockState
         ));
+    }
+
+    public SuCraftBlockType blockStateMappingBuild(Consumer<BlockStateMappingRegistryEntryNMS.Builder> builderConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        this.blockStateMappingBuilding.add(builderConsumer);
+        return this;
+    }
+
+    public SuCraftBlockType blockStateMappingBuild(BiConsumer<Block, BlockStateMappingRegistryEntryNMS.Builder> builderConsumer) {
+        return this.blockStateMappingBuild(builder -> builderConsumer.accept(this.getNMS(), builder));
     }
 
     public SuCraftBlockType constructorForDataGeneration(Function<BlockBehaviour.Properties, Block> constructor) {
@@ -595,6 +623,10 @@ public final class SuCraftBlockType implements ItemLike {
         return this;
     }
 
+    public SuCraftBlockType dataGenerateBlockLootTable(BiConsumer<Block, BlockLootTables.CollectedFactory> consumer) {
+        return this.dataGenerateBlockLootTable(factory -> consumer.accept(this.getNMS(), factory));
+    }
+
     public SuCraftBlockType dataGenerateBlockLootTableForDropSelf() {
         return this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.dropSelf(this.getNMS())));
     }
@@ -623,6 +655,10 @@ public final class SuCraftBlockType implements ItemLike {
         return this;
     }
 
+    public SuCraftBlockType dataGenerateTag(TagKey<Block> tag) {
+        return this.dataGenerateTag(new TagKey[]{tag});
+    }
+
     public SuCraftBlockType dataGenerateTag(TagKey<Block>... tags) {
         if (!this.definedByCode) {
             throw new IllegalStateException();
@@ -636,6 +672,10 @@ public final class SuCraftBlockType implements ItemLike {
             }
         }
         return this;
+    }
+
+    public SuCraftBlockType dataGenerateItemTag(TagKey<Item> tag) {
+        return this.dataGenerateItemTag(new TagKey[]{tag});
     }
 
     public SuCraftBlockType dataGenerateItemTag(TagKey<Item>... tags) {
@@ -952,6 +992,7 @@ public final class SuCraftBlockType implements ItemLike {
         this.dataGenerateTag(BlockTags.BEE_ATTRACTIVE);
         this.dataGenerateTag(BlockTags.WASHED_AWAY_BY_FLUIDS);
         this.dataGenerateItemTag(ItemTags.BEE_FOOD);
+        this.flammableLikeFlower();
         this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
         return this;
     }
@@ -989,6 +1030,7 @@ public final class SuCraftBlockType implements ItemLike {
         this.dataGenerateTag(BlockTags.BEE_ATTRACTIVE);
         this.dataGenerateTag(BlockTags.WASHED_AWAY_BY_FLUIDS);
         this.dataGenerateItemTag(ItemTags.BEE_FOOD);
+        this.flammableLikeFlower();
         this.compostable(ContextIntProviders.COMPOSTABLE_LOW);
         return this;
     }
@@ -1022,7 +1064,7 @@ public final class SuCraftBlockType implements ItemLike {
         return this.woodenLadder(planks, true);
     }
 
-    public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, Block> constructorForDataGeneration, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+    public SuCraftBlockType leaves(Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, Block> constructorForDataGeneration, @Nullable Integer tintColor, Block propertiesFrom, Block fallback, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
         this.blockBuild(builder -> builder.factoryNMS(constructor));
         this.propertiesFull(propertiesFrom);
         this.properties(properties -> {
@@ -1031,7 +1073,13 @@ public final class SuCraftBlockType implements ItemLike {
         });
         this.leavesMacro(fallback);
         this.constructorForDataGeneration(constructorForDataGeneration);
-        this.dataGenerateModel(factory -> factory.addBlockTrivialCube(this.getNMS()));
+        this.dataGenerateModel(factory -> {
+            if (tintColor == null) {
+                factory.addBlockLeaves(this.getNMS());
+            } else {
+                factory.addBlockTintedLeaves(this.getNMS(), tintColor);
+            }
+        });
         this.dataGenerateBlockLootTable(factory -> factory.add(provider -> provider.add(this.getNMS(), block -> provider.createLeavesDrops(block, sapling.get(), saplingChances != null ? saplingChances : FabricBlockLootSubProvider.NORMAL_LEAVES_SAPLING_CHANCES))));
         this.dataGenerateTag(BlockItemTags.LEAVES);
         this.flammableLikeLeaves();
@@ -1040,7 +1088,11 @@ public final class SuCraftBlockType implements ItemLike {
     }
 
     public SuCraftBlockType untintedLeaves(@Nullable Block propertiesFrom, Block fallback, @Nullable Float leafParticleChance, ParticleOptions leafParticle, @Nullable Supplier<AmbientLeavesBlockSoundPlayer> ambientLeavesBlockSoundPlayer, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
-        return this.leaves(properties -> new UntintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, leafParticle, ambientLeavesBlockSoundPlayer != null ? ambientLeavesBlockSoundPlayer.get() : AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), properties -> new UntintedParticleLeavesBlock(0, null, AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
+        return this.leaves(properties -> new UntintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, leafParticle, ambientLeavesBlockSoundPlayer != null ? ambientLeavesBlockSoundPlayer.get() : AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), properties -> new UntintedParticleLeavesBlock(0, null, AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), null, propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
+    }
+
+    public SuCraftBlockType tintedLeaves(int tintColor, @Nullable Block propertiesFrom, Block fallback, @Nullable Float leafParticleChance, MapColor mapColor, @Nullable SoundType soundType, Supplier<Block> sapling, float @Nullable [] saplingChances) {
+        return this.leaves(properties -> new TintedParticleLeavesBlock(leafParticleChance != null ? leafParticleChance : 0.01f, properties), properties -> new UntintedParticleLeavesBlock(0, null, AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties), tintColor, propertiesFrom != null ? propertiesFrom : Blocks.CHERRY_LEAVES, fallback, mapColor, soundType, sapling, saplingChances);
     }
 
     public SuCraftBlockType sapling(@Nullable BiFunction<TreeGrower, BlockBehaviour.Properties, Block> constructor, Supplier<TreeGrower> treeGrower, Block fallback, boolean fuel) {

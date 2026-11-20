@@ -15,12 +15,13 @@ public final class CustomBlockStateMappingMacroAdder {
     public static void register(BootstrapContext context) {
         context.getLifecycleManager().registerEventHandler(SpoutRegistryEvents.BLOCK_STATE_MAPPING_MACRO.compose(), event -> {
             Arrays.stream(SuCraftBlocks.types()).forEach(block -> {
-                event.registry().register(block.mappingMacroRegistryKey(), builder -> {
-                    block.applyToBlockStateMappingMacroBuilder((BlockStateMappingMacroRegistryEntryBuilderNMS) builder);
-                });
+                if (block.blockStateMappingMacroBuilding != null && !block.blockStateMappingMacroBuilding.isEmpty()) {
+                    event.registry().register(block.mappingMacroRegistryKey(), builder ->
+                        block.applyToBlockStateMappingMacroBuilder((BlockStateMappingMacroRegistryEntryBuilderNMS) builder)
+                    );
+                }
             });
         });
-
     }
 
 }

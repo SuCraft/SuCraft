@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/block/grower/TreeGrower.java
 +++ b/net/minecraft/world/level/block/grower/TreeGrower.java
-@@ -81,6 +_,36 @@
+@@ -81,6 +_,46 @@
          WeightedList.of(),
          TreeFeatures.RED_POPLAR
      );
@@ -32,6 +32,16 @@
 +        WeightedList.of(),
 +        WeightedList.of(),
 +        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.FANCY_RED_MAPLE
++    );
++    public static final TreeGrower SWAMP = new TreeGrower(
++        "swamp",
++        WeightedList.of(
++            new Weighted<>(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.SWAMP_WOOD_SWAMP_TREE, 1),
++            new Weighted<>(org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.WEEPING_SWAMP_TREE, 5)
++        ),
++        WeightedList.of(),
++        WeightedList.of(),
++        org.sucraft.suki.gamecontent.world.tree.SuCraftTreeFeatures.SWAMP_WOOD_SWAMP_TREE
 +    );
 +    // Suki end - Add custom trees
      private final String name;

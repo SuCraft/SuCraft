@@ -1,6 +1,6 @@
 --- a/src/main/java/org/bukkit/TreeType.java
 +++ b/src/main/java/org/bukkit/TreeType.java
-@@ -121,4 +_,10 @@
+@@ -121,4 +_,12 @@
       * Poplar tree with yellow leaves
       */
      YELLOW_POPLAR,
@@ -8,6 +8,8 @@
 +    CHERRY_FROST_TREE,
 +    FANCY_YELLOW_MAPLE,
 +    FANCY_ORANGE_MAPLE,
-+    FANCY_RED_MAPLE
++    FANCY_RED_MAPLE,
++    SWAMP_WOOD_SWAMP_TREE,
++    WEEPING_SWAMP_TREE
 +    // Suki end - Add custom trees
  }

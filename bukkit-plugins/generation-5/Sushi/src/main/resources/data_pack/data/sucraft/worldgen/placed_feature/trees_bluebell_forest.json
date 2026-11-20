@@ -1,0 +1,778 @@
+{
+  "feature": "sucraft:trees_bluebell_forest",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 10,
+        "max_inclusive": 15
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:surface_water_depth_filter",
+      "max_water_depth": 0
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "OCEAN_FLOOR"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:all_of",
+        "predicates": [
+          {
+            "type": "minecraft:matching_block_tag",
+            "tag": "minecraft:air"
+          },
+          {
+            "type": "minecraft:would_survive",
+            "state": "minecraft:oak_sapling"
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:any_of",
+              "predicates": [
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, -1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, -1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, -1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, -1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, -1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 0, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 0, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 0, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 0, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 0, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -2, 1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, -1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, -1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, -1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, -1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, -1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 0, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 0, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 0, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 0, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 0, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    -1, 1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, -1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, -1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, -1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, -1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, -1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 0, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 0, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 0, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 0, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    0, 1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, -1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, -1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, -1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, -1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, -1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 0, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 0, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 0, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 0, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 0, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    1, 1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, -1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, -1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, -1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, -1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, -1, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 0, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 0, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 0, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 0, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 0, 2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 1, -2
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 1, -1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 1, 0
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 1, 1
+                  ]
+                },
+                {
+                  "type": "minecraft:matching_blocks",
+                  "blocks": [
+                    "minecraft:podzol",
+                    "minecraft:dirt_path"
+                  ],
+                  "offset": [
+                    2, 1, 2
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -16,18 +16,22 @@ import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ColoredFallingBlock;
-import net.minecraft.world.level.block.InfestedBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.FrogspawnBlock;
+import net.minecraft.world.level.block.GlowLichenBlock;import net.minecraft.world.level.block.InfestedBlock;
+import net.minecraft.world.level.block.LeafLitterBlock;import net.minecraft.world.level.block.PipeBlock;import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -64,22 +68,14 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public final class SuCraftBlocks {
 
     private SuCraftBlocks() {
         throw new UnsupportedOperationException();
     }
 
-    // Flora / Lavender
-
-    public static final SuCraftBlockType FRINGED_LAVENDER = blockType("fringed_lavender")
-        .flower(Blocks.ALLIUM, true);
-
-    public static final SuCraftBlockType TWISTED_LAVENDER = blockType("twisted_lavender")
-        .flower(Blocks.PINK_TULIP, true);
-
-    public static final SuCraftBlockType TALL_LAVENDER = blockType("tall_lavender")
-        .doubleFlower(Blocks.LILAC);
+    // Flora / Astilbe
 
     public static final SuCraftBlockType SHORT_ASTILBE = blockType("short_astilbe")
         .flower(Blocks.ALLIUM, true);
@@ -95,6 +91,57 @@ public final class SuCraftBlocks {
                 generators.createDoublePlant(block, BlockModelGenerators.PlantType.NOT_TINTED);
             })
         );
+
+    // Flora / Bluebell
+
+    public static final SuCraftBlockType BLUEBELL = blockType("bluebell")
+        .flower(Blocks.BLUE_ORCHID, true);
+
+    // Flora / Duckweed
+
+    public static final SuCraftBlockType DUCKWEED = blockType("duckweed")
+        .blockBuild(builder -> builder.factoryNMS(properties -> new FrogspawnBlock(properties) {
+
+            @Override
+            protected void onPlace(final BlockState state, final Level level, final BlockPos pos, final BlockState oldState, final boolean movedByPiston) {
+            }
+
+            @Override
+            protected void tick(final BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
+            }
+
+        }))
+        .propertiesFull(Blocks.FROGSPAWN)
+        .blockStateMappingBuild((block, builder) -> {
+            builder.setFromNMS(block.defaultBlockState());
+            builder.setToNMS(Blocks.GLOW_LICHEN.defaultBlockState().setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.DOWN), true));
+        })
+        .updateItem(itemType -> {
+            itemType.itemBuild(builder -> builder.factoryForBlockNMS(PlaceOnWaterBlockItem::new));
+            itemType.itemStackMappingBuild((item, builder) -> {
+                builder.setFromNMS(item);
+                builder.setToNMS(Items.GLOW_LICHEN);
+            });
+        })
+        .constructorForDataGeneration(FrogspawnBlock::new)
+        .dataGenerateModel((factory, block) -> {
+            factory.addBlock(generators -> {
+                generators.registerSimpleFlatItemModel(block, "");
+            });
+        })
+        .dataGenerateTag(BlockTags.WASHED_AWAY_BY_FLUIDS)
+        .compostable(ContextIntProviders.COMPOSTABLE_LOW);
+
+    // Flora / Lavender
+
+    public static final SuCraftBlockType FRINGED_LAVENDER = blockType("fringed_lavender")
+        .flower(Blocks.ALLIUM, true);
+
+    public static final SuCraftBlockType TWISTED_LAVENDER = blockType("twisted_lavender")
+        .flower(Blocks.PINK_TULIP, true);
+
+    public static final SuCraftBlockType TALL_LAVENDER = blockType("tall_lavender")
+        .doubleFlower(Blocks.LILAC);
 
     public static final SuCraftBlockType WHITE_FRINGED_LAVENDER = blockType("white_fringed_lavender")
         .flower(Blocks.LILY_OF_THE_VALLEY, true);
@@ -131,7 +178,7 @@ public final class SuCraftBlocks {
 
     public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate CHARCOAL_BLOCK =
         BlockSet.builder("charcoal_block").mineableWithPickaxe()
-            .fullBlock().vanilla(Blocks.COAL_BLOCK).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_REGULAR)
+            .fullBlock().vanilla(Blocks.COAL_BLOCK).fullBlockItemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_REGULAR).fullBlockFinalizer(SuCraftBlockType::flammableLikeLog).fullBlockFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
             .slab().slabFallback(Blocks.BLACKSTONE_SLAB).slabFinalizer(SuCraftBlockType::flammableLikeLog).slabFinalizer(type -> type.cookingFuel(SuCraftContextIntProviders.COOKING_TIME_COAL_SLABS))
             .stairs().stairsFallback(Blocks.BLACKSTONE_STAIRS).stairsFinalizer(SuCraftBlockType::flammableLikeLog).stairsFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
             .stoneWall().wallFallback(Blocks.BLACKSTONE_WALL).wallFinalizer(SuCraftBlockType::flammableLikeLog).wallFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_COAL_BLOCK))
@@ -163,9 +210,9 @@ public final class SuCraftBlocks {
 
     public static final BlockSet.WithFullBlockAndSlabAndStairs FLINT_BLOCK =
         BlockSet.builder("flint_block").mineableWithPickaxe()
-            .fullBlock().vanilla(Blocks.DEEPSLATE_TILES).fullBlockModelProvider(block -> TexturedModel.CUBE_BOTTOM_TOP.get(block).updateTextures(mappings -> {
-                mappings.put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block));
-            }))
+            .fullBlock().vanilla(Blocks.DEEPSLATE_TILES).fullBlockModelProvider(block -> TexturedModel.CUBE_BOTTOM_TOP.get(block).updateTextures(mappings ->
+                mappings.put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block))
+            ))
             .slab()
             .stairs()
             .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
@@ -185,17 +232,17 @@ public final class SuCraftBlocks {
         var definedByCode =
             BlockSet.builder("flint_pillar").mineableWithPickaxe()
                 .fullBlockOnlyForDataGeneration().vanilla(Blocks.POLISHED_BASALT)
-                .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings -> {
-                    mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(block, "_top"));
-                }))
+                .fullBlockModelProvider(block -> TexturedModel.COLUMN.get(block).updateTextures(mappings ->
+                    mappings.put(TextureSlot.END, TextureMapping.getBlockTexture(block, "_top"))
+                ))
                 .slab().slabFallback(Blocks.DEEPSLATE_TILE_SLAB)
                 .stairs().stairsFallback(Blocks.DEEPSLATE_TILE_STAIRS)
                 .propertiesFinalizer(SuCraftBlocks::finalizeFlintBlockProperties)
                 .build();
         FLINT_PILLAR = new BlockSet.IndirectImpl(
             () -> ifInitializingElse(definedByCode.fullBlockType(), blockTypeNotDefinedByCode("flint_pillar")),
-            () -> definedByCode.slabType(),
-            () -> definedByCode.stairsType(),
+            definedByCode::slabType,
+            definedByCode::stairsType,
             null,
             null,
             null,
@@ -405,6 +452,40 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.MANGROVE_PRESSURE_PLATE)
             .build();
 
+    // Soil - Peat
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate PEAT =
+        BlockSet.builder("peat").mineableWithShovel()
+            .nonVolatileShapeTag(BlockTags.SUPPORTS_VEGETATION)
+            .nonVolatileShapeTag(BlockTags.SUPPORTS_BAMBOO)
+            .nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON)
+            .nonVolatileShapeTag(BlockTags.SUPPORTS_SUGAR_CANE)
+            .nonVolatileShapeTag(BlockTags.SUPPORTS_BIG_DRIPLEAF)
+            .fullBlock().vanilla(Blocks.PACKED_MUD).fullBlockFinalizer(SuCraftBlockType::flammableLikeFlower).fullBlockFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)).fullBlockFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM))
+            .propertiesFinalizer(properties -> properties.mapColor(MapColor.PODZOL))
+            .slab().slabFallback(Blocks.MUD_BRICK_SLAB).slabFinalizer(SuCraftBlockType::flammableLikeFlower).slabFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS)).slabFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_LOW))
+            .stairs().stairsFallback(Blocks.MUD_BRICK_STAIRS).stairsFinalizer(SuCraftBlockType::flammableLikeFlower).stairsFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)).stairsFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM))
+            .wall().wallFallback(Blocks.MUD_BRICK_WALL).wallFinalizer(SuCraftBlockType::flammableLikeFlower).wallFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)).wallFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM))
+            .button().blockSetType(BlockSetType.STONE).buttonFallback(Blocks.DARK_OAK_BUTTON).buttonFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL)).buttonFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_LOW))
+            .pressurePlate().pressurePlateFallback(Blocks.DARK_OAK_PRESSURE_PLATE).pressurePlateFinalizer(type -> type.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)).pressurePlateFinalizer(type -> type.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM))
+            .build();
+
+    public static final SuCraftBlockType SMOULDERING_PEAT = blockType("smouldering_peat")
+        .fullBlock(Blocks.PACKED_MUD).mineableWithShovel()
+        .properties(properties -> {
+            properties.lightLevel(_ -> 3);
+            properties.mapColor(MapColor.PODZOL);
+        })
+        .dataGenerateBlockLootTable((block, factory) -> factory.add(provider -> provider.add(block, self -> provider.createSingleItemTableWithSilkTouch(self, PEAT.fullBlockNMS()))))
+        .flammableLikeFlower()
+        .cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS)
+        .compostable(ContextIntProviders.COMPOSTABLE_MEDIUM)
+        .dataGenerateTag(BlockTags.SUPPORTS_VEGETATION)
+        .dataGenerateTag(BlockTags.SUPPORTS_BAMBOO)
+        .dataGenerateTag(BlockTags.AZALEA_GROWS_ON)
+        .dataGenerateTag(BlockTags.SUPPORTS_SUGAR_CANE)
+        .dataGenerateTag(BlockTags.SUPPORTS_BIG_DRIPLEAF);
+
     // Soil - Red sand
 
     public static final BlockSet.WithSlabAndStairs RED_SAND =
@@ -432,9 +513,9 @@ public final class SuCraftBlocks {
 
     public static final BlockSet.WithWallAndButtonAndPressurePlate SMOOTH_RED_SANDSTONE =
         BlockSet.builder("smooth_red_sandstone").mineableWithPickaxe()
-            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_RED_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
-                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.RED_SANDSTONE, "_top"));
-            }))
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_RED_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings ->
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.RED_SANDSTONE, "_top"))
+            ))
             .stoneWall().wallFallback(Blocks.RED_SANDSTONE_WALL)
             .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.ACACIA_BUTTON)
             .stonePressurePlate().pressurePlateFallback(Blocks.ACACIA_PRESSURE_PLATE)
@@ -492,9 +573,9 @@ public final class SuCraftBlocks {
 
     public static final BlockSet.WithWallAndButtonAndPressurePlate SMOOTH_SANDSTONE =
         BlockSet.builder("smooth_sandstone").mineableWithPickaxe()
-            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings -> {
-                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.SANDSTONE, "_top"));
-            }))
+            .fullBlockOnlyForDataGeneration().vanilla(Blocks.SMOOTH_SANDSTONE).fullBlockModelProvider(block -> TexturedModel.CUBE.get(block).updateTextures(mappings ->
+                mappings.put(TextureSlot.WALL, TextureMapping.getBlockTexture(Blocks.SANDSTONE, "_top"))
+            ))
             .stoneWall().wallFallback(Blocks.SANDSTONE_WALL)
             .stoneButton(BlockSetType.STONE).buttonFallback(Blocks.BIRCH_BUTTON)
             .stonePressurePlate().pressurePlateFallback(Blocks.BIRCH_PRESSURE_PLATE)
@@ -877,6 +958,7 @@ public final class SuCraftBlocks {
                 .build()
         );
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private static Block wallFallbackForSmoothDyeColor(DyeColor dyeColor) {
         return switch (dyeColor) {
             case BLACK -> Blocks.BLACKSTONE_WALL;
@@ -898,6 +980,7 @@ public final class SuCraftBlocks {
         };
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private static Block buttonFallbackForSmoothDyeColor(DyeColor dyeColor) {
         return switch (dyeColor) {
             case BLACK -> Blocks.POLISHED_BLACKSTONE_BUTTON;
@@ -919,6 +1002,7 @@ public final class SuCraftBlocks {
         };
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private static Block pressurePlateFallbackForSmoothDyeColor(DyeColor dyeColor) {
         return switch (dyeColor) {
             case BLACK -> Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE;
@@ -1584,6 +1668,7 @@ public final class SuCraftBlocks {
             .stonePressurePlate().pressurePlateFallback(Blocks.JUNGLE_PRESSURE_PLATE).pressurePlateTag(SuCraftBlockItemTags.TERRACOTTA_PRESSURE_PLATES)
             .build();
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     public static final Family.DyeColor<BlockSet.WithSlabAndStairsAndWallAndButtonAndPressurePlate> DYED_TERRACOTTA =
         new Family.DyeColor<>(dyeColor ->
             BlockSet.builder(dyeColor.getSerializedName() + "_terracotta").mineableWithPickaxe().nonVolatileShapeTag(BlockTags.AZALEA_GROWS_ON).nonVolatileShapeTag(BlockTags.SUPPORTS_DRY_VEGETATION).nonVolatileShapeTag(BlockTags.TRIGGERS_AMBIENT_DESERT_DRY_VEGETATION_BLOCK_SOUNDS).nonVolatileShapeTag(SuCraftBlockTags.SUPPORTS_VEGETATION_MANUAL)
@@ -1972,6 +2057,7 @@ public final class SuCraftBlocks {
 
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     public static final DyedPlankFamily<Family.DyeColor<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate>> DYED_PLANKS =
         new DyedPlankFamily<>(abraded ->
             new Family.DyeColor<>(dyeColor ->
@@ -2151,7 +2237,7 @@ public final class SuCraftBlocks {
 
         }, () -> SuCraftTreeGrowers.FROST, Blocks.PALE_OAK_SAPLING, false);
 
-    private static SuCraftBlockType leaves(
+    private static SuCraftBlockType untintedLeaves(
         String path,
         @Nullable Block propertiesFrom,
         Block fallback,
@@ -2175,7 +2261,29 @@ public final class SuCraftBlocks {
         );
     }
 
-    public static final SuCraftBlockType FROST_LEAVES = leaves(
+    private static SuCraftBlockType tintedLeaves(
+        String path,
+        int tintColor,
+        @Nullable Block propertiesFrom,
+        Block fallback,
+        @Nullable Float leafParticleChance,
+        MapColor mapColor,
+        @Nullable SoundType soundType,
+        Supplier<Block> sapling
+    ) {
+        return blockType(path).tintedLeaves(
+            tintColor,
+            propertiesFrom,
+            fallback,
+            leafParticleChance,
+            mapColor,
+            soundType,
+            sapling,
+            null
+        );
+    }
+
+    public static final SuCraftBlockType FROST_LEAVES = untintedLeaves(
         "frost_leaves",
         Blocks.SPRUCE_LEAVES,
         Blocks.PALE_OAK_LEAVES,
@@ -2246,7 +2354,7 @@ public final class SuCraftBlocks {
     public static final SuCraftBlockType RED_MAPLE_SAPLING = blockType("red_maple_sapling")
         .sapling(null, () -> SuCraftTreeGrowers.RED_MAPLE, Blocks.POPLAR_SAPLING, false);
 
-    public static final SuCraftBlockType YELLOW_MAPLE_LEAVES = leaves(
+    public static final SuCraftBlockType YELLOW_MAPLE_LEAVES = untintedLeaves(
         "yellow_maple_leaves",
         Blocks.YELLOW_POPLAR_LEAVES,
         Blocks.YELLOW_POPLAR_LEAVES,
@@ -2258,7 +2366,7 @@ public final class SuCraftBlocks {
         YELLOW_MAPLE_SAPLING::getNMS
     );
 
-    public static final SuCraftBlockType ORANGE_MAPLE_LEAVES = leaves(
+    public static final SuCraftBlockType ORANGE_MAPLE_LEAVES = untintedLeaves(
         "orange_maple_leaves",
         Blocks.ORANGE_POPLAR_LEAVES,
         Blocks.ORANGE_POPLAR_LEAVES,
@@ -2270,7 +2378,7 @@ public final class SuCraftBlocks {
         ORANGE_MAPLE_SAPLING::getNMS
     );
 
-    public static final SuCraftBlockType RED_MAPLE_LEAVES = leaves(
+    public static final SuCraftBlockType RED_MAPLE_LEAVES = untintedLeaves(
         "red_maple_leaves",
         Blocks.RED_POPLAR_LEAVES,
         Blocks.RED_POPLAR_LEAVES,
@@ -2304,6 +2412,77 @@ public final class SuCraftBlocks {
         "maple_bookshelf",
         MAPLE_PLANKS::fullBlockNMS, Blocks.ACACIA_SLAB, Blocks.ACACIA_STAIRS, Blocks.RED_SANDSTONE_WALL
     );
+
+    // Wood / Trees / Swamp
+
+    private static <V extends BlockSet> StrippableFamily<V> swampLogsOrWood(
+        boolean isWood
+    ) {
+        return logsOrWood(
+            isWood,
+            false,
+            "swamp",
+            false,
+            true,
+            null,
+            null,
+            () -> isWood ? Blocks.OAK_WOOD : Blocks.OAK_LOG,
+            () -> Blocks.POPLAR_SLAB,
+            () -> Blocks.POPLAR_STAIRS,
+            () -> Blocks.TUFF_WALL,
+            () -> Blocks.POPLAR_FENCE,
+            () -> Blocks.POPLAR_FENCE_GATE,
+            () -> Blocks.POPLAR_BUTTON,
+            () -> Blocks.POPLAR_PRESSURE_PLATE,
+            WoodType.OAK,
+            null,
+            MapColor.COLOR_LIGHT_GREEN,
+            MapColor.PODZOL
+        );
+    }
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairs> SWAMP_LOG = swampLogsOrWood(false);
+
+    public static final StrippableFamily<BlockSet.WithFullBlockAndSlabAndStairsAndWallAndButtonAndPressurePlate> SWAMP_WOOD = swampLogsOrWood(true);
+
+    public static final SuCraftBlockType SWAMP_SAPLING = blockType("swamp_sapling")
+        .sapling(null, () -> SuCraftTreeGrowers.SWAMP, Blocks.OAK_SAPLING, false);
+
+    public static final SuCraftBlockType SWAMP_LEAVES = tintedLeaves(
+        "swamp_leaves",
+        0x6a7039,
+        null,
+        Blocks.OAK_LEAVES,
+        null,
+        MapColor.PLANT,
+        null,
+        SWAMP_SAPLING::getNMS
+    );
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairsAndWallAndFenceAndFenceGateAndButtonAndPressurePlate SWAMP_PLANKS =
+        BlockSet.builder("swamp_planks").mineableWithAxe()
+            .fullBlock().vanilla(Blocks.POPLAR_PLANKS).fullBlockTag(BlockItemTags.PLANKS)
+            .woodenSlab()
+            .woodenStairs()
+            .woodenWall().wallFallback(Blocks.TUFF_WALL)
+            .woodenFence()
+            .woodenFenceGate()
+            .woodenButton()
+            .woodenPressurePlate()
+            .build();
+
+    public static final SuCraftBlockType SWAMP_DOOR = blockType("swamp_door")
+        .woodenDoor(SWAMP_PLANKS::fullBlockNMS, () -> BlockSetType.OAK, Blocks.POPLAR_DOOR);
+
+    public static final SuCraftBlockType SWAMP_TRAPDOOR = blockType("swamp_trapdoor")
+        .woodenTrapdoor(SWAMP_PLANKS::fullBlockNMS, () -> BlockSetType.OAK, Blocks.POPLAR_TRAPDOOR);
+
+    public static final BlockSet.WithFullBlockAndSlabAndStairs SWAMP_BOOKSHELF = bookshelf(
+        "swamp_bookshelf",
+        SWAMP_PLANKS::fullBlockNMS, Blocks.POPLAR_SLAB, Blocks.POPLAR_STAIRS, Blocks.TUFF_WALL
+    );
+
+    public static final SuCraftBlockType SWAMP_LADDER = woodenLadder("swamp_ladder", SWAMP_PLANKS::fullBlockNMS);
 
     // Wood / Vanilla logs
 
@@ -2413,6 +2592,7 @@ public final class SuCraftBlocks {
                 }
                 return computedOtherMapColor;
             }));
+            //noinspection unchecked
             return (V) builder.build();
         });
     }
@@ -2449,6 +2629,7 @@ public final class SuCraftBlocks {
 
     // Wood / Vanilla plank walls
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private static Block getVanillaPlankWallFallback(WoodType woodType) {
         return switch (woodType.name()) {
             case "acacia" -> Blocks.RED_SANDSTONE_WALL;
@@ -2543,7 +2724,7 @@ public final class SuCraftBlocks {
                 return Stream.of(type);
             } else if (value instanceof BlockSet blockSet) {
                 return typesFromBlockSet(blockSet);
-            } else if (value instanceof Family nested) {
+            } else if (value instanceof Family<?, ?> nested) {
                 return typesFromFamily(nested);
             }
             return Stream.empty();
@@ -2573,7 +2754,7 @@ public final class SuCraftBlocks {
         if (Family.class.isAssignableFrom(field.getType())) {
             field.trySetAccessible();
             try {
-                return typesFromFamily((Family) field.get(null));
+                return typesFromFamily((Family<?, ?>) field.get(null));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

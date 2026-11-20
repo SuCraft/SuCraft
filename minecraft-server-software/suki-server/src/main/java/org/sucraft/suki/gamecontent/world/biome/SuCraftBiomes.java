@@ -15,6 +15,7 @@ public final class SuCraftBiomes {
         throw new UnsupportedOperationException();
     }
 
+    public static final ResourceKey<Biome> BLUEBELL_FOREST = register("bluebell_forest");
     public static final ResourceKey<Biome> FROST_FOREST = register("frost_forest");
     public static final ResourceKey<Biome> LAVENDER_PLAINS = register("lavender_plains");
     public static final ResourceKey<Biome> ORANGE_FOREST = register("orange_forest");

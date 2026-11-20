@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/block/VegetationBlock.java
 +++ b/net/minecraft/world/level/block/VegetationBlock.java
-@@ -17,6 +_,11 @@
+@@ -17,6 +_,16 @@
      }
  
      protected boolean mayPlaceOn(final BlockState state, final BlockGetter level, final BlockPos pos) {
@@ -9,6 +9,11 @@
 +            return true;
 +        }
 +        // Suki end - Allow vegetation to be placed on more blocks, but not by terrain generation
++        // Suki start - Allow some blocks to survive on top of water
++        if (this.suki$maySurviveBecauseOfWater(state)) {
++            return true;
++        }
++        // Suki end - Allow some blocks to survive on top of water
          return state.is(BlockTags.SUPPORTS_VEGETATION);
      }
  

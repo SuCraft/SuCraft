@@ -1,0 +1,12 @@
+--- a/net/minecraft/world/level/levelgen/feature/treedecorators/TreeDecoratorType.java
++++ b/net/minecraft/world/level/levelgen/feature/treedecorators/TreeDecoratorType.java
+@@ -16,6 +_,9 @@
+     public static final TreeDecoratorType<AttachedToLeavesDecorator> ATTACHED_TO_LEAVES = register("attached_to_leaves", AttachedToLeavesDecorator.CODEC);
+     public static final TreeDecoratorType<PlaceOnGroundDecorator> PLACE_ON_GROUND = register("place_on_ground", PlaceOnGroundDecorator.CODEC);
+     public static final TreeDecoratorType<AttachedToLogsDecorator> ATTACHED_TO_LOGS = register("attached_to_logs", AttachedToLogsDecorator.CODEC);
++    // Suki start - Custom tree decorator types
++    public static final TreeDecoratorType<com.teamabnormals.environmental.common.levelgen.treedecorators.HangingWillowDecorator> HANGING_WILLOW_LEAVES = Registry.register(BuiltInRegistries.TREE_DECORATOR_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("environmental", "hanging_willow_leaves"), new TreeDecoratorType<>(com.teamabnormals.environmental.common.levelgen.treedecorators.HangingWillowDecorator.CODEC));
++    // Suki end - Custom tree decorator types
+     private final MapCodec<P> codec;
+ 
+     private static <P extends TreeDecorator> TreeDecoratorType<P> register(final String name, final MapCodec<P> codec) {

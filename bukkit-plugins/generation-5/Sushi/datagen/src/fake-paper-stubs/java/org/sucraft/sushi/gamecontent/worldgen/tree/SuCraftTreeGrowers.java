@@ -8,5 +8,6 @@ public interface SuCraftTreeGrowers {
     TreeGrower YELLOW_MAPLE = null;
     TreeGrower ORANGE_MAPLE = null;
     TreeGrower RED_MAPLE = null;
+    TreeGrower SWAMP = null;
 
 }

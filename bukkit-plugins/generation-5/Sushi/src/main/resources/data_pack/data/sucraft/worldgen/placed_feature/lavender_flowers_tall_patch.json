@@ -19,6 +19,10 @@
       "chance": 15
     },
     {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
+    },
+    {
       "type": "minecraft:count",
       "count": 32
     },
@@ -76,10 +80,6 @@
         "max_inclusive": 2,
         "min_inclusive": -2
       }
-    },
-    {
-      "type": "minecraft:heightmap",
-      "heightmap": "MOTION_BLOCKING"
     },
     {
       "type": "minecraft:offset",

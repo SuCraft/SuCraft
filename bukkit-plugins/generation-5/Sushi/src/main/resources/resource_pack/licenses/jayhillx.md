@@ -5,7 +5,7 @@ The following files (referenced relative to the parent folder of the folder this
 * `assets/sucraft/textures/block/tall_astilbe_top.png`
 
 These files are provided under "all rights reserved"
-as the original resource pack does not come with a license to redistribute.
+as the original mod does not come with a license to redistribute.
 
 As such, the author has given no way for these files to be included in a larger resource pack.
 We include them in the server resource pack (which requires distribution) anyway,

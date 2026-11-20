@@ -24,7 +24,8 @@ public final class Flowers {
             SuCraftBlocks.WHITE_TALL_LAVENDER.itemNMS(), Items.DYE.white(),
             SuCraftBlocks.SHORT_ASTILBE.itemNMS(), Items.DYE.pink(),
             SuCraftBlocks.ASTILBE.itemNMS(), Items.DYE.pink(),
-            SuCraftBlocks.TALL_ASTILBE.itemNMS(), Items.DYE.pink()
+            SuCraftBlocks.TALL_ASTILBE.itemNMS(), Items.DYE.pink(),
+            SuCraftBlocks.BLUEBELL.itemNMS(), Items.DYE.blue()
         ).forEach((flower, dye) -> factories.recipes().add(Recipes.start()
             .addRecipeSupplier(function -> Recipes.RecipeSupplier.withSuffix(
                 () -> function.provider

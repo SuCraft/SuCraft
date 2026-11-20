@@ -1,0 +1,17 @@
+--- a/net/minecraft/world/level/block/LeafLitterBlock.java
++++ b/net/minecraft/world/level/block/LeafLitterBlock.java
+@@ -46,7 +_,13 @@
+     @Override
+     protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
+         BlockPos belowPos = pos.below();
+-        return level.getBlockState(belowPos).isFaceSturdy(level, belowPos, Direction.UP);
++        // Suki start - Allow some blocks to survive on top of water
++        BlockState belowState = level.getBlockState(belowPos);
++        if (this.suki$maySurviveBecauseOfWater(belowState)) {
++            return true;
++        }
++        return belowState.isFaceSturdy(level, belowPos, Direction.UP);
++        // Suki end - Allow some blocks to survive on top of water
+     }
+ 
+     @Override

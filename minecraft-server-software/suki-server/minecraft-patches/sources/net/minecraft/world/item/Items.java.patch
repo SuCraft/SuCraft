@@ -1,0 +1,41 @@
+--- a/net/minecraft/world/item/Items.java
++++ b/net/minecraft/world/item/Items.java
+@@ -598,24 +_,25 @@
+     );
+     public static final Item KELP = registerBlock(BlockItemIds.KELP, Blocks.KELP, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW));
+     public static final Item PINK_PETALS = registerBlock(
+-        BlockItemIds.PINK_PETALS, Blocks.PINK_PETALS, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW)
++        BlockItemIds.PINK_PETALS, Blocks.PINK_PETALS, PlaceOnWaterBlockItem::new, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW) // Suki - Allow some blocks to survive on top of water
+     );
+     public static final Item WILDFLOWERS = registerBlock(
+-        BlockItemIds.WILDFLOWERS, Blocks.WILDFLOWERS, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW)
++        BlockItemIds.WILDFLOWERS, Blocks.WILDFLOWERS, PlaceOnWaterBlockItem::new, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW) // Suki - Allow some blocks to survive on top of water
+     );
+     public static final Item LEAF_LITTER = registerBlock(
+         BlockItemIds.LEAF_LITTER,
+         Blocks.LEAF_LITTER,
++        PlaceOnWaterBlockItem::new, // Suki - Allow some blocks to survive on top of water
+         new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS)
+     );
+     public static final Item MOSS_CARPET = registerBlock(
+-        BlockItemIds.MOSS_CARPET, Blocks.MOSS_CARPET, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW)
++        BlockItemIds.MOSS_CARPET, Blocks.MOSS_CARPET, PlaceOnWaterBlockItem::new, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW) // Suki - Allow some blocks to survive on top of water
+     );
+     public static final Item MOSS_BLOCK = registerBlock(
+         BlockItemIds.MOSS_BLOCK, Blocks.MOSS_BLOCK, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_MEDIUM)
+     );
+     public static final Item PALE_MOSS_CARPET = registerBlock(
+-        BlockItemIds.PALE_MOSS_CARPET, Blocks.PALE_MOSS_CARPET, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW)
++        BlockItemIds.PALE_MOSS_CARPET, Blocks.PALE_MOSS_CARPET, PlaceOnWaterBlockItem::new, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW) // Suki - Allow some blocks to survive on top of water
+     );
+     public static final Item PALE_HANGING_MOSS = registerBlock(
+         BlockItemIds.PALE_HANGING_MOSS, Blocks.PALE_HANGING_MOSS, new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW)
+@@ -2068,7 +_,7 @@
+         BlockItemIds.COCOA_CROP, createBlockItemWithCustomItemName(Blocks.COCOA), new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_MEDIUM)
+     );
+     public static final ColorCollection<Item> DYE = ColorCollection.registerItems(
+-        ItemIds.DYE, (id, color) -> registerItem(id, DyeItem::new, new Item.Properties().component(DataComponents.DYE, color))
++        ItemIds.DYE, (id, color) -> registerItem(id, DyeItem::new, new Item.Properties().component(DataComponents.DYE, color).delayedComponent(DataComponents.BLOCK_TRANSFORMER, context -> context.getOrThrow(org.sucraft.suki.gamecontent.block.transformer.SukiBlockTransformers.RED_DYE))) // Suki - Add dye block transformers
+     );
+     public static final Item BONE_MEAL = registerItem(ItemIds.BONE_MEAL, BoneMealItem::new);
+     public static final Item BONE = registerItem(ItemIds.BONE);

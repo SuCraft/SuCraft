@@ -690,7 +690,8 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                                     Triple("warped", true, true),
                                     Triple("azalea", false, false),
                                     Triple("frost", false, false),
-                                    Triple("maple", false, false)
+                                    Triple("maple", false, false),
+                                    Triple("swamp", false, false)
                                 ).forEach { (woodType, nether, vanilla) ->
                                     listOf(false, true).forEach { wood ->
                                         listOfNotNull(
@@ -1109,11 +1110,102 @@ val extractVanillaData: TaskProvider<Task> = tasks.register("extractVanillaData"
                         })
                         addProperty("then_run", "sucraft:overworld/biome_surface/orange_forest")
                     })
+                    insert(0, JsonObject().apply {
+                        addProperty("type", "minecraft:condition")
+                        add("if_true", JsonObject().apply {
+                            addProperty("type", "minecraft:biome")
+                            addProperty("biome_is", "sucraft:bluebell_forest")
+                        })
+                        addProperty("then_run", "sucraft:overworld/biome_surface/bluebell_forest")
+                    })
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/biome/forest.json",
+                "sucraft/worldgen/biome/bluebell_forest.json"
+            ) {
+                addProperty("downfall", get("downfall").asDouble + 0.1)
+                getAsJsonArray("features").map { it.asJsonArray }.apply {
+                    first { it.contains(JsonPrimitive("minecraft:forest_flowers")) }.apply {
+                        removeAll { true }
+                        add("minecraft:glow_lichen")
+                        add("sucraft:trees_bluebell_forest")
+                        add("minecraft:patch_firefly_bush_near_water")
+                        add("sucraft:bluebell_grass_loose")
+                        add("sucraft:bluebell_grass_patches")
+                        add("sucraft:bluebell_dead_bush_patches")
+                        add("sucraft:bluebell_dense_cover")
+                        add("sucraft:bluebell_dense_grass_cover")
+                        add("sucraft:bluebell_sparse_cover")
+                        add("sucraft:bluebell_sparse_grass_cover")
+                        add("sucraft:shrink_dirt_path")
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/biome/swamp.json") {
+                getAsJsonArray("features").map { it.asJsonArray }.apply {
+                    first { it.contains(JsonPrimitive("minecraft:glow_lichen")) }.apply {
+                        insert(0, JsonPrimitive("sucraft:swamp_peat"))
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/trees_swamp.json") {
+                addProperty("feature", "sucraft:trees_swamp")
+                getAsJsonArray("placement").apply {
+                    last().asJsonObject.getAsJsonObject("predicate").apply {
+                        addProperty("state", "sucraft:swamp_sapling")
+                    }
+                }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/feature/swamp_oak.json",
+                "sucraft/worldgen/feature/swamp_wood_swamp_tree.json"
+            ) {
+                getAsJsonObject("foliage_provider").apply {
+                    addProperty("id", "sucraft:swamp_leaves")
+                }
+                getAsJsonObject("trunk_provider").apply {
+                    addProperty("id", "sucraft:swamp_log")
+                }
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/patch_sugar_cane_swamp.json") {
+                getAsJsonArray("placement").map { it.asJsonObject }
+                    .first { it.get("type").asString == "minecraft:rarity_filter" }.addProperty("chance", 2)
+            } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/placed_feature/seagrass_swamp.json") {
+                getAsJsonArray("placement").map { it.asJsonObject }.apply {
+                    first { it.get("type").asString == "minecraft:count" }.addProperty("count", 96)
+                    first { it.get("type").asString == "minecraft:offset" }.apply {
+                        listOf("x", "z").forEach { dimension ->
+                            getAsJsonObject(dimension).apply {
+                                addProperty("min", -10)
+                                addProperty("max", 10)
+                            }
+                        }
+                    }
                 }
             } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/feature/azalea_tree.json") {
                 getAsJsonObject("trunk_provider").apply {
                     addProperty("id", "sucraft:azalea_log")
                 }
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/super_birch_bees_0002.json",
+                "sucraft/worldgen/placed_feature/super_birch_bees_004.json"
+            ) {
+                addProperty("feature", "sucraft:super_birch_bees_004")
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/feature/super_birch_bees_0002.json",
+                "sucraft/worldgen/feature/super_birch_bees_004.json"
+            ) {
+                getAsJsonArray("decorators").map { it.asJsonObject }
+                    .first { it.get("type").asString == "minecraft:beehive" }
+                    .addProperty("probability", 0.04)
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/placed_feature/fancy_oak_bees_002.json",
+                "sucraft/worldgen/placed_feature/fancy_oak_bees_004.json"
+            ) {
+                addProperty("feature", "sucraft:fancy_oak_bees_004")
+            } + includedVanillaJSONObjectFileMutated(
+                "minecraft/worldgen/feature/fancy_oak_bees_002.json",
+                "sucraft/worldgen/feature/fancy_oak_bees_004.json"
+            ) {
+                getAsJsonArray("decorators").map { it.asJsonObject }
+                    .first { it.get("type").asString == "minecraft:beehive" }
+                    .addProperty("probability", 0.04)
             } + includedVanillaJSONObjectFileMutated("minecraft/worldgen/density_function/overworld/preliminary_surface_level.json") {
                 getAsJsonObject("density").getAsJsonObject("left").apply {
                     getAsJsonObject("second").getAsJsonObject("alpha").apply {

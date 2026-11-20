@@ -32,6 +32,7 @@ import org.sucraft.sushi.datageneration.redstone.Repeater;
 import org.sucraft.sushi.datageneration.soil.CoarseDirt;
 import org.sucraft.sushi.datageneration.soil.Dirt;
 import org.sucraft.sushi.datageneration.soil.Gravel;
+import org.sucraft.sushi.datageneration.soil.Peat;
 import org.sucraft.sushi.datageneration.soil.Sand;
 import org.sucraft.sushi.datageneration.soil.SoulSandstone;
 import org.sucraft.sushi.datageneration.stone.StoneWalls;
@@ -117,6 +118,7 @@ public class SushiDataGenerator implements DataGeneratorEntrypoint {
         CoarseDirt.add(factories);
         Dirt.add(factories);
         Gravel.add(factories);
+        Peat.add(factories);
         Sand.add(factories);
 
         // Soil / Soul

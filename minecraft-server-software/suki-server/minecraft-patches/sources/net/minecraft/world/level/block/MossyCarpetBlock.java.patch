@@ -1,0 +1,14 @@
+--- a/net/minecraft/world/level/block/MossyCarpetBlock.java
++++ b/net/minecraft/world/level/block/MossyCarpetBlock.java
+@@ -96,6 +_,11 @@
+     @Override
+     protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
+         BlockState belowState = level.getBlockState(pos.below());
++        // Suki start - Allow some blocks to survive on top of water
++        if (this.suki$maySurviveBecauseOfWater(belowState)) {
++            return true;
++        }
++        // Suki end - Allow some blocks to survive on top of water
+         return state.getValue(BASE) ? !belowState.isAir() : belowState.is(this) && belowState.getValue(BASE);
+     }
+ 

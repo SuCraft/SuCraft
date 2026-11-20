@@ -34,6 +34,11 @@ public abstract class FabricBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
+    public LootTable.Builder createSingleItemTableWithSilkTouch(final Block original, final ItemLike drop) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public LootTable.Builder createSingleItemTableWithSilkTouch(Block original, ItemLike drop, Holder<ContextIntProvider> count) {
         throw new UnsupportedOperationException();
     }

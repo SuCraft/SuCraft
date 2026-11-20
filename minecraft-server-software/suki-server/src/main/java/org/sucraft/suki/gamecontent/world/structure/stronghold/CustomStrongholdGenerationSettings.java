@@ -1,10 +1,9 @@
 package org.sucraft.suki.gamecontent.world.structure.stronghold;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.sucraft.suki.gamecontent.block.SukiBlocks;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -120,8 +119,8 @@ public final class CustomStrongholdGenerationSettings {
             Blocks.STONE_STAIRS,
             Blocks.STONE_BRICK_STAIRS,
             Blocks.MOSSY_STONE_BRICK_STAIRS,
-            BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cracked_stone_brick_stairs")),
-            BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mossy_cracked_stone_brick_stairs"))
+            SukiBlocks.CRACKED_STONE_BRICK_STAIRS.get(),
+            SukiBlocks.MOSSY_CRACKED_STONE_BRICK_STAIRS.get()
         );
 
         public static final List<Block> OUTPUTS_COLD = List.of(
@@ -131,9 +130,9 @@ public final class CustomStrongholdGenerationSettings {
             Blocks.STONE_STAIRS,
             Blocks.STONE_STAIRS,
             Blocks.STONE_BRICK_STAIRS,
-            BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cracked_stone_brick_stairs")),
-            BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_brick_stairs")),
-            BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_brick_stairs"))
+            SukiBlocks.CRACKED_STONE_BRICK_STAIRS.get(),
+            SukiBlocks.SNOWY_STONE_BRICK_STAIRS.get(),
+            SukiBlocks.SNOWY_STONE_BRICK_STAIRS.get()
         );
 
         public static final ObjectOpenHashSet<Block> INPUTS = new ObjectOpenHashSet<>();
@@ -157,10 +156,10 @@ public final class CustomStrongholdGenerationSettings {
         public static final List<Chippable> LIST = List.of(
             new Chippable(Blocks.STONE_BRICKS, Blocks.STONE_BRICK_STAIRS, Blocks.STONE_BRICK_SLAB),
             new Chippable(Blocks.MOSSY_STONE_BRICKS, Blocks.MOSSY_STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_SLAB),
-            new Chippable(Blocks.CRACKED_STONE_BRICKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cracked_stone_brick_stairs")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cracked_stone_brick_slab"))),
-            new Chippable(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mossy_cracked_stone_bricks")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mossy_cracked_stone_brick_stairs")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mossy_cracked_stone_brick_slab"))),
-            new Chippable(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "dirty_stone_bricks")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "dirty_stone_brick_stairs")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "dirty_stone_brick_slab"))),
-            new Chippable(BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_bricks")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_brick_stairs")), BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "snowy_stone_brick_slab")))
+            new Chippable(Blocks.CRACKED_STONE_BRICKS, SukiBlocks.CRACKED_STONE_BRICK_STAIRS.get(), SukiBlocks.CRACKED_STONE_BRICK_SLAB.get()),
+            new Chippable(SukiBlocks.MOSSY_CRACKED_STONE_BRICKS.get(), SukiBlocks.MOSSY_CRACKED_STONE_BRICK_STAIRS.get(), SukiBlocks.MOSSY_CRACKED_STONE_BRICK_SLAB.get()),
+            new Chippable(SukiBlocks.DIRTY_STONE_BRICKS.get(), SukiBlocks.DIRTY_STONE_BRICK_STAIRS.get(), SukiBlocks.DIRTY_STONE_BRICK_SLAB.get()),
+            new Chippable(SukiBlocks.SNOWY_STONE_BRICKS.get(), SukiBlocks.SNOWY_STONE_BRICK_STAIRS.get(), SukiBlocks.SNOWY_STONE_BRICK_SLAB.get())
         );
 
         public static final Map<Block, Chippable> BY_FULL_BLOCK = LIST.stream().collect(Collectors.toMap(Chippable::fullBlock, Function.identity()));
@@ -188,13 +187,14 @@ public final class CustomStrongholdGenerationSettings {
         }
 
         public static final Type OAK = new Type(Blocks.OAK_PLANKS, Blocks.BOOKSHELF, Blocks.OAK_FENCE, Blocks.LADDER);
-        public static final Type ACACIA = new Type(Blocks.ACACIA_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "acacia_bookshelf")), Blocks.ACACIA_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "acacia_ladder")));
-        public static final Type BIRCH = new Type(Blocks.BIRCH_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "birch_bookshelf")), Blocks.BIRCH_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "birch_ladder")));
-        public static final Type CHERRY = new Type(Blocks.CHERRY_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cherry_bookshelf")), Blocks.CHERRY_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "cherry_ladder")));
-        public static final Type DARK_OAK = new Type(Blocks.DARK_OAK_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "dark_oak_bookshelf")), Blocks.DARK_OAK_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "dark_oak_ladder")));
-        public static final Type JUNGLE = new Type(Blocks.JUNGLE_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "jungle_bookshelf")), Blocks.JUNGLE_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "jungle_ladder")));
-        public static final Type MANGROVE = new Type(Blocks.MANGROVE_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mangrove_bookshelf")), Blocks.MANGROVE_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "mangrove_ladder")));
-        public static final Type SPRUCE = new Type(Blocks.SPRUCE_PLANKS, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "spruce_bookshelf")), Blocks.SPRUCE_FENCE, BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("sucraft", "spruce_ladder")));
+        public static final Type ACACIA = new Type(Blocks.ACACIA_PLANKS, SukiBlocks.ACACIA_BOOKSHELF.get(), Blocks.ACACIA_FENCE, SukiBlocks.ACACIA_LADDER.get());
+        public static final Type BIRCH = new Type(Blocks.BIRCH_PLANKS, SukiBlocks.BIRCH_BOOKSHELF.get(), Blocks.BIRCH_FENCE, SukiBlocks.BIRCH_LADDER.get());
+        public static final Type CHERRY = new Type(Blocks.CHERRY_PLANKS, SukiBlocks.CHERRY_BOOKSHELF.get(), Blocks.CHERRY_FENCE, SukiBlocks.CHERRY_LADDER.get());
+        public static final Type DARK_OAK = new Type(Blocks.DARK_OAK_PLANKS, SukiBlocks.DARK_OAK_BOOKSHELF.get(), Blocks.DARK_OAK_FENCE, SukiBlocks.DARK_OAK_LADDER.get());
+        public static final Type JUNGLE = new Type(Blocks.JUNGLE_PLANKS, SukiBlocks.JUNGLE_BOOKSHELF.get(), Blocks.JUNGLE_FENCE, SukiBlocks.JUNGLE_LADDER.get());
+        public static final Type MANGROVE = new Type(Blocks.MANGROVE_PLANKS, SukiBlocks.MANGROVE_BOOKSHELF.get(), Blocks.MANGROVE_FENCE, SukiBlocks.MANGROVE_LADDER.get());
+        public static final Type SPRUCE = new Type(Blocks.SPRUCE_PLANKS, SukiBlocks.SPRUCE_BOOKSHELF.get(), Blocks.SPRUCE_FENCE, SukiBlocks.SPRUCE_LADDER.get());
+        public static final Type SWAMP = new Type(SukiBlocks.SWAMP_PLANKS.get(), SukiBlocks.SWAMP_BOOKSHELF.get(), SukiBlocks.SWAMP_FENCE.get(), SukiBlocks.SWAMP_LADDER.get());
 
         public static final List<Type> PICKABLE_TYPES = List.of(
             OAK,
@@ -219,7 +219,8 @@ public final class CustomStrongholdGenerationSettings {
             SPRUCE,
             SPRUCE,
             SPRUCE,
-            SPRUCE
+            SPRUCE,
+            SWAMP
         );
 
     }

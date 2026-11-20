@@ -73,6 +73,7 @@ java \
   -Xlog:async \
   -Dlog4j2.formatMsgNoLookups=true \
   -Djdk.serialFilter='!java.rmi.MarshalledObject' \
+  -XX:-UseBASE64Intrinsics \
   -Dcom.sun.net.ssl.checkRevocation=true \
   -Dcom.sun.security.enableCRLDP=true \
   -jar server.jar \

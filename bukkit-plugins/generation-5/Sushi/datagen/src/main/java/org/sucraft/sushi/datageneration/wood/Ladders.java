@@ -28,7 +28,8 @@ public final class Ladders {
             Pair.of(Items.LADDER, Items.OAK_PLANKS),
             Pair.of(SuCraftBlocks.SPRUCE_LADDER.itemNMS(), Items.SPRUCE_PLANKS),
             Pair.of(SuCraftBlocks.WARPED_LADDER.itemNMS(), Items.WARPED_PLANKS),
-            Pair.of(SuCraftBlocks.AZALEA_LADDER.itemNMS(), SuCraftBlocks.AZALEA_PLANKS.fullBlockItemNMS())
+            Pair.of(SuCraftBlocks.AZALEA_LADDER.itemNMS(), SuCraftBlocks.AZALEA_PLANKS.fullBlockItemNMS()),
+            Pair.of(SuCraftBlocks.SWAMP_LADDER.itemNMS(), SuCraftBlocks.SWAMP_PLANKS.fullBlockItemNMS())
         ).forEach(pair -> {
             Item ladder = pair.left();
             Item planks = pair.right();

@@ -30,6 +30,10 @@ public interface Models {
 
         void addBlockTrivialCube(Block block);
 
+        void addBlockLeaves(Block block);
+
+        void addBlockTintedLeaves(Block block, int tintColor);
+
         void addBlockCubeColumn(Block block);
 
         void addBlockCubeColumn(Block block, @Nullable Block side, @Nullable Block end);

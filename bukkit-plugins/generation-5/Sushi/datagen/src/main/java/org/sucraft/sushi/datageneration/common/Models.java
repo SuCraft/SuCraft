@@ -99,6 +99,14 @@ public final class Models {
             this.addBlock(generators -> generators.createTrivialCube(block));
         }
 
+        public void addBlockLeaves(Block block) {
+            this.addBlock(generators -> generators.createTrivialBlock(block, TexturedModel.LEAVES));
+        }
+
+        public void addBlockTintedLeaves(Block block, int tintColor) {
+            this.addBlock(generators -> generators.createTintedLeaves(block, TexturedModel.LEAVES, tintColor));
+        }
+
         public void addBlockCubeColumn(Block block) {
             this.addBlockCubeColumn(block, (Identifier) null, (Identifier) null);
         }

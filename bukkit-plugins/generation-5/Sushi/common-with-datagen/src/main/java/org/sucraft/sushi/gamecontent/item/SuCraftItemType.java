@@ -28,6 +28,7 @@ import org.sucraft.sushi.datageneration.common.DataGenerationFlag;
 import org.sucraft.sushi.datageneration.common.Models;
 import spout.api.SpoutRegistryKey;
 import spout.api.clientview.packetmapping.itemstack.ItemStackMapping;
+import spout.api.clientview.packetmapping.itemstack.registry.ItemStackMappingRegistryEntryNMS;
 import spout.api.gamecontent.datadriven.item.registry.ItemTypeRegistryEntryBuilderNMS;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public final class SuCraftItemType implements ItemLike {
     public final boolean definedByCode;
     private List<Consumer<ItemTypeRegistryEntryBuilderNMS>> itemBuilding = new ArrayList<>();
     public @Nullable BiConsumer<SuCraftItemType, Item> postConstruction;
+    public List<Consumer<ItemStackMappingRegistryEntryNMS.Builder>> itemStackMappingBuilding = new ArrayList<>(0);
     private @Nullable Function<Item.Properties, Item> constructorForDataGeneration = Item::new;
     private List<Consumer<CollectedFactories>> dataGenerating = new ArrayList<>();
     private @Nullable Consumer<Models.CollectedFactory> dataGeneratingModel;
@@ -204,6 +206,26 @@ public final class SuCraftItemType implements ItemLike {
 
     public SuCraftItemType compostable(ResolvableInt layers) {
         return this.properties(properties -> properties.component(DataComponents.COMPOSTABLE, new Compostable(layers)));
+    }
+
+    public SuCraftItemType itemStackMappingBuild(Consumer<ItemStackMappingRegistryEntryNMS.Builder> builderConsumer) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        this.itemStackMappingBuilding.add(builderConsumer);
+        return this;
+    }
+
+    public SuCraftItemType itemStackMappingBuild(BiConsumer<Item, ItemStackMappingRegistryEntryNMS.Builder> builderConsumer) {
+        return this.itemStackMappingBuild(builder -> builderConsumer.accept(this.getNMS(), builder));
+    }
+
+    public void applyToItemStackMappingBuilder(ItemStackMappingRegistryEntryNMS.Builder builder) {
+        if (!this.definedByCode) {
+            throw new IllegalStateException();
+        }
+        this.itemStackMappingBuilding.forEach(it -> it.accept(builder));
+        this.itemStackMappingBuilding = null;
     }
 
     public SuCraftItemType constructorForDataGeneration(Function<Item.Properties, Item> constructor) {

@@ -280,7 +280,7 @@
              final ChunkPos chunkPos,
              final BlockPos referencePos
          ) {
-+            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setPortalRoom(true); // Suki - Custom strongholds - Surface strongholds
++            org.sucraft.suki.gamecontent.world.structure.stronghold.CurrentStrongholdGeneration.setPortalRoom(); // Suki - Custom strongholds - Surface strongholds
              this.generateBox(level, chunkBB, 0, 0, 0, 10, 7, 15, false, random, StrongholdPieces.SMOOTH_STONE_SELECTOR);
              this.generateSmallDoor(level, random, chunkBB, StrongholdPieces.StrongholdPiece.SmallDoorType.GRATES, 4, 1, 0);
              int y = 6;

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:weighted_random_selector",
+  "features": [
+    {
+      "data": "sucraft:grass",
+      "weight": 150
+    },
+    {
+      "data": "sucraft:tall_grass",
+      "weight": 50
+    }
+  ]
+}

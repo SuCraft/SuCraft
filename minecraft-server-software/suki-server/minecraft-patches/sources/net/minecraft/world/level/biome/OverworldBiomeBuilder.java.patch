@@ -13,7 +13,7 @@
 -        {Biomes.ICE_SPIKES, null, Biomes.SNOWY_TAIGA, null, null},
 -        {Biomes.DAPPLED_FOREST, null, null, null, Biomes.OLD_GROWTH_PINE_TAIGA},
 +        {Biomes.ICE_SPIKES, org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.FROST_FOREST, null, null, Biomes.SNOWY_TAIGA}, // Suki - Modify biome choice
-+        {Biomes.DAPPLED_FOREST, Biomes.DAPPLED_FOREST, org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.ORANGE_FOREST, null, Biomes.OLD_GROWTH_PINE_TAIGA}, // Suki - Modify biome choice
++        {org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.BLUEBELL_FOREST, Biomes.FOREST, Biomes.DAPPLED_FOREST, org.sucraft.suki.gamecontent.world.biome.SuCraftBiomes.ORANGE_FOREST, Biomes.OLD_GROWTH_PINE_TAIGA}, // Suki - Modify biome choice
          {Biomes.SUNFLOWER_PLAINS, null, null, Biomes.OLD_GROWTH_BIRCH_FOREST, null},
          {null, null, Biomes.PLAINS, Biomes.SPARSE_JUNGLE, Biomes.BAMBOO_JUNGLE},
          {null, null, null, null, null}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:weighted_random_selector",
+  "features": [
+    {
+      "data": "sucraft:swamp_wood_swamp_tree",
+      "weight": 1
+    },
+    {
+      "data": "sucraft:weeping_swamp_tree",
+      "weight": 5
+    }
+  ]
+}
